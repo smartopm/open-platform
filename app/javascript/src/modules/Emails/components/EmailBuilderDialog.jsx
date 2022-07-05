@@ -11,12 +11,12 @@ import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
 import EmailDetailsDialog from './EmailDetailsDialog';
-import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 import CreateEmailTemplateMutation, { EmailUpdateMutation } from '../graphql/email_mutations';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { EmailTemplateQuery } from '../graphql/email_queries';
 import { useScript } from '../../../utils/customHooks'
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 // eslint-disable-next-line
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -27,7 +27,6 @@ export default function EmailBuilderDialog() {
   const [createEmailTemplate] = useMutation(CreateEmailTemplateMutation);
   const [updateEmailTemplate] = useMutation(EmailUpdateMutation);
   const [detailsOpen, setOpenDetails] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '', loading: false });
   const { t } = useTranslation(['email' ,'common'])
   const defaultLanguage = localStorage.getItem('default-language');
@@ -46,12 +45,10 @@ export default function EmailBuilderDialog() {
   );
   const [emailSubject, setEmailSubject] = useState(templateData?.emailTemplate?.subject || '');
 
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   function handleClose(){
     history.push('/mail_templates')
-  }
-
-  function handleAlertClose() {
-    setAlertOpen(false);
   }
 
   function updateTemplate(){
@@ -61,13 +58,13 @@ export default function EmailBuilderDialog() {
         variables: { id: emailId, body: data.html, data, subject: (emailSubject || templateData?.emailTemplate?.subject) }
       })
         .then(() => {
-          setMessage({ ...message, isError: false, detail: t('email.email_updated'), loading: false});
-          setAlertOpen(true);
+          showSnackbar({ type: messageType.success, message: t('email.email_updated') });
+          setMessage({ ...message, loading: false});
           handleClose();
         })
         .catch(err => {
-          setMessage({ isError: true, detail: formatError(err.message), loading: false });
-          setAlertOpen(true);
+          showSnackbar({ type: messageType.error, message: formatError(err.message) });
+          setMessage({  ...message, loading: false });
         });
     });
   }
@@ -80,14 +77,14 @@ export default function EmailBuilderDialog() {
         variables: { ...details, body: html, data }
       })
         .then(() => {
-          setMessage({ ...message, detail: t('email.email_saved'), loading: false});
-          setAlertOpen(true);
+          showSnackbar({ type: messageType.success, message: t('email.email_saved') });
+          setMessage({ ...message, loading: false});
           handleClose();
           handleDetailsDialog();
         })
         .catch(err => {
-          setMessage({ isError: true, detail: formatError(err.message), loading: false});
-          setAlertOpen(true);
+          showSnackbar({ type: messageType.error, message: formatError(err.message) });
+          setMessage({ loading: false});
         });
     });
   }
@@ -134,12 +131,6 @@ export default function EmailBuilderDialog() {
         subject: emailSubject || templateData?.emailTemplate?.subject || ''
       }}
         action={emailId ? 'update' : 'create'}
-      />
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={alertOpen}
-        handleClose={handleAlertClose}
       />
       <Dialog fullScreen open onClose={handleClose} TransitionComponent={Transition} data-testid="fullscreen_dialog">
         <AppBar position="relative">

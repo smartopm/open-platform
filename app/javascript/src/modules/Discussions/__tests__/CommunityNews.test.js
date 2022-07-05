@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { CommunityNewsPostsQuery, SystemDiscussionsQuery } from '../../../graphql/queries';
 import CommunityNews from '../Components/CommunityNews';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Community news with posts', () => {
@@ -122,7 +123,9 @@ describe('Community news with posts', () => {
       <BrowserRouter>
         <MockedProvider mocks={mocks} addTypename={false}>
           <MockedThemeProvider>
-            <CommunityNews {...props} />
+            <MockedSnackbarProvider>
+              <CommunityNews {...props} />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>

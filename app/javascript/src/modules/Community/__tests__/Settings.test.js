@@ -8,6 +8,8 @@ import CommunitySettings from '../components/Settings';
 import { CommunityUpdateMutation } from '../graphql/community_mutations';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
+import { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 // TODO(Nurudeen): Check why this requires more time
@@ -166,7 +168,9 @@ describe('Community settings page', () => {
     render(
       <MockedProvider mocks={[communityMutationMock, templateMock]} addTypename={false}>
         <MockedThemeProvider>
-          <CommunitySettings data={data} token="374857uwehfsdf232" refetch={refetchMock} />
+          <SnackbarContext.Provider value={{...mockedSnackbarProviderProps }}>
+            <CommunitySettings data={data} token="374857uwehfsdf232" refetch={refetchMock} />
+          </SnackbarContext.Provider>
         </MockedThemeProvider>
       </MockedProvider>
     );
@@ -217,7 +221,9 @@ describe('Community settings page', () => {
     render(
       <MockedProvider mocks={[communityMutationMock, templateMock]} addTypename={false}>
         <MockedThemeProvider>
-          <CommunitySettings data={data} token="374857uwehfsdf232" refetch={refetchMock} />
+          <SnackbarContext.Provider value={{...mockedSnackbarProviderProps }}>
+            <CommunitySettings data={data} token="374857uwehfsdf232" refetch={refetchMock} />
+          </SnackbarContext.Provider>
         </MockedThemeProvider>
       </MockedProvider>
     );
@@ -262,7 +268,9 @@ describe('Community settings page', () => {
     render(
       <MockedProvider mocks={[updateMock, templateMock]} addTypename={false}>
         <MockedThemeProvider>
-          <CommunitySettings data={data} token="374857uwehfsdf232" refetch={refetchMock} />
+          <SnackbarContext.Provider value={{...mockedSnackbarProviderProps }}>
+            <CommunitySettings data={data} token="374857uwehfsdf232" refetch={refetchMock} />
+          </SnackbarContext.Provider>
         </MockedThemeProvider>
       </MockedProvider>
     );
@@ -360,7 +368,10 @@ describe('Community settings page', () => {
 
     await waitFor(() => {
       expect(refetchMock).toBeCalled();
-      expect(screen.queryByText('community.community_updated')).toBeInTheDocument();
-    });
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        type: mockedSnackbarProviderProps.messageType.success,
+        message: 'community.community_updated'
+      });
+    }, 10);
   });
 });

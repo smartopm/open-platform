@@ -1,7 +1,7 @@
 /* eslint-disable complexity */
 /* eslint-disable max-statements */
 /* eslint-disable max-lines */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 import { useLocation, useHistory } from 'react-router-dom';
@@ -26,7 +26,6 @@ import {
   CampaignUpdateMutation,
   CampaignLabelRemoveMutation
 } from '../../../graphql/mutations';
-import MessageAlert from '../../../components/MessageAlert';
 import CampaignStatCard from './CampaignStatCard';
 import TemplateList from '../../Emails/components/TemplateList';
 import SearchInput from '../../../shared/search/SearchInput';
@@ -35,6 +34,7 @@ import SearchID from '../graphql/campaign_query';
 import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../shared/CenteredContent';
 import UserNameAvatar from '../../../shared/UserNameAvatar';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 const initData = {
   id: '',
@@ -59,10 +59,8 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
   const [formData, setFormData] = useState(initData);
   const [mailListType, setMailListType] = useState('label');
   const [label, setLabel] = useState([]);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [mutationLoading, setLoading] = useState(false);
   const [campaignCreate] = useMutation(CampaignCreate);
-  const [messageAlert, setMessageAlert] = useState('');
   const [campaignLabelRemove] = useMutation(CampaignLabelRemoveMutation);
   const [campaignUpdate] = useMutation(CampaignUpdateMutation);
   const { t } = useTranslation(['campaign', 'common']);
@@ -74,14 +72,15 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
     fetchPolicy: 'cache-and-network'
   });
 
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   function handleLabelDelete(labelId) {
     campaignLabelRemove({
       variables: { campaignId: campaign.id, labelId }
     })
       .then(() => refetch())
       .catch(err => {
-        setIsSuccessAlert(false);
-        setMessageAlert(formatError(err.message));
+        showSnackbar({ type: messageType.error, message: formatError(err.message) })
       });
   }
 
@@ -134,14 +133,12 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
     setLoading(true);
     try {
       await campaignCreate({ variables: campData });
-      setIsSuccessAlert(true);
+      showSnackbar({ type: messageType.success, message: t('message.campaign_successfully_created') })
       setFormData(initData);
       setLoading(false);
-      setMessageAlert('Campaign succesfully created');
       refetch();
     } catch (err) {
-      setIsSuccessAlert(false);
-      setMessageAlert(formatError(err.message));
+      showSnackbar({ type: messageType.error, message: formatError(err.message) })
       setLoading(false);
     }
   }
@@ -150,48 +147,41 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
     setLoading(true);
     try {
       await campaignUpdate({ variables: campData });
-      setIsSuccessAlert(true);
+      showSnackbar({ type: messageType.success, message: t('message.campaign_successfully_updated') })
       setLoading(false);
-      setMessageAlert('Campaign succesfully updated');
       refetch();
     } catch (err) {
-      setIsSuccessAlert(false);
-      setMessageAlert(formatError(err.message));
+      showSnackbar({ type: messageType.error, message: formatError(err.message) })
       setLoading(false);
     }
   }
 
   function validateCampaignForm() {
     if (!formData.name) {
-      setIsSuccessAlert(false);
-      setMessageAlert(t('message.include_name'));
+      showSnackbar({ type: messageType.error, message: t('message.include_name') })
       setLoading(false);
       return false;
     }
     if (!formData.batchTime) {
-      setIsSuccessAlert(false);
-      setMessageAlert(t('message.include_batch_time'));
+      showSnackbar({ type: messageType.error, message: t('message.include_batch_time') })
       setLoading(false);
       return false;
     }
     if (formData.status === 'scheduled') {
       if (!formData.message) {
-        setIsSuccessAlert(false);
-        setMessageAlert(t('message.include_message'));
+        showSnackbar({ type: messageType.error, message: t('message.include_message') })
         setLoading(false);
         return false;
       }
       if (!formData.userIdList) {
-        setIsSuccessAlert(false);
-        setMessageAlert(t('message.include_user_list'));
+        showSnackbar({ type: messageType.error, message: t('message.include_user_list') })
         setLoading(false);
         return false;
       }
     }
     if (formData.campaignType === 'email') {
       if (!formData.emailTemplatesId) {
-        setIsSuccessAlert(false);
-        setMessageAlert(t('message.include_email_template'));
+        showSnackbar({ type: messageType.error, message: t('message.include_email_template') })
         setLoading(false);
         return false;
       }
@@ -266,15 +256,6 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
           </Breadcrumbs>
         </Grid>
       )}
-      <div className={classes.messageAlert}>
-        <MessageAlert
-          type={isSuccessAlert ? 'success' : 'error'}
-          message={messageAlert}
-          open={!!messageAlert}
-          handleClose={() => setMessageAlert('')}
-          style={{ marginTop: '30px' }}
-        />
-      </div>
       {campaign?.status === 'done' && <CampaignStatCard data={campaign.campaignMetrics} />}
       <Grid item sm={9} xs={6}>
         <Typography variant="h6" data-testid="title" className={classes.title}>

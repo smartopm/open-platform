@@ -2,9 +2,11 @@ import React, { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import MessageAlert from '../../../components/MessageAlert';
 
-export const SnackbarContext = createContext({});
-
 const SNACKBAR_TYPES = Object.freeze({ success: 'success', error: 'error', warn: 'warning', info: 'info' });
+
+// Initial state for Context - useful also in Jest tests
+export const SnackbarContext = createContext({ showSnackbar: () => {}, messageType: SNACKBAR_TYPES });
+
 
 /**
  *

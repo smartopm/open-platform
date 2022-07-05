@@ -5,6 +5,8 @@ import { BrowserRouter } from 'react-router-dom';
 import CategoryForm from '../../components/Category/CategoryForm';
 import { FormCategoryUpdateMutation } from '../../graphql/form_category_mutations';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
+import { mockedSnackbarProviderProps } from '../../../__mocks__/mock_snackbar';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => []);
 describe('CategoryForm Component', () => {
@@ -68,7 +70,9 @@ describe('CategoryForm Component', () => {
     <MockedProvider mocks={[updateCategoryMock]} addTypename={false}>
       <BrowserRouter>
         <MockedThemeProvider>
-          <CategoryForm {...props} />
+          <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+            <CategoryForm {...props} />
+          </SnackbarContext.Provider>
         </MockedThemeProvider>
       </BrowserRouter>
     </MockedProvider>
@@ -112,7 +116,10 @@ describe('CategoryForm Component', () => {
     await waitFor(() => {
       expect(props.close).toBeCalled();
       expect(props.refetchCategories).toBeCalled();
-      expect(formWrapper.queryByText('misc.updated_form_category')).toBeInTheDocument();
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        type: mockedSnackbarProviderProps.messageType.success,
+        message: 'misc.updated_form_category'
+      });
     }, 50);
   });
 });

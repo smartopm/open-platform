@@ -6,6 +6,8 @@ import { MockedProvider } from '@apollo/react-testing';
 import EditModal from '../Components/EditModal';
 import { LabelEdit, LabelCreate } from '../../../graphql/mutations';
 import { Spinner } from '../../../shared/Loading';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
+import { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar';
 
 describe('Label Edit Component', () => {
   const mocks = {
@@ -158,13 +160,15 @@ describe('Label Edit Component', () => {
     const container = render(
       <MockedProvider mocks={[mocks, editMocks]}>
         <BrowserRouter>
-          <EditModal
-            open={open}
-            handleClose={handleClose}
-            refetch={jest.fn}
-            data={data}
-            type="new"
-          />
+          <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+            <EditModal
+              open={open}
+              handleClose={handleClose}
+              refetch={jest.fn}
+              data={data}
+              type="new"
+            />
+          </SnackbarContext.Provider>
         </BrowserRouter>
       </MockedProvider>
     );
@@ -184,7 +188,10 @@ describe('Label Edit Component', () => {
 
       await waitFor(
         () => {
-          expect(container.queryByText('label.label_created')).toBeInTheDocument();
+          expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+            type: mockedSnackbarProviderProps.messageType.success,
+            message: 'label.label_created'
+          });
         },
         { timeout: 100 }
       );

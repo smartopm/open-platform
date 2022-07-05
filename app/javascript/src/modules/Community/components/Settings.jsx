@@ -3,7 +3,7 @@
 /* eslint-disable complexity */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Typography from '@mui/material/Typography';
 import { Button, TextField, MenuItem, Grid, IconButton, Checkbox } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -15,7 +15,6 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useApolloClient, useQuery } from 'react-apollo';
 import { CommunityUpdateMutation } from '../graphql/community_mutations';
 import DynamicContactFields from './DynamicContactFields';
-import MessageAlert from '../../../components/MessageAlert';
 import useFileUpload from '../../../graphql/useFileUpload';
 import {
   currencies,
@@ -32,6 +31,7 @@ import { AdminUsersQuery } from '../../Users/graphql/user_query';
 import MultiSelect from '../../../shared/MultiSelect';
 import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
 import PageWrapper from '../../../shared/PageWrapper';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function CommunitySettings({ data, refetch }) {
   const numbers = {
@@ -103,8 +103,6 @@ export default function CommunitySettings({ data, refetch }) {
   const [templateOptions, setTemplateOptions] = useState(data?.templates || {});
   const [themeColors, setThemeColor] = useState(theme);
   const [bankingDetails, setBankingDetails] = useState(banking);
-  const [message, setMessage] = useState({ isError: false, detail: '' });
-  const [alertOpen, setAlertOpen] = useState(false);
   const [mutationLoading, setCallMutation] = useState(false);
   const [currency, setCurrency] = useState('');
   const [tagline, setTagline] = useState(data?.tagline || '');
@@ -126,6 +124,8 @@ export default function CommunitySettings({ data, refetch }) {
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const { data: adminUsersData } = useQuery(AdminUsersQuery, {
     fetchPolicy: 'cache-and-network',
@@ -306,8 +306,7 @@ export default function CommunitySettings({ data, refetch }) {
           // eslint-disable-next-line consistent-return
           () => {
             if (image.height > 160 || image.width > 600) {
-              setMessage({ isError: true, detail: t('community.upload_error') });
-              setAlertOpen(true);
+              showSnackbar({ type: messageType.error, message: t('community.upload_error') });
               return false;
             }
             setLogoDimension([image.width, image.height]);
@@ -336,8 +335,7 @@ export default function CommunitySettings({ data, refetch }) {
 
   function uploadLogo(img) {
     onChange(img, false);
-    setMessage({ isError: false, detail: t('community.logo_updated') });
-    setAlertOpen(true);
+    showSnackbar({ type: messageType.success, message: t('community.logo_updated') });
   }
 
   function setLanguageInLocalStorage(selectedLanguage) {
@@ -362,11 +360,7 @@ export default function CommunitySettings({ data, refetch }) {
 
   function updateCommunity() {
     if (!validateThemeColor(themeColors)) {
-      setAlertOpen(true);
-      setMessage({
-        isError: true,
-        detail: t('common:errors.invalid_color_code')
-      });
+      showSnackbar({ type: messageType.error, message: t('common:errors.invalid_color_code') });
       return;
     }
     setCallMutation(true);
@@ -398,12 +392,8 @@ export default function CommunitySettings({ data, refetch }) {
       }
     })
       .then(() => {
-        setMessage({
-          isError: false,
-          detail: t('community.community_updated')
-        });
+        showSnackbar({ type: messageType.success, message: t('community.community_updated') });
         setLanguageInLocalStorage(language);
-        setAlertOpen(true);
         setCallMutation(false);
         // reload if the primary color, quick links or division targets have changed
         if (
@@ -416,8 +406,7 @@ export default function CommunitySettings({ data, refetch }) {
         refetch();
       })
       .catch(error => {
-        setMessage({ isError: true, detail: formatError(error.message) });
-        setAlertOpen(true);
+        showSnackbar({ type: messageType.error, message: formatError(error.message) });
         setCallMutation(false);
       });
   }
@@ -446,12 +435,6 @@ export default function CommunitySettings({ data, refetch }) {
 
   return (
     <PageWrapper oneCol pageTitle={t('community.community_settings')}>
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={alertOpen}
-        handleClose={() => setAlertOpen(false)}
-      />
       <Typography variant="h6">{t('community.community_logo')}</Typography>
       <Typography variant="caption">{t('community.change_community_logo')}</Typography>
       <div className={classes.avatar}>

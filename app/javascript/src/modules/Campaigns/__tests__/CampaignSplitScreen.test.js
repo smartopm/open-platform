@@ -6,6 +6,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import CampaignSplitScreen from '../components/CampaignSplitScreen';
 import { Campaign } from '../../../graphql/queries';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('It should render the campaign split screen', () => {
   const mocks = {
@@ -53,12 +54,14 @@ describe('It should render the campaign split screen', () => {
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <CampaignSplitScreen
-              campaignId="23692382"
-              campaignLength={10}
-              refetch={jest.fn()}
-              setShow={jest.fn()}
-            />
+            <MockedSnackbarProvider>
+              <CampaignSplitScreen
+                campaignId="23692382"
+                campaignLength={10}
+                refetch={jest.fn()}
+                setShow={jest.fn()}
+              />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

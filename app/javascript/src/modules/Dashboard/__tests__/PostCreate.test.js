@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { PostCreateMutation, PostUpdateMutation } from '../../../graphql/mutations';
 import PostCreate from '../Components/PostCreate';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('PostCreate component', () => {
   it('should call the mutation', async () => {
@@ -26,13 +27,15 @@ describe('PostCreate component', () => {
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <MockedThemeProvider>
-          <PostCreate
-            translate={translate}
-            currentUserImage="https://image-url.com"
-            userPermissions={[{ module: 'discussion', permissions: ['can_set_accessibility'] }]}
-            btnBorderColor="#575757"
-            refetchNews={() => {}}
-          />
+          <MockedSnackbarProvider>
+            <PostCreate
+              translate={translate}
+              currentUserImage="https://image-url.com"
+              userPermissions={[{ module: 'discussion', permissions: ['can_set_accessibility'] }]}
+              btnBorderColor="#575757"
+              refetchNews={() => {}}
+            />
+          </MockedSnackbarProvider>
         </MockedThemeProvider>
       </MockedProvider>
     );
@@ -82,19 +85,21 @@ describe('PostCreate component', () => {
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <MockedThemeProvider>
-          <PostCreate
-            translate={translate}
-            currentUserImage="https://image-url.com"
-            btnBorderColor="#575757"
-            refetchNews={() => {}}
-            isMobile={false}
-            postData={postData}
-            editModal
-            setPostData={jest.fn()}
-            setEditModal={jest.fn()}
-            setAnchorEl={jest.fn()}
-            userPermissions={[{ module: 'discussion', permissions: ['can_set_accessibility'] }]}
-          />
+          <MockedSnackbarProvider>
+            <PostCreate
+              translate={translate}
+              currentUserImage="https://image-url.com"
+              btnBorderColor="#575757"
+              refetchNews={() => {}}
+              isMobile={false}
+              postData={postData}
+              editModal
+              setPostData={jest.fn()}
+              setEditModal={jest.fn()}
+              setAnchorEl={jest.fn()}
+              userPermissions={[{ module: 'discussion', permissions: ['can_set_accessibility'] }]}
+            />
+          </MockedSnackbarProvider>
         </MockedThemeProvider>
       </MockedProvider>
     );

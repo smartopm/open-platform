@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import { useQuery, useMutation } from 'react-apollo';
@@ -8,7 +8,6 @@ import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import EmailDetailsDialog from './EmailDetailsDialog';
 import MailTemplateItem from './MailTemplateItem';
-import MessageAlert from '../../../components/MessageAlert';
 import { EmailTemplatesQuery } from '../graphql/email_queries';
 import CreateEmailTemplateMutation from '../graphql/email_mutations';
 import { Spinner } from '../../../shared/Loading';
@@ -17,11 +16,11 @@ import { formatError, useParamsQuery } from '../../../utils/helpers';
 import Paginate from '../../../components/Paginate';
 import ListHeader from '../../../shared/list/ListHeader';
 import PageWrapper from '../../../shared/PageWrapper';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function MailTemplateList() {
   const [currentEmail, setCurrentEmail] = useState({});
   const [emailDetailsDialogOpen, setEmailDetailsDialogOpen] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '', loading: false });
   const [createEmailTemplate] = useMutation(CreateEmailTemplateMutation);
   const path = useParamsQuery();
@@ -29,6 +28,8 @@ export default function MailTemplateList() {
   const limit = 50;
   const [offset, setOffset] = useState(0);
   const { t } = useTranslation(['email', 'common']);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const mailListHeader = [
     { title: 'Name', value: t('common:table_headers.name'), col: 2 },
@@ -108,14 +109,14 @@ export default function MailTemplateList() {
       variables: { ...updatedDetails, body: html, data: editorData },
     })
       .then(() => {
-        setMessage({ ...message, detail: t('email.duplicated'), loading: false });
-        setAlertOpen(true);
+        showSnackbar({ type: messageType.success, message: t('email.duplicated') });
+        setMessage({ ...message, loading: false});
         handleClose();
         refetch();
       })
       .catch(err => {
-        setMessage({ isError: true, detail: formatError(err.message), loading: false });
-        setAlertOpen(true);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
+        setMessage({ ...message, loading: false });
       });
   }
 
@@ -127,12 +128,6 @@ export default function MailTemplateList() {
         <Spinner />
       ) : (
         <>
-          <MessageAlert
-            type={message.isError ? 'error' : 'success'}
-            message={message.detail}
-            open={alertOpen}
-            handleClose={() => setAlertOpen(false)}
-          />
           <EmailDetailsDialog
             open={emailDetailsDialogOpen}
             handleClose={handleClose}

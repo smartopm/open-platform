@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { ListItem, ListItemAvatar, ListItemText, Grid, Typography, IconButton } from '@mui/material';
 import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
 import { StyleSheet, css } from 'aphrodite';
@@ -20,8 +20,8 @@ import CardWrapper from '../../../shared/CardWrapper';
 import MenuList from '../../../shared/MenuList';
 import { PostDeleteMutation } from '../../../graphql/mutations';
 import DeleteDialogueBox from '../../../shared/dialogs/DeleteDialogue';
-import MessageAlert from '../../../components/MessageAlert';
 import useMomentWithLocale from '../../../shared/hooks/useMomentWithLocale';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function CommunityNews({
   userType,
@@ -46,6 +46,8 @@ export default function CommunityNews({
     message: '',
     loading: false
   });
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const { loading, error, data, refetch } = useQuery(CommunityNewsPostsQuery, {
     variables: { limit }
@@ -118,9 +120,13 @@ export default function CommunityNews({
       .then(() => {
         refetch();
         setOpenModal(!openModal);
-        setPostDetails({ ...postDetails, loading: false, message: t('messages.delete_post') })
+        showSnackbar({ type: messageType.success, message: t('messages.delete_post') });
+        setPostDetails({ ...postDetails, loading: false })
       })
-      .catch(err => setPostDetails({ ...postDetails, isError: err.message, loading: false }));
+      .catch(err => {
+        showSnackbar({ type: messageType.error, message: err.message, });
+        setPostDetails({ ...postDetails, loading: false })
+      });
   }
 
   function redirectToDiscussionsPage() {
@@ -138,12 +144,6 @@ export default function CommunityNews({
 
   return (
     <div style={isMobile ? {} : { width: '99%' }}>
-      <MessageAlert
-        type={!postDetails.isError ? 'success' : 'error'}
-        message={postDetails.message}
-        open={!!postDetails.message}
-        handleClose={() => setPostDetails({ ...postDetails, message: '' })}
-      />
       <DeleteDialogueBox
         open={openModal}
         handleClose={handleDeleteClick}

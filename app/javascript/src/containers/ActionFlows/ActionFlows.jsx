@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { CreateActionFlow, UpdateActionFlow } from '../../graphql/mutations';
-import MessageAlert from '../../components/MessageAlert';
 import ActionFlowModal from './ActionFlowModal';
 import { Flows } from '../../graphql/queries';
 import ActionFlowsList from '../../components/ActionFlowsList';
@@ -15,18 +14,19 @@ import CenteredContent from '../../components/CenteredContent';
 import Paginate from '../../components/Paginate';
 import { formatError, useParamsQuery } from '../../utils/helpers';
 import PageWrapper from '../../shared/PageWrapper';
+import { SnackbarContext } from '../../shared/snackbar/Context';
 
 export default function ActionFlows() {
   const limit = 10;
   const [open, setModalOpen] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [selectedActionFlow, setSelectedActionFlow] = useState({});
   const [offset, setOffset] = useState(0);
   const history = useHistory();
   const [createActionFlow] = useMutation(CreateActionFlow);
   const [updateActionFlow] = useMutation(UpdateActionFlow);
   const { t } = useTranslation(['actionflow', 'common']);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const pathQuery = useParamsQuery('');
   const type = pathQuery.get('type');
@@ -130,20 +130,11 @@ export default function ActionFlows() {
       .then(() => {
         closeModal();
         refetch();
-        setMessageAlert(t('actionflow:messages.success_message'));
-        setIsSuccessAlert(true);
+        showSnackbar({ type: messageType.success, message: t('actionflow:messages.success_message') })
       })
       .catch(e => {
-        setMessageAlert(formatError(e.message));
-        setIsSuccessAlert(false);
+        showSnackbar({ type: messageType.error, message: formatError(e.message) })
       });
-  }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
   }
 
   function getActionFlow(id) {
@@ -176,12 +167,6 @@ export default function ActionFlows() {
           closeModal={closeModal}
           handleSave={handleSave}
           selectedActionFlow={selectedActionFlow}
-        />
-        <MessageAlert
-          type={isSuccessAlert ? 'success' : 'error'}
-          message={messageAlert}
-          open={!!messageAlert}
-          handleClose={handleMessageAlertClose}
         />
         <div style={{ textAlign: 'right' }}>
           <Button
