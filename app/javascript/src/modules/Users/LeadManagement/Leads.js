@@ -3,6 +3,8 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import LeadsPage from './Components/LeadsPage';
 import { RenderUsers } from '..';
 
+const currentModule = 'lead';
+
 export default {
   routeProps: {
     path: '/leads',
@@ -12,8 +14,8 @@ export default {
     icon: <FilterAltIcon />
   },
   name: t => t('menu.leads'),
-  moduleName: 'user',
-  featureName: 'Users',
+  moduleName: currentModule,
+  featureName: 'Leads',
   accessibleBy: [],
   subMenu: [
     {
@@ -23,8 +25,8 @@ export default {
         exact: true
       },
       name: t => t('lead_management.scorecard'),
-      featureName: 'Users',
-      moduleName: 'lead',
+      featureName: 'Scorecard',
+      moduleName: currentModule,
       accessibleBy: []
     },
     {
@@ -33,8 +35,8 @@ export default {
         component: RenderUsers
       },
       name: t => t('menu.lead_users'),
-      featureName: 'Users',
-      moduleName: 'lead',
+      featureName: 'Lead Users',
+      moduleName: currentModule,
       accessibleBy: []
     }
   ]
