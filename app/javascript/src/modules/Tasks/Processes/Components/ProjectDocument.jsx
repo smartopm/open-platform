@@ -292,7 +292,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                                 </>
                               </Grid>
                               <Typography variant="caption">
-                                {replaceDocumentMentions(
+                              {replaceDocumentMentions(
                                   comment,
                                   `/processes/${processId}/projects?tab=documents&project_id=${att.task_id}&comment_id=${comment.id}`
                                 )}
