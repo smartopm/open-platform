@@ -112,6 +112,27 @@ RSpec.describe Types::Queries::LeadLog do
              deal_size: 120_000,
              investment_target: 15_001)
     end
+
+    let!(:other_deal_log) do
+      create(:lead_log,
+             user: another_lead_user,
+             community: community,
+             acting_user_id: admin.id,
+             log_type: 'deal_details',
+             name: 'its deal',
+             deal_size: 120_000,
+             investment_target: 10)
+    end
+
+    let(:another_investment_lead_log) do
+      create(:lead_log,
+             user: another_lead_user,
+             community: community,
+             acting_user_id: admin.id,
+             log_type: 'investment',
+             name: 'new investment',
+             amount: 12_001)
+    end
     let(:lead_logs_query) do
       <<~GQL
         query leadLogs($userId: ID!, $logType: String!, $limit: Int, $offset: Int){
@@ -232,6 +253,8 @@ RSpec.describe Types::Queries::LeadLog do
           qualified_lead_log.update(updated_at: "#{Time.zone.now.year}-01-01")
           signed_mou_lead_log.update(updated_at: "#{Time.zone.now.year}-01-01")
           signed_lease_lead_log.update(updated_at: "#{Time.zone.now.year}-01-01")
+          investment_lead_log
+          another_investment_lead_log
         end
 
         it 'returns scorecard' do
@@ -251,10 +274,11 @@ RSpec.describe Types::Queries::LeadLog do
           expect(scorecard.dig('leads_monthly_stats_by_status', 'Qualified Lead').size).to eql 12
           expect(scorecard.dig('leads_monthly_stats_by_status', 'Signed MOU', '1')).to eql 1
           expect(scorecard.dig('leads_monthly_stats_by_status', 'Signed Lease', '1')).to eql 1
-          expect(scorecard.dig('ytd_count', 'leads_by_division')).to eql 2
           expect(scorecard.dig('ytd_count', 'qualified_lead')).to eql 1
           expect(scorecard.dig('ytd_count', 'signed_mou')).to eql 1
           expect(scorecard.dig('ytd_count', 'signed_lease')).to eql 1
+          expect(scorecard.dig('investment_status_stats', 'on_target')).to eql 1
+          expect(scorecard.dig('investment_status_stats', 'over_target')).to eql 1
         end
       end
 
