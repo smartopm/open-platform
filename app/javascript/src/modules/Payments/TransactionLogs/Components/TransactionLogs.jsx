@@ -17,14 +17,12 @@ import { Spinner } from '../../../../shared/Loading';
 import { dateToString } from '../../../../components/DateContainer';
 import CenteredContent from '../../../../shared/CenteredContent';
 import Paginate from '../../../../components/Paginate';
-// import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import { useParamsQuery } from '../../../../utils/helpers';
 
 export default function TransactionLogs() {
   const { t } = useTranslation('common');
   const matches = useMediaQuery('(max-width:600px)');
   const path = useParamsQuery('');
-  // const authState = useContext(AuthStateContext);
   const classes = useStyles();
   const [offset, setOffset] = useState(0);
   const [userId, setUserId] = useState(0);
@@ -51,6 +49,9 @@ export default function TransactionLogs() {
   const transactionLogs = data?.transactionLogs || userLogData?.userTransactionLogs;
 
   function handleMoreDetailsClick(id) {
+    if (currentId && currentId !== id && openDetails) {
+      return
+    }
     setCurrentId(id);
     setOpenDetails(!openDetails);
   }
