@@ -4,6 +4,7 @@ import { MockedProvider } from '@apollo/react-testing';
 
 import { BrowserRouter } from 'react-router-dom';
 import  CommentSection from '../Components/CommentSection';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -23,7 +24,9 @@ describe('CommentSection', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <CommentSection {...commentsProps} />
+          <MockedSnackbarProvider>
+            <CommentSection {...commentsProps} />
+          </MockedSnackbarProvider>
         </BrowserRouter>
       </MockedProvider>
     );

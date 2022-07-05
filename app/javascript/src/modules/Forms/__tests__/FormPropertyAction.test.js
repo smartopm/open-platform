@@ -6,6 +6,7 @@ import { FormPropertyQuery } from '../graphql/forms_queries';
 import { FormPropertyDeleteMutation } from '../graphql/forms_mutation';
 import FormPropertyAction from '../components/FormPropertyAction';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('Form that creates other forms component', () => {
   // create a query mock
@@ -66,14 +67,16 @@ describe('Form that creates other forms component', () => {
     const container = render(
       <MockedProvider mocks={[mocks, deletePropertyMock]} addTypename>
         <MockedThemeProvider>
-          <FormPropertyAction
-            propertyId={mocks.request.variables.formPropertyId}
-            formId={mocks.request.variables.formId}
-            refetch={refetchMock}
-            categoryId=""
-            editMode
-            formDetailRefetch={jest.fn()}
-          />
+          <MockedSnackbarProvider>
+            <FormPropertyAction
+              propertyId={mocks.request.variables.formPropertyId}
+              formId={mocks.request.variables.formId}
+              refetch={refetchMock}
+              categoryId=""
+              editMode
+              formDetailRefetch={jest.fn()}
+            />
+          </MockedSnackbarProvider>
         </MockedThemeProvider>
       </MockedProvider>
     );
@@ -87,7 +90,6 @@ describe('Form that creates other forms component', () => {
     fireEvent.click(container.queryByText('common:menu.delete'));
     await waitFor(() => {
       expect(refetchMock).toBeCalled();
-      expect(container.queryByText('misc.deleted_form_property')).toBeInTheDocument();
     }, 50);
   });
 
@@ -96,14 +98,16 @@ describe('Form that creates other forms component', () => {
     const container = render(
       <MockedProvider mocks={[mocks, deletePropertyMock]} addTypename>
         <MockedThemeProvider>
-          <FormPropertyAction
-            propertyId={mocks.request.variables.formPropertyId}
-            formId={mocks.request.variables.formId}
-            refetch={refetchMock}
-            categoryId=""
-            editMode
-            formDetailRefetch={jest.fn()}
-          />
+          <MockedSnackbarProvider>
+            <FormPropertyAction
+              propertyId={mocks.request.variables.formPropertyId}
+              formId={mocks.request.variables.formId}
+              refetch={refetchMock}
+              categoryId=""
+              editMode
+              formDetailRefetch={jest.fn()}
+            />
+          </MockedSnackbarProvider>
         </MockedThemeProvider>
       </MockedProvider>
     );

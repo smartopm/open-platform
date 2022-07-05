@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useRef } from 'react';
+import React, { Fragment, useState, useRef, useContext } from 'react';
 import {
   MenuItem,
   Menu,
@@ -21,15 +21,14 @@ import { QRCode } from 'react-qr-svg';
 import { FormUpdateMutation } from '../graphql/forms_mutation';
 import { formStatus } from '../../../utils/constants';
 import { ActionDialog } from '../../../components/Dialog';
-import MessageAlert from '../../../components/MessageAlert';
 import { copyText, downloadAsImage, objectAccessor } from '../../../utils/helpers';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function FormMenu(
   { formId, anchorEl, handleClose, open, refetch, t, isPublic, formName }
 ) {
   const history = useHistory();
   const [isDialogOpen, setOpen] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
   const [actionType, setActionType] = useState('');
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const theme = useTheme();
@@ -39,6 +38,8 @@ export default function FormMenu(
   const ref = useRef(null);
   const matches = useMediaQuery('(max-width:600px)');
 
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [publish] = useMutation(FormUpdateMutation);
 
   function handleConfirm(type) {
@@ -47,28 +48,22 @@ export default function FormMenu(
     setActionType(type);
   }
 
-  function handleAlertClose() {
-    setAlertOpen(false);
-  }
-
   function updateForm() {
     publish({
       variables: { id: formId, status: objectAccessor(formStatus, actionType) }
     })
       .then(() => {
-        setMessage({
-          isError: false,
-          detail: t('misc.form_action_success', { status: t(`form_status.${actionType}`) })
+        showSnackbar({
+          type: messageType.success,
+          message: t('misc.form_action_success', { status: t(`form_status.${actionType}`) })
         });
         setOpen(!isDialogOpen);
-        setAlertOpen(true);
         handleClose();
         refetch();
       })
       .catch(err => {
-        setMessage({ isError: true, detail: err.message });
+        showSnackbar({ type: messageType.error, message: err.message });
         setOpen(!isDialogOpen);
-        setAlertOpen(true);
       });
   }
 
@@ -107,14 +102,6 @@ export default function FormMenu(
         })}
         type={actionType === 'delete' ? 'warning' : 'confirm'}
       />
-
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={alertOpen}
-        handleClose={handleAlertClose}
-      />
-
       <Dialog
         fullScreen={fullScreen}
         open={openQRCodeModal}

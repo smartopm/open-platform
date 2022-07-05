@@ -8,6 +8,7 @@ import FormContextProvider from '../Context';
 import FormCreate from '../components/FormCreate';
 import { FormQuery } from '../graphql/forms_queries';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 jest.mock('react-markdown', () => <div />);
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
@@ -48,7 +49,9 @@ describe('FormCreate Component', () => {
         <BrowserRouter>
           <FormContextProvider>
             <MockedThemeProvider>
-              <FormCreate {...props} />
+              <MockedSnackbarProvider>
+                <FormCreate {...props} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </FormContextProvider>
         </BrowserRouter>
@@ -102,7 +105,9 @@ describe('FormCreate Component', () => {
         <BrowserRouter>
           <FormContextProvider>
             <MockedThemeProvider>
-              <FormCreate {...newProps} />
+              <MockedSnackbarProvider>
+                <FormCreate {...newProps} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </FormContextProvider>
         </BrowserRouter>

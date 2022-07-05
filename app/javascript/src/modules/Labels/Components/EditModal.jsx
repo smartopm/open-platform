@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import TextField from '@mui/material/TextField';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +9,7 @@ import { LabelEdit, LabelCreate } from '../../../graphql/mutations';
 import { colorPallete } from '../../../utils/constants';
 import { formatError, ifNotTest } from '../../../utils/helpers';
 import { CustomizedDialogs } from '../../../components/Dialog';
-import MessageAlert from '../../../components/MessageAlert';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function EditModal({ open, handleClose, data, refetch, type }) {
   const [editLabel] = useMutation(LabelEdit);
@@ -18,9 +18,9 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
   const [shortDesc, setShortDesc] = useState('');
   const [description, setDescription] = useState('');
   const [mutationLoading, setMutationLoading] = useState(false);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
   const { t } = useTranslation(['label', 'common']);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   function handleEdit() {
     setMutationLoading(true);
@@ -29,15 +29,13 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
     })
       .then(() => {
         setMutationLoading(false);
-        setMessageAlert(t('label.label_edited'));
-        setIsSuccessAlert(true);
+        showSnackbar({ type: messageType.success, message: t('label.label_edited') });
         handleClose();
         refetch();
       })
       .catch(err => {
         setMutationLoading(false);
-        setMessageAlert(formatError(err.message));
-        setIsSuccessAlert(false);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
@@ -51,15 +49,13 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
         setShortDesc('');
         setDescription('');
         setColor('');
-        setMessageAlert(t('label.label_created'));
-        setIsSuccessAlert(true);
+        showSnackbar({ type: messageType.success, message: t('label.label_created') });
         handleClose();
         refetch();
       })
       .catch(err => {
         setMutationLoading(false);
-        setMessageAlert(formatError(err.message));
-        setIsSuccessAlert(false);
+        showSnackbar({ type: messageType.success, message: formatError(err.message) });
       });
   }
 
@@ -75,12 +71,6 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
   }, []);
   return (
     <>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={() => setMessageAlert('')}
-      />
       <CustomizedDialogs
         open={open}
         handleModal={handleClose}

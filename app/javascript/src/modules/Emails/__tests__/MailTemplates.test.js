@@ -6,6 +6,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import MailTemplates from '../components/MailTemplateList';
 import { EmailTemplatesQuery } from '../graphql/email_queries';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('Mail Templates Component', () => {
   it('renders Mail Templates', async () => {
@@ -35,7 +36,9 @@ describe('Mail Templates Component', () => {
         <MockedProvider mocks={[templateMock]} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <MailTemplates />
+              <MockedSnackbarProvider>
+                <MailTemplates />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>

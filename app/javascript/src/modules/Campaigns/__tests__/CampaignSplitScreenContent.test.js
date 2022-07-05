@@ -7,6 +7,8 @@ import userEvent from '@testing-library/user-event'
 import CampaignSplitScreenContent from '../components/CampaignSplitScreenContent';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import SearchID from '../graphql/campaign_query';
+import MockedSnackbarProvider, { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 describe('It should render the campaign split screen content', () => {
   const campaign = {
@@ -36,11 +38,13 @@ describe('It should render the campaign split screen content', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <CampaignSplitScreenContent
-              refetch={jest.fn()}
-              handleClose={jest.fn}
-              campaign={campaign}
-            />
+            <MockedSnackbarProvider>
+              <CampaignSplitScreenContent
+                refetch={jest.fn()}
+                handleClose={jest.fn}
+                campaign={campaign}
+              />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -70,11 +74,13 @@ describe('It should render the campaign split screen content', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <CampaignSplitScreenContent
-              refetch={jest.fn()}
-              handleClose={jest.fn}
-              campaign={newCampaign}
-            />
+            <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+              <CampaignSplitScreenContent
+                refetch={jest.fn()}
+                handleClose={jest.fn}
+                campaign={newCampaign}
+              />
+            </SnackbarContext.Provider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -82,7 +88,10 @@ describe('It should render the campaign split screen content', () => {
 
     await waitFor(() =>{
       fireEvent.click(container.queryByTestId('save-campaign'));
-      expect(container.queryByText('message.include_name')).toBeInTheDocument();
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        message: 'message.include_name',
+        type: mockedSnackbarProviderProps.messageType.error
+      });
     }, 5)
   });
 
@@ -92,11 +101,13 @@ describe('It should render the campaign split screen content', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <CampaignSplitScreenContent
-              refetch={jest.fn()}
-              handleClose={jest.fn}
-              campaign={newCampaign}
-            />
+            <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+              <CampaignSplitScreenContent
+                refetch={jest.fn()}
+                handleClose={jest.fn}
+                campaign={newCampaign}
+              />
+            </SnackbarContext.Provider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -104,7 +115,10 @@ describe('It should render the campaign split screen content', () => {
 
     await waitFor(() => {
       fireEvent.click(container.queryByTestId('save-campaign'));
-      expect(container.queryByText('message.include_batch_time')).toBeInTheDocument();
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        message: 'message.include_batch_time',
+        type: mockedSnackbarProviderProps.messageType.error
+      });
     }, 5)
   });
 
@@ -114,11 +128,13 @@ describe('It should render the campaign split screen content', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <CampaignSplitScreenContent
-              refetch={jest.fn()}
-              handleClose={jest.fn}
-              campaign={newCampaign}
-            />
+            <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+              <CampaignSplitScreenContent
+                refetch={jest.fn()}
+                handleClose={jest.fn}
+                campaign={newCampaign}
+              />
+            </SnackbarContext.Provider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -126,7 +142,10 @@ describe('It should render the campaign split screen content', () => {
 
     await waitFor(() => {
       fireEvent.click(container.queryByTestId('save-campaign'));
-      expect(container.queryByText('message.include_message')).toBeInTheDocument();
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        message: 'message.include_message',
+        type: mockedSnackbarProviderProps.messageType.error
+      });
     }, 5)
   });
 
@@ -136,11 +155,13 @@ describe('It should render the campaign split screen content', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <CampaignSplitScreenContent
-              refetch={jest.fn()}
-              handleClose={jest.fn}
-              campaign={newCampaign}
-            />
+            <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+              <CampaignSplitScreenContent
+                refetch={jest.fn()}
+                handleClose={jest.fn}
+                campaign={newCampaign}
+              />
+            </SnackbarContext.Provider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -148,7 +169,10 @@ describe('It should render the campaign split screen content', () => {
 
     await waitFor(() => {
       fireEvent.click(container.queryByTestId('save-campaign'));
-      expect(container.queryByText('message.include_user_list')).toBeInTheDocument();
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        message: 'message.include_user_list',
+        type: mockedSnackbarProviderProps.messageType.error
+      });
     }, 5)
   });
 
@@ -158,11 +182,13 @@ describe('It should render the campaign split screen content', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <CampaignSplitScreenContent
-              refetch={jest.fn()}
-              handleClose={jest.fn}
-              campaign={newCampaign}
-            />
+            <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+              <CampaignSplitScreenContent
+                refetch={jest.fn()}
+                handleClose={jest.fn}
+                campaign={newCampaign}
+              />
+            </SnackbarContext.Provider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -170,7 +196,10 @@ describe('It should render the campaign split screen content', () => {
 
     await waitFor(() => {
       fireEvent.click(container.queryByTestId('save-campaign'));
-      expect(container.queryByText('message.include_email_template')).toBeInTheDocument();
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        message: 'message.include_email_template',
+        type: mockedSnackbarProviderProps.messageType.error
+      });
     }, 5)
   });
 
@@ -201,11 +230,13 @@ describe('It should render the campaign split screen content', () => {
       <MockedProvider>
         <BrowserRouter mock={[mockData]} addTypename={false}>
           <MockedThemeProvider>
-            <CampaignSplitScreenContent
-              refetch={jest.fn()}
-              handleClose={jest.fn}
-              campaign={newCampaign}
-            />
+            <MockedSnackbarProvider>
+              <CampaignSplitScreenContent
+                refetch={jest.fn()}
+                handleClose={jest.fn}
+                campaign={newCampaign}
+              />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

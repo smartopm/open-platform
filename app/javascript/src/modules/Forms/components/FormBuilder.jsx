@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,6 @@ import { formStatus } from '../../../utils/constants';
 import FormTimeline from '../../../shared/TimeLine';
 import { ActionDialog } from '../../../components/Dialog';
 import { formatError, objectAccessor } from '../../../utils/helpers';
-import MessageAlert from '../../../components/MessageAlert';
 import Form from './Category/Form';
 import FormContextProvider from '../Context';
 import ErrorPage from '../../../components/Error';
@@ -20,6 +19,7 @@ import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/
 import FormTitle from './FormTitle';
 import FormCreate from './FormCreate';
 import PageWrapper from '../../../shared/PageWrapper';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 /**
  * @param {String} formId
@@ -31,9 +31,9 @@ export default function FormBuilder({ formId }) {
   const history = useHistory();
   const [tabValue, setTabValue] = useState(0);
   const [isPublishing, setIsPublishing] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [message, setMessage] = useState({ isError: false, detail: '' });
   const { t } = useTranslation(['form', 'common']);
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [updateForm] = useMutation(FormUpdateMutation);
   const { data, error, loading, refetch: dataRefetch } = useQuery(FormPropertiesQuery, {
     variables: { formId },
@@ -73,10 +73,6 @@ export default function FormBuilder({ formId }) {
     setOpen(!open);
   }
 
-  function handleAlertClose() {
-    setAlertOpen(false);
-  }
-
   function publishForm() {
     setIsPublishing(true);
     setOpen(!open);
@@ -84,17 +80,12 @@ export default function FormBuilder({ formId }) {
       variables: { id: formId, status: formStatus.publish }
     })
       .then(() => {
-        setMessage({
-          isError: false,
-          detail: t('misc.published_form')
-        });
+        showSnackbar({ type: messageType.success, message: t('misc.published_form') });
         setIsPublishing(false);
-        setAlertOpen(true);
       })
       .catch(err => {
-        setMessage({ isError: true, detail: formatError(err.message) });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setIsPublishing(false);
-        setAlertOpen(true);
       });
   }
 
@@ -119,13 +110,6 @@ export default function FormBuilder({ formId }) {
             handleOnSave={publishForm}
             message={t('misc.are_you_sure_to_publish')}
             type="confirm"
-          />
-
-          <MessageAlert
-            type={message.isError ? 'error' : 'success'}
-            message={message.detail}
-            open={alertOpen}
-            handleClose={handleAlertClose}
           />
           {loading && <Spinner />}
           {!loading && formDetailData && <FormTitle name={formDetailData.form?.name} />}

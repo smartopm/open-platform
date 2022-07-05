@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useLazyQuery, useMutation, useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import {
@@ -22,8 +22,8 @@ import SwitchInput from './FormProperties/SwitchInput';
 import { FormPropertyQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
-import MessageAlert from '../../../components/MessageAlert';
 import { LiteFormCategories } from '../graphql/form_category_queries';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 // Replace this with translation and remove options on FormPropertySelector
 const fieldTypes = {
@@ -63,11 +63,12 @@ export default function FormPropertyCreateForm({
   const classes = useStyles();
   const [options, setOptions] = useState(['']);
   const { t } = useTranslation('form');
-  const [message, setMessage] = useState({ isError: false, detail: '' });
   const [formPropertyCreate] = useMutation(FormPropertyCreateMutation);
   const [formPropertyUpdate] = useMutation(FormPropertyUpdateMutation);
   const history = useHistory();
   const matches = useMediaQuery('(max-width:900px)');
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [loadFields, { data }] = useLazyQuery(FormPropertyQuery, {
     variables: { formId, formPropertyId: propertyId }
   });
@@ -121,7 +122,7 @@ export default function FormPropertyCreateForm({
         refetch();
         formDetailRefetch();
         setMutationLoading(false);
-        setMessage({ ...message, isError: false, detail: t('misc.created_form_property') });
+        showSnackbar({ type: messageType.success, message: t('misc.created_form_property') });
         setProperty({
           ...initData,
           order: nextOrder.toString()
@@ -129,7 +130,7 @@ export default function FormPropertyCreateForm({
         setOptions(['']);
       })
       .catch(err => {
-        setMessage({ ...message, isError: true, detail: formatError(err.message) });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setMutationLoading(false);
       });
   }
@@ -156,24 +157,17 @@ export default function FormPropertyCreateForm({
           order: nextOrder.toString()
         });
         setOptions(['']);
-        setMessage({ ...message, isError: false, detail: t('misc.updated_form_property') });
+        showSnackbar({ type: messageType.success, message: t('misc.updated_form_property') });
         close();
       })
       .catch(err => {
-        setMessage({ ...message, isError: true, detail: formatError(err.message) });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setMutationLoading(false);
       });
   }
 
   return (
     <>
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '' })}
-      />
-
       <form
         onSubmit={propertyId ? updateFormProperty : saveFormProperty}
         data-testid="form_property_submit"
