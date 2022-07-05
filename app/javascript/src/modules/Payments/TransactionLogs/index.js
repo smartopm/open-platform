@@ -18,7 +18,7 @@ export function RenderPayment() {
 
 export function RenderTransactionLogs() {
   return (
-    <AccessCheck module='transaction_history' allowedPermissions={['can_see_menu_item']}>
+    <AccessCheck module={currentModule} allowedPermissions={paymentPermission}>
       <TransactionLogs />
     </AccessCheck>
   );

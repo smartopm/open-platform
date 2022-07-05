@@ -1,7 +1,6 @@
 /* eslint-disable complexity */
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom'
 import { useLazyQuery } from 'react-apollo';
 import Grid from '@mui/material/Grid';
 import makeStyles from '@mui/styles/makeStyles';
@@ -10,23 +9,25 @@ import { Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 import PageWrapper from '../../../../shared/PageWrapper';
 import { TransactionLogsQuery, UserTransactionLogsQuery } from '../graphql/transaction_logs_query';
 import { Spinner } from '../../../../shared/Loading';
 import { dateToString } from '../../../../components/DateContainer';
 import CenteredContent from '../../../../shared/CenteredContent';
 import Paginate from '../../../../components/Paginate';
-import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
+// import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import { useParamsQuery } from '../../../../utils/helpers';
 
 export default function TransactionLogs() {
   const { t } = useTranslation('common');
   const matches = useMediaQuery('(max-width:600px)');
   const path = useParamsQuery('');
-  const userId = path.get('userId');
-  const authState = useContext(AuthStateContext);
+  // const authState = useContext(AuthStateContext);
   const classes = useStyles();
   const [offset, setOffset] = useState(0);
+  const [userId, setUserId] = useState(0);
   const [openDetails, setOpenDetails] = useState(false);
   const [currentId, setCurrentId] = useState('');
   const limit = 10;
@@ -63,18 +64,36 @@ export default function TransactionLogs() {
     }
   }
 
+  const rightPanelObj = [
+    {
+      mainElement: (
+        <Button style={{ color: '#FFFFFF' }} variant="contained">
+          {matches ? <AddIcon /> : t('common:misc.add_payment')}
+        </Button>
+      ),
+      key: 1,
+    },
+  ];
+
   useEffect(() => {
-    if (userId) {
+    const getUserId = path.get('userId');
+    setUserId(getUserId);
+    if (getUserId) {
       getUserLogs();
     }
-    if (!userId) {
+    if (!getUserId) {
       getAllLogs();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   return (
-    <PageWrapper pageTitle={t('misc.history')} breadCrumbObj={breadCrumbObj} oneCol>
+    <PageWrapper
+      pageTitle={t('misc.history')}
+      breadCrumbObj={breadCrumbObj}
+      rightPanelObj={userId ? rightPanelObj : undefined}
+      oneCol
+    >
       {(error || userLogError) && (
         <CenteredContent>
           <p>{error.message || userLogError.message}</p>

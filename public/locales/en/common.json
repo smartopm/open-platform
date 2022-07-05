@@ -311,7 +311,8 @@
     "references": "References",
     "form_amount": "Form Amount",
     "no_history": "No Transaction Log Available",
-    "transaction_logs": "Transaction Logs"
+    "transaction_logs": "Transaction Logs",
+    "add_payment": "Add Payment"
   },
   "menu": {
     "invoice": "Invoice",
