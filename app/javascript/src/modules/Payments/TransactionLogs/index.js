@@ -45,7 +45,8 @@ const TransactionRoutes = [
     name: t => t('common:misc.history'),
     featureName: 'Transactions',
     moduleName: currentModule,
-    accessibleBy: []
+    accessibleBy: [],
+    transactionHistory: true
   }
 ];
 
