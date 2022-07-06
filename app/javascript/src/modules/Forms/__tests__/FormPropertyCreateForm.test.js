@@ -6,6 +6,7 @@ import FormPropertyCreateForm from '../components/FormPropertyCreateForm';
 import { FormPropertyQuery } from '../graphql/forms_queries';
 import { FormPropertyUpdateMutation, FormPropertyCreateMutation } from '../graphql/forms_mutation';
 import { LiteFormCategories } from '../graphql/form_category_queries';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('Form that creates other forms component', () => {
   // create a query mock
@@ -100,13 +101,15 @@ describe('Form that creates other forms component', () => {
     const refetchMock = jest.fn();
     const container = render(
       <MockedProvider mocks={[mocks, updatePropertyMock]} addTypename={false}>
-        <FormPropertyCreateForm
-          propertyId={mocks.request.variables.formPropertyId}
-          formId="39c3b38e-136d-42e0"
-          categoryId=""
-          refetch={refetchMock}
-          close={closeMock}
-        />
+        <MockedSnackbarProvider>
+          <FormPropertyCreateForm
+            propertyId={mocks.request.variables.formPropertyId}
+            formId="39c3b38e-136d-42e0"
+            categoryId=""
+            refetch={refetchMock}
+            close={closeMock}
+          />
+        </MockedSnackbarProvider>
       </MockedProvider>
     );
     expect(container.queryByText('form_fields.field_name')).toBeInTheDocument();
@@ -138,12 +141,14 @@ describe('Form that creates other forms component', () => {
     const refetchMock = jest.fn();
     const container = render(
       <MockedProvider mocks={[mocks, createPropertyMock]} addTypename>
-        <FormPropertyCreateForm
-          formId={createPropertyMock.request.variables.formId}
-          categoryId=""
-          refetch={refetchMock}
-          close={closeMock}
-        />
+        <MockedSnackbarProvider>
+          <FormPropertyCreateForm
+            formId={createPropertyMock.request.variables.formId}
+            categoryId=""
+            refetch={refetchMock}
+            close={closeMock}
+          />
+        </MockedSnackbarProvider>
       </MockedProvider>
     );
     expect(container.queryByText('form_fields.field_name')).toBeInTheDocument();
@@ -212,12 +217,14 @@ describe('Form that creates other forms component', () => {
         mocks={[paymentFieldMock, createPropertyMock, formCategoriesMock]}
         addTypename
       >
-        <FormPropertyCreateForm
-          formId={createPropertyMock.request.variables.formId}
-          categoryId=""
-          refetch={refetchMock}
-          close={closeMock}
-        />
+        <MockedSnackbarProvider>
+          <FormPropertyCreateForm
+            formId={createPropertyMock.request.variables.formId}
+            categoryId=""
+            refetch={refetchMock}
+            close={closeMock}
+          />
+        </MockedSnackbarProvider>
       </MockedProvider>
     );
     ReactTestUtils.Simulate.change(container.queryByTestId('field_type_selector'), {

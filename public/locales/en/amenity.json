@@ -8,8 +8,11 @@
   },
   "misc": {
     "configure_amenity": "Configure Amenity",
-    "amenity_created": "Amenity Created Successfully",
-    "amenity_updated": "Amenity Updated Successfully",
+    "amenity_created": "Amenity created Successfully",
+    "amenity_updated": "Amenity updated Successfully",
+    "amenity_deleted": "Amenity deleted Successfully",
+    "delete_warning": "You are about to delete this amenity!. Cancel if you are not sure.",
+    "no_amenity_added": "No amenities added yet",
     "reserve": "Reserve"
   },
   "helper_text": {

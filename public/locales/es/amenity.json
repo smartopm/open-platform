@@ -13,8 +13,11 @@
   },
   "misc": {
     "amenity_created": "Amenidad Creada con Éxito",
+    "amenity_deleted": "Amenidad eliminada con éxito",
     "amenity_updated": "Servicio Actualizado con Éxito",
     "configure_amenity": "Configurar Amenidad",
+    "delete_warning": "¡Estás a punto de eliminar esta Amenidad! Cancele si no está seguro.",
+    "no_amenity_added": "Aún no se agregaron Amenidades",
     "reserve": "Reservar"
   }
 }

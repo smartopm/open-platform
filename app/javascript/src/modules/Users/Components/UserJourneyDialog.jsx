@@ -9,7 +9,7 @@ import { UserJourneyUpdateMutation } from '../../../graphql/mutations/user_journ
 import { formatError } from '../../../utils/helpers';
 
 export default function UserJourneyDialog({ open, handleModalClose, refetch, log }) {
-  const { t } = useTranslation('users')
+  const { t } = useTranslation(['users', 'common'])
   const [state, setState] = useState({
     isError: false,
     message: '',
@@ -70,6 +70,7 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
           label={t("users.journey_start")}
           handleDateChange={date => setDates(date)}
           maxDate={log.stopDate || undefined}
+          t={t}
         />
       </CustomizedDialogs>
     </>

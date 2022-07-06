@@ -13,11 +13,11 @@ import FormRoleSelect from './FormRoleSelect';
 import SwitchInput from './FormProperties/SwitchInput';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { copyText, formatError } from '../../../utils/helpers';
-import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
 import { FormQuery } from '../graphql/forms_queries';
 import CenteredContent from '../../../shared/CenteredContent'
 import { generateIframeSnippet } from '../utils';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function FormCreate({
   formMutation,
@@ -39,8 +39,6 @@ export default function FormCreate({
   const [description, setDescription] = useState('');
   const [roles, setRoles] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [message, setMessage] = useState({ isError: false, detail: '' });
   const [expiresAt, setExpiresAtDate] = useState(null);
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(true);
   const [preview, setPreview] = useState(false);
@@ -50,6 +48,8 @@ export default function FormCreate({
   const communityRoles = authState?.user?.community?.roles;
   const [isCopied, setIsCopied] = useState(false);
   const { hostname } = window.location
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   function submitForm() {
     const variables = {
@@ -70,11 +70,10 @@ export default function FormCreate({
       variables
     })
       .then(() => {
-        setMessage({
-          isError: false,
-          detail: actionType === 'update' ? t('misc.form_updated') : t('misc.form_created')
+        showSnackbar({
+          type: messageType.success,
+          message: actionType === 'update' ? t('misc.form_updated') : t('misc.form_created')
         });
-        setAlertOpen(true);
         setLoading(false);
         refetch();
         if (routeBack) {
@@ -83,14 +82,8 @@ export default function FormCreate({
       })
       .catch(err => {
         setLoading(false);
-        setMessage({ isError: true, detail: formatError(err.message) });
-        setAlertOpen(true);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
-  }
-
-  function handleClose() {
-    setMessage({ isError: false, detail: '' });
-    setAlertOpen(false);
   }
 
   async function handleTextCopy(){
@@ -123,12 +116,6 @@ export default function FormCreate({
       {formError && (
         <CenteredContent><p>{formError.message}</p></CenteredContent>
       )}
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={alertOpen}
-        handleClose={handleClose}
-      />
       <Grid container spacing={4}>
         <Grid item md={12} xs={12}>
           <TextField
@@ -179,6 +166,7 @@ export default function FormCreate({
             handleDateChange={date => setExpiresAtDate(date)}
             inputVariant="outlined"
             pastDate
+            t={t}
           />
         </Grid>
         <Grid item xs={12}>

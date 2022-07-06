@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Container, IconButton } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -7,11 +7,11 @@ import { useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from '../../../shared/Loading';
 import { FormPropertyDeleteMutation } from '../graphql/forms_mutation';
-import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 import FormPropertyCreateForm from './FormPropertyCreateForm';
 import { DetailsDialog } from '../../../components/Dialog';
 import MenuList from '../../../shared/MenuList';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function FormPropertyAction({
   propertyId,
@@ -26,10 +26,11 @@ export default function FormPropertyAction({
   const [isDeletingProperty, setDeleteLoading] = useState(false);
   const [deleteProperty] = useMutation(FormPropertyDeleteMutation);
   const history = useHistory();
-  const [message, setMessage] = useState({ isError: false, detail: '' });
   const { t } = useTranslation(['form', 'common']);
   const [anchorEl, setAnchorEl] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const menuList = [
     {
       content: t('common:menu.edit'),
@@ -86,12 +87,12 @@ export default function FormPropertyAction({
           history.push(`/edit_form/${formPropResponse.newFormVersion.id}`);
         }
 
-        setMessage({ ...message, isError: false, detail: t('misc.deleted_form_property') });
+        showSnackbar({ type: messageType.success, message: t('misc.deleted_form_property') });
         refetch();
         formDetailRefetch();
       })
       .catch(err => {
-        setMessage({ ...message, isError: true, detail: formatError(err.message) });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setDeleteLoading(false);
       });
   }
@@ -102,12 +103,6 @@ export default function FormPropertyAction({
 
   return (
     <>
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '' })}
-      />
       <DetailsDialog
         handleClose={handleModal}
         open={modal.isOpen}

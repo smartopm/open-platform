@@ -668,7 +668,9 @@
     "monthly_leads_by_division": "Monthly Leads By Division",
     "scorecard": "Scorecard",
     "leads": "Leads",
-    "current_status_of_leads": "Current Status of Leads"
+    "current_status_of_leads": "Current Status of Leads",
+    "on_target": "On Target ",
+    "over_target": "Over Target "
   },
   "right_menu": {
     "edit_user": "Edit User",
@@ -682,5 +684,12 @@
     "video": "Video",
     "pdf": "PDF",
     "compressed_file": "Zipped file"
+  },
+  "date_picker": {
+    "required_field": "{{fieldName}} is Required",
+    "ok_label": "Ok",
+    "clear": "Clear",
+    "cancel": "Cancel",
+    "date_time_in_the_future": "Please select a date and time in the future"
   }
 }

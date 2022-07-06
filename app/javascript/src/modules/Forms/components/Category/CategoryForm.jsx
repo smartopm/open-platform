@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Button,
   Grid,
@@ -21,9 +21,9 @@ import {
   FormCategoryCreateMutation,
   FormCategoryUpdateMutation
 } from '../../graphql/form_category_mutations';
-import MessageAlert from '../../../../components/MessageAlert';
 import { formatError } from '../../../../utils/helpers';
 import { CustomizedDialogs } from '../../../../components/Dialog';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function CategoryForm({
   data,
@@ -47,9 +47,11 @@ export default function CategoryForm({
 
   const { t } = useTranslation(['form', 'common']);
   const [categoryData, setCategoryData] = useState(initialData);
-  const [info, setInfo] = useState({ error: false, message: '' });
-  const [createCategory, { loading, called }] = useMutation(FormCategoryCreateMutation);
-  const [updateCategory, { loading: updateLoading, called: updateCalled }] = useMutation(
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
+  const [createCategory, { loading }] = useMutation(FormCategoryCreateMutation);
+  const [updateCategory, { loading: updateLoading }] = useMutation(
     FormCategoryUpdateMutation
   );
   const { formId } = useParams();
@@ -86,10 +88,10 @@ export default function CategoryForm({
       .then(() => {
         refetchCategories();
         close();
-        setInfo({ error: false, message: t('misc.created_form_category') });
+        showSnackbar({ type: messageType.success, message: t('misc.created_form_category') });
       })
       .catch(err => {
-        setInfo({ ...info, error: formatError(err.message) });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
@@ -113,12 +115,12 @@ export default function CategoryForm({
         if (categoryResponse.message === 'New version created') {
           history.push(`/edit_form/${categoryResponse.newFormVersion.id}`);
         }
-        setInfo({ error: false, message: t('misc.updated_form_category') });
+        showSnackbar({ type: messageType.success, message: t('misc.updated_form_category') });
         refetchCategories();
         close();
       })
       .catch(err => {
-        setInfo({ error: true, message: formatError(err.message) });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
@@ -149,12 +151,6 @@ export default function CategoryForm({
 
   return (
     <>
-      <MessageAlert
-        type={info.error ? 'error' : 'success'}
-        message={info.message}
-        open={(called || updateCalled) && !loading}
-        handleClose={() => {}}
-      />
       <CustomizedDialogs
         handleModal={handleCategoryClose}
         open={categoryFormOpen}

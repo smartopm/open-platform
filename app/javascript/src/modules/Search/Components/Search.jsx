@@ -6,7 +6,6 @@ import { useQuery } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
-
 import { Spinner } from '../../../shared/Loading';
 import ScanIcon from '../../../../../assets/images/shape.svg';
 import { formatError } from '../../../utils/helpers';
@@ -131,7 +130,7 @@ export default function SearchContainer({ location }) {
   }
 
   return (
-    <PageWrapper oneCol pageTitle={t('search.search')}>
+    <PageWrapper oneCol pageTitle={t('search.search')} loading={called && loading}>
       <div className={`${css(styles.inputGroup)}`}>
         <input
           className={`form-control ${css(styles.input)} user-search-input`}

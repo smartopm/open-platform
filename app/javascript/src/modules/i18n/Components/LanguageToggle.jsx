@@ -9,9 +9,10 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 export default function LanguageToggle() {
   const savedLang = localStorage.getItem('default-language');
-  const authState = useContext(Context)
-  const defaultLanguage = authState.user?.community.language
-  // if the user has not set their language, then we initially show them the community default language 
+  const authState = useContext(Context);
+  const defaultLanguage = authState.user?.community.language;
+  const languageOptions = authState.user?.community?.supportedLanguages || languages;
+  // if the user has not set their language, then we initially show them the community default language
   // else we show them the fallback language
   const [locale, setLocale] = useState(savedLang || defaultLanguage || 'en-US');
   const { i18n } = useTranslation();
@@ -37,7 +38,7 @@ export default function LanguageToggle() {
           IconComponent={() => <ArrowDropDownIcon style={{ marginLeft: -34 }} />}
           inputProps={{ 'data-testid': 'language_toggle' }}
         >
-          {Object.entries(languages).map(([key, val]) => (
+          {Object.entries(languageOptions).map(([key, val]) => (
             <MenuItem key={val} value={val}>
               {key}
             </MenuItem>

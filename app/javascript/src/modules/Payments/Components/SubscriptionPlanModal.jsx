@@ -180,12 +180,14 @@ export default function SubscriptionPlanModal({
           }
           label={t('common:table_headers.start_date')}
           required
+          t={t}
         />
         <DatePickerDialog
           selectedDate={inputValue.endDate}
           handleDateChange={date => handleInputChange({ target: { name: 'endDate', value: date } })}
           label={t('table_headers.end_date')}
           required
+          t={t}
         />
         <TextField
           id="amount"

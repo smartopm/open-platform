@@ -7,7 +7,7 @@ import { AmenityCreateMutation, AmenityUpdateMutation } from '../graphql/amenity
 import { checkInValidRequiredFields } from '../../LogBook/utils';
 import useMutationWrapper from '../../../shared/hooks/useMutationWrapper';
 
-export default function AmenityForm({ isOpen, setOpen, refetch, t, amenityData }) {
+export default function AmenityForm({ isOpen, handleClose, refetch, t, amenityData }) {
   const initialInputValue = {
     name: '',
     description: '',
@@ -35,13 +35,19 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t, amenityData }
 
   function resetFunction() {
     refetch();
-    setOpen(!isOpen);
+    handleClose();
     setAmenityValue({ ...initialInputValue });
   }
 
   useEffect(() => {
     if(amenityData){
-      setAmenityValue({ ...amenityData});
+      setAmenityValue({
+        name: amenityData.name || '',
+        description: amenityData.description || '',
+        location: amenityData.location || '',
+        hours: amenityData.hours || '',
+        invitationLink: amenityData.invitationLink || '',
+      });
     }
   }, [amenityData])
 
@@ -161,7 +167,7 @@ AmenityForm.defaultProps = {
 };
 AmenityForm.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  setOpen: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   amenityData: PropTypes.shape({

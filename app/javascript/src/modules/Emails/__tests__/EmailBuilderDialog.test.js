@@ -6,6 +6,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import EmailBuilderDialog from '../components/EmailBuilderDialog';
 import EmailTemplatesMutation, { EmailUpdateMutation } from '../graphql/email_mutations';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 // this does not help much
 jest.mock('react-email-editor')
@@ -60,7 +61,9 @@ describe('Email Builder Component', () => {
     const container = render(
       <MockedProvider mocks={[updateRequestMock, createRequestMock]}>
         <BrowserRouter>
-          <EmailBuilderDialog  />
+          <MockedSnackbarProvider>
+            <EmailBuilderDialog  />
+          </MockedSnackbarProvider>
         </BrowserRouter>
       </MockedProvider>
     );

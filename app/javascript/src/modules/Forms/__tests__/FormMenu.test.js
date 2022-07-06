@@ -6,6 +6,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { useTranslation } from 'react-i18next';
 import FormMenu from '../components/FormMenu';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('TextInput component', () => {
   const { t } = useTranslation(['common', 'form']);
@@ -25,7 +26,9 @@ describe('TextInput component', () => {
       <BrowserRouter>
         <MockedProvider mocks={[]}>
           <MockedThemeProvider>
-            <FormMenu {...props} />
+            <MockedSnackbarProvider>
+              <FormMenu {...props} />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>
@@ -61,7 +64,9 @@ describe('TextInput component', () => {
       <BrowserRouter>
         <MockedProvider mocks={[]}>
           <MockedThemeProvider>
-            <FormMenu {...props} />
+            <MockedSnackbarProvider>
+              <FormMenu {...props} />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>

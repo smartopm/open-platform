@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useApolloClient, useMutation } from 'react-apollo';
 import { Button, Avatar } from '@mui/material';
 import PropTypes from 'prop-types';
 import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload';
 import useFileUpload from '../../../graphql/useFileUpload';
 import { PostCreateMutation, PostUpdateMutation } from '../../../graphql/mutations';
-import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
 import { getObjectKey } from '../../../utils/helpers';
 import { accessibilityOptions } from '../../../utils/constants';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function PostCreate({
   translate,
@@ -36,6 +36,8 @@ export default function PostCreate({
     message: '',
     loading: false
   });
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
@@ -127,43 +129,28 @@ export default function PostCreate({
 
     handleUpdateMutation()
       .then(() => {
-        setPostDetails({
-          ...postDetails,
-          loading: false,
-          isError: false,
-          message: !editModal
+        showSnackbar({
+          type: messageType.success,
+          message:!editModal
             ? translate('dashboard.created_post')
             : translate('dashboard.updated_post')
         });
+        setPostDetails({ ...postDetails, loading: false });
         setPost('');
         closeCreateModal();
         refetchNews();
       })
       .catch(err => {
-        setPostDetails({
-          ...postDetails,
-          loading: false,
-          isError: true,
-          message: err.message
-        });
+        showSnackbar({ type: messageType.error, message: err.message })
+        setPostDetails({ ...postDetails, loading: false });
         setPost('');
         setVisibilityOption('Everyone');
         closeCreateModal();
       });
   }
 
-  function handleCloseAlert() {
-    setPostDetails({ ...postDetails, message: '' });
-  }
-
   return (
     <div style={{ margin: '0 5px' }}>
-      <MessageAlert
-        type={!postDetails.isError ? 'success' : 'error'}
-        message={postDetails.message}
-        open={!!postDetails.message}
-        handleClose={handleCloseAlert}
-      />
       <DialogWithImageUpload
         open={isCreateModalOpen || editModal}
         handleDialogStatus={closeCreateModal}

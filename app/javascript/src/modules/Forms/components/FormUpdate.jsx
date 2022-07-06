@@ -377,6 +377,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
             )
           }
           label={formPropertiesData.formProperty.fieldName}
+          t={t}
         />
       ),
       time: (
@@ -402,6 +403,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
           }
           label={formPropertiesData.formProperty.fieldName}
           style={{ width: '100%' }}
+          t={t}
         />
       ),
       datetime: (
@@ -426,6 +428,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
             )
           }
           label={formPropertiesData.formProperty.fieldName}
+          t={t}
         />
       ),
       file_upload: (

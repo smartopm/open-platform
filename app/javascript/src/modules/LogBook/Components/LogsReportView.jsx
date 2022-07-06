@@ -26,6 +26,7 @@ export default function LogsReportView({ startDate, endDate, handleChange, child
             inputVariant="outlined"
             maxDate={new Date()}
             size="small"
+            t={t}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -37,6 +38,7 @@ export default function LogsReportView({ startDate, endDate, handleChange, child
             inputVariant="outlined"
             maxDate={new Date()}
             size="small"
+            t={t}
           />
         </Grid>
         <Grid item xs={4} sm={4} md={2}>

@@ -63,7 +63,9 @@ describe('Payment', () => {
     cy.login('2348167740149');
 
     // Go to user's page
+    cy.wait(1000);
     cy.visitMainMenu('.my-profile-menu-item');
+    cy.wait(2000);
     cy.get('.option_menu_toggler').click();
     cy.wait(1000);
     cy.get('#payments').click();

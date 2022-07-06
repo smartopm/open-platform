@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   ListItem,
   ListItemAvatar,
@@ -19,10 +19,10 @@ import Avatar from '../../../components/Avatar';
 import DateContainer from '../../../components/DateContainer';
 import ImageAuth from '../../../shared/ImageAuth';
 import MenuList from '../../../shared/MenuList';
-import MessageAlert from '../../../components/MessageAlert';
 import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload';
 import { Spinner } from '../../../shared/Loading';
 import { accessibilityOptions } from '../../../utils/constants';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function CommentSection({ data, handleDeleteComment, refetch }) {
   const { t } = useTranslation(['discussion', 'dashboard']);
@@ -70,6 +70,8 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
     handleClose
   };
 
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   function handleClose(event) {
     event.stopPropagation();
     setAnchorEl(null);
@@ -86,10 +88,6 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
       setVisibilityOption(actionVisibilityOptions[data.accessibility]);
     }
     setEditModal(true);
-  }
-
-  function handleCloseAlert() {
-    setPostDetails({ ...postDetails, message: '' });
   }
 
   function closeCreateModal() {
@@ -109,23 +107,15 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
       }
     })
       .then(() => {
-        setPostDetails({
-          ...postDetails,
-          loading: false,
-          isError: false,
-          message: t('dashboard:dashboard.updated_post')
-        });
+        showSnackbar({ type: messageType.success, message: t('dashboard:dashboard.updated_post') });
+        setPostDetails({ ...postDetails, loading: false });
         setPost('');
         closeCreateModal();
         refetch();
       })
       .catch(err => {
-        setPostDetails({
-          ...postDetails,
-          loading: false,
-          isError: true,
-          message: err.message
-        });
+        showSnackbar({ type: messageType.error, message: err.message });
+        setPostDetails({ ...postDetails,loading: false });
         setPost('');
         closeCreateModal();
       });
@@ -133,12 +123,6 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
 
   return (
     <>
-      <MessageAlert
-        type={!postDetails.isError ? 'success' : 'error'}
-        message={postDetails.message}
-        open={!!postDetails.message}
-        handleClose={handleCloseAlert}
-      />
       <DialogWithImageUpload
         open={editModal}
         handleDialogStatus={closeCreateModal}

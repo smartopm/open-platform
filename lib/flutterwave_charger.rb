@@ -5,6 +5,8 @@ require 'uri'
 
 # flutterwave charger
 class FlutterwaveCharger
+  extend ApplicationHelper
+
   def self.generate_link(payload, community_id)
     url = URI(ENV['FLUTTERWAVE_PAYMENT_URL'])
     http = generate_http(url)
@@ -35,7 +37,7 @@ class FlutterwaveCharger
 
   def self.auth_key(community_id)
     community_name = Community.find_by(id: community_id).name
-    key = JSON.parse(ENV["#{community_name.parameterize.underscore.upcase}_FLUTTERWAVE"])
+    key = flutterwave_keys(community_name)
     "Bearer #{key['PRIVATE_KEY']}"
   end
 end

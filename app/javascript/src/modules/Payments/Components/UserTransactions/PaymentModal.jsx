@@ -335,6 +335,7 @@ export default function PaymentModal({
                   selectedDate={inputValue.paidDate}
                   label={t('table_headers.paid_date')}
                   handleDateChange={date => setInputValue({ ...inputValue, paidDate: date })}
+                  t={t}
                 />
               </>
             )}

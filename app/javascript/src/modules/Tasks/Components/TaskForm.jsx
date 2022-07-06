@@ -183,6 +183,7 @@ export default function TaskForm({
               inputVariant="outlined"
               label={t('task.due_date_optional')}
               margin="none"
+              t={t}
             />
             <FormHelperText>{t('common:form_placeholders.note_due_date')}</FormHelperText>
           </Grid>

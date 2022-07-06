@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import DiscussionList from '../Components/DiscussionList';
 import { DiscussionsQuery } from '../../../graphql/queries';
-import Loading, { Spinner } from '../../../shared/Loading';
+import  { Spinner } from '../../../shared/Loading';
 import ErrorPage from '../../../components/Error';
 import CenteredContent from '../../../components/CenteredContent';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
@@ -17,7 +17,7 @@ import PageWrapper from '../../../shared/PageWrapper';
 export default function Discussions() {
   const limit = 20;
   const { loading, error, data, refetch, fetchMore } = useQuery(DiscussionsQuery, {
-    variables: { limit }
+    variables: { limit },
   });
   const [createDiscuss] = useMutation(DiscussionMutation);
   const [open, setOpen] = useState(false);
@@ -44,9 +44,9 @@ export default function Discussions() {
         setLoading(false);
         return {
           ...prev,
-          discussions: [...prev.discussions, ...fetchMoreResult.discussions]
+          discussions: [...prev.discussions, ...fetchMoreResult.discussions],
         };
-      }
+      },
     });
   }
 
@@ -67,52 +67,57 @@ export default function Discussions() {
       });
   }
 
-  if (loading) return <Loading />;
   if (error) {
     return <ErrorPage title={error.message || error} />;
   }
   return (
     <PageWrapper pageTitle={t('common:misc.discussions')}>
-      <Dialog
-        fullScreen={fullScreen}
-        open={open}
-        fullWidth
-        maxWidth="lg"
-        onClose={openModal}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <DialogTitle id="responsive-dialog-title">
-          <CenteredContent>
-            <span>{t('headers.create_discussion')}</span>
-          </CenteredContent>
-        </DialogTitle>
-        <DialogContent>
-          <TitleDescriptionForm
-            close={updateList}
-            type="discussion"
-            save={saveDiscussion}
-            data={{
-              loading: isLoading,
-              msg: message
-            }}
-          />
-        </DialogContent>
-      </Dialog>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <>
+          <Dialog
+            fullScreen={fullScreen}
+            open={open}
+            fullWidth
+            maxWidth="lg"
+            onClose={openModal}
+            aria-labelledby="responsive-dialog-title"
+          >
+            <DialogTitle id="responsive-dialog-title">
+              <CenteredContent>
+                <span>{t('headers.create_discussion')}</span>
+              </CenteredContent>
+            </DialogTitle>
+            <DialogContent>
+              <TitleDescriptionForm
+                close={updateList}
+                type="discussion"
+                save={saveDiscussion}
+                data={{
+                  loading: isLoading,
+                  msg: message,
+                }}
+              />
+            </DialogContent>
+          </Dialog>
 
-      <DiscussionList
-        data={data.discussions}
-        refetch={refetch}
-        isAdmin={authState?.user?.userType === 'admin'}
-      />
-      {data.discussions.length >= limit && (
-        <CenteredContent>
-          <Button variant="outlined" onClick={fetchMoreDiscussions}>
-            {isLoading ? <Spinner /> : t('form_actions.more_discussions')}
-          </Button>
-        </CenteredContent>
-      )}
-      {authState?.user?.userType === 'admin' && (
-        <FloatButton title={t('headers.create_discussion')} handleClick={openModal} />
+          <DiscussionList
+            data={data.discussions}
+            refetch={refetch}
+            isAdmin={authState?.user?.userType === 'admin'}
+          />
+          {data.discussions.length >= limit && (
+            <CenteredContent>
+              <Button variant="outlined" onClick={fetchMoreDiscussions}>
+                {isLoading ? <Spinner /> : t('form_actions.more_discussions')}
+              </Button>
+            </CenteredContent>
+          )}
+          {authState?.user?.userType === 'admin' && (
+            <FloatButton title={t('headers.create_discussion')} handleClick={openModal} />
+          )}
+        </>
       )}
     </PageWrapper>
   );

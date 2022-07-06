@@ -560,7 +560,12 @@ module Types::Queries::Note
 
     context[:site_community]
       .notes
-      .includes(:sub_notes, :assignees, :assignee_notes, :documents_attachments, note_list: :process)
+      .includes(
+        :sub_notes,
+        :assignees,
+        :assignee_notes,
+        :documents_attachments,
+        note_list: :process)
       .where(category: 'task_list', note_list: { status: 'active' })
       .offset(offset).limit(limit)
   end

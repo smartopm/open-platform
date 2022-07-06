@@ -18,4 +18,9 @@ RSpec.describe Amenity, type: :model do
     it { is_expected.to belong_to(:user).class_name('Users::User') }
     it { is_expected.to belong_to(:community) }
   end
+  describe 'enums' do
+    it do
+      is_expected.to define_enum_for(:status).with_values(published: 0, deleted: 1, deprecated: 2)
+    end
+  end
 end

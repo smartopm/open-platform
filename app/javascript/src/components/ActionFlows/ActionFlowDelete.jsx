@@ -1,40 +1,30 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 import DeleteDialogueBox from '../../shared/dialogs/DeleteDialogue'
 import { DeleteActionFlow } from '../../graphql/mutations'
-import MessageAlert from '../MessageAlert'
 import { formatError } from '../../utils/helpers'
+import { SnackbarContext } from '../../shared/snackbar/Context';
 
 export default function ActionFlowDelete({ open, handleClose, data, refetch }){
   const [deleteAction] = useMutation(DeleteActionFlow);
-  const [messageAlert, setMessageAlert] = useState('')
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const { t } = useTranslation(['actionflow'])
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   function handleDelete(){
     deleteAction({
       variables: { id: data.id }
     }).then(() => {
-      setMessageAlert(t('actionflow:messages.delete_message'));
-      setIsSuccessAlert(true);
+      showSnackbar({ type: messageType.success, message: t('actionflow:messages.delete_message') })
       handleClose();
       refetch();
     }).catch((err) => {
-      setMessageAlert(formatError(err.message))
-      setIsSuccessAlert(false)
+      showSnackbar({ type: messageType.error, message: formatError(err.message) })
       handleClose();
     })
   }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return
-    }
-    setMessageAlert('')
-  }
-
 
   return (
     <>
@@ -45,13 +35,6 @@ export default function ActionFlowDelete({ open, handleClose, data, refetch }){
         action='delete'
         title={t('actionflow:headers.action_flow')}
       />
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
-
     </>
   )
 }

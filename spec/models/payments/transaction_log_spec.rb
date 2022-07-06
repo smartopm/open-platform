@@ -16,12 +16,18 @@ RSpec.describe Payments::TransactionLog, type: :model do
     it { is_expected.to have_db_column(:description).of_type(:string) }
     it { is_expected.to have_db_column(:currency).of_type(:string) }
     it { is_expected.to have_db_column(:account_name).of_type(:string) }
+    it { is_expected.to have_db_column(:meta_data).of_type(:json) }
+    it { is_expected.to have_db_column(:payment_link).of_type(:string) }
+    it do
+      is_expected.to have_db_column(:status).of_type(:integer).with_options(default: :pending)
+    end
   end
 
   describe 'enums' do
+    it { is_expected.to define_enum_for(:integration_type).with_values(flutterwave: 0) }
     it do
-      is_expected.to define_enum_for(:integration_type)
-        .with_values(flutterwave: 0)
+      is_expected.to define_enum_for(:status)
+        .with_values(pending: 0, successful: 1, failed: 2, cancelled: 3)
     end
   end
 

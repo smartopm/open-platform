@@ -55,7 +55,9 @@
     "include_batch_time": "Please include a batch time",
     "include_message": "Please include a message",
     "include_user_list": "Please include userIdList",
-    "include_email_template": "Please include email template"
+    "include_email_template": "Please include email template",
+    "campaign_successfully_created": "Campaign successfully created",
+    "campaign_successfully_updated": "Campaign successfully updated"
   },
   "misc": {
     "yes": "Yes",

@@ -209,6 +209,7 @@ export default function PaymentPlanModal({
           }
           label={t('common:table_headers.start_date')}
           required
+          t={t}
         />
         <div>
           <TextField

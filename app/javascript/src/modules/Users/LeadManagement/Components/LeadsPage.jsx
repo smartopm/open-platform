@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { useQuery } from 'react-apollo';
 import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Grid';
-import { Typography } from '@mui/material';
+import { Typography, Container, useMediaQuery } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { LeadScoreCardQuery } from '../graphql/queries';
 import { Spinner } from '../../../../shared/Loading';
@@ -19,11 +19,12 @@ export default function LeadsPage() {
   const classes = useStyles();
   const authState = useContext(AuthStateContext);
   const { data, loading, error } = useQuery(LeadScoreCardQuery, {
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
+
   const { t } = useTranslation('common');
   const communityDivisionTargets = authState?.user.community?.leadMonthlyTargets;
-
+  const mobile = useMediaQuery('(max-width:800px)');
   function getMonthlyTarget(division) {
     const target = authState?.user.community.leadMonthlyTargets
       ?.filter(tar => tar.division === division)
@@ -65,7 +66,53 @@ export default function LeadsPage() {
     <PageWrapper pageTitle={t('lead_management.leads')}>
       <Grid container>
         <Grid item md={12} xs={12} className={classes.title} data-testid="subtitle">
-          <Typography variant="h6">{t('lead_management.scorecard')}</Typography>
+          <Grid container>
+            <Grid item md={8} xs={12} className={classes.title} data-testid="scorecard-title">
+              <Typography variant="h6">{t('lead_management.scorecard')}</Typography>
+            </Grid>
+
+            <Grid item md={4} xs={12} className={classes.title} data-testid="scorecard-label">
+              <Container
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  paddingLeft: mobile && 0,
+                  marginTop: mobile && 8,
+                  justifyContent: mobile ? 'space-between' : 'end',
+                  border: '1px solid #2c8bd0',
+                  width: mobile ? '100%' : 'fit-content',
+                  borderRadius: '8px',
+                  paddingTop: '12px',
+                  marginRight: mobile ? 38 : -2,
+                }}
+              >
+                <p>
+                  <span
+                    style={{
+                      marginTop: 20,
+                      fontSize: '15px',
+                      width: '100%',
+                      padding: '8px',
+                      marginRight: '15px',
+                    }}
+                  >
+                    {t('lead_management.investment')}
+                  </span>
+                  <span className={classes.onTargetColor}>
+                    {`${t('lead_management.on_target')} ${''} ${
+                      data?.leadScorecards?.investment_status_stats?.on_target
+                    }`}
+                  </span>
+
+                  <span className={classes.offTargetColor}>
+                    {`${t('lead_management.over_target')}  ${''} ${
+                      data?.leadScorecards?.investment_status_stats?.over_target
+                    }`}
+                  </span>
+                </p>
+              </Container>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item md={10} xs={7} className={classes.title} data-testid="monthly_lead">
           <Typography variant="body1" className={classes.weight}>
@@ -153,21 +200,44 @@ export default function LeadsPage() {
 
 const useStyles = makeStyles(theme => ({
   container: {
-    padding: '0 100px'
+    padding: '0 100px',
+  },
+  labelBorderColor: {
+    borderColor: theme.palette.primary.main,
   },
   containerMobile: {
-    padding: '0 20px'
+    padding: '0 20px',
   },
   title: {
-    paddingBottom: '20px'
+    paddingBottom: '20px',
   },
   cardTitle: {
-    padding: '20px 0'
+    padding: '20px 0',
   },
   addColor: {
-    color: theme.palette.primary.main
+    color: theme.palette.primary.main,
   },
   weight: {
-    fontWeight: 500
-  }
+    fontWeight: 500,
+  },
+
+  onTargetColor: {
+    background: '#5CB85C',
+    borderRadius: '16px',
+    color: 'white',
+    fontSize: '12px',
+    width: '100%',
+    padding: '9px',
+    marginRight: '20px',
+  },
+
+  offTargetColor: {
+    background: '#ec2b2a',
+    borderRadius: '16px',
+    color: 'white',
+    fontSize: '12px',
+    width: '100%',
+    padding: '9px',
+    marginRight: '-8px',
+  },
 }));
