@@ -82,7 +82,7 @@ export default function TaskDataList({
 
   function isTaskList()
   {
-    return window.location.pathname === '/tasks/task_lists';
+    return window.location.pathname === '/tasks/task_lists'
   }
 
   return (
