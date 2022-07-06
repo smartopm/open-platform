@@ -14,9 +14,8 @@ import FloatingButton from '../../../../shared/buttons/FloatingButton';
 import PageWrapper from '../../../../shared/PageWrapper';
 import SplitScreen from '../../../../shared/SplitScreen';
 import TaskUpdate from '../../containers/TaskUpdate';
-import MessageAlert from '../../../../components/MessageAlert';
 import TaskForm from '../../Components/TaskForm';
-import { AssignUser, UpdateNote } from '../../../../graphql/mutations';
+import { AssignUser } from '../../../../graphql/mutations';
 import { UsersLiteQuery } from '../../../../graphql/queries';
 
 export default function TaskLists() {
@@ -32,7 +31,6 @@ export default function TaskLists() {
     fetchPolicy: 'cache-and-network'
   });
   const [splitScreenOpen, setSplitScreenOpen] = useState(false);
-  const [taskUpdate] = useMutation(UpdateNote);
   const [taskUpdateStatus, setTaskUpdateStatus] = useState({ message: '', success: false });
   const [open, setModalOpen] = useState(false);
 
@@ -99,37 +97,6 @@ export default function TaskLists() {
     return history.push('/tasks/task_lists');
   }
 
-  function handleTaskCompletion(selectedTaskId, completed) {
-    taskUpdate({ variables: { id: selectedTaskId, completed } })
-      .then(() => {
-        refetch();
-        setTaskUpdateStatus({
-          ...taskUpdateStatus,
-          success: true,
-          message: `${t('task.task_marked_as')} ${
-            completed ? t('task.complete') : t('task.incomplete')
-          }`,
-        });
-      })
-      .catch(err => {
-        setTaskUpdateStatus({
-          ...taskUpdateStatus,
-          success: false,
-          message: formatError(err.message),
-        });
-      });
-  }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setTaskUpdateStatus({
-      ...taskUpdateStatus,
-      message: '',
-    });
-  }
-
   function handleCloseTaskForm() {
     if (open) {
       setParentTaskId('');
@@ -174,12 +141,6 @@ export default function TaskLists() {
         />
       </Dialog>
       <PageWrapper pageTitle={t('task_lists.task_lists')}>
-        <MessageAlert
-          type={taskUpdateStatus.success ? 'success' : 'error'}
-          message={taskUpdateStatus.message}
-          open={!!taskUpdateStatus.message}
-          handleClose={handleMessageAlertClose}
-        />
         {Boolean(data?.taskLists?.length) && (
           <SplitScreen open={splitScreenOpen} onClose={() => setSplitScreenOpen(false)}>
             <TaskUpdate
@@ -199,7 +160,6 @@ export default function TaskLists() {
                   taskId={taskList.id}
                   refetch={refetch}
                   handleTodoClick={handleTaskListClick}
-                  handleTaskCompletion={handleTaskCompletion}
                   handleAddSubTask={handleAddSubTask}
                   createTaskListSubTask
                 />
