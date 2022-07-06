@@ -124,13 +124,8 @@ export default function TodoItem({
         handleClick: () =>
           history.push({
             pathname: `/tasks/task_lists/edit/${noteList?.id}`,
-            state: { noteList, task },
+            state: { noteList, task }
           })
-      },
-      {
-        content: canCreateNote ? t('menu.add_subtask') : null,
-        isAdmin: true,
-        handleClick: () => handleAddSubTask(selectedTask),
       },
       {
         content: t('menu.delete_task_list'),
@@ -268,6 +263,9 @@ export default function TodoItem({
             handleTodoClick={handleTodoClick}
             handleAddSubTask={() => handleAddSubTask(task)}
             menuData={menuData}
+            styles={{
+              backgroundColor: `${location.pathname === '/tasks/task_lists' ? '' : '#F5F5F4'}`,
+            }}
             openSubTask={objectAccessor(tasksOpen, task.id)}
             refetch={subTasksRefetch}
             taskListRefetch={refetch}
