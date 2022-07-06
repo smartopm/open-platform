@@ -201,6 +201,7 @@ export default function TaskLists() {
                   handleTodoClick={handleTaskListClick}
                   handleTaskCompletion={handleTaskCompletion}
                   handleAddSubTask={handleAddSubTask}
+                  createTaskListSubTask
                 />
               </div>
             ))}

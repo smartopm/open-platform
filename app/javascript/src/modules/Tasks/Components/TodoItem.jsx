@@ -262,9 +262,9 @@ export default function TodoItem({
             handleTodoClick={handleTodoClick}
             handleAddSubTask={() => handleAddSubTask(task)}
             menuData={menuData}
-            styles={{ backgroundColor: '#F5F5F4' }}
             openSubTask={objectAccessor(tasksOpen, task.id)}
             refetch={subTasksRefetch}
+            taskListRefetch={refetch}
           />
         )}
 

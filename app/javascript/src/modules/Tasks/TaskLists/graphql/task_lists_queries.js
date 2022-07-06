@@ -9,9 +9,14 @@ export const TaskListsQuery = gql`
       subTasksCount
       completed
       progress
+      category
       noteList {
         id
         name
+        process {
+          id
+          name
+        }
       }
     }
   }

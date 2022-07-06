@@ -18,6 +18,7 @@ import MenuList from '../../../../shared/MenuList';
 import { DeleteTask } from '../../graphql/task_mutation';
 import { ActionDialog } from '../../../../components/Dialog';
 import { SnackbarContext } from '../../../../shared/snackbar/Context';
+import { DeleteTaskList } from '../graphql/task_list_mutation';
 
 export default function TaskListDataList({
   task,
@@ -27,7 +28,8 @@ export default function TaskListDataList({
   styles,
   openSubTask,
   isSecondLevelSubTask,
-  refetch
+  refetch,
+  taskListRefetch
 }) {
   const classes = useStyles();
   const isMobile = useMediaQuery('(max-width:800px)');
@@ -50,9 +52,10 @@ export default function TaskListDataList({
   const canDeleteNote = taskPermissions
     ? taskPermissions.permissions.includes('can_delete_note')
     : false;
+  const [taskListDelete] = useMutation(DeleteTaskList);
   const menuList = [
     {
-      content: t('menu.open_task_details'),
+      content: t('menu.open_details'),
       isAdmin: true,
       handleClick: () => handleTaskDetails()
     },
@@ -64,8 +67,13 @@ export default function TaskListDataList({
     {
       content: canDeleteNote && userAuthorized() && !isTaskList() ? t('menu.delete_task') : null,
       isAdmin: true,
-      handleClick: () => handleDeleteTask()
-    }
+      handleClick: () => handleDeleteTask(),
+    },
+    {
+      content: userAuthorized() && isTaskList() ? t('menu.delete_task_list') : null,
+      isAdmin: true,
+      handleClick: () => handleDeleteTask(),
+    },
   ];
 
   const menuData = {
@@ -123,6 +131,24 @@ export default function TaskListDataList({
         showSnackbar({ type: messageType.error, message: formatError(err.message) })
       });
   }
+
+  function handleTaskListDelete() {
+    if (task?.noteList?.process) {
+      showSnackbar({ type: messageType.error, message: t('menu.task_list_in_use') });
+      setOpen(!isDialogOpen);
+      return;
+    }
+    taskListDelete({
+      variables: { id: task?.noteList?.id },
+    })
+      .then(() => {
+        showSnackbar({ type: messageType.success, message: t('menu.task_list_deleted') });
+        setTimeout(taskListRefetch, 500);
+      })
+      .catch(err => {
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
+      });
+  }
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
@@ -130,8 +156,16 @@ export default function TaskListDataList({
         <ActionDialog
           open={isDialogOpen}
           handleClose={handleDeleteTask}
-          handleOnSave={handleTaskDelete}
-          message={t('menu.task_delete_confirmation_message')}
+          handleOnSave={
+            isTaskList()
+              ? handleTaskListDelete
+              : handleTaskDelete
+          }
+          message={
+            isTaskList()
+              ? t('menu.task_list_delete_confirmation_message')
+              : t('menu.task_delete_confirmation_message')
+          }
         />
         <Grid item md={6} xs={12} data-testid="task_list_body_section">
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
@@ -284,7 +318,8 @@ TaskListDataList.defaultProps = {
   openSubTask: false,
   handleOpenSubTasksClick: null,
   isSecondLevelSubTask: false,
-  refetch: () => {}
+  refetch: () => {},
+  taskListRefetch: () => {},
 };
 
 TaskListDataList.propTypes = {
@@ -293,6 +328,7 @@ TaskListDataList.propTypes = {
   handleTodoClick: PropTypes.func,
   handleAddSubTask: PropTypes.func,
   refetch: PropTypes.func,
+  taskListRefetch: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   styles: PropTypes.object,
   openSubTask: PropTypes.bool,
