@@ -666,7 +666,9 @@
     "monthly_leads_by_division": "Monthly Leads By Division",
     "scorecard": "Scorecard",
     "leads": "Leads",
-    "current_status_of_leads": "Current Status of Leads"
+    "current_status_of_leads": "Current Status of Leads",
+    "on_target": "On Target ",
+    "over_target": "Over Target "
   },
   "right_menu": {
     "edit_user": "Edit User",

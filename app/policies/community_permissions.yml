@@ -693,6 +693,7 @@ DoubleGDP:
         - can_fetch_all_labels
         - can_fetch_label_users
         - can_fetch_user_labels
+        - can_view_lead_labels
         - can_see_menu_item
     community:
       permissions:
@@ -771,10 +772,10 @@ DoubleGDP:
         - can_see_menu_item
         - can_access_own_forms
         - can_fetch_form_task_comments
-  transaction:
-    permissions:
-      - can_make_payment
-      - can_see_menu_item
+    transaction:
+      permissions:
+        - can_make_payment
+        - can_see_menu_item
 Enyimba:
   marketing_admin:
     note:
@@ -880,6 +881,7 @@ Enyimba:
         - can_fetch_all_labels
         - can_fetch_label_users
         - can_fetch_user_labels
+        - can_view_lead_labels
         - can_see_menu_item
     community:
       permissions:
