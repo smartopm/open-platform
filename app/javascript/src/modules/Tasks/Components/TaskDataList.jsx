@@ -80,6 +80,11 @@ export default function TaskDataList({
     }
   }
 
+  function isTaskList()
+  {
+    return window.location.pathname === '/tasks/task_lists';
+  }
+
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }} lateCard={mdDownHidden && overDue}>
       <Grid container>
@@ -331,13 +336,15 @@ export default function TaskDataList({
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}
               data-testid="task_status"
             >
-              <Chip
-                data-testid="task_status_chip"
-                label={task?.status ? t(`task.${task.status}`) : t('task.not_started')}
-                className={task?.status ? classes[task.status] : classes.not_started}
-                style={{ color: 'white' }}
-                size="small"
-              />
+              {!isTaskList() && (
+                <Chip
+                  data-testid="task_status_chip"
+                  label={task?.status ? t(`task.${task.status}`) : t('task.not_started')}
+                  className={task?.status ? classes[task.status] : classes.not_started}
+                  style={{ color: 'white' }}
+                  size="small"
+                />
+              )}
             </Grid>
           </>
         )}
