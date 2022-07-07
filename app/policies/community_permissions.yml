@@ -825,7 +825,6 @@ Enyimba:
         - can_create_category
         - can_update_category
         - can_delete_category
-        # - can_create_form
         - can_update_form
         - can_create_form_properties
         - can_update_form_properties
