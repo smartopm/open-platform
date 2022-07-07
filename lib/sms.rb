@@ -16,14 +16,23 @@ class Sms
     yield config
   end
 
-  def self.send(to, message)
+  def self.send(to, message, community)
     raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
 
     return if Rails.env.test?
 
     to = clean_number(to)
+    country = community.locale&.split('-')[1]
     client = Vonage::Client.new(api_key: config[:api_key], api_secret: config[:api_secret])
-    client.sms.send(from: 'DoubleGDP', to: to, text: message)
+
+    begin
+      insight = client.number_insight.advanced(number:  to, country: country)
+      return unless insight.valid_number == 'valid'
+
+      client.sms.send(from: 'DoubleGDP', to: to, text: message)
+    rescue => exception
+      raise SmsError, exception
+    end
   end
 
   def self.send_from(to, from, message)
