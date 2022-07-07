@@ -78,6 +78,8 @@ admin:
     permissions:
       - can_make_payment
       - can_see_menu_item
+      - can_view_all_transaction_logs
+      - can_view_transaction_logs
   payment_records:
     permissions:
       - can_create_transaction
@@ -88,6 +90,10 @@ admin:
       - can_create_wallet_transaction
       - can_update_wallet_transaction
       - can_revert_wallet_transaction
+      - can_make_payment
+      - can_see_menu_item
+      - can_view_transaction_logs
+      - can_view_all_transaction_logs
   entry_request:
     permissions:
       - can_see_menu_item
@@ -657,6 +663,7 @@ visitor:
     permissions:
       - can_make_payment
       - can_see_menu_item
+      - can_view_transaction_logs
 resident:
   gate_access:
     permissions:
@@ -722,6 +729,7 @@ resident:
     permissions:
       - can_make_payment
       - can_see_menu_item
+      - can_view_transaction_logs
   amenity:
     permissions:
       - can_access_amenities
@@ -844,6 +852,7 @@ client:
     permissions:
       - can_make_payment
       - can_see_menu_item
+      - can_view_transaction_logs
   amenity:
     permissions:
       - can_access_amenities

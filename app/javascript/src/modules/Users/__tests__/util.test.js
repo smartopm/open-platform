@@ -27,7 +27,7 @@ describe('Test the selectOptions for menus', () => {
     );
 
     expect(options).toBeInstanceOf(Array);
-    expect(options).toHaveLength(9);
+    expect(options).toHaveLength(10);
     expect(options[0].key).toBe('user_settings');
     expect(options[0].subMenu).toBeInstanceOf(Array);
     expect(options[0].subMenu).toHaveLength(4);

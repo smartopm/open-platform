@@ -35,6 +35,7 @@ module Types
     include Types::Queries::Post
     include Types::Queries::Notification
     include Types::Queries::Amenity
+    include Types::Queries::TransactionLog
 
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
