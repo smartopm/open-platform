@@ -47,7 +47,7 @@ export default function TaskLists() {
     },
     errorPolicy: 'all',
   });
-  const smMatches = useMediaQuery('(max-width:1020px)');
+  const smMatches = useMediaQuery(theme => theme.breakpoints.down('md'));
 
   useEffect(() => {
     if (redirectedTaskListId) {
