@@ -164,7 +164,7 @@ export default function TaskLists() {
           assignUser={assignUnassignUser}
           users={liteData?.usersLite}
           parentTaskId={parentTaskId}
-          subTasksCount={subTasksCount}
+          subTasksCount={parseInt(subTasksCount, 10)}
         />
       </Dialog>
       <PageWrapper pageTitle={t('task_lists.task_lists')} rightPanelObj={rightPanelObj}>
