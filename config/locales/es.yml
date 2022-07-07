@@ -510,6 +510,7 @@ es:
     thanks_for_using_our_app: Gracias por usar nuestra aplicación, por favor use este
       enlace para darnos su opinión %{feedback_link}
   internet_off: Parece que no hay conexión de internet.
+  invalid_phone_number: El número de teléfono no es válido
   notification_description:
     comment: "¡%{user} comentó!"
     message: "%{user} te envió un mensaje de texto."
