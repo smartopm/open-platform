@@ -275,4 +275,37 @@ describe('Task Lists', () => {
       expect(screen.queryByTestId('task-submit-button')).toBeInTheDocument();
     });
   });
+
+  it('renders error when user attempts to delete a tasklist in use by a process', async () => {
+    const adminUser = { userType: 'admin', ...authState };
+    render(
+      <MockedProvider mocks={mocks} addTypename>
+        <Context.Provider value={adminUser}>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <TaskLists />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </Context.Provider>
+      </MockedProvider>
+    );
+
+    await waitFor(() => {
+      const kebabButton = screen.queryAllByTestId('task-item-menu')[0];
+      expect(kebabButton).toBeInTheDocument();
+      fireEvent.click(kebabButton);
+      expect(screen.queryAllByTestId('menu_item')[0]).toBeInTheDocument();
+      const deleteTaskList = screen.getByText('menu.delete_task_list');
+      expect(deleteTaskList).toBeInTheDocument();
+
+      act(() => {
+        fireEvent.click(deleteTaskList);
+      });
+
+      expect(screen.queryByText('Warning')).toBeInTheDocument();
+      expect(screen.queryByText('menu.task_list_delete_confirmation_message')).toBeInTheDocument();
+      expect(screen.queryByText('form_actions.cancel')).toBeInTheDocument();
+      expect(screen.queryByTestId('proceed_button')).toBeInTheDocument();
+    });
+  });
 });
