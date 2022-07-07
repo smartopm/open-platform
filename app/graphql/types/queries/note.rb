@@ -565,7 +565,8 @@ module Types::Queries::Note
         :assignees,
         :assignee_notes,
         :documents_attachments,
-        note_list: :process)
+        note_list: :process
+      )
       .where(category: 'task_list', note_list: { status: 'active' })
       .offset(offset).limit(limit)
   end

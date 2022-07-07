@@ -21,10 +21,24 @@ const taskListMock = {
   __typename: 'Note',
   id: 'a349e612-f65f-4c66-82cb-3e9311ae39b2',
   body: 'Sample task list',
+  status: 'in_progress',
+  subTasksCount: '1',
+  completed: false,
+  progress: {
+    complete: 0,
+    progress_percentage: 0,
+    total: 0,
+  },
+  category: 'task_list',
   noteList: {
     __typename: 'NoteList',
     id: '450e1fa8-b8aa-480b-8e3c-b6f1e8e78a25',
-    name: 'Sample task list'
+    name: 'Sample task list',
+    process: {
+      __typename: 'Process',
+      id: '8239jd2-f8a23-ads23-323d-23i59jkdd',
+      name: 'Test Process',
+    }
   }
 };
 
@@ -47,7 +61,7 @@ describe('Task Lists', () => {
     {
       request: {
         query: DeleteTaskList,
-        variables: { id: taskListMock.id } 
+        variables: { id: taskListMock.id }
       },
       result: { data: { deleteTaskList: { success: true } } },
     }
@@ -161,14 +175,14 @@ describe('Task Lists', () => {
       expect(kebabButton).toBeInTheDocument();
       fireEvent.click(kebabButton);
       expect(screen.queryAllByTestId('menu_item')[0]).toBeInTheDocument();
-      expect(screen.getByText('menu.edit_task_list')).toBeInTheDocument();
+      expect(screen.getByText('menu.open_details')).toBeInTheDocument();
+      expect(screen.getByText('menu.add_subtask')).toBeInTheDocument();
       const deleteTaskList = screen.getByText('menu.delete_task_list');
       expect(deleteTaskList).toBeInTheDocument();
       fireEvent.click(deleteTaskList);
       const proceedButton = screen.queryByTestId('proceed_button');
       expect(proceedButton).toBeInTheDocument();
       fireEvent.click(proceedButton);
-
     });
   });
 

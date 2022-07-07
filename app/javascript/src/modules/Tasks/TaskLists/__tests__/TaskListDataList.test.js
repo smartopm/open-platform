@@ -72,7 +72,7 @@ describe('Task Data components', () => {
     {
       request: {
         query: DeleteTask,
-        variables: { id: task.id } 
+        variables: { id: task.id }
       },
       result: { data: { noteDelete: { success: true } } },
     }
@@ -102,7 +102,7 @@ describe('Task Data components', () => {
     fireEvent.click(menuButton);
 
     await waitFor(() => {
-      expect(screen.getByText('menu.open_task_details')).toBeInTheDocument();
+      expect(screen.getByText('menu.open_details')).toBeInTheDocument();
       expect(screen.getByText('menu.add_subtask')).toBeInTheDocument();
     }, 10);
   });
@@ -134,7 +134,7 @@ describe('Task Data components', () => {
 
       const addSubTaskMenuItem = screen.getByText('menu.add_subtask');
       expect(addSubTaskMenuItem).toBeInTheDocument();
-      const taskDetailsMenuItem = screen.getByText('menu.open_task_details');
+      const taskDetailsMenuItem = screen.getByText('menu.open_details');
       expect(taskDetailsMenuItem).toBeInTheDocument();
       fireEvent.click(taskDetailsMenuItem);
       const deleteTask = screen.getByText('menu.delete_task');
