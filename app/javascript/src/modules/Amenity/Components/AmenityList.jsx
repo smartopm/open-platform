@@ -64,7 +64,7 @@ export default function AmenityList() {
           variant="contained"
           color="primary"
           style={matches ? { color: '#FFFFFF', margin: '0 5px 0 8px' } : { color: '#FFFFFF' }}
-          data-testid="create_task_btn"
+          data-testid="create_amenity_btn"
           disableElevation
         >
           {matches ? <AddIcon /> : t('common:misc.add_new')}
