@@ -7,13 +7,16 @@ class Community < ApplicationRecord
   class CommunityError < StandardError; end
   has_one_attached :image
 
+  # For ease of reference, keep the menu items as closely as they appear in the UI
+  # Refer to app/javascript/src/modules/index.js
   COMMUNITY_FEATURES = [
-    'Dashboard', 'Search', 'Profile', 'Messages', 'Communication', 'LogBook', 'Payments',
-    'Invoices', 'Transactions', 'Forms', 'Customer Journey', 'UserStats', 'Users',
-    'Properties', 'News', 'Discussions', 'Campaigns', 'Labels', 'Tasks', 'Business',
-    'Forms', 'Email Templates', 'Community', 'Contact', 'Referral', 'My Thebe Portal',
-    'Action Flows', 'Time Card', 'Logout', 'Showroom', 'DynamicMenu', 'Guest List', 'Processes',
-    'Task Lists', 'Amenity', 'MyForms'
+    'Dashboard', 'Search', 'Profile', 'Messages', 'Communication', 'MyForms',
+    'LogBook', 'Guest List', 'Payments', 'Invoices', 'Transactions', 'Leads',
+    'Scorecard', 'Lead Users', 'Processes', 'Forms', 'Customer Journey', 'UserStats',
+    'Users', 'Community', 'Amenity', 'News', 'Discussions', 'Campaigns',
+    'Labels', 'Tasks', 'Task Lists', 'Business', 'Email Templates', 'Contact',
+    'DynamicMenu', 'Referral', 'Showroom', 'My Thebe Portal', 'Action Flows', 'Time Card',
+    'Properties', 'Logout'
   ].freeze
 
   after_initialize :add_default_community_features
