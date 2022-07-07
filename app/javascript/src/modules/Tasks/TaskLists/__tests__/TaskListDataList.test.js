@@ -104,6 +104,7 @@ describe('Task Data components', () => {
     await waitFor(() => {
       expect(screen.getByText('menu.open_details')).toBeInTheDocument();
       expect(screen.getByText('menu.add_subtask')).toBeInTheDocument();
+      expect(screen.getByText('menu.delete_task')).toBeInTheDocument();
     }, 10);
   });
 
@@ -140,6 +141,7 @@ describe('Task Data components', () => {
       const deleteTask = screen.getByText('menu.delete_task');
       expect(deleteTask).toBeInTheDocument();
       fireEvent.click(deleteTask);
+      expect(screen.getByText('menu.task_delete_confirmation_message')).toBeInTheDocument();
       const proceedButton = screen.queryByTestId('proceed_button');
       expect(proceedButton).toBeInTheDocument();
       fireEvent.click(proceedButton);
@@ -199,6 +201,40 @@ describe('Task Data components', () => {
       expect(container.getByTestId('show_task_list_subtasks')).toBeInTheDocument();
 
       fireEvent.click(container.queryByTestId('show_task_list_subtasks'));
+    }, 10);
+  });
+
+  it('renders "delete_task_list" menu option for task list', async () => {
+    task.category = 'task_list';
+    render(
+      <BrowserRouter>
+        <MockedProvider>
+          <Context.Provider value={authState}>
+            <MockedThemeProvider>
+              <TodoItem
+                task={task}
+                handleTaskDetails={() => {}}
+                handleAddSubTask={jest.fn()}
+                handleTodoClick={jest.fn}
+                createTaskListSubTask
+              />
+            </MockedThemeProvider>
+          </Context.Provider>
+        </MockedProvider>
+      </BrowserRouter>
+    );
+
+    const menuButton = screen.getAllByTestId('task-item-menu')[0];
+    expect(menuButton).toBeInTheDocument();
+    fireEvent.click(menuButton);
+
+    await waitFor(() => {
+      const deleteTaskListButton = screen.getByText('menu.delete_task_list');
+      expect(deleteTaskListButton).toBeInTheDocument();
+      fireEvent.click(deleteTaskListButton);
+
+      expect(screen.getByText('Warning')).toBeInTheDocument();
+      expect(screen.getByText('menu.task_list_delete_confirmation_message')).toBeInTheDocument();
     }, 10);
   });
 });
