@@ -348,7 +348,7 @@ en:
     lead_log:
       not_found: Lead log not found
       empty_deal_details: Deal details cannot be empty
-      invalid_log_type: Invalid log type 
+      invalid_log_type: Invalid log type
     not_found: Not found
     note:
       task_not_found: No Task Found, Try a different query
@@ -456,6 +456,7 @@ en:
   offline: "Oops."
   internet_off: "Looks like your internet is off."
   reload_page: "Reload Page"
+  invalid_phone_number: "The Phone number is not valid"
   community_name:
     ciudadmorazán: ciudadmorazan
     greenpark: greenpark

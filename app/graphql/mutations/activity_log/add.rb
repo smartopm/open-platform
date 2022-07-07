@@ -42,11 +42,12 @@ module Mutations
 
       def send_notifications(user)
         number = user.phone_number
-        feedback_link = "https://#{HostEnv.base_url(user.community)}/feedback"
+        link = "https://#{HostEnv.base_url(user.community)}/feedback"
         return if number.nil?
 
         # disabled rubocop to keep the structure of the message
-        Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: feedback_link))
+        Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: link),
+                 user.community)
       end
 
       # create an entry if it doesnt exit

@@ -16,15 +16,28 @@ class Sms
     yield config
   end
 
-  def self.send(to, message)
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  def self.send(to, message, community)
     raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
 
     return if Rails.env.test?
 
     to = clean_number(to)
+    country = community.locale&.split('-')
     client = Vonage::Client.new(api_key: config[:api_key], api_secret: config[:api_secret])
-    client.sms.send(from: 'DoubleGDP', to: to, text: message)
+
+    begin
+      insight = client.number_insight.advanced(number: to, country: country[1])
+      raise SmsError, insight.status_message unless insight.valid_number == 'valid'
+
+      client.sms.send(from: 'DoubleGDP', to: to, text: message)
+    rescue StandardError
+      raise SmsError, I18n.t('invalid_phone_number')
+    end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def self.send_from(to, from, message)
     raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
