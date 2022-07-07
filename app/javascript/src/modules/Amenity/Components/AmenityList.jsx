@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +33,8 @@ export default function AmenityList() {
     reset,
     t('amenity:misc.amenity_deleted')
   );
-  const matches = useMediaQuery('(max-width:600px)');
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
   function handleEditAmenity(amenity, type) {
     setAmenityData(amenity);
@@ -55,31 +57,20 @@ export default function AmenityList() {
 
   const rightPanelObj = [
     {
-      mainElement: matches ? (
+      mainElement: (
         <Button
           onClick={handleAddAmenity}
+          startIcon={!matches ? <AddIcon /> : undefined}
           variant="contained"
           color="primary"
-          style={{ color: '#FFFFFF', margin: '0 5px 0 8px' }}
+          style={matches ? { color: '#FFFFFF', margin: '0 5px 0 8px' } : { color: '#FFFFFF' }}
           data-testid="create_task_btn"
           disableElevation
         >
-          <AddIcon />
-        </Button>
-      ) : (
-        <Button
-          startIcon={<AddIcon />}
-          onClick={handleAddAmenity}
-          variant="contained"
-          color="primary"
-          style={{ color: '#FFFFFF' }}
-          data-testid="create_task_btn"
-          disableElevation
-        >
-          {t('common:misc.add_new')}
+          {matches ? <AddIcon /> : t('common:misc.add_new')}
         </Button>
       ),
-      key: 3,
+      key: 1,
     },
   ];
 
