@@ -32,8 +32,8 @@ class Sms
       raise SmsError, insight.status_message unless insight.valid_number == 'valid'
 
       client.sms.send(from: 'DoubleGDP', to: to, text: message)
-    rescue StandardError => e
-      raise SmsError, e
+    rescue StandardError
+      raise SmsError, I18n.t('invalid_phone_number')
     end
   end
   # rubocop:enable Metrics/AbcSize
