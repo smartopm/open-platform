@@ -1,8 +1,6 @@
-/* eslint-disable security/detect-object-injection */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-return-assign */
-/* eslint-disable no-sequences */
+/* eslint-disable max-lines */
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, useLazyQuery } from 'react-apollo';
@@ -25,6 +23,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { useTheme } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
 import PhoneInput from 'react-phone-input-2';
+import { v4 as uuidv4 } from 'uuid';
 import DatePickerDialog from '../../components/DatePickerDialog';
 import { UserChip } from '../../modules/Tasks/Components/UserChip';
 import {
@@ -46,18 +45,9 @@ import {
   setObjectValue,
   ifNotTest
 } from '../../utils/helpers';
-import { dateWidget, NotesCategories, defaultBusinessReasons } from '../../utils/constants';
+import { dateWidget, NotesCategories, defaultBusinessReasons, initialData } from '../../utils/constants';
 import UserAutoResult from '../../shared/UserAutoResult';
 
-// const { primary, dew } = colors;
-const initialData = {
-  title: '',
-  description: '',
-  eventType: '',
-  eventCondition: '',
-  eventConditionQuery: '',
-  actionType: ''
-};
 export default function ActionFlowModal({ open, closeModal, handleSave, selectedActionFlow }) {
   const [data, setData] = useState(initialData);
   const [metaData, setMetaData] = useState({});
@@ -67,20 +57,16 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   const theme = useTheme();
   const { t } = useTranslation(['actionflow', 'common']);
   const matches = useMediaQuery('(max-width:800px)');
-  const [loadLabelsLite, { data: labelsLiteData }] = useLazyQuery(LabelsQuery, {
-    fetchPolicy: 'cache-and-network'
-  });
+  const [loadLabelsLite, { data: labelsLiteData }] =
+    useLazyQuery(LabelsQuery, { fetchPolicy: 'cache-and-network' });
   const [loadAssignees, { data: assigneesLiteData }] = useLazyQuery(UsersLiteQuery, {
     variables: { query: 'user_type = admin' },
     errorPolicy: 'all'
   });
-  const [loadEmailTemplates, { data: emailTemplatesData }] = useLazyQuery(EmailTemplatesQuery, {
-    fetchPolicy: 'cache-and-network'
-  });
-
+  const [loadEmailTemplates, { data: emailTemplatesData }] =
+    useLazyQuery(EmailTemplatesQuery, { fetchPolicy: 'cache-and-network' });
   const eventData = useQuery(Events);
   const actionData = useQuery(Actions);
-
   const actionFieldsData = useQuery(ActionFields, {
     variables: { action: data.actionType }
   });
@@ -91,7 +77,6 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   useEffect(() => {
     if (isEdit()) {
       setData(selectedActionFlow);
-
       let actionFieldsValues = {};
       Object.entries(selectedActionFlow.eventAction.action_fields).forEach(([key, val]) => {
         actionFieldsValues = setObjectValue(
@@ -148,8 +133,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         addQueryDateInput(field);
       } else if (field === 'visit_request_reason') {
         addQuerySelectMenu(field, defaultBusinessReasons);
-      } else {
-        ruleFieldsConfig = setObjectValue(ruleFieldsConfig, field, {
+      } else { ruleFieldsConfig = setObjectValue(ruleFieldsConfig, field, {
           label: titleize(field),
           type: 'text',
           valueSources: ['value']
@@ -188,69 +172,34 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
 
   function handleInputChange(event) {
     const { name, value } = event.target;
-
-    if (data.eventType && value === 'notification') {
-      loadLabelsLite();
-    }
-
-    if (data.eventType && value === 'task') {
-      loadAssignees();
-    }
-
+    if (data.eventType && value === 'notification') { loadLabelsLite(); }
+    if (data.eventType && value === 'task') { loadAssignees(); }
     if (data.eventType && value === 'custom_email') {
       loadEmailTemplates();
     }
 
     // Reset the array of assignees when a new eventType/action is selected
     if (assignees.length) setAssignees([]);
-
-    setData({
-      ...data,
-      [name]: value
-    });
+    setData({...data, [name]: value });
   }
 
   function handleSelect(event) {
     const { name, value } = event.target;
-
-    setMetaData({
-      ...metaData,
-      [name]: value
-    });
-
-    setData({
-      ...data,
-      [name]: value
-    });
+    setMetaData({ ...metaData, [name]: value });
+    setData({ ...data, [name]: value });
   }
 
   function handlePhoneNumberInput(event) {
     const { name, value } = event;
-    setMetaData({
-      ...metaData,
-      [name]: value
-    });
-
-    setData({
-      ...data,
-      [name]: value
-    });
+    setMetaData({ ...metaData, [name]: value });
+    setData({ ...data, [name]: value });
   }
 
   function handleDateChange(params) {
     const { name, value } = params;
-
     setDate(value);
-
-    setMetaData({
-      ...metaData,
-      [name]: value.toISOString()
-    });
-
-    setData({
-      ...data,
-      [name]: value.toISOString()
-    });
+    setMetaData({ ...metaData, [name]: value.toISOString() });
+    setData({...data, [name]: value.toISOString() });
   }
 
   function getAssigneeIds(user) {
@@ -259,20 +208,10 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
 
   function handleChooseAssignees(event) {
     const { name, value: user } = event.target;
-
     setAssignees([...user]);
-
     const assigneeIds = getAssigneeIds(user);
-
-    setMetaData({
-      ...metaData,
-      [name]: assigneeIds
-    });
-
-    setData({
-      ...data,
-      [name]: assigneeIds
-    });
+    setMetaData({ ...metaData, [name]: assigneeIds });
+    setData({ ...data, [name]: assigneeIds });
   }
 
   function handleQueryOnChange(conditionJsonLogic, conditionQuery) {
@@ -294,7 +233,6 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       setIsError(true);
       return;
     }
-
     handleSave(data, metaData);
   }
 
@@ -304,7 +242,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         id="workflow-dialog-title"
         style={{
           borderBottom: `1px solid ${theme.palette.primary.main}`,
-          color: theme.palette.primary.main
+          color: theme.palette.primary.main,
         }}
       >
         {isEdit()
@@ -356,9 +294,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 fullWidth
                 onChange={handleInputChange}
               >
-                {eventData.data.events.map((event, index) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <MenuItem key={index} value={event}>
+                {eventData.data.events.map(event => (
+                  <MenuItem key={uuidv4()} value={event}>
                     {`On ${titleize(event)}`}
                   </MenuItem>
                 ))}
@@ -394,9 +331,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 onChange={handleInputChange}
                 fullWidth
               >
-                {actionData.data.actions.map((action, index) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <MenuItem key={index} value={action.toLowerCase().replace(/ /g, '_')}>
+                {actionData.data.actions.map(action => (
+                  <MenuItem key={uuidv4()} value={action.toLowerCase().replace(/ /g, '_')}>
                     {sentencizeAction(action)}
                   </MenuItem>
                 ))}
@@ -406,11 +342,11 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         </FormControl>
         {data.actionType &&
           actionFieldsData.data &&
-          actionFieldsData.data.actionFields.map((actionField, index) => {
+          actionFieldsData.data.actionFields.map(actionField => {
             // REFACTOR THESE IF-ELSEs (Nurudeen)
             if (actionField.type === 'select' && actionField.name === 'label') {
               return (
-                <FormControl key={index} fullWidth>
+                <FormControl key={uuidv4()} fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
                     {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
@@ -434,7 +370,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'select' && actionField.name === 'category') {
               return (
-                <FormControl key={index} fullWidth>
+                <FormControl key={uuidv4()} fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
                     {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
@@ -457,7 +393,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'select' && actionField.name === 'assignees') {
               return (
-                <FormControl key={index} fullWidth>
+                <FormControl key={uuidv4()} fullWidth>
                   <FormHelperText>{t('actionflow:form_fields.assign_user')}</FormHelperText>
                   <Select
                     labelId={`select-${actionField.name}`}
@@ -471,8 +407,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     MenuProps={{ MenuListProps: { disablePadding: true } }}
                     renderValue={selected => (
                       <div>
-                        {selected.map((value, i) => (
-                          <UserChip user={value} key={i} label={value.name} size="medium" />
+                        {selected.map((value) => (
+                          <UserChip user={value} key={uuidv4()} label={value.name} size="medium" />
                         ))}
                       </div>
                     )}
@@ -488,7 +424,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'select' && actionField.name === 'template') {
               return (
-                <FormControl key={index} fullWidth>
+                <FormControl key={uuidv4()} fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
                     {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
@@ -511,7 +447,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'date' && actionField.name === 'due_date') {
               return (
-                <FormControl key={index} fullWidth>
+                <FormControl key={uuidv4()} fullWidth>
                   <FormHelperText>{t('actionflow:form_fields.pick_date')}</FormHelperText>
                   <DatePickerDialog
                     handleDateChange={date =>
@@ -526,14 +462,14 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             if (actionField.type === 'text' && actionField.name === 'phone_number') {
               return (
                 <PhoneInput
-                  key={index}
+                  key={uuidv4()}
                   value={metaData.phone_number || ''}
                   inputStyle={{ width: '100%' }}
                   enableSearch
                   inputProps={{
                     name: 'phoneNumber',
                     required: true,
-                    'data-testid': 'primary_phone'
+                    'data-testid': 'primary_phone',
                   }}
                   placeholder={t('common:form_placeholders.phone_number')}
                   onChange={value => handlePhoneNumberInput({ name: actionField.name, value })}
@@ -543,8 +479,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             return (
               <Autocomplete
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
+                key={uuidv4()}
                 id={`${actionField.name}-action-input`}
                 freeSolo
                 value={objectAccessor(metaData, actionField.name)}
@@ -552,7 +487,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 onInputChange={(_event, newValue) => {
                   setMetaData({
                     ...metaData,
-                    [actionField.name]: newValue
+                    [actionField.name]: newValue,
                   });
                 }}
                 options={ruleFieldsData.data?.ruleFields.map(option => titleize(option)) || []}
@@ -573,10 +508,9 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         {data.actionType === 'custom_email' &&
           emailTemplatesData?.emailTemplates
             .find(temp => temp.id === metaData.template)
-            ?.variableNames.map((varName, index) => (
+            ?.variableNames.map((varName) => (
               <Autocomplete
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
+                key={uuidv4()}
                 id={`${varName}-action-input`}
                 freeSolo
                 value={objectAccessor(metaData, varName)}
@@ -584,7 +518,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 onInputChange={(_event, newValue) => {
                   setMetaData({
                     ...metaData,
-                    [varName]: newValue
+                    [varName]: newValue,
                   });
                 }}
                 options={ruleFieldsData.data?.ruleFields.map(option => titleize(option)) || []}
@@ -618,6 +552,5 @@ ActionFlowModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleSave: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  selectedActionFlow: PropTypes.object.isRequired
+  selectedActionFlow: PropTypes.instanceOf(Object).isRequired
 };
