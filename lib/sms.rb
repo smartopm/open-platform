@@ -27,7 +27,7 @@ class Sms
 
     begin
       insight = client.number_insight.advanced(number:  to, country: country)
-      return unless insight.valid_number == 'valid'
+      raise SmsError, exception unless insight.valid_number == 'valid'
 
       client.sms.send(from: 'DoubleGDP', to: to, text: message)
     rescue => exception
