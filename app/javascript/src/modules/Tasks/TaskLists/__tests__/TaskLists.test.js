@@ -133,6 +133,8 @@ describe('Task Lists', () => {
 
     await waitFor(() => {
       expect(screen.queryByText('task_lists.no_task_lists')).toBeInTheDocument();
+      expect(screen.getByTestId('create_task_list_btn')).toBeInTheDocument();
+      expect(screen.getByTestId('AddIcon')).toBeInTheDocument();
     });
   });
 

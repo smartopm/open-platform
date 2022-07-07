@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useLazyQuery, useMutation, useQuery } from 'react-apollo';
-import { Dialog } from '@mui/material';
+import { Dialog, Button } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import AddIcon from '@mui/icons-material/Add';
 import { formatError, useParamsQuery } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
 import Paginate from '../../../../components/Paginate';
@@ -10,7 +12,6 @@ import { Spinner } from '../../../../shared/Loading';
 import { TaskListsQuery } from '../graphql/task_lists_queries';
 import TodoItem from '../../Components/TodoItem';
 import AccessCheck from '../../../Permissions/Components/AccessCheck';
-import FloatingButton from '../../../../shared/buttons/FloatingButton';
 import PageWrapper from '../../../../shared/PageWrapper';
 import SplitScreen from '../../../../shared/SplitScreen';
 import TaskUpdate from '../../containers/TaskUpdate';
@@ -46,6 +47,7 @@ export default function TaskLists() {
     },
     errorPolicy: 'all',
   });
+  const smMatches = useMediaQuery('(max-width:1020px)');
 
   useEffect(() => {
     if (redirectedTaskListId) {
@@ -121,6 +123,32 @@ export default function TaskLists() {
         setTaskUpdateStatus({ ...taskUpdateStatus, success: false, message: err.message })
       );
   }
+
+  const rightPanelObj = [
+    {
+      mainElement: (
+        <AccessCheck
+          module="note"
+          allowedPermissions={['can_view_create_task_button']}
+          show404ForUnauthorized={false}
+        >
+          <Button
+            startIcon={!smMatches && <AddIcon />}
+            onClick={redirectToTaskListCreatePage}
+            variant="contained"
+            color="primary"
+            style={{ color: '#FFFFFF' }}
+            data-testid="create_task_list_btn"
+            disableElevation
+          >
+            {smMatches ? <AddIcon /> : t('common:misc.add_new')}
+          </Button>
+        </AccessCheck>
+      ),
+      key: 3,
+    },
+  ];
+
   return (
     <>
       <Dialog
@@ -139,7 +167,7 @@ export default function TaskLists() {
           subTasksCount={subTasksCount}
         />
       </Dialog>
-      <PageWrapper pageTitle={t('task_lists.task_lists')}>
+      <PageWrapper pageTitle={t('task_lists.task_lists')} rightPanelObj={rightPanelObj}>
         {Boolean(data?.taskLists?.length) && (
           <SplitScreen open={splitScreenOpen} onClose={() => setSplitScreenOpen(false)}>
             <TaskUpdate
@@ -181,18 +209,6 @@ export default function TaskLists() {
                 handlePageChange={paginate}
               />
             </CenteredContent>
-            <AccessCheck
-              module="note"
-              allowedPermissions={['can_view_create_task_button']}
-              show404ForUnauthorized={false}
-            >
-              <FloatingButton
-                variant="extended"
-                handleClick={redirectToTaskListCreatePage}
-                color="primary"
-                data-testid="create_task_btn"
-              />
-            </AccessCheck>
           </>
         )}
       </PageWrapper>
