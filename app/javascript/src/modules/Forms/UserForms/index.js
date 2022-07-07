@@ -21,7 +21,8 @@ export function RenderMyForms() {
 export default {
   routeProps: {
     path: '/myforms', // myforms
-    component: RenderMyForms
+    // eslint-disable-next-line react/display-name
+    component:() => <span />
   },
   styleProps: {
     icon: <DescriptionIcon />
