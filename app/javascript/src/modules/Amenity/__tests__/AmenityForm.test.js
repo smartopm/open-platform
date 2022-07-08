@@ -81,7 +81,13 @@ describe('Amenity Form', () => {
     const wrapper = render(
       <MockedProvider mocks={[mock]} addTypename={false}>
         <MockedSnackbarProvider>
-          <AmenityForm isOpen setOpen={openDialog} refetch={refetch} t={jest.fn()} />
+          <AmenityForm
+            isOpen
+            handleClose={jest.fn()}
+            setOpen={openDialog}
+            refetch={refetch}
+            t={jest.fn()}
+          />
         </MockedSnackbarProvider>
       </MockedProvider>
     );

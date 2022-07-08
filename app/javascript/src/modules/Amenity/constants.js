@@ -1,6 +1,7 @@
-// eslint-disable-next-line import/prefer-default-export
-export const AmenityStatus = {
+const AmenityStatus = {
   publish: 'published',
   delete: 'deleted',
   deprecate: 'deprecated',
 };
+
+export default AmenityStatus;

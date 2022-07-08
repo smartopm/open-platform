@@ -6,7 +6,7 @@ import { Button, Typography } from '@mui/material';
 import AmenityItem from './AmenityItem';
 import SpeedDialButton from '../../../shared/buttons/SpeedDial';
 import AmenityForm from './AmenityForm';
-import { AmenitiesQuery } from '../graphql/amenity_queries';
+import AmenitiesQuery from '../graphql/amenity_queries';
 import { Spinner } from '../../../shared/Loading';
 import PageWrapper from '../../../shared/PageWrapper';
 import CenteredContent from '../../../shared/CenteredContent';
@@ -14,7 +14,7 @@ import useFetchMoreRecords from '../../../shared/hooks/useFetchMoreRecords';
 import useMutationWrapper from '../../../shared/hooks/useMutationWrapper';
 import { AmenityDeleteMutation } from '../graphql/amenity_mutations';
 import { ActionDialog } from '../../../components/Dialog';
-import { AmenityStatus } from '../constants';
+import AmenityStatus from '../constants';
 
 export default function AmenityList() {
   const [dialog, setOpenDialog] = useState({ isOpen: false, type: null })
