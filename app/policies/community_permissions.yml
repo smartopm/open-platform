@@ -1031,6 +1031,13 @@ Greenpark:
         - can_see_menu_item
         - can_access_own_forms
         - can_fetch_form_task_comments
+    amenity:
+      permissions:
+        - can_create_amenity
+        - can_access_amenities
+        - can_see_menu_item
+        - can_edit_amenities
+        - can_delete_amenities
   site_worker:
     note:
       permissions:
@@ -1094,3 +1101,10 @@ Greenpark:
         - can_see_menu_item
         - can_access_own_forms
         - can_fetch_form_task_comments
+    amenity:
+      permissions:
+        - can_create_amenity
+        - can_access_amenities
+        - can_see_menu_item
+        - can_edit_amenities
+        - can_delete_amenities
