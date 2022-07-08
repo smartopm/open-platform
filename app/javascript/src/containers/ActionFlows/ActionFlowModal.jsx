@@ -1,5 +1,4 @@
 /* eslint-disable max-lines */
-/* eslint-disable max-statements */
 /* eslint-disable complexity */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -47,6 +46,10 @@ import {
 } from '../../utils/helpers';
 import { dateWidget, NotesCategories, defaultBusinessReasons, initialData } from '../../utils/constants';
 import UserAutoResult from '../../shared/UserAutoResult';
+
+function getAssigneeIds(user) {
+  return user.map(u => u.id).join(',');
+}
 
 export default function ActionFlowModal({ open, closeModal, handleSave, selectedActionFlow }) {
   const [data, setData] = useState(initialData);
@@ -142,11 +145,10 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     });
   }
 
-  const InitialConfig = MuiConfig;
   const queryBuilderConfig = {
-    ...InitialConfig,
+    ...MuiConfig,
     fields: ruleFieldsConfig,
-    widgets: dateWidget
+    widgets: dateWidget,
   };
 
   function addQuerySelectMenu(field, options) {
@@ -184,26 +186,17 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   }
 
   function handleSelect(event) {
-    const { name, value } = event.target;
-    setMetaData({ ...metaData, [name]: value });
-    setData({ ...data, [name]: value });
-  }
+    const { name, value } = event.target ? event.target : event;
 
-  function handlePhoneNumberInput(event) {
-    const { name, value } = event;
     setMetaData({ ...metaData, [name]: value });
     setData({ ...data, [name]: value });
   }
 
   function handleDateChange(params) {
     const { name, value } = params;
-    setDate(value);
+    setDate(value, 'date change input');
     setMetaData({ ...metaData, [name]: value.toISOString() });
     setData({...data, [name]: value.toISOString() });
-  }
-
-  function getAssigneeIds(user) {
-    return user.map(u => u.id).join(',');
   }
 
   function handleChooseAssignees(event) {
@@ -472,7 +465,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     'data-testid': 'primary_phone',
                   }}
                   placeholder={t('common:form_placeholders.phone_number')}
-                  onChange={value => handlePhoneNumberInput({ name: actionField.name, value })}
+                  onChange={value => handleSelect({ name: actionField.name, value })}
                   preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
                 />
               );
