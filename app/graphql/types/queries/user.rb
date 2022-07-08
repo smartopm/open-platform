@@ -115,7 +115,6 @@ module Types::Queries::User
 
     if query.present? && query.include?('date_filter')
       Users::User.allowed_users(context[:current_user])
-                 .eager_load(:labels)
                  .heavy_search(query)
                  .order(name: :asc)
                  .limit(limit)
@@ -123,7 +122,6 @@ module Types::Queries::User
                  .with_attached_avatar
     else
       Users::User.allowed_users(context[:current_user])
-                 .eager_load(:labels)
                  .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
                  .order(name: :asc)
                  .limit(limit)
@@ -187,7 +185,6 @@ module Types::Queries::User
                ).order(name: :asc)
   end
 
-  # rubocop:disable Metrics/MethodLength
   def users_lite(offset: 0, limit: 50, query: nil)
     unless permitted?(module: :user, permission: :can_get_users_lite)
       raise GraphQL::ExecutionError,
@@ -195,14 +192,12 @@ module Types::Queries::User
     end
 
     Users::User.allowed_users(context[:current_user])
-               .includes(:accounts)
                .search_lite(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
                .order(name: :asc)
                .limit(limit)
                .offset(offset)
                .with_attached_avatar
   end
-  # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
   def find_community_user(id)
@@ -283,7 +278,6 @@ module Types::Queries::User
     end
 
     context[:current_user].invitees
-                          .includes(:guest, :host, :entry_time)
                           .search(or: [{ query: (query.presence || '.') },
                                        { guest: { matches: query } }])
                           .order(created_at: :desc)
@@ -312,7 +306,7 @@ module Types::Queries::User
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    user.invites.includes(:host, :entry_time).order(created_at: :desc)
+    user.invites.includes(:entry_time).order(created_at: :desc)
   end
 
   def user_permissions_check?(permission)

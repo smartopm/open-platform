@@ -27,5 +27,17 @@ module Types
       path = Rails.application.routes.url_helpers.rails_blob_path(type)
       "https://#{base_url}#{path}"
     end
+
+    def guest
+      BatchLoader::GraphQL.for(object.guest_id).batch(cache: false) do |guest_ids, loader|
+        Users::User.where(id: guest_ids).each { |guest| loader.call(guest.id, guest) }
+      end
+    end
+
+    def host
+      BatchLoader::GraphQL.for(object.host_id).batch(cache: false) do |host_ids, loader|
+        Users::User.where(id: host_ids).each { |host| loader.call(host.id, host) }
+      end
+    end
   end
 end

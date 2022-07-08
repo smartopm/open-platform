@@ -158,6 +158,124 @@ module Types
     def secondary_details(contact_type)
       object.contact_infos.select { |info| info.contact_type.eql?(contact_type) }
     end
+
+    def accounts
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        Properties::Account.where(user_id: ids).each do |account|
+          loader.call(account.user_id) { |memo| memo << account }
+        end
+      end
+    end
+
+    def notes
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        Notes::Note.where(user_id: ids).each do |note|
+          loader.call(note.user_id) { |memo| memo << note }
+        end
+      end
+    end
+
+    def form_users
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        Forms::FormUser.where(user_id: ids).each do |form_user|
+          loader.call(form_user.user_id) { |memo| memo << form_user }
+        end
+      end
+    end
+
+    def invoices
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        Payments::Invoice.where(user_id: ids).each do |invoice|
+          loader.call(invoice.user_id) { |memo| memo << invoice }
+        end
+      end
+    end
+
+    def messages
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        Notifications::Message.where(user_id: ids).each do |message|
+          loader.call(message.user_id) { |memo| memo << message }
+        end
+      end
+    end
+
+    def time_sheets
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        Users::TimeSheet.where(user_id: ids).each do |time_sheet|
+          loader.call(time_sheet.user_id) { |memo| memo << time_sheet }
+        end
+      end
+    end
+
+    def businesses
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        Business.where(user_id: ids).each do |business|
+          loader.call(business.user_id) { |memo| memo << business }
+        end
+      end
+    end
+
+    def contact_infos
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        Users::ContactInfo.where(user_id: ids).each do |contact_info|
+          loader.call(contact_info.user_id) { |memo| memo << contact_info }
+        end
+      end
+    end
+
+    def substatus_logs
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        Logs::SubstatusLog.where(user_id: ids).each do |substatus_log|
+          loader.call(substatus_log.user_id) { |memo| memo << substatus_log }
+        end
+      end
+    end
+
+    def invites
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        Logs::Invite.where(guest_id: ids).each do |contact_info|
+          loader.call(contact_info.guest_id) { |memo| memo << contact_info }
+        end
+      end
+    end
+
+    def invitees
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        Logs::Invite.where(host_id: ids).each do |contact_info|
+          loader.call(contact_info.host_id) { |memo| memo << contact_info }
+        end
+      end
+    end
+
+    def tasks
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        assignee_notes = Notes::AssigneeNote.where(user_id: ids).includes(:note)
+        assignee_notes.each do |assignee_note|
+          loader.call(assignee_note.user_id) { |memo| memo << assignee_note.note }
+        end
+      end
+    end
+
+    def labels
+      BatchLoader::GraphQL.for(object.id).batch(cache: false, default_value: []) do |ids, loader|
+        user_labels = Labels::UserLabel.where(user_id: ids).includes(:label)
+        user_labels.each do |user_label|
+          loader.call(user_label.user_id) { |memo| memo << user_label.label }
+        end
+      end
+    end
+
+    def request
+      BatchLoader::GraphQL.for(object.id).batch(cache: false) do |ids, loader|
+        Logs::EntryRequest.where(guest_id: ids).each { |user| loader.call(user.id, user) }
+      end
+    end
+
+    def community
+      BatchLoader::GraphQL.for(object.community_id).batch(cache: false) do |ids, loader|
+        Community.where(id: ids).each { |community| loader.call(community.id, community) }
+      end
+    end
   end
   # rubocop: enable Metrics/ClassLength
 end

@@ -7,6 +7,7 @@ class DoubleGdpSchema < GraphQL::Schema
   # Commenting unused policy since it is causing error with upgraded rails version : Saurabh
   # use GraphQL::Guard.new(policy_object: GraphqlPolicy)
   use(GraphQL::Tracing::NewRelicTracing)
+  use(BatchLoader::GraphQL)
 
   rescue_from(Users::User::PhoneTokenResultInvalid,
               Users::User::PhoneTokenResultExpired) do |_err, _obj, _args, _ctx, _field|

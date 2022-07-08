@@ -134,3 +134,5 @@ end
 
 
 gem "request_store", "~> 1.4"
+
+gem "batch-loader", "~> 2.0"

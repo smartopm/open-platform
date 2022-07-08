@@ -138,7 +138,7 @@ module Types::Queries::Form
     query = updated_query(query)
     form_users = Forms::FormUser.where(form_id: Forms::Form.where(grouping_id: form.grouping_id)
                                 .select(:id))
-                                .includes(:user).search(query).order(created_at: :desc)
+                                .includes(:user).search(query)
                                 .limit(limit).offset(offset)
     { form_name: form.name, form_users: form_users }
   end
