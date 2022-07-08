@@ -60,7 +60,7 @@ export default {
   },
   accessibleBy: [],
   moduleName: 'transaction',
-  name: t => t('common:menu.transaction_plural'),
+  name: t => t('common:menu.payment_plural'),
   featureName: 'Transactions',
   subRoutes: TransactionRoutes,
   subMenu: TransactionRoutes
