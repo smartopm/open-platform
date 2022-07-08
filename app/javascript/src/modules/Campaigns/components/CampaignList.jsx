@@ -1,6 +1,4 @@
 /* eslint-disable max-statements */
-/* eslint-disable no-use-before-define */
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useState, useEffect } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';

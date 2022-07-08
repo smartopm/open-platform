@@ -4,6 +4,7 @@ import { TextField, Chip } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 import { LabelsQuery } from '../../../graphql/queries';
 
 export default function CampaignLabels({ handleLabelSelect }) {
@@ -28,8 +29,7 @@ export default function CampaignLabels({ handleLabelSelect }) {
             renderTags={(values, getTagProps) => {
               return values.map((option, index) => (
                 <Chip
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={index}
+                  key={uuidv4()}
                   variant="outlined"
                   label={option.shortDesc || option}
                   {...getTagProps({ index })}
