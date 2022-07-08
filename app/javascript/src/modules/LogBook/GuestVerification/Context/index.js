@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { initialRequestState } from '../constants';
 import { EntryRequestQuery } from '../../../../graphql/queries';
 import { EntryRequestGrant } from '../../../../graphql/mutations';
-import { useParamsQuery } from '../../../../utils/helpers';
+import { formatError, useParamsQuery } from '../../../../utils/helpers';
 
 export const EntryRequestContext = createContext({});
 
@@ -64,7 +64,7 @@ export default function EntryRequestContextProvider({ children }) {
       })
       .catch(error => {
         updateRequest({ ...request, isLoading: false });
-        setDetails({ ...observationDetails, isError: true, message: error.message });
+        setDetails({ ...observationDetails, isError: true, message: formatError(error.message) });
       });
   }
 
