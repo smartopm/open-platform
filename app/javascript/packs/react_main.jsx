@@ -238,11 +238,6 @@ const App = () => {
                                       />
                                       <Route
                                         exact
-                                        path="/myforms"
-                                        render={() => <Redirect to={`/user/${user.id}?tab=Forms`} />}
-                                      />
-                                      <Route
-                                        exact
                                         path="/myprofile"
                                         render={() => <Redirect to={`/user/${user.id}`} />}
                                       />

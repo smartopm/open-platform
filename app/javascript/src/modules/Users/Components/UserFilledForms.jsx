@@ -14,7 +14,7 @@ import { formatError, useParamsQuery } from '../../../utils/helpers';
 import PageWrapper from '../../../shared/PageWrapper';
 import { Spinner } from '../../../shared/Loading';
 
-export default function UserFilledForms({ userFormsFilled, userId, currentUser }) {
+export default function UserFilledForms({ userFormsFilled, userId, currentUser, user }) {
   const { data, error, loading } = useQuery(FormsQuery, {
     variables: { userId: userId !== currentUser ? userId : currentUser },
     fetchPolicy: 'network-only',
@@ -77,15 +77,35 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
     },
   ];
 
+  const avatarObj = {
+    data: {
+      user: {
+        imageUrl: user?.imageUrl,
+        avatarUrl: user?.avatarUrl,
+        name: user?.name,
+        userType: user?.userType,
+      },
+    },
+  };
+
+  const breadCrumbObj = {
+    linkText: t('common:misc.user_detail'),
+    linkHref: `/user/${user?.id}`,
+    pageName: t('common:menu.my_forms')
+  };
+
   const isProfileForms = tab === 'Forms';
 
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
     <PageWrapper
-      pageTitle={t('menu.form', { count: 0 })}
       rightPanelObj={rightPanelObj}
       hideWrapper={isProfileForms}
+      avatarObj={avatarObj}
+      showAvatar
+      oneCol={!isProfileForms}
+      breadCrumbObj={breadCrumbObj}
     >
       {loading ? (
         <Spinner />
@@ -106,11 +126,11 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
               </>
             ))}
 
-          {isProfileForms && (
-            <Grid container style={{ marginBottom: '50px' }}>
-              <Grid item lg={4} md={4} sm={6} xs={6}>
-                <Typography variant="h6">{t('menu.form', { count: 0 })}</Typography>
-              </Grid>
+          <Grid container style={{ marginBottom: '50px' }}>
+            <Grid item lg={4} md={4} sm={6} xs={6}>
+              <Typography variant="h6">{t('menu.form', { count: 0 })}</Typography>
+            </Grid>
+            {isProfileForms && (
               <Grid item lg={8} md={8} sm={6} xs={6} style={{ textAlign: 'right' }}>
                 <SelectButton
                   options={menuOptions}
@@ -122,8 +142,8 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
                   style={{ marginLeft: mobile && '-40px', zIndex: 1 }}
                 />
               </Grid>
-            </Grid>
-          )}
+            )}
+          </Grid>
 
           <div>
             {userFormsFilled?.length >= 1 &&
@@ -153,6 +173,7 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
 
 UserFilledForms.defaultProps = {
   userFormsFilled: [],
+  user: undefined
 };
 
 UserFilledForms.propTypes = {
@@ -166,4 +187,11 @@ UserFilledForms.propTypes = {
   ),
   userId: PropTypes.string.isRequired,
   currentUser: PropTypes.string.isRequired,
+  user: PropTypes.shape({
+    imageUrl: PropTypes.string,
+    avatarUrl: PropTypes.string,
+    name: PropTypes.string,
+    userType: PropTypes.string,
+    id: PropTypes.string,
+  })
 };
