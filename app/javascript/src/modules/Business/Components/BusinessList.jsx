@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { css, StyleSheet } from 'aphrodite';
@@ -17,6 +16,7 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 import Avatar from '../../../components/Avatar';
 import BusinessActionMenu from './BusinessActionMenu';
 import { businessCategories } from '../../../utils/constants';
@@ -138,7 +138,6 @@ export default function BusinessList({ businessData, authState, refetch }) {
               anchorEl={anchorEl}
               handleClose={handleClose}
               open={open && anchorEl.getAttribute('dataid') === business.id}
-              // eslint-disable-next-line no-use-before-define
               linkStyles={css(styles.linkItem)}
               refetch={refetch}
               handleEditClick={() => handleEditClick(business)}
@@ -152,7 +151,6 @@ export default function BusinessList({ businessData, authState, refetch }) {
           variant="extended"
           onClick={openModal}
           color="primary"
-          // eslint-disable-next-line no-use-before-define
           className={`${css(styles.taskButton)} `}
         >
           {t('form_actions.create_business')}
@@ -177,3 +175,13 @@ const styles = StyleSheet.create({
     textDecoration: 'none'
   }
 });
+
+BusinessList.defaultProps = {
+  authState: {},
+};
+
+BusinessList.propTypes = {
+  refetch: PropTypes.func.isRequired,
+  authState: PropTypes.instanceOf(Object),
+  businessData: PropTypes.instanceOf(Object).isRequired,
+};

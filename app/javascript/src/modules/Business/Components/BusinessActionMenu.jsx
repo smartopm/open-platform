@@ -1,9 +1,9 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import { useMutation } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 import BusinessDeleteDialogue from '../../../shared/dialogs/DeleteDialogue';
 import { DeleteBusiness } from '../graphql/business_mutations';
 import { canDeleteBusiness, canUpdateBusiness } from '../utils';
@@ -86,3 +86,21 @@ export default function BusinessActionMenu({
     </Menu>
   );
 }
+
+BusinessActionMenu.defaultProps = {
+  data: {},
+  authState: {},
+  linkStyles: '',
+  anchorEl: {},
+};
+
+BusinessActionMenu.propTypes = {
+  refetch: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  anchorEl: PropTypes.instanceOf(Object),
+  authState: PropTypes.instanceOf(Object),
+  open: PropTypes.bool.isRequired,
+  linkStyles: PropTypes.string,
+  handleEditClick: PropTypes.func.isRequired,
+  data: PropTypes.instanceOf(Object),
+};
