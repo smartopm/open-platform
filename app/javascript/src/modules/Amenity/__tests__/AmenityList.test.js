@@ -65,7 +65,7 @@ describe('Amenity List', () => {
       expect(wrapper.queryByText('amenity:misc.delete_warning')).toBeInTheDocument();
       expect(wrapper.queryByTestId('proceed_button')).toBeInTheDocument();
 
-      fireEvent.click(wrapper.queryByTestId('speed-dial'));
+      fireEvent.click(wrapper.queryByTestId('create_amenity_btn'));
       // The add form should be visible
       expect(wrapper.queryByTestId('amenity_name')).toBeInTheDocument();
       expect(wrapper.queryByText('common:form_actions.save')).toBeInTheDocument();
