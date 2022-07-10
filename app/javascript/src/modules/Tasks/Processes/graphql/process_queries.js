@@ -90,6 +90,7 @@ export const ProjectCommentsQuery = gql`
       replyRequired
       groupingId
       noteId
+      taggedAttachments
     }
   }
 `;
@@ -140,6 +141,7 @@ export const ProjectRepliesRequestedComments = gql`
         body
         createdAt
         groupingId
+        taggedAttachments
         user {
           id
           name
@@ -159,6 +161,7 @@ export const ProjectRepliesRequestedComments = gql`
         body
         createdAt
         groupingId
+        taggedAttachments
         user {
           id
           name
@@ -174,6 +177,7 @@ export const ProjectRepliesRequestedComments = gql`
         body
         createdAt
         groupingId
+        taggedAttachments
         user {
           id
           name
@@ -188,6 +192,7 @@ export const ProjectRepliesRequestedComments = gql`
         id
         body
         createdAt
+        taggedAttachments
         user {
           id
           name
@@ -202,7 +207,7 @@ export const ProjectRepliesRequestedComments = gql`
   }
 `;
 
-export const ProcessReplyComments = gql`
+export const czProcessReplyComments = gql`
   query processReplyComments($processId: ID!) {
     processReplyComments(processId: $processId) {
       sent {
@@ -210,6 +215,7 @@ export const ProcessReplyComments = gql`
         body
         createdAt
         groupingId
+        taggedAttachments
         user {
           id
           name
@@ -229,6 +235,7 @@ export const ProcessReplyComments = gql`
         body
         createdAt
         groupingId
+        taggedAttachments
         user {
           id
           name
@@ -244,6 +251,7 @@ export const ProcessReplyComments = gql`
         body
         createdAt
         groupingId
+        taggedAttachments
         user {
           id
           name
@@ -275,6 +283,7 @@ export const DocumentCommentsQuery = gql`
       id
       body
       createdAt
+      taggedAttachments
       user {
         id
         name

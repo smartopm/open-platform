@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import CommentCard from './CommentCard';
 import { TaskComment } from '../../../graphql/mutations';
 import CommentTextField from '../../../shared/CommentTextField';
+import { downloadCommentFile } from '../../../utils/helpers';
 
 export default function CommentField({
   data,
@@ -90,6 +91,7 @@ export default function CommentField({
         commentsRefetch={commentsRefetch}
         mentionsData={mentionsData}
         forProcess={forProcess}
+        taggedDocOnClick={downloadCommentFile}
         forAccordionSection
       />
       {Boolean(error.length) && <p className="text-center">{error}</p>}

@@ -9,6 +9,7 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import CommentCard from '../../Components/CommentCard';
 import { formatError } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
+import { downloadCommentFile } from '../../../../utils/helpers';
 
 export default function ProjectActivitySummary({comments, commentsLoading, commentsError, commentsRefetch, commentsFetchMore}) {
   const classes = useStyles();
@@ -51,6 +52,7 @@ export default function ProjectActivitySummary({comments, commentsLoading, comme
         <CommentCard
           comments={comments.projectComments}
           refetch={commentsRefetch}
+          taggedDocOnClick={downloadCommentFile}
         />
       )
         : (

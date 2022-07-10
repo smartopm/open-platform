@@ -646,10 +646,10 @@ export function decodeHtmlEntity(str) {
   });
 };
 
-export function replaceDocumentMentions(comment, path, onDocClick) {
+export function replaceDocumentMentions(comment, onDocClick) {
   const text = comment?.body;
   if (!text) return;
-  if (!path && !onDocClick) return text;
+  if (!onDocClick) return text;
 
   const formattedText = text
     .trim()
@@ -657,13 +657,11 @@ export function replaceDocumentMentions(comment, path, onDocClick) {
     .map((word, index) => {
       if (/\###(.*?)\###/.test(word)) {
         const documentId = word.split('__')[1];
-        const linkOptions = { key: index, href: path ? `${path}&document_id=${documentId}` : '' };
-        if (onDocClick) {
-          linkOptions['onClick'] = e => {
-            e.preventDefault();
-            onDocClick(comment.id, documentId);
-          };
-        }
+        const linkOptions = { key: index, href: '#' };
+        linkOptions['onClick'] = e => {
+          e.preventDefault();
+          onDocClick(comment, documentId);
+        };
 
         return React.createElement('a', linkOptions, word.split('__')[2]);
       }
@@ -741,3 +739,7 @@ export function downloadAsImage(currentRef, name) {
     });
 }
 
+export function downloadCommentFile(comment, fileId) {
+  const clickedDoc = comment?.taggedAttachments.find(doc => doc.id === fileId);
+  secureFileDownload(clickedDoc.url);
+}

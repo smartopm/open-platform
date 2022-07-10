@@ -26,7 +26,8 @@ import {
   useParamsQuery,
   sanitizeText,
   replaceDocumentMentions,
-  removeNewLines
+  removeNewLines,
+  downloadCommentFile
 } from '../../../../utils/helpers';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import { ActionDialog } from '../../../../components/Dialog';
@@ -294,7 +295,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                               <Typography variant="caption">
                                 {replaceDocumentMentions(
                                   comment,
-                                  `/processes/${processId}/projects?tab=documents&project_id=${att.task_id}&comment_id=${comment.id}`
+                                  downloadCommentFile
                                 )}
                               </Typography>
                             </Grid>
