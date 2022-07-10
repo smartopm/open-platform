@@ -24,6 +24,7 @@ describe('Admin processes dashboard', () => {
                 body: 'sent comment body',
                 createdAt: '2020-12-28T22:00:00Z',
                 groupingId: '67ue',
+                taggedAttachments: [],
                 user: {
                   id: 'yu678',
                   name: 'Sent User Name',
@@ -62,6 +63,7 @@ describe('Admin processes dashboard', () => {
                 body: 'resolved comment body',
                 createdAt: '2020-12-30T22:00:00Z',
                 groupingId: '672hgoe',
+                taggedAttachments: [],
                 user: {
                   id: 'ya8788',
                   name: 'Resolved User Name',
@@ -79,6 +81,7 @@ describe('Admin processes dashboard', () => {
                 body: 'ordinary comment body',
                 createdAt: '2020-12-31T22:00:00Z',
                 groupingId: '6a62e',
+                taggedAttachments: [],
                 user: {
                   id: 'a9n788',
                   name: 'Ordinary User Name',

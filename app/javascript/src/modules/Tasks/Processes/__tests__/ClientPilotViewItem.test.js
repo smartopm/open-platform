@@ -35,6 +35,7 @@ const projectComments = [
     replyFrom: null,
     replyRequired: false,
     groupingId: null,
+    taggedAttachments: [],
     user: {
       __typename: 'User',
       id: '50da896a-9217-43b9-a28f-03a13c7d401f',

@@ -22,6 +22,7 @@ describe('Process Comment Page Component', () => {
                 body: 'sent comment body',
                 createdAt: '2020-12-28T22:00:00Z',
                 groupingId: '67ue',
+                
                 taggedAttachments: [{ id: '4567', url: 'https://sent-download.com/url' }],
                 user: {
                   id: 'yu678',

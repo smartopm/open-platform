@@ -12,6 +12,7 @@ describe('Process Comment Item Component', () => {
     body: 'sent comment body',
     createdAt: '2020-12-28T22:00:00Z',
     groupingId: '67ue',
+    taggedAttachments: [],
     user: {
       id: 'yu678',
       name: 'Sent User Name',
