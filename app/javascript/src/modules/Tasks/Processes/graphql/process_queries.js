@@ -207,7 +207,7 @@ export const ProjectRepliesRequestedComments = gql`
   }
 `;
 
-export const czProcessReplyComments = gql`
+export const ProcessReplyComments = gql`
   query processReplyComments($processId: ID!) {
     processReplyComments(processId: $processId) {
       sent {

@@ -28,8 +28,6 @@ import {
   replaceDocumentMentions,
   validateRequiredField,
   downloadAsImage,
-  secureFileDownload,
-  downloadCommentFile,
 } from '../../utils/helpers';
 
 jest.mock('dompurify')

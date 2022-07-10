@@ -7,9 +7,8 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CenteredContent from '../../../../shared/CenteredContent';
 import CommentCard from '../../Components/CommentCard';
-import { formatError } from '../../../../utils/helpers';
+import { formatError, downloadCommentFile } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
-import { downloadCommentFile } from '../../../../utils/helpers';
 
 export default function ProjectActivitySummary({comments, commentsLoading, commentsError, commentsRefetch, commentsFetchMore}) {
   const classes = useStyles();
