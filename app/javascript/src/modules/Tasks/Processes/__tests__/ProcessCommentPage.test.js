@@ -22,6 +22,7 @@ describe('Process Comment Page Component', () => {
                 body: 'sent comment body',
                 createdAt: '2020-12-28T22:00:00Z',
                 groupingId: '67ue',
+                taggedAttachments: [{ id: '4567', url: 'https://sent-download.com/url' }],
                 user: {
                   id: 'yu678',
                   name: 'Sent User Name',
@@ -43,6 +44,7 @@ describe('Process Comment Page Component', () => {
                 body: 'received comment body',
                 createdAt: '2020-12-29T22:00:00Z',
                 groupingId: '67oe',
+                taggedAttachments: [],
                 user: {
                   id: 'yua788',
                   name: 'Received User Name',
@@ -60,6 +62,7 @@ describe('Process Comment Page Component', () => {
                 body: 'resolved comment body',
                 createdAt: '2020-12-30T22:00:00Z',
                 groupingId: '672hgoe',
+                taggedAttachments: [],
                 user: {
                   id: 'ya8788',
                   name: 'Resolved User Name',
