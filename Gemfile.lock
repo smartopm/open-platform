@@ -78,7 +78,7 @@ GEM
     ast (2.4.2)
     awesome_print (1.9.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.602.0)
+    aws-partitions (1.603.0)
     aws-sdk-core (3.131.2)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
@@ -137,14 +137,12 @@ GEM
     faraday-net_http (2.0.3)
     ffi (1.15.5)
     ffi (1.15.5-java)
-    ffi (1.15.5-x64-mingw32)
-    ffi (1.15.5-x86-mingw32)
     flutterwave_sdk (0.1.1)
     fugit (1.5.3)
       et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
-    gitlab (4.18.0)
-      httparty (~> 0.18)
+    gitlab (4.19.0)
+      httparty (~> 0.20)
       terminal-table (>= 1.5.1)
     globalid (1.0.0)
       activesupport (>= 5.0)
@@ -159,7 +157,7 @@ GEM
     httparty (0.20.0)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
-    i18n (1.10.0)
+    i18n (1.11.0)
       concurrent-ruby (~> 1.0)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
@@ -201,10 +199,6 @@ GEM
       racc (~> 1.4)
     nokogiri (1.13.6-java)
       racc (~> 1.4)
-    nokogiri (1.13.6-x64-mingw32)
-      racc (~> 1.4)
-    nokogiri (1.13.6-x86-mingw32)
-      racc (~> 1.4)
     oauth2 (1.4.10)
       faraday (>= 0.17.3, < 3.0)
       jwt (>= 1.0, < 3.0)
@@ -238,8 +232,6 @@ GEM
     parser (3.1.2.0)
       ast (~> 2.4.1)
     pg (1.1.4)
-    pg (1.1.4-x64-mingw32)
-    pg (1.1.4-x86-mingw32)
     phonelib (0.7.0)
     polyglot (0.3.5)
     pronto (0.11.0)
@@ -341,7 +333,7 @@ GEM
       rubocop-ast (>= 0.6.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-ast (1.18.0)
+    rubocop-ast (1.19.1)
       parser (>= 3.1.1.0)
     rubocop-rails (2.9.1)
       activesupport (>= 4.2.0)
@@ -358,8 +350,6 @@ GEM
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
-      ffi (~> 1.9)
-    sassc (2.4.0-x64-mingw32)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
       railties (>= 4.0.0)
@@ -399,7 +389,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
-    sorbet-runtime (0.5.10139)
+    sorbet-runtime (0.5.10151)
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -465,9 +455,6 @@ GEM
 PLATFORMS
   java
   ruby
-  x64-mingw32
-  x86-mingw32
-  x86-mswin32
 
 DEPENDENCIES
   acsv
@@ -512,7 +499,7 @@ DEPENDENCIES
   rubocop (~> 0.77)
   rubocop-rails (~> 2.3)
   sass-rails (>= 5)
-  search_cop (~> 1.2.0)
+  search_cop (= 1.2.0)
   selenium-webdriver
   sendgrid-ruby (~> 6.6.1)
   shoulda-callback-matchers (~> 1.1.1)
