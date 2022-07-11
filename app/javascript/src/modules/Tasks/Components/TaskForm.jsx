@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import {
@@ -20,7 +20,7 @@ import { NotesCategories } from '../../../utils/constants';
 // TODO: This should be moved to the shared directory
 import UserSearch from '../../Users/Components/UserSearch';
 import CustomAutoComplete from '../../../shared/autoComplete/CustomAutoComplete';
-import MessageAlert from '../../../components/MessageAlert';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 const initialData = {
   user: '',
@@ -45,8 +45,8 @@ export default function TaskForm({
   const [createTask] = useMutation(CreateNote);
   const [userData, setData] = useState(initialData);
   const { t } = useTranslation(['task', 'common']);
-  const [messageAlert, setMessageAlert] = useState('');
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   useEffect(() => {
     if (createTaskListSubTask) {
@@ -74,25 +74,17 @@ export default function TaskForm({
         assignees.map(user => assignUser(data.noteCreate.note.id, user.id));
         setLoadingStatus(false);
         refetch();
-        setIsSuccessAlert(true);
-        setMessageAlert(t('task.task_created'));
+        showSnackbar({ type: messageType.success, message: t('task.task_created') });
         close();
       })
       .catch(err => {
         setLoadingStatus(false);
-        setIsSuccessAlert(false);
-        setMessageAlert(err.message);
+        showSnackbar({ type: messageType.error, message: err.message });
       });
   }
 
   return (
     <Container>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={() => setMessageAlert('')}
-      />
       <Grid container>
         <Grid item sm={12} md={12} xs={12} style={{padding: '50px 0'}}>
           <Typography variant="h4" color="text.secondary">

@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
 import TransactionDetails from '../Components/UserTransactions/TransactionDetails';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('It should test the transaction detail modal component', () => {
@@ -35,12 +36,14 @@ describe('It should test the transaction detail modal component', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <TransactionDetails
-              open
-              handleModalClose={jest.fn}
-              currencyData={{ currency: 'ZMW', locale: 'en-ZM' }}
-              data={data}
-            />
+            <MockedSnackbarProvider>
+              <TransactionDetails
+                open
+                handleModalClose={jest.fn}
+                currencyData={{ currency: 'ZMW', locale: 'en-ZM' }}
+                data={data}
+              />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

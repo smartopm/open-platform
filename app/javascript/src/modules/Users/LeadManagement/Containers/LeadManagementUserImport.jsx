@@ -9,9 +9,9 @@ import { ImportCreate } from '../../../../graphql/mutations';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
-import MessageAlert from '../../../../components/MessageAlert';
 import { csvValidate, readFileAsText } from '../../utils';
 import PageWrapper from '../../../../shared/PageWrapper';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate);
@@ -20,10 +20,10 @@ export default function UsersImport() {
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const { token } = useContext(Context);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
   const [CSVFileUploadErrors, setCSVFileUploadErrors] = useState([]);
   const { t } = useTranslation('common');
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   function createImport() {
     setIsLoading(true);
@@ -32,27 +32,19 @@ export default function UsersImport() {
     })
       .then(() => {
         setIsLoading(false);
-        setMessageAlert(
-          "Your import is currently being processed. You'll receive a mail when it's done."
-        );
-        setIsSuccessAlert(true);
+        showSnackbar({
+          type: messageType.success,
+          message: "Your import is currently being processed. You'll receive a mail when it's done."
+        });
       })
       .catch(err => {
         setIsLoading(false);
-        setMessageAlert(err.message);
-        setIsSuccessAlert(false);
+        showSnackbar({type: messageType.error, message: err.message });
       });
   }
 
   function onCancel() {
     return history.push('/users');
-  }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
   }
 
   function outputErrors(errorMessages) {
@@ -87,12 +79,6 @@ export default function UsersImport() {
 
   return (
     <PageWrapper pageTitle={t('misc.lead_import')}>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
       <Grid
         container
         style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}

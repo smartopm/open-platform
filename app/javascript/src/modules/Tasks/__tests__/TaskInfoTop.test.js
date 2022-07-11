@@ -10,6 +10,7 @@ import { UpdateNote } from '../../../graphql/mutations';
 import authState from '../../../__mocks__/authstate';
 import taskMock from '../__mocks__/taskMock';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 beforeEach(() => {
   jest.useFakeTimers()
@@ -84,7 +85,9 @@ describe('Top part of the task form component', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TaskInfoTop {...props} />
+              <MockedSnackbarProvider>
+                <TaskInfoTop {...props} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -119,7 +122,9 @@ describe('Top part of the task form component', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TaskInfoTop {...props} />
+              <MockedSnackbarProvider>
+                <TaskInfoTop {...props} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -148,7 +153,9 @@ describe('Top part of the task form component', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TaskInfoTop {...propsWithUnauthorizedCurrentUser} />
+              <MockedSnackbarProvider>
+                <TaskInfoTop {...propsWithUnauthorizedCurrentUser} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -165,7 +172,9 @@ describe('Top part of the task form component', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TaskInfoTop {...props} />
+              <MockedSnackbarProvider>
+                <TaskInfoTop {...props} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -215,7 +224,9 @@ describe('Top part of the task form component', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TaskInfoTop {...newProps} />
+              <MockedSnackbarProvider>
+                <TaskInfoTop {...newProps} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -270,7 +281,9 @@ describe('Top part of the task form component', () => {
         <MockedProvider mocks={[updateMock]} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TaskInfoTop {...newProps} />
+              <MockedSnackbarProvider>
+                <TaskInfoTop {...newProps} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -335,7 +348,9 @@ describe('Top part of the task form component', () => {
         <MockedProvider mocks={[updateMock]} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TaskInfoTop {...newProps} />
+              <MockedSnackbarProvider>
+                <TaskInfoTop {...newProps} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -394,7 +409,9 @@ describe('Top part of the task form component', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TaskInfoTop {...newProps} />
+              <MockedSnackbarProvider>
+                <TaskInfoTop {...newProps} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -428,7 +445,9 @@ describe('Top part of the task form component', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TaskInfoTop {...unassignedUserProps} />
+              <MockedSnackbarProvider>
+                <TaskInfoTop {...unassignedUserProps} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -457,7 +476,9 @@ describe('Top part of the task form component', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TaskInfoTop {...newProps} />
+              <MockedSnackbarProvider>
+                <TaskInfoTop {...newProps} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>

@@ -38,8 +38,8 @@ export default function PaymentPlanModal({
   currency,
   paymentPlansRefetch,
   landParcelsData,
-  setMessage,
-  openAlertMessage,
+  showSnackbar,
+  messageType,
   balanceRefetch,
   genRefetch
 }) {
@@ -172,14 +172,12 @@ export default function PaymentPlanModal({
         cleanModal();
         genRefetch();
         paymentPlansRefetch();
-        setMessage({ isError: false, detail: 'Successfuly created payment plan' });
-        openAlertMessage();
+        showSnackbar({ type: messageType.success, message: 'Successfuly created payment plan' });
         handleModalClose();
         balanceRefetch();
       })
       .catch(err => {
-        setMessage({ isError: true, detail: formatError(err.message) });
-        openAlertMessage();
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
@@ -484,8 +482,11 @@ PaymentPlanModal.propTypes = {
       })
     )
   }),
-  setMessage: PropTypes.func.isRequired,
-  openAlertMessage: PropTypes.func.isRequired,
+  showSnackbar: PropTypes.func.isRequired,
+  messageType: PropTypes.shape({
+    success: PropTypes.string,
+    error: PropTypes.string,
+  }).isRequired,
   balanceRefetch: PropTypes.func,
   genRefetch: PropTypes.func
 };

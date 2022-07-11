@@ -5,6 +5,7 @@ import { render, fireEvent, screen } from '@testing-library/react'
 import { BrowserRouter, Route } from 'react-router-dom/'
 import { createClient } from '../../../utils/apollo'
 import Task from '../Components/Task'
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar'
 
 // find elements that are available when DOM mounts then check the visual contents
 const mck = jest.fn()
@@ -40,8 +41,10 @@ describe('Task Component', () => {
     const container = render(
       <BrowserRouter>
         <ApolloProvider client={createClient}>
-          <Task {...props} />
-          <Route path={`/tasks/${props.note.id}`}>{props.note.body}</Route>
+          <MockedSnackbarProvider>
+            <Task {...props} />
+            <Route path={`/tasks/${props.note.id}`}>{props.note.body}</Route>
+          </MockedSnackbarProvider>
         </ApolloProvider>
       </BrowserRouter>
     )
@@ -84,7 +87,9 @@ describe('Task Component', () => {
     const container = render(
       <BrowserRouter>
         <ApolloProvider client={createClient}>
-          <Task {...newProps} />
+          <MockedSnackbarProvider>
+            <Task {...newProps} />
+          </MockedSnackbarProvider>
         </ApolloProvider>
       </BrowserRouter>
     )

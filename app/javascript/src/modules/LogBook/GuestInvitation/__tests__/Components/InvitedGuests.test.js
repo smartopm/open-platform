@@ -9,6 +9,7 @@ import { MyInvitedGuestsQuery } from '../../graphql/queries';
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../../../__mocks__/authstate';
 import { InvitationUpdateMutation } from '../../graphql/mutations';
+import MockedSnackbarProvider from '../../../../__mocks__/mock_snackbar';
 
 describe('Invited Guests Component', () => {
   const mockHistory = {
@@ -77,7 +78,9 @@ describe('Invited Guests Component', () => {
         <MemoryRouter>
           <MockedProvider mocks={[invitedGuests, cancelInviteMutationMock]} addTypename={false}>
             <MockedThemeProvider>
-              <InvitedGuests />
+              <MockedSnackbarProvider>
+                <InvitedGuests />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </MockedProvider>
         </MemoryRouter>
@@ -144,7 +147,9 @@ describe('Invited Guests Component', () => {
         <MemoryRouter>
           <MockedProvider mocks={[]} addTypename={false}>
             <MockedThemeProvider>
-              <InvitedGuests />
+              <MockedSnackbarProvider>
+                <InvitedGuests />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </MockedProvider>
         </MemoryRouter>

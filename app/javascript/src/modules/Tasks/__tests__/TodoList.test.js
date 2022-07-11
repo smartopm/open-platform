@@ -10,6 +10,7 @@ import authState from '../../../__mocks__/authstate';
 import taskMock from '../__mocks__/taskMock';
 import { TasksLiteQuery } from '../graphql/task_queries';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 jest.mock('react-router', () => ({
@@ -58,7 +59,9 @@ describe('Test the Todo page', () => {
         <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TodoList {...props} />
+              <MockedSnackbarProvider>
+                <TodoList {...props} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -73,7 +76,9 @@ describe('Test the Todo page', () => {
         <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TodoList {...props} />
+              <MockedSnackbarProvider>
+                <TodoList {...props} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -93,7 +98,9 @@ describe('Test the Todo page', () => {
         <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TodoList {...props} />
+              <MockedSnackbarProvider>
+                <TodoList {...props} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -112,7 +119,9 @@ describe('Test the Todo page', () => {
         <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TodoList {...props} />
+              <MockedSnackbarProvider>
+                <TodoList {...props} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -137,7 +146,9 @@ describe('Test the Todo page', () => {
           <MockedProvider mocks={mocks} addTypename>
             <BrowserRouter>
               <MockedThemeProvider>
-                <TodoList {...props} />
+                <MockedSnackbarProvider>
+                  <TodoList {...props} />
+                </MockedSnackbarProvider>
               </MockedThemeProvider>
             </BrowserRouter>
           </MockedProvider>
@@ -155,7 +166,9 @@ describe('Test the Todo page', () => {
           <MockedProvider mocks={mocks} addTypename>
             <BrowserRouter>
               <MockedThemeProvider>
-                <TodoList {...props} />
+                <MockedSnackbarProvider>
+                  <TodoList {...props} />
+                </MockedSnackbarProvider>
               </MockedThemeProvider>
             </BrowserRouter>
           </MockedProvider>

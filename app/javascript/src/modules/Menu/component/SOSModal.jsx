@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from 'react-apollo'
 import { useTranslation } from 'react-i18next';
 // eslint-disable-next-line import/no-unresolved
@@ -10,10 +10,10 @@ import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import Button from '@mui/material/Button';
 import PanicButtonSVG from './PanicButtonSVG';
-import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 import {CommunityEmergencyMutation, CancelCommunityEmergencyMutation} from '../graphql/sos_mutation';
 import userProps from '../../../shared/types/user';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -217,7 +217,6 @@ const useStyles = makeStyles((theme) => ({
 const SOSModal=({open, setOpen, location, authState})=> {
 
   const [panicButtonMessage, setPanicButtonMessage] = useState({ isError: false, detail: '' });
-  const [panicAlertOpen, setPanicAlertOpen] = useState(false);
   const [panicButtonPressed, setPanicButtonPressed] = useState(false);
   const [iamSafeButtonPressed, setIamSafeButtonPressed] = useState(false);
   const [counter, setCounter] = useState(-1);
@@ -226,35 +225,31 @@ const SOSModal=({open, setOpen, location, authState})=> {
 
   const { t } = useTranslation('panic_alerts')
 
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const callback = () => {
     setPanicButtonPressed(true)
     if (location.loaded && !location.error){
       const googleMapUrl = `https://www.google.com/maps/search/?api=1&query=${location.coordinates.lat},${location.coordinates.lng}`
       communityEmergency({ variables: { googleMapUrl } }).then(()=>{
-        setPanicButtonMessage({
-          isError: false,
-          detail: t('panic_alerts.panic_success_alert')
-        });
-        setPanicAlertOpen(true);
+        showSnackbar({ type: messageType.success, message: t('panic_alerts.panic_success_alert') });
+        setPanicButtonMessage({ isError: false, detail: '' });
       })
       .catch(error => {
-        setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
-        setPanicAlertOpen(true);
+        showSnackbar({ type: messageType.error, message: formatError(error.message) });
+        setPanicButtonMessage({ isError: true, detail: '' });
         setPanicButtonPressed(false)
       })
 
     }
     else{
       communityEmergency({ variables: { googleMapUrl: null } }).then(()=>{
-        setPanicButtonMessage({
-          isError: false,
-          detail: t('panic_alerts.panic_success_alert')
-        });
-        setPanicAlertOpen(true);
+        showSnackbar({ type: messageType.success, message: t('panic_alerts.panic_success_alert') });
+        setPanicButtonMessage({ isError: false, detail: '' });
       })
       .catch(error => {
-        setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
-        setPanicAlertOpen(true);
+        showSnackbar({ type: messageType.error, message: formatError(error.message) });
+        setPanicButtonMessage({ isError: true, detail: '' });
         setPanicButtonPressed(false)
       })
 
@@ -266,23 +261,20 @@ const SOSModal=({open, setOpen, location, authState})=> {
   const cancelCommunityEmergency = () => {
     setPanicButtonPressed(true)
     communityEmergencyCancel().then(()=>{
-        setPanicButtonMessage({
-          isError: false,
-          detail: t('panic_alerts.cancel_emergency_success_alert')
-        });
-        setPanicAlertOpen(true);
+        showSnackbar({ type: messageType.success, message: t('panic_alerts.cancel_emergency_success_alert') });
+        setPanicButtonMessage({ isError: false, detail: '' });
       })
       .catch(error => {
-        setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
-        setPanicAlertOpen(true);
+        showSnackbar({ type: messageType.error, message: formatError(error.message) });
+        setPanicButtonMessage({ isError: true, detail: '' });
         setPanicButtonPressed(false)
       })
 
   };
 
   const showPanicAlert = ()=> {
-    setPanicButtonMessage({ isError: true, detail: t('panic_alerts.panic_error_alert') });
-    setPanicAlertOpen(true);
+    showSnackbar({ type: messageType.error, message: t('panic_alerts.panic_error_alert') });
+    setPanicButtonMessage({ isError: true, detail: '' });
     setCounter(-1)
 
   }
@@ -291,7 +283,6 @@ const SOSModal=({open, setOpen, location, authState})=> {
     setOpen(false)
     setPanicButtonPressed(false)
     setPanicButtonMessage({ isError: false, detail: '' })
-    setPanicAlertOpen(false);
     setCounter(-1)
     setIamSafeButtonPressed(false);
   }
@@ -303,7 +294,6 @@ const SOSModal=({open, setOpen, location, authState})=> {
   }
 
   const handleLongPressStart = () => {
-    setPanicAlertOpen(false);
     setPanicButtonMessage({ isError: false, detail: '' });
     setCounter(0)
   }
@@ -354,12 +344,6 @@ const SOSModal=({open, setOpen, location, authState})=> {
           </p>
           <CloseIcon onClick={resetSOSModalState} data-testid="sos-modal-close-btn" />
         </div>
-        <MessageAlert
-          type={panicButtonMessage.isError ? 'error' : 'success'}
-          message={panicButtonMessage.detail}
-          open={panicAlertOpen}
-          handleClose={() => setPanicAlertOpen(false)}
-        />
         <br />
         { (!panicButtonPressed && !iamSafeButtonPressed) && (
           <div data-testid="modal-data">

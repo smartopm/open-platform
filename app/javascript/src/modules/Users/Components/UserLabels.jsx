@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
 /* eslint-disable complexity */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import AddIcon from '@mui/icons-material/Add';
 import Avatar from '@mui/material/Avatar';
@@ -23,10 +23,10 @@ import { UserLabelsQuery, LabelsQuery } from '../../../graphql/queries';
 import { LabelCreate, UserLabelCreate, UserLabelUpdate } from '../../../graphql/mutations';
 import useDebounce from '../../../utils/useDebounce';
 import { formatError, truncateString } from '../../../utils/helpers';
-import MessageAlert from '../../../components/MessageAlert';
 import ErrorPage from '../../../components/Error';
 import CenteredContent from '../../../shared/CenteredContent';
 import { Spinner } from '../../../shared/Loading';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function UserLabels({ userId, isLabelOpen }) {
   const [showAddTextBox, setshowAddTextBox] = useState(false);
@@ -35,13 +35,13 @@ export default function UserLabels({ userId, isLabelOpen }) {
   const [labelCreate] = useMutation(LabelCreate);
   const [userLabelCreate] = useMutation(UserLabelCreate);
   const [userLabelUpdate] = useMutation(UserLabelUpdate);
-  const [messageAlert, setMessageAlert] = useState('');
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const { t } = useTranslation(['common', 'label']);
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.only('sm'));
   const isMobile = useMediaQuery('(max-width:800px)');
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   useEffect(() => {
     setLabel(newUserLabel);
@@ -60,8 +60,7 @@ export default function UserLabels({ userId, isLabelOpen }) {
         })
         .then(() => userLabelRefetch())
         .catch(err => {
-          setMessageAlert(formatError(err.message));
-          setIsSuccessAlert(false);
+          showSnackbar({type: messageType.error, message: formatError(err.message) });
         });
     }
   }
@@ -79,13 +78,6 @@ export default function UserLabels({ userId, isLabelOpen }) {
       .catch(error => <ErrorPage title={error.message} />); // do something useful with this error
   }
 
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
-  }
-
   const { loading, error, data, refetch: LabelRefetch } = useQuery(LabelsQuery);
   const { loading: _loading, error: _error, data: userData, refetch: userLabelRefetch } = useQuery(
     UserLabelsQuery,
@@ -101,12 +93,6 @@ export default function UserLabels({ userId, isLabelOpen }) {
   if (err) return <CenteredContent>{formatError(err.message)}</CenteredContent>;
   return (
     <div className={classes.labelContainer}>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
       {isLabelOpen && (
         <Container
           maxWidth="xl"

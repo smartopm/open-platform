@@ -10,7 +10,8 @@ export default function CreateLabel({
   handleLabelSelect,
   loading,
   setLoading,
-  setMessage,
+  showSnackbar,
+  messageType,
   data,
   refetch
 }) {
@@ -56,10 +57,7 @@ export default function CreateLabel({
       })
       .catch(err => {
         setLoading(false);
-        setMessage({
-          isError: true,
-          detail: err.message
-        });
+        showSnackbar({type: messageType.error, message: err.message });
       });
   }
 
@@ -124,7 +122,11 @@ CreateLabel.propTypes = {
   handleLabelSelect: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   setLoading: PropTypes.func.isRequired,
-  setMessage: PropTypes.func.isRequired,
+  showSnackbar: PropTypes.func.isRequired,
+  messageType: PropTypes.shape({
+    success: PropTypes.string,
+    error: PropTypes.string,
+  }).isRequired,
   data: PropTypes.shape({
     labels: PropTypes.arrayOf(
       PropTypes.shape({

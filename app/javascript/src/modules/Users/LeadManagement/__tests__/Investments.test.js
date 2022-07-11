@@ -10,6 +10,7 @@ import Investments from '../Components/Investments';
 import { DealDetailsQuery, LeadInvestmentsQuery, InvestmentStatsQuery } from '../graphql/queries';
 import CreateEvent from '../graphql/mutations';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -126,7 +127,9 @@ describe('LeadEvents Page', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
+              <MockedSnackbarProvider>
+                <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -165,7 +168,9 @@ describe('LeadEvents Page', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
+              <MockedSnackbarProvider>
+                <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>

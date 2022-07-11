@@ -4,6 +4,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import UserLabels from '../Components/UserLabels';
 import { LabelsQuery, UserLabelsQuery } from '../../../graphql/queries';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('It should test the user label component', () => {
   it('should render component', async () => {
@@ -51,7 +52,9 @@ describe('It should test the user label component', () => {
     };
     const container = render(
       <MockedProvider mocks={[...mockData, labelsMockData]} addTypename={false}>
-        <UserLabels userId="59927651-9bb4-4e47-8afe-0989d03d210d" isLabelOpen />
+        <MockedSnackbarProvider>
+          <UserLabels userId="59927651-9bb4-4e47-8afe-0989d03d210d" isLabelOpen />
+        </MockedSnackbarProvider>
       </MockedProvider>
     );
     await waitFor(() => {
@@ -86,7 +89,9 @@ describe('It should test the user label component', () => {
     };
     const container = render(
       <MockedProvider mocks={[mockData, labelsMockData]} addTypename={false}>
-        <UserLabels userId="59927651-9bb4-4e47-8afe-0989d03d210d" isLabelOpen />
+        <MockedSnackbarProvider>
+          <UserLabels userId="59927651-9bb4-4e47-8afe-0989d03d210d" isLabelOpen />
+        </MockedSnackbarProvider>
       </MockedProvider>
     );
     await waitFor(() => {

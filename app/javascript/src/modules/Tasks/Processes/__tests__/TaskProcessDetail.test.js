@@ -11,6 +11,7 @@ import authState from '../../../../__mocks__/authstate';
 import TaskProcessDetail from '../Components/TaskProcessDetail';
 import { ProjectQuery } from '../graphql/process_queries';
 import MockedThemeProvider from "../../../__mocks__/mock_theme";
+import MockedSnackbarProvider from '../../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -64,7 +65,9 @@ describe('TaskProcessDetail Component', () => {
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <TaskProcessDetail />
+              <MockedSnackbarProvider>
+                <TaskProcessDetail />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>

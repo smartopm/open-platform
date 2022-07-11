@@ -9,6 +9,8 @@ import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../../../__mocks__/authstate';
 import { SearchGuestsQuery } from '../../graphql/queries';
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
+import { SnackbarContext } from '../../../../../shared/snackbar/Context';
+import MockedSnackbarProvider, { mockedSnackbarProviderProps } from '../../../../__mocks__/mock_snackbar';
 
 describe('Guest Invitation Form', () => {
   const mockHistory = {
@@ -82,7 +84,9 @@ describe('Guest Invitation Form', () => {
         <Context.Provider value={userMock}>
           <MockedProvider mocks={[createInviteMock, searchGuestsMock]} addTypename={false}>
             <MockedThemeProvider>
-              <GuestInviteForm />
+              <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+                <GuestInviteForm />
+              </SnackbarContext.Provider>
             </MockedThemeProvider>
           </MockedProvider>
         </Context.Provider>
@@ -98,11 +102,14 @@ describe('Guest Invitation Form', () => {
     fireEvent.change(getByTestId('search'), { target: { value: '090909090' } });
 
     fireEvent.click(getByTestId('invite_button'));
-    //   await waitFor(() => {
-    //     expect(getAllByText('guest.guest_invited')[0]).toBeInTheDocument();
-    //     expect(mockHistory.push).toBeCalled();
-    //     expect(mockHistory.push).toBeCalledWith('/logbook/guests');
-    //   }, 50);
+    // await waitFor(() => {
+    //   expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+    //     type: mockedSnackbarProviderProps.messageType.success,
+    //     message: 'guest.guest_invited'
+    //   });
+    //   expect(mockHistory.push).toBeCalled();
+    //   expect(mockHistory.push).toBeCalledWith('/logbook/guests');
+    // }, 50);
   });
 
   it('should render the same form for guest update', async () => {
@@ -127,7 +134,9 @@ describe('Guest Invitation Form', () => {
         <Context.Provider value={userMock}>
           <MockedProvider mocks={[createInviteMock, searchGuestsMock]} addTypename={false}>
             <MockedThemeProvider>
-              <GuestInviteForm {...props} />
+              <MockedSnackbarProvider>
+                <GuestInviteForm {...props} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </MockedProvider>
         </Context.Provider>

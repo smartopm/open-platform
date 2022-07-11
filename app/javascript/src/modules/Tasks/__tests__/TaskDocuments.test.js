@@ -7,6 +7,7 @@ import TaskDocuments from '../Components/TaskDocuments';
 import authState from '../../../__mocks__/authstate';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import MockedThemeProvider from '../../__mocks__/mock_theme'
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -31,7 +32,9 @@ describe('Task Documents', () => {
         <MockedThemeProvider>
           <MockedProvider>
             <BrowserRouter>
-              <TaskDocuments loading={false} refetch={jest.fn()} status="FILE_RESIZE" data={data} />
+              <MockedSnackbarProvider>
+                <TaskDocuments loading={false} refetch={jest.fn()} status="FILE_RESIZE" data={data} />
+              </MockedSnackbarProvider>
             </BrowserRouter>
           </MockedProvider>
         </MockedThemeProvider>

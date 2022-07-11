@@ -4,6 +4,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { UserJourneyUpdateMutation } from '../../../graphql/mutations/user_journey'
 import UserJourneyDialog from '../../Users/Components/UserJourneyDialog'
+import { SnackbarContext } from '../../../shared/snackbar/Context'
+import { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar'
 
 
 describe('user journey dialog', () => {
@@ -34,12 +36,14 @@ describe('user journey dialog', () => {
     ];
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserJourneyDialog
-          open={open}
-          handleModalClose={handleClose}
-          log={log}
-          refetch={refetch}
-        />
+        <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+          <UserJourneyDialog
+            open={open}
+            handleModalClose={handleClose}
+            log={log}
+            refetch={refetch}
+          />
+        </SnackbarContext.Provider>
       </MockedProvider>
     )
 
@@ -50,7 +54,10 @@ describe('user journey dialog', () => {
 
     await waitFor(() => {
       expect(refetch).toBeCalled()
-      expect(container.queryByText('users.user_success')).toBeInTheDocument()
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        type: mockedSnackbarProviderProps.messageType.success,
+        message: 'users.user_success',
+      });
     }, 10)
   })
 
@@ -75,12 +82,14 @@ describe('user journey dialog', () => {
 
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserJourneyDialog
-          open={open}
-          handleModalClose={handleClose}
-          log={log}
-          refetch={refetch}
-        />
+        <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+          <UserJourneyDialog
+            open={open}
+            handleModalClose={handleClose}
+            log={log}
+            refetch={refetch}
+          />
+        </SnackbarContext.Provider>
       </MockedProvider>
     )
     fireEvent.click(container.queryByTestId('custom-dialog-button'))
@@ -88,7 +97,10 @@ describe('user journey dialog', () => {
     await waitFor(() => {
       expect(handleClose).not.toBeCalled()
       expect(refetch).not.toBeCalled()
-      expect(container.queryByText('An error occurred, the date is wrong')).toBeInTheDocument()
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        type: mockedSnackbarProviderProps.messageType.error,
+        message: ' An error occurred, the date is wrong',
+      });
     }, 10)
   })
 })

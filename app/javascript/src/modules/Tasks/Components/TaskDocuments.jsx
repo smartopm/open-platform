@@ -20,7 +20,6 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
 import { dateToString } from '../../../components/DateContainer';
 import CenteredContent from '../../../shared/CenteredContent';
-import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
 import { formatError, secureFileDownload, useParamsQuery } from '../../../utils/helpers';
 import { DeleteNoteDocument } from '../../../graphql/mutations';
@@ -29,6 +28,7 @@ import ProgressBar from '../../../shared/ProgressBar';
 
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { useScroll, useRemoveBackground } from '../../../hooks/useDomActions';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function TaskDocuments({ data, loading, error, refetch, status }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -37,9 +37,11 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
   const [open, setOpen] = useState(false);
   const [taskDocumentDelete] = useMutation(DeleteNoteDocument);
   const authState = useContext(AuthStateContext);
-  const [messageDetails, setMessageDetails] = useState({ isError: false, message: '' });
   const classes = useStyles();
   const { t } = useTranslation('task');
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const userTaskPermissions = authState.user?.permissions.find(
     permissionObject => permissionObject.module === 'note'
   );
@@ -79,12 +81,12 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
   function handleDeleteDocument() {
     taskDocumentDelete({ variables: { documentId: currentDoc?.id } })
       .then(() => {
-        setMessageDetails({ isError: false, message: t('document.document_deleted') });
+        showSnackbar({ type: messageType.success, message: t('document.document_deleted') });
         handleCloseDialog();
         refetch();
       })
       .catch(err => {
-        setMessageDetails({ isError: true, message: err.message });
+        showSnackbar({ type: messageType.error, message: err.message });
         handleCloseDialog();
       });
   }
@@ -96,12 +98,6 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
   const documents = data.task?.attachments;
   return (
     <div className={classes.documentsSection}>
-      <MessageAlert
-        type={!messageDetails.isError ? 'success' : 'error'}
-        message={messageDetails.message}
-        open={!!messageDetails.message}
-        handleClose={() => setMessageDetails({ ...messageDetails, message: '' })}
-      />
       <ActionDialog
         open={open}
         type={t('misc.confirm')}

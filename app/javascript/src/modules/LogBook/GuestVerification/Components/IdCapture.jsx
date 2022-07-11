@@ -10,10 +10,10 @@ import ImageArea from '../../../../shared/imageUpload/ImageArea';
 import useFileUpload from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import { EntryRequestContext } from '../Context';
-import MessageAlert from '../../../../components/MessageAlert';
 import CenteredContent from '../../../../components/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import AccessCheck from '../../../Permissions/Components/AccessCheck';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function IDCapture({ handleNext }) {
   const [frontImageUrl, setFrontImageUrl] = useState('');
@@ -26,10 +26,9 @@ export default function IDCapture({ handleNext }) {
   const matches = useMediaQuery('(max-width:600px)');
   const { t } = useTranslation('logbook');
   const [updateRequest] = useMutation(EntryRequestUpdateMutation);
-  const [errorDetails, setDetails] = useState({
-    isError: false,
-    message: ''
-  });
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
   });
@@ -47,12 +46,11 @@ export default function IDCapture({ handleNext }) {
     setLoading(true);
     updateRequest({ variables: { id: requestContext.request.id, imageBlobIds: blobIds } })
       .then(({ data }) => {
-        setDetails({
-          ...errorDetails,
+        showSnackbar({
+          type: messageType.success,
           message: requestContext.request.isEdit
-            ? t('image_capture.image_updated')
-            : t('image_capture.image_captured'),
-          isError: false
+              ? t('image_capture.image_updated')
+              : t('image_capture.image_captured')
         });
         requestContext.updateRequest({
           ...requestContext.request,
@@ -64,7 +62,7 @@ export default function IDCapture({ handleNext }) {
         }
       })
       .catch(error => {
-        setDetails({ ...errorDetails, isError: true, message: error.message });
+        showSnackbar({ type: messageType.error, message: error.message });
         setLoading(false);
       });
   }
@@ -87,12 +85,6 @@ export default function IDCapture({ handleNext }) {
 
   return (
     <>
-      <MessageAlert
-        type={!errorDetails.isError ? 'success' : 'error'}
-        message={errorDetails.message}
-        open={!!errorDetails.message}
-        handleClose={() => setDetails({ ...errorDetails, message: '' })}
-      />
       <Grid container>
         <Grid item xs={12} className={classes.body}>
           <Typography variant="h6" className={classes.header} data-testid="add_photo">

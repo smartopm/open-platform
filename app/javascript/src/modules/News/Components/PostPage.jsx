@@ -25,10 +25,10 @@ import Comments from '../../Discussions/Components/Comment';
 import { DiscussionMutation } from '../../../graphql/mutations';
 import CenteredContent from '../../../shared/CenteredContent';
 import TagsComponent from './Tags';
-import MessageAlert from '../../../components/MessageAlert';
 import { NewsNav } from '../../Menu';
 import { CurrentCommunityQuery } from '../../Community/graphql/community_query';
 import useStateIfMounted from '../../../shared/hooks/useStateIfMounted';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 // TODO: Reuse this component
 // eslint-disable-next-line
@@ -53,11 +53,12 @@ export default function PostPage() {
   });
   const communityQuery = useQuery(CurrentCommunityQuery);
   const [discuss] = useMutation(DiscussionMutation);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
   const [response, setData] = useState({});
   const [error, setError] = useStateIfMounted(null);
   const { t } = useTranslation(['news', 'common']);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const fetchData = async url => {
     try {
       const result = await fetch(url);
@@ -86,21 +87,13 @@ export default function PostPage() {
         setLoading(false);
       })
       .catch(err => {
-        setMessageAlert(err.message);
-        setIsSuccessAlert(false);
+        showSnackbar({ type: messageType.error, message: err.message });
       });
   }
   const [open, setOpen] = useState(false);
 
   function handleCommentsView() {
     setOpen(!open);
-  }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
   }
 
   function fetchMoreComments() {
@@ -124,13 +117,6 @@ export default function PostPage() {
   }
   return (
     <>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
-
       <NewsNav history={history}>
         <h4>{t('news.news')}</h4>
       </NewsNav>

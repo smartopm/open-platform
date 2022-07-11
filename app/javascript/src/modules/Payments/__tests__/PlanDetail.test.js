@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
 import PlanDetail from '../Components/UserTransactions/PlanDetail';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('It should test the plan detail modal component', () => {
@@ -36,8 +37,8 @@ describe('It should test the plan detail modal component', () => {
               currencyData={{ currency: 'ZMW', locale: 'en-ZM' }}
               planData={planData}
               updatePaymentPlan={jest.fn}
-              setIsSuccessAlert={jest.fn}
-              setMessageAlert={jest.fn}
+              messageType={{...mockedSnackbarProviderProps}}
+              showSnackbar={jest.fn}
               plansRefetch={jest.fn}
             />
           </MockedThemeProvider>
