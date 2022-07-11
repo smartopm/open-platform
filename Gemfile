@@ -32,7 +32,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'dotenv'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', '~> 1.2021', '>= 1.2021.2', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', '~> 1.2021', '>= 1.2021.2'
 
 gem 'vonage', "~> 7.7.0"
 gem 'sendgrid-ruby', "~> 6.6.1"
@@ -69,7 +69,7 @@ gem 'paper_trail', '~> 12.2.0'
 gem 'rollbar', '~> 3.3.0'
 
 # full text searching on models
-gem 'search_cop', '~> 1.2.0'
+gem 'search_cop', '1.2.0'
 
 # dynamic logic using json
 gem 'json_logic', '~> 0.4.7'
