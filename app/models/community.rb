@@ -71,6 +71,7 @@ class Community < ApplicationRecord
     'Greenpark': ['doublegdp.com'],
     'Enyimba': ['doublegdp.com'],
     'Metropolis': ['doublegdp.com'],
+    'Konza': ['doublegdp.com'],
     'DAST': ['doublegdp.com'],
   }.freeze
 
