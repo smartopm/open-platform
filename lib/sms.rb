@@ -27,13 +27,9 @@ class Sms
     country = community.locale&.split('-')
     client = Vonage::Client.new(api_key: config[:api_key], api_secret: config[:api_secret])
 
-    begin
-      insight = client.number_insight.advanced(number: to, country: country[1])
-      raise SmsError, insight.status_message unless insight.valid_number == 'valid'
-
+    insight = client.number_insight.advanced(number: to, country: country[1])
+    if insight.valid_number == 'valid'
       client.sms.send(from: 'DoubleGDP', to: to, text: message)
-    rescue StandardError
-      raise SmsError, I18n.t('invalid_phone_number')
     end
   end
   # rubocop:enable Metrics/AbcSize
