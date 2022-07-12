@@ -23,15 +23,11 @@ module Types
     end
 
     def acting_user
-      BatchLoader::GraphQL.for(object.acting_user_id).batch(cache: false) do |user_ids, loader|
-        Users::User.where(id: user_ids).each { |user| loader.call(user.id, user) }
-      end
+      batch_load(object, :acting_user)
     end
 
     def user
-      BatchLoader::GraphQL.for(object.user_id).batch(cache: false) do |user_ids, loader|
-        Users::User.where(id: user_ids).each { |user| loader.call(user.id, user) }
-      end
+      batch_load(object, :user)
     end
   end
 end

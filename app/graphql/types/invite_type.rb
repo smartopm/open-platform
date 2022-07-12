@@ -24,20 +24,20 @@ module Types
 
     def host_url(type)
       base_url = HostEnv.base_url(object.guest.community)
-      path = Rails.application.routes.url_helpers.rails_blob_path(type)
+      path = Rails.application.routes.url_helpers&.rails_blob_path(type)
       "https://#{base_url}#{path}"
     end
 
     def guest
-      BatchLoader::GraphQL.for(object.guest_id).batch(cache: false) do |guest_ids, loader|
-        Users::User.where(id: guest_ids).each { |guest| loader.call(guest.id, guest) }
-      end
+      batch_load(object, :guest)
     end
 
     def host
-      BatchLoader::GraphQL.for(object.host_id).batch(cache: false) do |host_ids, loader|
-        Users::User.where(id: host_ids).each { |host| loader.call(host.id, host) }
-      end
+      batch_load(object, :host)
+    end
+
+    def entry_time
+      batch_load(object, :entry_time)
     end
   end
 end
