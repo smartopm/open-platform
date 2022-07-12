@@ -16,24 +16,22 @@ class Sms
     yield config
   end
 
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Lint/SuppressedException
-  def self.send(to, message, community)
+  def self.send(to, message, _community)
     raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
 
     return if Rails.env.test?
 
     to = clean_number(to)
-    country = community.locale&.split('-')
     client = Vonage::Client.new(api_key: config[:api_key], api_secret: config[:api_secret])
 
+    # We temporarily removed the validation of numbers as it wasn't working well for CM
+    # We are also suppressing the error since invalid numbers throw an error with new gem
     begin
-      insight = client.number_insight.advanced(number: to, country: country[1])
-      client.sms.send(from: 'DoubleGDP', to: to, text: message) if insight.valid_number == 'valid'
+      client.sms.send(from: 'DoubleGDP', to: to, text: message)
     rescue StandardError
     end
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Lint/SuppressedException
 
   def self.send_from(to, from, message)
