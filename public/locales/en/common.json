@@ -312,7 +312,9 @@
     "form_amount": "Form Amount",
     "no_history": "No Transaction Log Available",
     "transaction_logs": "Transaction Logs",
-    "add_payment": "Add Payment"
+    "add_payment": "Add Payment",
+    "access": "Access",
+    "reload": "Reload"
   },
   "menu": {
     "invoice": "Invoice",
@@ -428,7 +430,8 @@
     "task_list_in_use": "Cannot delete this Task List as it is in use by a process.",
     "my_forms": "My Forms",
     "my_account": "My Account",
-    "my_guest": "My Guest"
+    "my_guest": "My Guest",
+    "guard_post": "Guard Post"
   },
   "user_types": {
     "admin": "Admin",
