@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Grid, useMediaQuery, Button } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Grid, useMediaQuery, Button, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import React, { useContext, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
@@ -262,7 +262,7 @@ export default function InvitedGuests() {
 
       {searchOpen && (
         <Grid container>
-          <Grid item sm={12} xs={12} md={6} style={{ marginTop: '30px' }}>
+          <Grid item sm={12} xs={12} md={6} style={{ marginTop: '15px' }}>
             <SearchInput
               title="Guests"
               filterRequired={false}
@@ -276,7 +276,10 @@ export default function InvitedGuests() {
       )}
       {loading && <Spinner />}
 
-      <br />
+      <Typography variant={matches ? 'h6' : 'h5'}>
+        {t('common:menu.my_guests')}
+      </Typography>
+
       {data?.myGuests.length
         ? data?.myGuests?.map(invite => (
           <GuestListCard
