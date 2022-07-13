@@ -44,12 +44,10 @@ import {
   setObjectValue,
   ifNotTest
 } from '../../utils/helpers';
-import { dateWidget, NotesCategories, defaultBusinessReasons, initialData } from '../../utils/constants';
+import { dateWidget, NotesCategories, defaultBusinessReasons } from '../../utils/constants';
 import UserAutoResult from '../../shared/UserAutoResult';
-
-function getAssigneeIds(user) {
-  return user.map(u => u.id).join(',');
-}
+import initialData from '../../modules/ActionFlows/constants'
+import getAssigneeIds from '../../modules/ActionFlows/utils';
 
 export default function ActionFlowModal({ open, closeModal, handleSave, selectedActionFlow }) {
   const [data, setData] = useState(initialData);

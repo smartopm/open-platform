@@ -1352,12 +1352,3 @@ export const accessibilityOptions = {
   admins: 'Admins Only',
   everyone: 'Everyone'
 }
-
-export const initialData = {
-  title: '',
-  description: '',
-  eventType: '',
-  eventCondition: '',
-  eventConditionQuery: '',
-  actionType: ''
-};
