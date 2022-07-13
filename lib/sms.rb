@@ -28,7 +28,10 @@ class Sms
     # We temporarily removed the validation of numbers as it wasn't working well for CM
     # We are also suppressing the error since invalid numbers throw an error with new gem
     begin
-      client.sms.send(from: 'DoubleGDP', to: to, text: message)
+      # TODO: We need to allow alphanumeric codes to be sent to US numers
+      # This is an urgent fix and this will be resolved properly
+      # client.sms.send(from: 'DoubleGDP', to: to, text: message)
+      client.sms.send(from: config[:from], to: to, text: message)
     rescue StandardError
     end
   end
