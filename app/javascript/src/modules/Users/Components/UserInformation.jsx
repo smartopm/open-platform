@@ -67,7 +67,8 @@ export default function UserInformation({
     handleMenuItemClick,
     handleMergeUserItemClick,
     checkRole,
-    t
+    t,
+    userId
   );
 
   const mainElement = (

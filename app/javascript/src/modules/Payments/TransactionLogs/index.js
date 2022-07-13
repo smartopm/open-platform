@@ -2,6 +2,7 @@ import React from 'react';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import PaymentForm from './Components/PaymentForm';
+import TransactionLogs from './Components/TransactionLogs';
 
 const paymentPermission = ['can_make_payment', 'can_see_menu_item'];
 
@@ -11,6 +12,14 @@ export function RenderPayment() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={paymentPermission}>
       <PaymentForm />
+    </AccessCheck>
+  );
+}
+
+export function RenderTransactionLogs() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={paymentPermission}>
+      <TransactionLogs />
     </AccessCheck>
   );
 }
@@ -26,6 +35,18 @@ const TransactionRoutes = [
     featureName: 'Transactions',
     moduleName: currentModule,
     accessibleBy: []
+  },
+  {
+    routeProps: {
+      path: '/transaction_logs',
+      component: RenderTransactionLogs,
+      exact: true
+    },
+    name: t => t('common:misc.history'),
+    featureName: 'Transactions',
+    moduleName: currentModule,
+    accessibleBy: [],
+    transactionHistory: true
   }
 ];
 

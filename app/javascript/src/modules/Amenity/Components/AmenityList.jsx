@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { Button, Typography } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import AddIcon from '@mui/icons-material/Add';
 import AmenityItem from './AmenityItem';
-import SpeedDialButton from '../../../shared/buttons/SpeedDial';
 import AmenityForm from './AmenityForm';
 import AmenitiesQuery from '../graphql/amenity_queries';
 import { Spinner } from '../../../shared/Loading';
@@ -17,20 +19,26 @@ import { ActionDialog } from '../../../components/Dialog';
 import AmenityStatus from '../constants';
 
 export default function AmenityList() {
-  const [dialog, setOpenDialog] = useState({ isOpen: false, type: null })
-  const [amenityData, setAmenityData] = useState(null)
+  const [dialog, setOpenDialog] = useState({ isOpen: false, type: null });
+  const [amenityData, setAmenityData] = useState(null);
   const { refetch, data, loading, fetchMore } = useQuery(AmenitiesQuery, {
     variables: { offset: 0 },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
   });
   const { t } = useTranslation(['common', 'amenity', 'form', 'search']);
   const variables = { offset: data?.amenities?.length };
   const { loadMore, hasMoreRecord } = useFetchMoreRecords(fetchMore, 'amenities', variables);
-  const [deleteAmenity, isDeleting] = useMutationWrapper(AmenityDeleteMutation, reset, t('amenity:misc.amenity_deleted'));
+  const [deleteAmenity, isDeleting] = useMutationWrapper(
+    AmenityDeleteMutation,
+    reset,
+    t('amenity:misc.amenity_deleted')
+  );
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
   function handleEditAmenity(amenity, type) {
-    setAmenityData(amenity)
-    setOpenDialog({ isOpen: true, type })
+    setAmenityData(amenity);
+    setOpenDialog({ isOpen: true, type });
   }
 
   function handleClose() {
@@ -38,17 +46,36 @@ export default function AmenityList() {
   }
 
   function reset() {
-    refetch()
+    refetch();
     handleClose();
   }
 
   function handleAddAmenity() {
     setAmenityData(null);
-     setOpenDialog({ isOpen: true, type: 'edit' });
+    setOpenDialog({ isOpen: true, type: 'edit' });
   }
 
+  const rightPanelObj = [
+    {
+      mainElement: (
+        <Button
+          onClick={handleAddAmenity}
+          startIcon={!matches ? <AddIcon /> : undefined}
+          variant="contained"
+          color="primary"
+          style={matches ? { color: '#FFFFFF', margin: '0 5px 0 8px' } : { color: '#FFFFFF' }}
+          data-testid="create_amenity_btn"
+          disableElevation
+        >
+          {matches ? <AddIcon /> : t('common:misc.add_new')}
+        </Button>
+      ),
+      key: 1,
+    },
+  ];
+
   return (
-    <PageWrapper pageTitle={t('common:misc.amenity_plural')}>
+    <PageWrapper pageTitle={t('common:misc.amenity_plural')} rightPanelObj={rightPanelObj}>
       <ActionDialog
         open={dialog.isOpen && dialog.type === 'delete'}
         type="warning"
@@ -64,12 +91,6 @@ export default function AmenityList() {
         amenityData={amenityData}
         t={t}
       />
-      <Grid container direction="row">
-        <Grid item xs={10} />
-        <Grid item xs={2} style={{ marginTop: -45 }}>
-          <SpeedDialButton handleAction={handleAddAmenity} />
-        </Grid>
-      </Grid>
       <br />
       <Grid container direction="row">
         <Grid item xs={11}>
@@ -102,13 +123,11 @@ export default function AmenityList() {
             {t('search:search.load_more')}
           </Button>
         </CenteredContent>
-      )
-      : (
+      ) : (
         <CenteredContent>
           <Typography>{t('amenity:misc.no_amenity_added')}</Typography>
         </CenteredContent>
-      )
-    }
+      )}
     </PageWrapper>
   );
 }

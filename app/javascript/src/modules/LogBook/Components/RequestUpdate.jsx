@@ -12,6 +12,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CallIcon from '@mui/icons-material/Call';
+import PhoneInput from 'react-phone-input-2';
 import {
   EntryRequestGrant,
   EntryRequestDeny,
@@ -19,7 +20,7 @@ import {
 } from '../../../graphql/mutations';
 import { Spinner } from '../../../shared/Loading';
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
-import { objectAccessor, validateEmail } from '../../../utils/helpers';
+import { extractCountry, objectAccessor, validateEmail } from '../../../utils/helpers';
 import { dateToString, dateTimeToString } from '../../../components/DateContainer';
 import { communityVisitingHours, defaultBusinessReasons, CommunityFeaturesWhiteList } from '../../../utils/constants'
 import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
@@ -503,21 +504,15 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             />
           </div>
           <div className="form-group">
-            <TextField
-              label={t('form_fields.phone_number')}
-              fullWidth
-              type="text"
+            <PhoneInput
               value={formData.phoneNumber || ''}
-              onChange={handleInputChange}
-              name="phoneNumber"
+              inputStyle={{ height: '3.96em', width: '100%' }}
+              country={extractCountry(authState.user.community?.locale)}
+              placeholder={t('form_placeholders.phone_number')}
+              onChange={number => setFormData({ ...formData, phoneNumber: number })}
+              preferredCountries={['hn', 'ke', 'zm', 'ng', 'in', 'us']}
               inputProps={{ 'data-testid': 'entry_user_phone' }}
-              error={inputValidationMsg.isError &&
-            requiredFields.includes('phoneNumber') &&
-            !formData.phoneNumber}
-              helperText={inputValidationMsg.isError &&
-            requiredFields.includes('phoneNumber') &&
-            !formData.phoneNumber &&
-            t('logbook:errors.required_field', { fieldName: 'Phone Number' })}
+              isValid={!!formData.phoneNumber}
             />
           </div>
           <div className="form-group">

@@ -113,7 +113,6 @@ describe('RequestUpdate Component', () => {
         fireEvent.change(container.queryByTestId('entry_user_phone'), {
           target: { value: '100100' }
         });
-        expect(container.queryByTestId('entry_user_phone').value).toBe('100100');
 
         fireEvent.change(container.queryByTestId('entry_user_vehicle'), {
           target: { value: 'ABT' }

@@ -71,6 +71,7 @@ class Community < ApplicationRecord
     'Greenpark': ['doublegdp.com'],
     'Enyimba': ['doublegdp.com'],
     'Metropolis': ['doublegdp.com'],
+    'Konza': ['doublegdp.com'],
     'DAST': ['doublegdp.com'],
   }.freeze
 
@@ -161,7 +162,7 @@ class Community < ApplicationRecord
   def send_sms(message)
     sms_phone_numbers.each  do |sms_phone_number|
       Rails.logger.info "Sending #{sms_phone_number}"
-      Sms.send(sms_phone_number, message)
+      Sms.send(sms_phone_number, message, self)
     end
   end
 

@@ -170,7 +170,7 @@ describe('Test the AddSubTasks page', () => {
     // the caret icon should be available since the task has subtasks
     expect(screen.queryByTestId('show_task_list_subtasks')).toBeInTheDocument();
     // assert two menu options
-    expect(screen.queryByText('menu.open_task_details')).toBeInTheDocument();
+    expect(screen.queryByText('menu.open_details')).toBeInTheDocument();
     expect(screen.queryByText('menu.add_subtask')).toBeInTheDocument();
   });
 

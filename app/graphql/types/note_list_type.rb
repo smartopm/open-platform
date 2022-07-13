@@ -5,7 +5,7 @@ module Types
   class NoteListType < Types::BaseObject
     field :id, ID, null: false
     field :name, String, null: false
-    field :process, Types::ProcessType, null: false
+    field :process, Types::ProcessType, null: true
     field :community, Types::CommunityType, null: false
   end
 end

@@ -51,12 +51,14 @@ RSpec.describe ActionFlows::Actions::Sms do
         .with(
           '2341234567',
           "Task 'some body' was assigned to you\nhttps:///tasks/#{id}\n",
+          acting_user.community,
         )
 
       expect(Sms).to receive(:send)
         .with(
           '1234567',
           "some name just assigned a task 'some body'\nto some name https:///tasks/#{id}\n",
+          acting_user.community,
         )
       described_class.execute_action(event.data_set, flow.action_fields, task_assign_event_log)
     end
@@ -76,6 +78,7 @@ RSpec.describe ActionFlows::Actions::Sms do
         .with(
           '1234567',
           "Welcome to the DoubleGDP online community. Please access the app using #{url}",
+          community,
         )
       described_class.execute_action(event.data_set, flow.action_fields, user_create_event_log)
     end

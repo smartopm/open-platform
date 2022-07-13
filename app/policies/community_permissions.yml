@@ -639,7 +639,6 @@ DoubleGDP:
         - can_create_category
         - can_update_category
         - can_delete_category
-        - can_create_form
         - can_update_form
         - can_create_form_properties
         - can_update_form_properties
@@ -775,7 +774,6 @@ DoubleGDP:
     transaction:
       permissions:
         - can_make_payment
-        - can_see_menu_item
 Enyimba:
   marketing_admin:
     note:
@@ -827,7 +825,6 @@ Enyimba:
         - can_create_category
         - can_update_category
         - can_delete_category
-        - can_create_form
         - can_update_form
         - can_create_form_properties
         - can_update_form_properties
@@ -963,7 +960,6 @@ Enyimba:
     transaction:
       permissions:
         - can_make_payment
-        - can_see_menu_item
 Greenpark:
   site_manager:
     note:
@@ -1031,6 +1027,13 @@ Greenpark:
         - can_see_menu_item
         - can_access_own_forms
         - can_fetch_form_task_comments
+    amenity:
+      permissions:
+        - can_create_amenity
+        - can_access_amenities
+        - can_see_menu_item
+        - can_edit_amenities
+        - can_delete_amenities
   site_worker:
     note:
       permissions:
@@ -1094,3 +1097,10 @@ Greenpark:
         - can_see_menu_item
         - can_access_own_forms
         - can_fetch_form_task_comments
+    amenity:
+      permissions:
+        - can_create_amenity
+        - can_access_amenities
+        - can_see_menu_item
+        - can_edit_amenities
+        - can_delete_amenities

@@ -10,7 +10,8 @@ export const PRIMARY_DOMAINS = [
   'morazancity.doublegdp.com',
   'greenpark.doublegdp.com',
   'enyimba.doublegdp.com',
-  'metropolis.doublegdp.com'
+  'metropolis.doublegdp.com',
+  'konzacity.doublegdp.com',
 ];
 
 export const filterUserByLoggedin = {
