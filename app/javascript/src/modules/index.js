@@ -1,6 +1,6 @@
 // all modules should be imported in here
 import Payments from './Payments';
-import Users, { Logout, Profile } from './Users';
+import Users, { Logout, Profile, MyAccount } from './Users';
 import Dashboard from './Dashboard';
 import Community from './Community';
 import MyForms from './Forms/UserForms';
@@ -24,6 +24,7 @@ import ManageForms from './Forms/ManageForms';
 // and exported back here
 export default [
   Dashboard,
+  MyAccount,
   Search,
   Profile,
   MyMessages,

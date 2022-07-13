@@ -31,7 +31,7 @@ const GuestInvitationRoutes = {
     icon: null,
     className: 'guest-list-sub-menu-item'
   },
-  name: (t) => t('menu.guest_list'),
+  name: (t) => t('menu.my_guest'),
   featureName: 'Guest List',
   moduleName: 'guest_list',
   accessibleBy: [],
