@@ -177,13 +177,13 @@ export default function InvitedGuests() {
   const rightPanelObj = [
     {
       mainElement: matches ? (
-        <IconButton color="primary" data-testid="search" onClick={() => setSearchOpen(!searchOpen)}>
+        <IconButton color="primary" data-testid="guest_search" onClick={() => setSearchOpen(!searchOpen)}>
           <SearchIcon />
         </IconButton>
       ) : (
         <Button
           startIcon={<SearchIcon />}
-          data-testid="search"
+          data-testid="guest_search_btn"
           onClick={() => setSearchOpen(!searchOpen)}
         >
           {t('common:menu.search')}

@@ -188,7 +188,7 @@ GuestListCard.defaultProps = {
   styles: {
     classes: {}
   },
-  tz: ''
+  tz: null
 };
 
 GuestListCard.propTypes = {
