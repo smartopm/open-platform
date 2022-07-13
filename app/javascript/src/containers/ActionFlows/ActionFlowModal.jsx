@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable max-lines */
 /* eslint-disable complexity */
 import React, { useState, useEffect } from 'react';
@@ -22,7 +23,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { useTheme } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
 import PhoneInput from 'react-phone-input-2';
-import { v4 as uuidv4 } from 'uuid';
 import DatePickerDialog from '../../components/DatePickerDialog';
 import { UserChip } from '../../modules/Tasks/Components/UserChip';
 import {
@@ -286,7 +286,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 onChange={handleInputChange}
               >
                 {eventData.data.events.map(event => (
-                  <MenuItem key={uuidv4()} value={event}>
+                  <MenuItem key={event} value={event}>
                     {`On ${titleize(event)}`}
                   </MenuItem>
                 ))}
@@ -323,7 +323,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 fullWidth
               >
                 {actionData.data.actions.map(action => (
-                  <MenuItem key={uuidv4()} value={action.toLowerCase().replace(/ /g, '_')}>
+                  <MenuItem key={action} value={action.toLowerCase().replace(/ /g, '_')}>
                     {sentencizeAction(action)}
                   </MenuItem>
                 ))}
@@ -333,11 +333,11 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         </FormControl>
         {data.actionType &&
           actionFieldsData.data &&
-          actionFieldsData.data.actionFields.map(actionField => {
+          actionFieldsData.data.actionFields.map((actionField, index) => {
             // REFACTOR THESE IF-ELSEs (Nurudeen)
             if (actionField.type === 'select' && actionField.name === 'label') {
               return (
-                <FormControl key={uuidv4()} fullWidth>
+                <FormControl key={index} fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
                     {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
@@ -361,7 +361,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'select' && actionField.name === 'category') {
               return (
-                <FormControl key={uuidv4()} fullWidth>
+                <FormControl key={index} fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
                     {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
@@ -384,7 +384,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'select' && actionField.name === 'assignees') {
               return (
-                <FormControl key={uuidv4()} fullWidth>
+                <FormControl key={index} fullWidth>
                   <FormHelperText>{t('actionflow:form_fields.assign_user')}</FormHelperText>
                   <Select
                     labelId={`select-${actionField.name}`}
@@ -398,8 +398,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     MenuProps={{ MenuListProps: { disablePadding: true } }}
                     renderValue={selected => (
                       <div>
-                        {selected.map((value) => (
-                          <UserChip user={value} key={uuidv4()} label={value.name} size="medium" />
+                        {selected.map(value => (
+                          <UserChip user={value} key={value.id} label={value.name} size="medium" />
                         ))}
                       </div>
                     )}
@@ -415,7 +415,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'select' && actionField.name === 'template') {
               return (
-                <FormControl key={uuidv4()} fullWidth>
+                <FormControl key={index} fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
                     {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
@@ -438,7 +438,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'date' && actionField.name === 'due_date') {
               return (
-                <FormControl key={uuidv4()} fullWidth>
+                <FormControl key={index} fullWidth>
                   <FormHelperText>{t('actionflow:form_fields.pick_date')}</FormHelperText>
                   <DatePickerDialog
                     handleDateChange={date =>
@@ -453,7 +453,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             if (actionField.type === 'text' && actionField.name === 'phone_number') {
               return (
                 <PhoneInput
-                  key={uuidv4()}
+                  key={index}
                   value={metaData.phone_number || ''}
                   inputStyle={{ width: '100%' }}
                   enableSearch
@@ -470,7 +470,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             return (
               <Autocomplete
-                key={uuidv4()}
+                key={index}
                 id={`${actionField.name}-action-input`}
                 freeSolo
                 value={objectAccessor(metaData, actionField.name)}
@@ -499,9 +499,9 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         {data.actionType === 'custom_email' &&
           emailTemplatesData?.emailTemplates
             .find(temp => temp.id === metaData.template)
-            ?.variableNames.map((varName) => (
+            ?.variableNames.map(varName => (
               <Autocomplete
-                key={uuidv4()}
+                key={varName}
                 id={`${varName}-action-input`}
                 freeSolo
                 value={objectAccessor(metaData, varName)}

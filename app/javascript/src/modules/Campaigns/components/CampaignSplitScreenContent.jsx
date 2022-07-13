@@ -16,7 +16,6 @@ import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Typography from '@mui/material/Typography';
-import { v4 as uuidv4 } from 'uuid';
 import TextFieldLiveEdit from '../../../shared/TextFieldLiveEdit';
 import { DateAndTimePickers } from '../../../components/DatePickerDialog';
 import CampaignLabels from './CampaignLabels';
@@ -449,7 +448,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
                   label.map((labl) => (
                     <Chip
                       data-testid="campaignChip-label"
-                      key={uuidv4()}
+                      key={labl}
                       label={labl?.shortDesc || labl}
                       className={classes.chip}
                     />
