@@ -24,7 +24,7 @@ export default function GuestListCard({
 }) {
   const history = useHistory();
   const classes = useLogbookStyles();
-  const isCancelled = invite.status === 'cancelled';
+  const isCancelled = invite?.status === 'cancelled';
   const theme = useTheme();
   const matchesSmall = useMediaQuery(theme.breakpoints.down('lg'));
 
@@ -187,7 +187,8 @@ export default function GuestListCard({
 GuestListCard.defaultProps = {
   styles: {
     classes: {}
-  }
+  },
+  tz: ''
 };
 
 GuestListCard.propTypes = {
@@ -208,12 +209,12 @@ GuestListCard.propTypes = {
       name: PropTypes.string
     }),
     id: PropTypes.string,
-    status: PropTypes.string.isRequired,
+    status: PropTypes.string,
     thumbnailUrl: PropTypes.string
   }).isRequired,
   translate: PropTypes.func.isRequired,
   handleInviteMenu: PropTypes.func.isRequired,
-  tz: PropTypes.string.isRequired,
+  tz: PropTypes.string,
   currentInvite: PropTypes.shape({
     id: PropTypes.string.isRequired,
     loading: PropTypes.bool.isRequired
