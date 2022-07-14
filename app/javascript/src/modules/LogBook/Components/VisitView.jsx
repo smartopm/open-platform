@@ -2,7 +2,6 @@
 /* eslint-disable max-lines */
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState, useContext } from 'react';
-import PropTypes from 'prop-types';
 import { useQuery, useMutation, useApolloClient } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import SearchIcon from '@mui/icons-material/Search';
@@ -35,18 +34,14 @@ import MessageAlert from '../../../components/MessageAlert';
 import useFileUpload from '../../../graphql/useFileUpload';
 import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload';
 
-export default function VisitView({
-  tabValue,
-  timeZone,
-  handleAddObservation,
-  // observationDetails
-}) {
+export default function VisitView() {
   const initialFilter = { type: 'allVisits', duration: null };
   const [isObservationOpen, setIsObservationOpen] = useState(false);
   const authState = useContext(AuthStateContext);
   const allUserPermissions = authState.user?.permissions || [];
   const modulePerms = allUserPermissions.find(mod => mod.module === 'entry_request')?.permissions;
   const permissions = new Set(modulePerms);
+  const timeZone = authState.user.community.timezone;
   const [searchOpen, setSearchOpen] = useState(false);
   const limit = 20;
   const [offset, setOffset] = useState(0);
@@ -94,6 +89,11 @@ export default function VisitView({
   function handleCancelClose() {
     setIsObservationOpen(false);
     resetImageData();
+  }
+
+  function handleAddObservation(log) {
+    setClickedEvent({ refId: log.refId, refType: log.refType });
+    setIsObservationOpen(true);
   }
 
   function handleCloseButton(imgUrl) {
@@ -180,7 +180,7 @@ export default function VisitView({
   function handleCardClick(visit) {
     history.push({
       pathname: `/request/${visit.id}`,
-      search: `?tab=${tabValue}&type=guest`,
+      search: '?tab=2&type=guest',
       state: { from: 'guests', offset },
     });
   }
@@ -391,8 +391,8 @@ export default function VisitView({
       )}
       <br />
       <LogbookStats
-        tabValue={tabValue}
-        // shouldRefetch={observationDetails.refetch}
+        tabValue={2}
+        shouldRefetch={observationDetails.refetch}
         handleFilter={handleFilterData}
         duration={statsTypeFilter.duration}
         isSmall={matches}
@@ -557,20 +557,10 @@ export default function VisitView({
           offSet={offset}
           limit={limit}
           active={offset >= 1}
-          handlePageChange={action => paginate(action, history, tabValue, { offset, limit })}
+          handlePageChange={paginate}
           count={data?.currentGuests?.length}
         />
       </CenteredContent>
     </PageWrapper>
   );
 }
-
-VisitView.propTypes = {
-  tabValue: PropTypes.number.isRequired,
-  timeZone: PropTypes.string.isRequired,
-  handleAddObservation: PropTypes.func.isRequired,
-  observationDetails: PropTypes.shape({
-    loading: PropTypes.bool,
-    refetch: PropTypes.bool,
-  }).isRequired,
-};
