@@ -7,6 +7,7 @@ import TaskDetail from '../Components/TaskDetail';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import authState from '../../../__mocks__/authstate';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 const data = {
@@ -51,7 +52,9 @@ describe('task form component', () => {
           <Context.Provider value={authState}>
             <BrowserRouter>
               <MockedThemeProvider>
-                <TaskDetail {...props} />
+                <MockedSnackbarProvider>
+                  <TaskDetail {...props} />
+                </MockedSnackbarProvider>
               </MockedThemeProvider>
             </BrowserRouter>
           </Context.Provider>
@@ -75,7 +78,9 @@ describe('task form component', () => {
           <Context.Provider value={authState}>
             <BrowserRouter>
               <MockedThemeProvider>
-                <TaskDetail {...newProps} />
+                <MockedSnackbarProvider>
+                  <TaskDetail {...newProps} />
+                </MockedSnackbarProvider>
               </MockedThemeProvider>
             </BrowserRouter>
           </Context.Provider>
@@ -100,7 +105,9 @@ describe('task form component', () => {
           <Context.Provider value={authState}>
             <BrowserRouter>
               <MockedThemeProvider>
-                <TaskDetail {...props} />
+                <MockedSnackbarProvider>
+                  <TaskDetail {...props} />
+                </MockedSnackbarProvider>
               </MockedThemeProvider>
             </BrowserRouter>
           </Context.Provider>
