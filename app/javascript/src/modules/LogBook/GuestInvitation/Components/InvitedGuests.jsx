@@ -1,11 +1,13 @@
-import { Dialog, DialogContent, DialogTitle, Grid, useMediaQuery } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Grid, useMediaQuery, Button, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import React, { useContext, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
+import IconButton from '@mui/material/IconButton';
+import SearchIcon from '@mui/icons-material/Search';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
-import CustomSpeedDial from '../../../../shared/buttons/SpeedDial';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import MenuList from '../../../../shared/MenuList';
@@ -21,7 +23,6 @@ import { formatError , ifNotTest } from '../../../../utils/helpers';
 import { validateGuest } from '../helpers';
 import GuestInviteForm from './GuestInviteForm';
 import PageWrapper from '../../../../shared/PageWrapper';
-
 
 export default function InvitedGuests() {
   const history = useHistory();
@@ -45,6 +46,8 @@ export default function InvitedGuests() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
   const [isLoading, setLoading] = useState(false);
+  const matches = useMediaQuery(() => theme.breakpoints.down('md'));
+  const [searchOpen, setSearchOpen] = useState(false);
 
   function handleEditOpen() {
     handleMenuClose();
@@ -171,8 +174,54 @@ export default function InvitedGuests() {
     userType: authState.user.userType,
     handleClose: event => handleMenuClose(event)
   };
+  const rightPanelObj = [
+    {
+      mainElement: matches ? (
+        <IconButton color="primary" data-testid="guest_search" onClick={() => setSearchOpen(!searchOpen)}>
+          <SearchIcon />
+        </IconButton>
+      ) : (
+        <Button
+          startIcon={<SearchIcon />}
+          data-testid="guest_search_btn"
+          onClick={() => setSearchOpen(!searchOpen)}
+        >
+          {t('common:menu.search')}
+        </Button>
+      ),
+      key: 1,
+    },
+    {
+      mainElement: (
+        <Button
+          startIcon={!matches && <AddIcon />}
+          onClick={() => history.push('/logbook/guests/invite')}
+          variant="contained"
+          color="primary"
+          style={{ color: '#FFFFFF' }}
+          data-testid="create_guest_btn"
+          disableElevation
+        >
+          {matches ? <AddIcon /> : t('common:misc.add_new')}
+        </Button>
+      ),
+      key: 2,
+    },
+  ];
+
+  const breadCrumbObj = {
+    linkText: t('common:menu.my_profile'),
+    linkHref: `/user/${authState.user.id}`,
+    pageName: t('common:menu.my_guests'),
+  };
+
   return (
-    <PageWrapper pageTitle={t('common:menu.guest_list')}>
+    <PageWrapper
+      rightPanelObj={rightPanelObj}
+      breadCrumbObj={breadCrumbObj}
+      avatarObj={{ data: { user: authState?.user } }}
+      showAvatar
+    >
       <Dialog
         fullScreen={fullScreen}
         open={openEditModal}
@@ -202,12 +251,6 @@ export default function InvitedGuests() {
         open={!!details.message}
         handleClose={() => setDetails({ ...details, message: '' })}
       />
-      <Grid container>
-        <Grid item xs={10} sm={11} />
-        <Grid item xs={2} sm={1} data-testid="speed_dial_add_guest">
-          <CustomSpeedDial handleAction={() => history.push('/logbook/guests/invite')} />
-        </Grid>
-      </Grid>
 
       <MenuList
         open={menuData.open}
@@ -217,23 +260,25 @@ export default function InvitedGuests() {
         list={accessibleMenus(menuData?.menuList)}
       />
 
-      <br />
-      <br />
-      <Grid container>
-        <Grid item xs={6} />
-        <Grid item sm={12} xs={12} md={6} style={{marginTop: '30px'}}>
-          <SearchInput
-            title="Guests"
-            filterRequired={false}
-            searchValue={searchValue}
-            handleSearch={event => setSearchValue(event.target.value)}
-            handleClear={() => setSearchValue('')}
-          />
+      {searchOpen && (
+        <Grid container>
+          <Grid item sm={12} xs={12} md={6} style={{ marginTop: '15px' }}>
+            <SearchInput
+              title="Guests"
+              filterRequired={false}
+              searchValue={searchValue}
+              handleSearch={event => setSearchValue(event.target.value)}
+              handleClear={() => setSearchValue('')}
+            />
+          </Grid>
+          <br />
         </Grid>
-      </Grid>
-      <br />
-      <br />
+      )}
       {loading && <Spinner />}
+
+      <Typography variant={matches ? 'h6' : 'h5'}>
+        {t('common:menu.my_guests')}
+      </Typography>
 
       {data?.myGuests.length
         ? data?.myGuests?.map(invite => (

@@ -65,7 +65,7 @@ describe('Side Nav component', () => {
     expect(container.queryByText('menu.community')).toBeInTheDocument();
     expect(container.queryByText('misc.properties')).toBeInTheDocument();
     expect(container.queryByText('menu.dashboard')).toBeInTheDocument();
-    expect(container.queryByText('common:menu.transaction_plural')).toBeInTheDocument();
+    expect(container.queryByText('common:menu.payment_plural')).toBeInTheDocument();
     expect(container.queryByText('menu.processes')).toBeInTheDocument();
     expect(container.queryByText('misc.news')).not.toBeInTheDocument() // should not be initially visible
 

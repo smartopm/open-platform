@@ -356,6 +356,7 @@
     "message_plural": "Messages",
     "my_messages": "My Messages",
     "my_payments": "My Payments",
+    "my_guests": "My Guests",
     "my_thebe_portal": "My Thebe Portal",
     "showroom": "Showroom",
     "search": "Search",
@@ -483,7 +484,9 @@
     "amount_paid": "Amount Paid",
     "payment_plan": "Payment Plan",
     "balance_amount": "Balance/Monthly Amount",
-    "payment_day": "Payment Day"
+    "payment_day": "Payment Day",
+    "payment_plan_plural": "Payment Plans",
+    "payment_history": "Payment History"
   },
   "table_content": {
     "invoice_number": "Invoice Number {{numb}}",
