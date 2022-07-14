@@ -7,7 +7,8 @@
  const business = { module: 'business' }
   export function canCreateBusiness(authState){
     if (!authState) return false;
-    const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === business.module);
+    const userPermissionsModule = authState.user?.permissions.find(
+        permissionObject => permissionObject.module === business.module);
     if (!userPermissionsModule){
       return false;
     }
@@ -18,7 +19,8 @@
   export function canDeleteBusiness(authState){
     if (!authState) return false;
 
-    const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === business.module);
+    const userPermissionsModule = authState.user?.permissions.find(
+      permissionObject => permissionObject.module === business.module);
     if (!userPermissionsModule){
       return false;
     }
@@ -28,7 +30,8 @@
   export function canUpdateBusiness(authState){
     if (!authState) return false;
 
-    const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === business.module);
+    const userPermissionsModule = authState.user?.permissions.find(
+      permissionObject => permissionObject.module === business.module);
     if (!userPermissionsModule){
       return false;
     }

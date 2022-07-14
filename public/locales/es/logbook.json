@@ -9,8 +9,8 @@
     "other": "Otro",
     "passing_through": "Pase Temporario",
     "prospective_client": "Futuro Cliente",
-    "sales": "Persona de ventas",
-    "working": "Trabajando"
+    "sales": "Ventas",
+    "working": "Trabajo"
   },
   "csv": {
     "acting_user": "Usuario Interino",
@@ -188,7 +188,7 @@
     "granting": "Concesión",
     "guest_entry_created_successful": "Exitoso: Invitado agregado a la lista de invitados exitosamente",
     "guest_entry_updated_successful": "Exitoso: registro de lista de Invitados actualizado exitosamente",
-    "guest_invite": "Invitación del Invitado",
+    "guest_invite": "Invitación",
     "host": "Anfitrión: ",
     "invite_updated_successful": "Invitación actualizada con éxito",
     "last_30_days": "Últimos 30 días",

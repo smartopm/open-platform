@@ -1,11 +1,10 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable security/detect-non-literal-fs-filename */
-/* eslint-disable react/prop-types */
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Typography, Tab, Button, Box, ListItem, List } from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
 import { useTranslation } from 'react-i18next'
+import PropTypes from 'prop-types';
 import { StyledTabs, TabPanel } from '../../../components/Tabs'
 import Status from '../../../components/StatusBadge'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
@@ -68,6 +67,7 @@ export default function BusinessProfile({ profileData }) {
 
             <span
               onClick={() => openLink(profileData.homeUrl)}
+              onKeyPress={() => {}}
               role="link"
               tabIndex={0}
               data-testid="home_url"
@@ -104,7 +104,7 @@ export default function BusinessProfile({ profileData }) {
           <div className="d-flex  justify-content-center">
             <div>
               <Typography variant="h6" data-testid="operating_hrs">
-                {t('form_fields.operating_hours')} 
+                {t('form_fields.operating_hours')}
               </Typography>
               <br />
               <p>
@@ -142,3 +142,19 @@ export default function BusinessProfile({ profileData }) {
     </PageWrapper>
   )
 }
+
+BusinessProfile.propTypes = {
+  profileData: PropTypes.shape({
+    category: PropTypes.string,
+    imageUrl: PropTypes.string,
+    links: PropTypes.string,
+    operationHours: PropTypes.string,
+    description: PropTypes.string,
+    homeUrl: PropTypes.string,
+    address: PropTypes.string,
+    name: PropTypes.string,
+    phoneNumber: PropTypes.string,
+    email: PropTypes.string,
+    status: PropTypes.string,
+  }).isRequired,
+};

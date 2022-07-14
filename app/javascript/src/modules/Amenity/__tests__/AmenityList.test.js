@@ -3,7 +3,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import AmenityList from '../Components/AmenityList';
-import { AmenitiesQuery } from '../graphql/amenity_queries';
+import AmenitiesQuery from '../graphql/amenity_queries';
 
 describe('Amenity List', () => {
   it('should render the Amenity List', async () => {

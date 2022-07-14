@@ -1,7 +1,6 @@
-/* eslint-disable import/prefer-default-export */
 import gql from 'graphql-tag';
 
-export const AmenitiesQuery = gql`
+const AmenitiesQuery = gql`
   query amenities($offset: Int) {
     amenities(offset: $offset) {
       id
@@ -13,3 +12,5 @@ export const AmenitiesQuery = gql`
     }
   }
 `;
+
+export default AmenitiesQuery;

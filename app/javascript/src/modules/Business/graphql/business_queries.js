@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import gql from 'graphql-tag';
 
 export const BusinessesQuery = gql`
@@ -25,6 +24,7 @@ export const BusinessesQuery = gql`
     }
   }
 `;
+
 export const BusinessByIdQuery = gql`
   query businessById($id: ID!) {
     business(id: $id) {

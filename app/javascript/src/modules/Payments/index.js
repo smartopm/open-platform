@@ -23,7 +23,7 @@ export default {
   styleProps: {
     icon: <PaymentsIcon />
   },
-  name: t => t('menu.payment', { count: 0 }),
+  name: t => t('menu.plan_plural'),
   featureName: 'Payments',
   accessibleBy: [],
   moduleName: currentModule
