@@ -735,7 +735,7 @@ export function selectOptions(
     {
       key: 'payments',
       value: 'Plans',
-      name: t('common:misc.payments'),
+      name: t('common:table_headers.payment_plan_plural'),
       handleMenuItemClick,
       show:
         checkCommunityFeatures('Payments') && checkRole(['admin', 'client', 'resident', 'lead'], 'Payments')
@@ -789,7 +789,7 @@ export function selectOptions(
     {
       key: 'transaction_logs',
       value: 'Transactions',
-      name: t('common:misc.transaction_logs'),
+      name: t('common:table_headers.payment_history'),
       handleMenuItemClick: () => history.push(`/transaction_logs?userId=${userId}`),
       show: checkCommunityFeatures('Transactions') && checkModule('transaction')
     }
