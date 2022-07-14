@@ -591,7 +591,7 @@ export default function TodoList({
                 selectedTasks={selectedTasks}
                 currentTile={currentTile}
               />
-              {Boolean(data?.flaggedNotes.length) && (
+              {Boolean(data?.flaggedNotes.length || redirectedTaskId) && (
                 <SplitScreen open={splitScreenOpen} onClose={() => setSplitScreenOpen(false)}>
                   <TaskUpdate
                     taskId={redirectedTaskId || data?.flaggedNotes[0].id}
