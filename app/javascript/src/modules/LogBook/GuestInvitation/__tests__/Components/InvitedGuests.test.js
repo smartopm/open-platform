@@ -84,20 +84,30 @@ describe('Invited Guests Component', () => {
       </Context.Provider>
     );
 
-    const search = getByTestId('search');
+    const search = getByTestId('guest_search_btn');
 
     expect(search).toBeInTheDocument();
 
-    expect(queryByText('common:menu.guest_list')).toBeInTheDocument();
-    expect(getByTestId('speed_dial_add_guest')).toBeInTheDocument();
+    expect(queryAllByText('common:menu.my_guests')[0]).toBeInTheDocument();
+    expect(getByTestId('AddIcon')).toBeInTheDocument();
+    expect(getByTestId('user_avatar')).toBeInTheDocument();
+    expect(getByTestId('page_breadcrumb')).toBeInTheDocument();
+    expect(getByTestId('page_name')).toBeInTheDocument();
+    expect(getByTestId('SearchIcon')).toBeInTheDocument();
+    expect(getByTestId('create_guest_btn')).toBeInTheDocument();
     expect(getByTestId('menu_list')).toBeInTheDocument();
+
+    fireEvent.click(getByTestId('SearchIcon'));
+    await waitFor(() => {
+      expect(getByTestId('search')).toBeInTheDocument();
+    })
 
     await waitFor(() => {
       expect(queryAllByText('Test two')[0]).toBeInTheDocument();
       expect(queryAllByText('Test two')[0]).toBeInTheDocument();
       expect(getByTestId('validity')).toBeInTheDocument();
       expect(getByTestId('status')).toBeInTheDocument();
-      expect(getByTestId('speed_dial_add_guest')).toBeInTheDocument();
+      expect(getByTestId('create_guest_btn')).toBeInTheDocument();
       expect(queryAllByText('guest_book.start_of_visit')[0]).toBeInTheDocument();
 
     }, 20);
@@ -125,7 +135,7 @@ describe('Invited Guests Component', () => {
       expect(queryByTestId('update_button')).toBeInTheDocument();
     }, 10);
 
-    fireEvent.click(getByTestId('speed_dial_btn'))
+    fireEvent.click(getByTestId('create_guest_btn'));
     expect(mockHistory.push).toBeCalled()
   });
   it('renders proper text when there are no guests', async () => {
