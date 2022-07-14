@@ -39,6 +39,8 @@ module Users
       attributes :name, :phone_number, :user_type, :email, :sub_status
       attributes labels: ['labels.short_desc']
       attributes date_filter: ['acting_event_log.created_at']
+      attributes created_date_from_filter: ['acting_event_log.created_at']
+      attributes created_date_to_filter: ['acting_event_log.created_at']
       scope { joins(:acting_event_log).eager_load(:labels) }
 
       generator :matches do |column_name, raw_value|

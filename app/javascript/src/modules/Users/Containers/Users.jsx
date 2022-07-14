@@ -172,6 +172,14 @@ export default function UsersList() {
               operator = '>';
               value = dateToString(value);
             }
+            if (property === 'created_date_from_filter') {
+              operator = '>=';
+              value = dateToString(value);
+            }
+            if (property === 'created_date_to_filter') {
+              operator = '<=';
+              value = dateToString(value);
+            }
             if (property === 'phone_number') operator = ':';
 
             return `${property} ${operator} "${value}"`;
@@ -325,6 +333,20 @@ export default function UsersList() {
   const queryBuilderConfig = {
     ...InitialConfig,
     fields: {
+      createdDateFrom: {
+        label: 'Created Date From',
+        type: 'date',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal'],
+      },
+
+      createdDateTo: {
+        label: 'Created Date To',
+        type: 'date',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal'],
+      },
+
       role: {
         label: 'Role',
         type: 'select',
@@ -401,6 +423,8 @@ export default function UsersList() {
   };
 
   const filterFields = {
+    createdDateFrom: 'created_date_from_filter',
+    createdDateTo: 'created_date_to_filter',
     role: 'user_type',
     label: 'labels',
     phoneNumber: 'phone_number',
