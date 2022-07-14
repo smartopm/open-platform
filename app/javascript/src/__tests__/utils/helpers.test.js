@@ -302,25 +302,16 @@ describe('#replaceDocumentMentions', () => {
     expect(replaceDocumentMentions(null, 'https://url.com')).toBeUndefined()
   });
 
-  it('returns text if no link is passed', () => {
+  it('returns text if no onClick is passed', () => {
     expect(replaceDocumentMentions({ body: 'Have you seen this doc ###__1234__doc-name__###' }, null)).toEqual('Have you seen this doc ###__1234__doc-name__###');
   });
 
   it('returns a React DIV with replaced mentions', () => {
-    const divChildren = replaceDocumentMentions({ body: 'Have you seen this doc ###__1234__doc-name__### ?' }, '/projects/path').props.children
+    const divChildren = replaceDocumentMentions({ body: 'Have you seen this doc ###__1234__doc-name__### ?' }, () => {}).props.children
 
     expect(divChildren[0].props.children).toEqual('Have you seen this doc ')
     expect(divChildren[1].props.children).toEqual('doc-name')
-    expect(divChildren[1].props.href).toEqual('/projects/path&document_id=1234')
-    expect(divChildren[2].props.children).toEqual(' ?')
-  });
-
-  it('adds onClick to generated link if onClick handler is passed', () => {
-    const divChildren = replaceDocumentMentions({ body: 'Have you seen this doc ###__1234__doc-name__### ?' }, null, () => {}).props.children
-
-    expect(divChildren[0].props.children).toEqual('Have you seen this doc ')
-    expect(divChildren[1].props.children).toEqual('doc-name')
-    expect(divChildren[1].props.href).toEqual('')
+    expect(divChildren[1].props.href).toEqual('#')
     expect(divChildren[1].props.onClick).toBeDefined()
     expect(divChildren[2].props.children).toEqual(' ?')
   });

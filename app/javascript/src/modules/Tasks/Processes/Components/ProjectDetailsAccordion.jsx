@@ -19,6 +19,7 @@ import {
   formatError,
   replaceDocumentMentions,
   useParamsQuery,
+  downloadCommentFile,
 } from '../../../../utils/helpers';
 import CustomSkeleton from '../../../../shared/CustomSkeleton';
 import TaskContextProvider from '../../Context';
@@ -220,7 +221,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
                           <Typography variant="caption">
                             {replaceDocumentMentions(
                               comment,
-                              `/processes/${processId}/projects?tab=documents&project_id=${taskId}&comment_id=${comment.id}`
+                              downloadCommentFile
                             )}
                           </Typography>
                         </Grid>
