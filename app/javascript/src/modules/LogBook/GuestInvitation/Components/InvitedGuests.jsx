@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Dialog, DialogContent, DialogTitle, Grid, useMediaQuery } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Grid, useMediaQuery, Button, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import { useQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -244,12 +244,6 @@ export default function InvitedGuests() {
           {Boolean(details.message?.length) && <CenteredContent>{details.message}</CenteredContent>}
         </DialogContent>
       </Dialog>
-      <Grid container>
-        <Grid item xs={10} sm={11} />
-        <Grid item xs={2} sm={1} data-testid="speed_dial_add_guest">
-          <CustomSpeedDial handleAction={() => history.push('/logbook/guests/invite')} />
-        </Grid>
-      </Grid>
 
       <MenuList
         open={menuData.open}
