@@ -8,7 +8,7 @@ import { Spinner } from '../../../shared/Loading';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import MessageAlert from '../../../components/MessageAlert';
 
-export default function AddObservation({ isObservationOpen, setIsObservationOpen }) {
+export default function AddObservation({ refetch, isObservationOpen, setIsObservationOpen }) {
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
   const [observationNote, setObservationNote] = useState('');
@@ -59,30 +59,30 @@ export default function AddObservation({ isObservationOpen, setIsObservationOpen
         attachedImages: blobIds,
       },
     })
-      .then(() => {
-        setDetails({
-          ...observationDetails,
-          loading: false,
-          isError: false,
-          refetch: true,
-          message: t('logbook:observations.created_observation'),
-        });
-        setObservationNote('');
-        // refetch();
-        setIsObservationOpen(false);
-        resetImageData();
-      })
-      .catch(err => {
-        setDetails({
-          ...observationDetails,
-          loading: false,
-          isError: true,
-          message: err.message,
-        });
-        // reset state in case it errs and user chooses a different log
-        setObservationNote('');
-        resetImageData();
+    .then(() => {
+      setDetails({
+        ...observationDetails,
+        loading: false,
+        isError: false,
+        refetch: true,
+        message: t('logbook:observations.created_observation'),
       });
+      setObservationNote('');
+      refetch();
+      setIsObservationOpen(false);
+      resetImageData();
+    })
+    .catch(err => {
+      setDetails({
+        ...observationDetails,
+        loading: false,
+        isError: true,
+        message: err.message,
+      });
+      // reset state in case it errs and user chooses a different log
+      setObservationNote('');
+      resetImageData();
+    });
   }
 
   useEffect(() => {

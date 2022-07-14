@@ -3,7 +3,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useQuery } from 'react-apollo';
+import { useQuery, useMutation, useApolloClient } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import SearchIcon from '@mui/icons-material/Search';
 import { useHistory } from 'react-router-dom';
@@ -19,7 +19,7 @@ import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
 import { dateToString } from '../../../components/DateContainer';
 import Text from '../../../shared/Text';
-import { checkRequests, paginate } from '../utils';
+import { checkRequests } from '../utils';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
@@ -30,7 +30,10 @@ import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import PageWrapper from '../../../shared/PageWrapper';
 import MenuList from '../../../shared/MenuList';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import AddObservation from './AddObservation';
+import AddObservationNoteMutation from '../graphql/logbook_mutations';
+import MessageAlert from '../../../components/MessageAlert';
+import useFileUpload from '../../../graphql/useFileUpload';
+import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload';
 
 export default function VisitView({
   tabValue,
@@ -47,6 +50,7 @@ export default function VisitView({
   const [searchOpen, setSearchOpen] = useState(false);
   const limit = 20;
   const [offset, setOffset] = useState(0);
+  const [clickedEvent, setClickedEvent] = useState({ refId: '', refType: '' });
   const [anchorEl, setAnchorEl] = useState(null);
   const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
   const { value, dbcValue, setSearchValue } = useDebouncedValue();
@@ -68,6 +72,110 @@ export default function VisitView({
   const classes = useLogbookStyles();
   const theme = useTheme();
   const mobileMatches = useMediaQuery(theme.breakpoints.down('sm'));
+  const [imageUrls, setImageUrls] = useState([]);
+  const [blobIds, setBlobIds] = useState([]);
+  const [observationNote, setObservationNote] = useState('');
+  const [addObservationNote] = useMutation(AddObservationNoteMutation);
+  const [observationDetails, setDetails] = useState({
+    isError: false,
+    message: '',
+    loading: false,
+    refetch: false,
+  });
+
+  const { onChange, signedBlobId, url, status } = useFileUpload({
+    client: useApolloClient(),
+  });
+
+  function resetImageData() {
+    setImageUrls([]);
+    setBlobIds([]);
+  }
+  function handleCancelClose() {
+    setIsObservationOpen(false);
+    resetImageData();
+  }
+
+  function handleCloseButton(imgUrl) {
+    const images = [...imageUrls];
+    const filteredImages = images.filter(img => img !== imgUrl);
+    setImageUrls(filteredImages);
+  }
+
+  const modalDetails = {
+    title: t('observations.observation_title'),
+    inputPlaceholder: t('logbook.add_observation'),
+    uploadBtnText: t('observations.upload_image'),
+    subTitle: t('observations.add_your_observation'),
+    uploadInstruction: t('observations.upload_label'),
+  };
+
+  // eslint-disable-next-line consistent-return
+  function handleSaveObservation(log = clickedEvent, type) {
+    const exitNote = 'Exited';
+    if (type !== 'exit' && !observationNote) {
+      setIsObservationOpen(false);
+      return;
+    }
+    setDetails({ ...observationDetails, loading: true });
+
+    addObservationNote({
+      variables: {
+        note: type === 'exit' ? exitNote : observationNote,
+        id: log.refId,
+        refType: log.refType,
+        eventLogId: log.id,
+        attachedImages: blobIds
+      }
+    })
+    .then(() => {
+      setDetails({
+        ...observationDetails,
+        loading: false,
+        isError: false,
+        refetch: true,
+        message:
+          type === 'exit'
+            ? t('logbook:observations.created_observation_exit')
+            : t('logbook:observations.created_observation')
+      });
+      setObservationNote('');
+      setClickedEvent({ refId: '', refType: '' });
+      refetch();
+      setIsObservationOpen(false);
+      resetImageData();
+    })
+    .catch(err => {
+      setDetails({
+        ...observationDetails,
+        loading: false,
+        isError: true,
+        message: err.message
+      });
+      // reset state in case it errs and user chooses a different log
+      setObservationNote('');
+      setClickedEvent({ refId: '', refType: '' });
+      resetImageData();
+    });
+  }
+
+  useEffect(() => {
+    if (status === 'DONE') {
+      setImageUrls([...imageUrls, url]);
+      setBlobIds([...blobIds, signedBlobId]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
+
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) return;
+      setOffset(offset - limit);
+    } else if (action === 'next') {
+      setOffset(offset + limit);
+    }
+  }
+
 
   function handleCardClick(visit) {
     history.push({
@@ -99,18 +207,6 @@ export default function VisitView({
   function handleClose() {
     setAnchorEl(null);
   }
-
-  // useEffect(() => {
-  //   if (observationDetails.refetch && tabValue === 2) {
-  //     refetch();
-  //   }
-  // }, [observationDetails.refetch, refetch, tabValue]);
-
-  // useEffect(() => {
-  //   if (tabValue === 2) {
-  //     loadGuests();
-  //   }
-  // }, [tabValue, loadGuests, dbcValue, offset]);
 
   function handleFilterData(filter, filterType = 'entryType') {
     const isDuration = filterType === 'duration';
@@ -234,10 +330,53 @@ export default function VisitView({
       breadCrumbObj={breadCrumbObj}
       rightPanelObj={rightPanelObj}
     >
-      <AddObservation
-        isObservationOpen={isObservationOpen}
-        setIsObservationOpen={setIsObservationOpen}
+      <MessageAlert
+        type={!observationDetails.isError ? 'success' : 'error'}
+        message={observationDetails.message}
+        open={!!observationDetails.message}
+        handleClose={() => setDetails({ ...observationDetails, message: '', refetch: false })}
       />
+      <DialogWithImageUpload
+        open={isObservationOpen}
+        handleDialogStatus={() => handleCancelClose()}
+        observationHandler={{
+          value: observationNote,
+          handleChange: val => setObservationNote(val),
+        }}
+        imageOnchange={img => onChange(img)}
+        imageUrls={imageUrls}
+        status={status}
+        closeButtonData={{
+          closeButton: true,
+          handleCloseButton,
+        }}
+        modalDetails={modalDetails}
+      >
+        {observationDetails.loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <Button
+              onClick={() => handleCancelClose()}
+              color="secondary"
+              variant="outlined"
+              data-testid="cancel"
+            >
+              {t('common:form_actions.cancel')}
+            </Button>
+            <Button
+              onClick={() => handleSaveObservation()}
+              color="primary"
+              variant="contained"
+              data-testid="save"
+              style={{ color: 'white' }}
+              autoFocus
+            >
+              {t('common:form_actions.save')}
+            </Button>
+          </>
+        )}
+      </DialogWithImageUpload>
       {searchOpen && (
         <SearchInput
           title={t('guest_book.visits')}
@@ -357,10 +496,10 @@ export default function VisitView({
                     color="primary"
                     data-testid="log_exit"
                     variant="outlined"
-                    // disabled={currentId === visit.id && observationDetails.loading}
-                    // startIcon={
-                    //   currentId === visit.id && observationDetails.loading ? <Spinner /> : null
-                    // }
+                    disabled={currentId === visit.id && observationDetails.loading}
+                    startIcon={
+                      currentId === visit.id && observationDetails.loading ? <Spinner /> : null
+                    }
                     onClick={event => handleExit(event, visit.id)}
                   >
                     {t('logbook.log_exit')}
