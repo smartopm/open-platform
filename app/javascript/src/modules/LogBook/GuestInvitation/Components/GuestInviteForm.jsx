@@ -293,8 +293,8 @@ GuestInviteForm.defaultProps = {
   update: false,
   inviteDetails: {
     visitationDate: null,
-    startsAt: null,
-    endsAt: null,
+    startsAt: new Date(),
+    endsAt: new Date(),
     occursOn: [],
     visitEndDate: null,
     isLoading: false,
@@ -307,11 +307,11 @@ GuestInviteForm.propTypes = {
   inviteDetails: PropTypes.shape({
     id: PropTypes.string,
     status: PropTypes.string,
-    startsAt: PropTypes.string,
-    endsAt: PropTypes.string,
+    startsAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+    endsAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     occursOn: PropTypes.arrayOf(PropTypes.string),
-    visitationDate: PropTypes.string,
-    visitEndDate: PropTypes.string,
+    visitationDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+    visitEndDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     loading: PropTypes.bool,
     name: PropTypes.string
   }),
