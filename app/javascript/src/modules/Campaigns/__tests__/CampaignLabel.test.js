@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 
@@ -28,7 +27,7 @@ describe('It should test the create label component', () => {
     handleDelete: jest.fn(),
   };
 
-  it('it should render with no error', async () => {
+  it('should render with no error', async () => {
     const container = render(
       <MockedProvider mock={[mockData]} addTypename={false}>
         <CampaignLabels {...props} />

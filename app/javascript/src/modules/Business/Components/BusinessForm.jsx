@@ -1,6 +1,6 @@
 // Business Name, Status, Website, Category, Description,
 // Image Upload, Email, Phone Number, Address Operating Hours
-
+/* eslint-disable max-lines */
 import React, { useState } from 'react';
 import {
   TextField,
@@ -33,12 +33,12 @@ const initialData = {
   description: '',
   imageUrl: '',
   address: '',
-  operationHours: ''
+  operationHours: '',
 };
 
 const initialUserData = {
   user: '',
-  userId: ''
+  userId: '',
 };
 
 export default function BusinessForm({ close, businessData, action }) {
@@ -50,16 +50,12 @@ export default function BusinessForm({ close, businessData, action }) {
   const [error, setError] = useState(null);
   const [editingUser, setEditingUser] = useState(false);
   const { t } = useTranslation(['common']);
-
   const [createBusiness] = useMutation(BusinessCreateMutation);
   const [updateBusiness] = useMutation(BusinessUpdateMutation);
 
   function handleInputChange(event) {
     const { name, value } = event.target;
-    setData({
-      ...data,
-      [name]: value
-    });
+    setData({ ...data, [name]: value });
   }
 
   function handleSubmit(event) {
@@ -76,7 +72,6 @@ export default function BusinessForm({ close, businessData, action }) {
       address,
       operationHours
     } = data;
-
     if (action === 'edit') {
       updateBusiness({
         variables: {
@@ -94,9 +89,7 @@ export default function BusinessForm({ close, businessData, action }) {
           userId: userData.userId
         }
       })
-        .then(() => {
-          close();
-        })
+        .then(() => { close(); })
         .catch(err => setError(err.message));
     } else {
       createBusiness({
@@ -114,9 +107,7 @@ export default function BusinessForm({ close, businessData, action }) {
           userId: userData.userId
         }
       })
-        .then(() => {
-          close();
-        })
+        .then(() => { close(); })
         .catch(err => setError(err.message));
     }
   }
@@ -166,7 +157,6 @@ export default function BusinessForm({ close, businessData, action }) {
               </Grid>
             </>
           )}
-
           <Grid item md={12} xs={12}>
             <TextField
               label={t('form_fields.email')}
@@ -180,7 +170,6 @@ export default function BusinessForm({ close, businessData, action }) {
               fullWidth
             />
           </Grid>
-
           <Grid item md={12} xs={12}>
             <TextField
               label={t('form_fields.phone_number')}
@@ -194,7 +183,6 @@ export default function BusinessForm({ close, businessData, action }) {
               margin="dense"
             />
           </Grid>
-
           <Grid item md={12} xs={12}>
             <TextField
               label={t('form_fields.home_url')}
@@ -219,7 +207,6 @@ export default function BusinessForm({ close, businessData, action }) {
               margin="dense"
             />
           </Grid>
-
           <Grid item md={12} xs={12}>
             <TextField
               label={t('table_headers.description')}
@@ -246,7 +233,6 @@ export default function BusinessForm({ close, businessData, action }) {
               margin="dense"
             />
           </Grid>
-
           <Grid item md={12} xs={12} style={{ padding: '20px 0' }}>
             <FormControl fullWidth>
               <InputLabel id="type">{t('table_headers.status')}</InputLabel>
@@ -261,14 +247,11 @@ export default function BusinessForm({ close, businessData, action }) {
                 label="status"
               >
                 {Object.entries(businessStatus).map(([key, val]) => (
-                  <MenuItem key={key} value={key}>
-                    {val}
-                  </MenuItem>
+                  <MenuItem key={key} value={key}>{val}</MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
-
           <Grid item md={12} xs={12} style={{ padding: '10px 0' }}>
             <FormControl fullWidth>
               <InputLabel id="type">{t('misc.select_category')}</InputLabel>
@@ -283,9 +266,7 @@ export default function BusinessForm({ close, businessData, action }) {
                 label="category"
               >
                 {Object.entries(businessCategories).map(([key, val]) => (
-                  <MenuItem key={key} value={key}>
-                    {val}
-                  </MenuItem>
+                  <MenuItem key={key} value={key}>{val}</MenuItem>
                 ))}
               </Select>
             </FormControl>

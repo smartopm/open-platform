@@ -28,8 +28,8 @@ export default function ActionFlowDelete({ open, handleClose, data, refetch }){
 
   return (
     <>
-      <DeleteDialogueBox 
-        open={open} 
+      <DeleteDialogueBox
+        open={open}
         handleClose={handleClose}
         handleAction={handleDelete}
         action='delete'
@@ -44,6 +44,6 @@ ActionFlowDelete.propTypes = {
     id: PropTypes.string.isRequired
   }).isRequired,
   handleClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired, 
+  open: PropTypes.bool.isRequired,
   refetch: PropTypes.func.isRequired
 }

@@ -4,7 +4,6 @@ import { MockedProvider } from '@apollo/react-testing';
 import BusinessForm from '../Components/BusinessForm';
 
 describe('Business  form', () => {
-  // eslint-disable-next-line max-statements
   it('should allow editing business fields inputs', async () => {
     const handleClose = jest.fn();
     const container = render(
@@ -12,43 +11,47 @@ describe('Business  form', () => {
         <BusinessForm close={handleClose} />
       </MockedProvider>
     );
-    const businessName = container.queryByTestId('business_name');
-    const businessEmail = container.queryByTestId('business_email');
-    const businessPhone = container.queryByTestId('business_phone_number');
-    const businessLink = container.queryByTestId('business_link');
-    const businessDesc = container.queryByTestId('business_description');
-    const businessAddress = container.queryByTestId('business_address');
-    const businessHours = container.queryByTestId('business_operating_hours');
-    const businessImage = container.queryByTestId('business_image');
 
-    fireEvent.change(businessName, { target: { value: 'new campaign' } });
-    expect(businessName.value).toBe('new campaign');
-
-    fireEvent.change(businessEmail, { target: { value: 'newbusiness@gm.ail' } });
-    expect(businessEmail.value).toBe('newbusiness@gm.ail');
-
-    fireEvent.change(businessPhone, { target: { value: '6353472323' } });
-    expect(businessPhone.value).toBe('6353472323');
-
-    fireEvent.change(businessLink, { target: { value: 'https://ulr.com' } });
-    expect(businessLink.value).toBe('https://ulr.com');
-
-    fireEvent.change(businessAddress, { target: { value: 'Plot 32, Nkwashi' } });
-    expect(businessAddress.value).toBe('Plot 32, Nkwashi');
-
-    fireEvent.change(businessAddress, { target: { value: 'Plot 32, Nkwashi' } });
-    expect(businessAddress.value).toBe('Plot 32, Nkwashi');
-
-    fireEvent.change(businessHours, { target: { value: '6-7' } });
-    expect(businessHours.value).toBe('6-7');
-
-    fireEvent.change(businessImage, { target: { value: 'https:image.jepg' } });
-    expect(businessImage.value).toBe('https:image.jepg');
-
-    fireEvent.change(businessDesc, {
-      target: { value: 'described as following bring change to startups' }
+    fireEvent.change(container.queryByTestId('business_name'), {
+      target: { value: 'new campaign' },
     });
-    expect(businessDesc.value).toBe('described as following bring change to startups');
+    expect(container.queryByTestId('business_name').value).toBe('new campaign');
+
+    fireEvent.change(container.queryByTestId('business_email'), {
+      target: { value: 'newbusiness@gm.ail' },
+    });
+    expect(container.queryByTestId('business_email').value).toBe('newbusiness@gm.ail');
+
+    fireEvent.change(container.queryByTestId('business_phone_number'), {
+      target: { value: '6353472323' },
+    });
+    expect(container.queryByTestId('business_phone_number').value).toBe('6353472323');
+
+    fireEvent.change(container.queryByTestId('business_link'), {
+      target: { value: 'https://ulr.com' },
+    });
+    expect(container.queryByTestId('business_link').value).toBe('https://ulr.com');
+
+    fireEvent.change(container.queryByTestId('business_address'), {
+      target: { value: 'Plot 32, Nkwashi' },
+    });
+    expect(container.queryByTestId('business_address').value).toBe('Plot 32, Nkwashi');
+
+    fireEvent.change(container.queryByTestId('business_operating_hours'), {
+      target: { value: '6-7' },
+    });
+    expect(container.queryByTestId('business_operating_hours').value).toBe('6-7');
+
+    fireEvent.change(container.queryByTestId('business_image'), {
+      target: { value: 'https:image.jepg' } });
+    expect(container.queryByTestId('business_image').value).toBe('https:image.jepg');
+
+    fireEvent.change(container.queryByTestId('business_description'), {
+      target: { value: 'described as following bring change to startups' },
+    });
+    expect(container.queryByTestId('business_description').value).toBe(
+      'described as following bring change to startups'
+    );
 
     const submit = container.queryByText('form_actions.create_business');
     const cancel = container.queryByText('form_actions.cancel');
@@ -62,7 +65,6 @@ describe('Business  form', () => {
     }, 5)
   });
 
-  // eslint-disable-next-line max-statements
   it('should allow updating business fields', async () => {
     const handleClose = jest.fn();
     const businessData = {
@@ -82,43 +84,45 @@ describe('Business  form', () => {
       </MockedProvider>
     );
 
-    const businessName = container.queryByTestId('business_name');
-    const businessEmail = container.queryByTestId('business_email');
-    const businessPhone = container.queryByTestId('business_phone_number');
-    const businessLink = container.queryByTestId('business_link');
-    const businessDesc = container.queryByTestId('business_description');
-    const businessAddress = container.queryByTestId('business_address');
-    const businessHours = container.queryByTestId('business_operating_hours');
-    const businessImage = container.queryByTestId('business_image');
+    fireEvent.change(container.queryByTestId('business_name'), { target: { value: 'new campaign' } });
+    expect(container.queryByTestId('business_name').value).toBe('new campaign');
 
-    fireEvent.change(businessName, { target: { value: 'new campaign' } });
-    expect(businessName.value).toBe('new campaign');
-
-    fireEvent.change(businessEmail, { target: { value: 'newbusiness@gm.ail' } });
-    expect(businessEmail.value).toBe('newbusiness@gm.ail');
-
-    fireEvent.change(businessPhone, { target: { value: '6353472323' } });
-    expect(businessPhone.value).toBe('6353472323');
-
-    fireEvent.change(businessLink, { target: { value: 'https://ulr.com' } });
-    expect(businessLink.value).toBe('https://ulr.com');
-
-    fireEvent.change(businessAddress, { target: { value: 'Plot 32, Nkwashi' } });
-    expect(businessAddress.value).toBe('Plot 32, Nkwashi');
-
-    fireEvent.change(businessAddress, { target: { value: 'Plot 32, Nkwashi' } });
-    expect(businessAddress.value).toBe('Plot 32, Nkwashi');
-
-    fireEvent.change(businessHours, { target: { value: '6-7' } });
-    expect(businessHours.value).toBe('6-7');
-
-    fireEvent.change(businessImage, { target: { value: 'https:image.jepg' } });
-    expect(businessImage.value).toBe('https:image.jepg');
-
-    fireEvent.change(businessDesc, {
-      target: { value: 'described as following bring change to startups' }
+    fireEvent.change(container.queryByTestId('business_email'), {
+      target: { value: 'newbusiness@gm.ail' },
     });
-    expect(businessDesc.value).toBe('described as following bring change to startups');
+    expect(container.queryByTestId('business_email').value).toBe('newbusiness@gm.ail');
+
+    fireEvent.change(container.queryByTestId('business_phone_number'), {
+      target: { value: '6353472323' },
+    });
+    expect(container.queryByTestId('business_phone_number').value).toBe('6353472323');
+
+    fireEvent.change(container.queryByTestId('business_link'), {
+      target: { value: 'https://ulr.com' },
+    });
+    expect(container.queryByTestId('business_link').value).toBe('https://ulr.com');
+
+    fireEvent.change(container.queryByTestId('business_address'), {
+      target: { value: 'Plot 32, Nkwashi' },
+    });
+    expect(container.queryByTestId('business_address').value).toBe('Plot 32, Nkwashi');
+
+    fireEvent.change(container.queryByTestId('business_operating_hours'), {
+      target: { value: '6-7' },
+    });
+    expect(container.queryByTestId('business_operating_hours').value).toBe('6-7');
+
+    fireEvent.change(container.queryByTestId('business_image'), {
+      target: { value: 'https:image.jepg' },
+    });
+    expect(container.queryByTestId('business_image').value).toBe('https:image.jepg');
+
+    fireEvent.change(container.queryByTestId('business_description'), {
+      target: { value: 'described as following bring change to startups' },
+    });
+    expect(container.queryByTestId('business_description').value).toBe(
+      'described as following bring change to startups'
+    );
 
     const submit = container.queryByText('form_actions.update_business');
     const cancel = container.queryByText('form_actions.cancel');
