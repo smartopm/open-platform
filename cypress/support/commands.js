@@ -86,7 +86,7 @@ Cypress.Commands.add("visitUserProfile", (user) => {
 })
 
 Cypress.Commands.add("visitUserMenu", (menuItem) => {
-  cy.get('.option_menu_toggler').click({ multiple: true });
+  cy.get('[data-testid=user_profile_option_menu]').click();
   cy.wait(1000);
   cy.get(`${menuItem}`).click();
   cy.wait(1000);
