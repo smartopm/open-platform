@@ -23,6 +23,7 @@ import AddSubTask from './AddSubTask';
 import useFileUpload from '../../../graphql/useFileUpload';
 import AddDocument from './AddDocument';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
+import { addHourToCurrentTime } from '../utils';
 
 const initialData = {
   user: '',
@@ -195,7 +196,7 @@ export default function TaskDetail({
     })
       .then(() => {
         handleClose();
-        const timeScheduled = new Date(Date.now() + hour * 60 * 60000).toISOString();
+        const timeScheduled = addHourToCurrentTime(hour);
         setReminderTime(timeFormat(timeScheduled));
         showSnackbar({ type: messageType.success, message: t('task.update_successful') });
         refetch();
@@ -208,7 +209,7 @@ export default function TaskDetail({
       assigneeNote => assigneeNote.userId === currentUser.id
     );
 
-    const timeScheduled = reminderTime || assignedNote?.reminderTime;
+    const timeScheduled = reminderTime || new Date(assignedNote?.reminderTime);
     let formattedTime = null;
     if (timeScheduled && new Date(timeScheduled).getTime() > new Date().getTime()) {
       formattedTime = timeFormat(timeScheduled);
@@ -237,8 +238,7 @@ export default function TaskDetail({
 
   useEffect(() => {
     setDefaultData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [data]);
 
   return (
     <div data-testid='task-detail'>

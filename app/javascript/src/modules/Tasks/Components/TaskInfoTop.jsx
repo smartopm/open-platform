@@ -62,7 +62,7 @@ export default function TaskInfoTop({
   const [editingBody, setEditingBody] = useState(false);
   const [editingDueDate, setEditingDueDate] = useState(false);
   const [editingOrderNumber, setEditingOrderNumber] = useState(false);
-  const [taskStatus, setTaskStatus] = useState(data?.status);
+  const [taskStatus, setTaskStatus] = useState(data.status);
 
   const { showSnackbar, messageType } = useContext(SnackbarContext);
 
