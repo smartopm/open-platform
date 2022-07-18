@@ -18,7 +18,6 @@ import { Spinner } from '../../../shared/Loading';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import Paginate from '../../../components/Paginate';
-import GuestsView from './GuestsView';
 import VisitView from './VisitView';
 import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
@@ -278,8 +277,7 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
                 onChange={handleTabValue}
               >
                 <StyledTab label={t('logbook.log_view')} {...a11yProps(0)} />
-                <StyledTab label={t('guest.guests')} {...a11yProps(1)} />
-                <StyledTab label={t('logbook.visit_view')} {...a11yProps(2)} />
+                <StyledTab label={t('logbook.visit_view')} {...a11yProps(1)} />
               </StyledTabs>
             </Grid>
           </Grid>
@@ -313,16 +311,6 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
             />
           </TabPanel>
           <TabPanel pad value={tabValue} index={1}>
-            <GuestsView
-              tabValue={tabValue}
-              handleAddObservation={handleAddObservation}
-              offset={offset}
-              limit={limit}
-              timeZone={authState.user.community.timezone}
-              speedDialOpen={open}
-            />
-          </TabPanel>
-          <TabPanel pad value={tabValue} index={2}>
             <VisitView
               tabValue={tabValue}
               handleAddObservation={handleExitEvent}
