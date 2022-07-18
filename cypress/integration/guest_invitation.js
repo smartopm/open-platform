@@ -50,7 +50,7 @@ describe('Gate Access', () => {
     cy.login('2347065834175');
 
     cy.visitSubMenu('.logbook-menu-item', '.guest-list-sub-menu-item');
-    cy.get('[aria-label=SpeedDial]').click();
+    cy.get('[data-testid=create_guest_btn]').click();
     cy.wait(1000);
 
     cy.get('[data-testid=date-picker]').eq(0).click()
