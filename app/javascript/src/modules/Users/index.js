@@ -68,7 +68,8 @@ export const Profile = {
   name: t => t('menu.my_profile'),
   featureName: 'Profile',
   moduleName: 'profile',
-  accessibleBy: []
+  accessibleBy: [],
+  hideFromMenu: ['admin']
 };
 
 export const Logout = {
@@ -96,7 +97,6 @@ export const MyAccount = {
   },
   name: t => t('menu.my_account'),
   featureName: 'Profile',
-  moduleName: 'profile',
-  accessibleBy: [],
+  accessibleBy: ['admin'],
   subMenu: [Profile, GuestInvitationRoutes, MyMessages, MyForms]
 };

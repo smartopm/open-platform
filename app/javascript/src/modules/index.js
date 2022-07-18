@@ -20,6 +20,7 @@ import Search from './Search';
 import Processes from './Tasks/Processes';
 import Leads from './Users/LeadManagement/Leads';
 import ManageForms from './Forms/ManageForms';
+import myGuest from './LogBook/GuestInvitation';
 
 // and exported back here
 export default [
@@ -29,6 +30,7 @@ export default [
   Profile,
   MyMessages,
   MyForms,
+  myGuest,
   Plots,
   Communication,
   LogBook,
