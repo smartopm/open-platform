@@ -24,20 +24,7 @@ import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
 import { LiteFormCategories } from '../graphql/form_category_queries';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
-
-// Replace this with translation and remove options on FormPropertySelector
-const fieldTypes = {
-  checkbox: 'Checkbox',
-  date: 'Date',
-  datetime: 'Date with Time',
-  dropdown: 'Dropdown',
-  file_upload: 'File Upload',
-  radio: 'Radio',
-  signature: 'Signature',
-  text: 'Text',
-  time: 'Time',
-  payment: 'Payment'
-};
+import fieldTypes from '../constants';
 
 export default function FormPropertyCreateForm({
   formId,
@@ -249,6 +236,7 @@ export default function FormPropertyCreateForm({
               inputProps={{ 'data-testid': 'long_desc' }}
               margin="normal"
               multiline
+              required={propertyData.fieldType === 'invitation'}
             />
           </Grid>
           <Grid item md={12} xs={12}>

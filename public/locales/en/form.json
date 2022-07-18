@@ -140,7 +140,8 @@
     "datetime": "Date with Time",
     "dropdown": "Dropdown",
     "terms_and_condition": "Terms and Condition",
-    "payment": "Payment"
+    "payment": "Payment",
+    "invitation": "Invitation"
   },
   "conditions": {
     "===": "equals to",
