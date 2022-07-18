@@ -79,7 +79,7 @@ ObservationModal.propTypes = {
   onChange: PropTypes.func.isRequired,
   status: PropTypes.string.isRequired,
   handleCloseButton: PropTypes.func.isRequired,
-  observationDetails: PropTypes.objectOf(PropTypes.Object).isRequired,
-  t: PropTypes.objectOf(PropTypes.Object).isRequired,
+  observationDetails: PropTypes.shape(PropTypes.Object).isRequired,
+  t: PropTypes.func.isRequired,
   handleSaveObservation: PropTypes.func.isRequired
 };

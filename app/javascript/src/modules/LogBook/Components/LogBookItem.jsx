@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Button from '@mui/material/Button';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
@@ -12,9 +11,7 @@ import { Divider, IconButton } from '@mui/material';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
-import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload';
 import useFileUpload from '../../../graphql/useFileUpload';
-import { Spinner } from '../../../shared/Loading';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import Paginate from '../../../components/Paginate';
@@ -29,6 +26,7 @@ import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import SearchInput from '../../../shared/search/SearchInput';
 import PageWrapper from '../../../shared/PageWrapper';
+import ObservationModal from '../Invitations/Components/ObservationModal';
 
 const limit = 20;
 const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
@@ -56,13 +54,6 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
   const { value, dbcValue, setSearchValue } = useDebouncedValue();
-  const modalDetails = {
-    title: t('observations.observation_title'),
-    inputPlaceholder: t('logbook.add_observation'),
-    uploadBtnText: t('observations.upload_image'),
-    subTitle: t('observations.add_your_observation'),
-    uploadInstruction: t('observations.upload_label')
-  };
 
   const eventsData = useQuery(AllEventLogsQuery, {
     variables: {
@@ -206,47 +197,19 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
         open={!!observationDetails.message}
         handleClose={handleCloseAlert}
       />
-      <DialogWithImageUpload
-        open={isObservationOpen}
-        handleDialogStatus={() => handleCancelClose()}
-        observationHandler={{
-          value: observationNote,
-          handleChange: val => setObservationNote(val)
-        }}
-        imageOnchange={img => onChange(img)}
+      <ObservationModal
+        isObservationOpen={isObservationOpen}
+        handleCancelClose={handleCancelClose}
+        observationNote={observationNote}
+        setObservationNote={setObservationNote}
         imageUrls={imageUrls}
+        onChange={onChange}
         status={status}
-        closeButtonData={{
-          closeButton: true,
-          handleCloseButton
-        }}
-        modalDetails={modalDetails}
-      >
-        {observationDetails.loading ? (
-          <Spinner />
-        ) : (
-          <>
-            <Button
-              onClick={() => handleCancelClose()}
-              color="secondary"
-              variant="outlined"
-              data-testid="cancel"
-            >
-              {t('common:form_actions.cancel')}
-            </Button>
-            <Button
-              onClick={() => handleSaveObservation()}
-              color="primary"
-              variant="contained"
-              data-testid="save"
-              style={{ color: 'white' }}
-              autoFocus
-            >
-              {t('common:form_actions.save')}
-            </Button>
-          </>
-        )}
-      </DialogWithImageUpload>
+        handleCloseButton={handleCloseButton}
+        observationDetails={observationDetails}
+        t={t}
+        handleSaveObservation={handleSaveObservation}
+      />
       <Grid container>
         <Grid item md={11} xs={11}>
           <Grid container spacing={1}>
@@ -282,7 +245,11 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
             </Grid>
           </Grid>
           <TabPanel pad value={tabValue} index={0}>
-            <AccessCheck module="event_log" allowedPermissions={['can_download_logbook_events']} show404ForUnauthorized={false}>
+            <AccessCheck
+              module="event_log"
+              allowedPermissions={['can_download_logbook_events']}
+              show404ForUnauthorized={false}
+            >
               <GateFlowReport />
               <br />
               <Divider />
