@@ -1,11 +1,11 @@
 import { useMediaQuery, Button } from '@mui/material';
 import { useTheme } from '@mui/styles';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
-import { useQuery, useMutation } from 'react-apollo';
+import { useApolloClient, useQuery, useMutation } from 'react-apollo';
 import PageWrapper from '../../../../shared/PageWrapper';
 import { GuestEntriesQuery } from '../../graphql/guestbook_queries';
 import useDebouncedValue from '../../../../shared/hooks/useDebouncedValue';
@@ -18,10 +18,15 @@ import { EntryRequestGrant } from '../../../../graphql/mutations';
 import MessageAlert from '../../../../components/MessageAlert';
 import Invitation from './Invitation';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
+import AddObservationNoteMutation from '../../graphql/logbook_mutations';
+import { AllEventLogsQuery } from '../../../../graphql/queries';
+import ObservationModal from './ObservationModal';
+import useFileUpload from '../../../../graphql/useFileUpload';
 
 export default function Invitations() {
   const history = useHistory();
   const limit = 20;
+  const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
   const { t } = useTranslation(['logbook', 'common']);
   const theme = useTheme();
   const matches = useMediaQuery(() => theme.breakpoints.down('md'));
@@ -40,7 +45,21 @@ export default function Invitations() {
     variables: { offset: dbcValue.length ? 0 : offset, limit, query: dbcValue.trim() },
     fetchPolicy: 'cache-and-network',
   });
-
+  const [clickedEvent, setClickedEvent] = useState({ refId: '', refType: '' });
+  const [observationNote, setObservationNote] = useState('');
+  const [observationDetails, setDetails] = useState({
+    isError: false,
+    message: '',
+    loading: false,
+    refetch: false,
+  });
+  const [isObservationOpen, setIsObservationOpen] = useState(false);
+  const [blobIds, setBlobIds] = useState([]);
+  const [addObservationNote] = useMutation(AddObservationNoteMutation);
+  const { onChange, signedBlobId, url, status } = useFileUpload({
+    client: useApolloClient(),
+  });
+  const [imageUrls, setImageUrls] = useState([]);
   const rightPanelObj = [
     {
       mainElement: (
@@ -78,6 +97,31 @@ export default function Invitations() {
     pageName: t('common:menu.invitations'),
   };
 
+  const eventsData = useQuery(AllEventLogsQuery, {
+    variables: {
+      subject: subjects,
+      refId: null,
+      refType: null,
+      offset,
+      limit: 20,
+      name: dbcValue.trim(),
+    },
+    fetchPolicy: 'cache-and-network',
+  });
+
+  useEffect(() => {
+    if (status === 'DONE') {
+      setImageUrls([...imageUrls, url]);
+      setBlobIds([...blobIds, signedBlobId]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
+
+  function resetImageData() {
+    setImageUrls([]);
+    setBlobIds([]);
+  }
+
   function handleCardClick(visit) {
     history.push({
       pathname: `/request/${visit.id}`,
@@ -102,9 +146,69 @@ export default function Invitations() {
     }
   }
 
+  function handleAddObservation(log) {
+    setClickedEvent({ refId: log.refId, refType: log.refType });
+    setIsObservationOpen(true);
+  }
+
+  // eslint-disable-next-line consistent-return
+  function handleSaveObservation(log = clickedEvent, type) {
+    const exitNote = 'Exited';
+    if (type !== 'exit' && !observationNote) {
+      setIsObservationOpen(false);
+      return;
+    }
+    setDetails({ ...observationDetails, loading: true });
+
+    addObservationNote({
+      variables: {
+        note: type === 'exit' ? exitNote : observationNote,
+        id: log.refId,
+        refType: log.refType,
+        eventLogId: log.id,
+        attachedImages: blobIds
+      }
+    })
+      .then(() => {
+        setDetails({
+          ...observationDetails,
+          loading: false,
+          isError: false,
+          refetch: true,
+          message:
+            type === 'exit'
+              ? t('logbook:observations.created_observation_exit')
+              : t('logbook:observations.created_observation')
+        });
+        setObservationNote('');
+        setClickedEvent({ refId: '', refType: '' });
+        eventsData.refetch();
+        setIsObservationOpen(false);
+        resetImageData();
+      })
+      .catch(err => {
+        setDetails({
+          ...observationDetails,
+          loading: false,
+          isError: true,
+          message: err.message
+        });
+        // reset state in case it errs and user chooses a different log
+        setObservationNote('');
+        setClickedEvent({ refId: '', refType: '' });
+        resetImageData();
+      });
+  }
+
   function handleGrantAccess(event, user) {
     event.stopPropagation();
     setLoadingInfo({ loading: true, currentId: user.id });
+
+    // handling compatibility with event log
+    const log = {
+      refId: user.id,
+      refType: 'Logs::EntryRequest'
+    };
 
     grantEntry({
       variables: { id: user.id },
@@ -116,6 +220,7 @@ export default function Invitations() {
           detail: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') }),
         });
         setLoadingInfo({ ...loadingStatus, loading: false });
+        handleAddObservation(log);
       })
       .catch(err => {
         setMessage({ isError: true, detail: err.message });
@@ -123,6 +228,16 @@ export default function Invitations() {
       });
   }
 
+  function handleCancelClose() {
+    setIsObservationOpen(false);
+    resetImageData();
+  }
+
+  function handleCloseButton(imgUrl) {
+    const images = [...imageUrls];
+    const filteredImages = images.filter(img => img !== imgUrl);
+    setImageUrls(filteredImages);
+  }
   return (
     <PageWrapper
       rightPanelObj={rightPanelObj}
@@ -137,6 +252,20 @@ export default function Invitations() {
         message={message.detail}
         open={!!message.detail}
         handleClose={() => setMessage({ ...message, detail: '' })}
+      />
+
+      <ObservationModal
+        isObservationOpen={isObservationOpen}
+        handleCancelClose={handleCancelClose}
+        observationNote={observationNote}
+        setObservationNote={setObservationNote}
+        imageUrls={imageUrls}
+        onChange={onChange}
+        status={status}
+        handleCloseButton={handleCloseButton}
+        observationDetails={observationDetails}
+        t={t}
+        handleSaveObservation={handleSaveObservation}
       />
 
       {searchOpen && (
