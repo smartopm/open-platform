@@ -113,7 +113,10 @@ module Types::Queries::User
             I18n.t('errors.unauthorized')
     end
 
-    if query.present? && query.include?('date_filter')
+    login_after_filter = query.to_s.include?('login_after_filter')
+    has_created_date_filter = query.to_s.include?('created_date_filter')
+
+    if query.present? && login_after_filter || has_created_date_filter
       Users::User.allowed_users(context[:current_user])
                  .eager_load(:labels)
                  .heavy_search(query)
