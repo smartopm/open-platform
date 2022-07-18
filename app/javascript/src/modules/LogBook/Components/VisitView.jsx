@@ -330,7 +330,6 @@ export default function VisitView() {
       breadCrumbObj={breadCrumbObj}
       rightPanelObj={rightPanelObj}
     >
-      {console.log(error)}
       <MessageAlert
         type={!observationDetails.isError ? 'success' : 'error'}
         message={observationDetails.message}

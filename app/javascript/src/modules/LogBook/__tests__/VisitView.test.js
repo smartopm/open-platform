@@ -21,7 +21,7 @@ describe('Should render Visits View Component', () => {
   const mocks = {
     request: {
       query: CurrentGuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '', type: 'allVisits', duration: null }
+      variables: { offset: 0, limit: 20, query: '', type: 'allVisits', duration: null }
     },
     result: {
       data: {
@@ -119,7 +119,7 @@ describe('Should render Visits View Component', () => {
   const errorMock = {
     request: {
       query: CurrentGuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '', type: 'allVisits', duration: null }
+      variables: { offset: 0, limit: 20, query: '', type: 'allVisits', duration: null }
     },
     result: {
       data: {
@@ -129,13 +129,13 @@ describe('Should render Visits View Component', () => {
     error: new Error('Something wrong happened')
   };
 
-  const props = {
-    handleAddObservation: jest.fn(),
-    observationDetails: {
-      loading: false,
-      refetch: false
-    }
-  };
+  // const props = {
+  //   handleAddObservation: jest.fn(),
+  //   observationDetails: {
+  //     loading: false,
+  //     refetch: false
+  //   }
+  // };
   it('should render proper data', async () => {
     const { getAllByTestId, getByText } = render(
       <Context.Provider value={authState}>
@@ -177,8 +177,6 @@ describe('Should render Visits View Component', () => {
       expect(getAllByTestId('next-btn')[0]).toBeInTheDocument();
       
       fireEvent.click(getAllByTestId('log_exit')[0]);
-      expect(props.handleAddObservation).toBeCalled();
-      
       fireEvent.click(getAllByTestId('card')[3]);
       expect(mockHistory.push).toBeCalled();
       expect(getAllByTestId('card')[0]).toBeInTheDocument();
