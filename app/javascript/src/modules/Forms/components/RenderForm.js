@@ -318,7 +318,7 @@ export default function RenderForm({
       />
     ),
     payment: <PaymentInput properties={formPropertiesData} communityCurrency={communityCurrency} />,
-    invitation: <InvitationInput properties={formPropertiesData} />,
+    appointment: <InvitationInput properties={formPropertiesData} />,
   };
   return (
     <Grid style={!editMode && !matches ? { padding: '0 120px' } : {}}>

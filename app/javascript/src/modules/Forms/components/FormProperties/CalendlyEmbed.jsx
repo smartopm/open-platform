@@ -1,23 +1,29 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-export default function CalendlyEmbed({ isOpen }) {
+export default function CalendlyEmbed({ isOpen, submitForm }) {
+  const [scheduled, setIsScheduled] = useState(false)
   useEffect(() => {
-    if (isOpen) {
-      window.Calendly.initBadgeWidget({
+    if (isOpen && window.Calendly) {
+       window.Calendly.initPopupWidget({
         url:
           'https://calendly.com/dgdp-amenity1/kiosk?hide_event_type_details=1&hide_gdpr_banner=1',
-        parentElement: document.getElementById('calendly'),
-        prefill: {},
-        utm: {},
       });
+      return
     }
-  }, [isOpen]);
+    if(scheduled) {
+      window.Calendly = null
+    }
+  }, [isOpen, scheduled]);
 
   function callback(e) {
     if (isCalendlyEvent(e)) {
-      console.log('Event name:', e.data.event);
-      console.log('Event details:', e.data.payload);
+      if(e.data.event === 'calendly.event_scheduled') {
+        window.Calendly = null
+        setIsScheduled(true)
+        // submit the form from here
+        submitForm()
+      }
     }
   }
 
@@ -27,6 +33,7 @@ export default function CalendlyEmbed({ isOpen }) {
     );
   }
 
+
   useEffect(() => {
     window.addEventListener('message', callback);
     return () => {
@@ -34,12 +41,11 @@ export default function CalendlyEmbed({ isOpen }) {
     };
   }, []);
 
-  if(isOpen) {
-      return  <div style={{ width: 320, height: 580 }} />
-  }
   return null
 }
 
 CalendlyEmbed.propTypes = {
   isOpen: PropTypes.bool.isRequired,
+  submitForm: PropTypes.func.isRequired,
+  close: PropTypes.func.isRequired,
 };

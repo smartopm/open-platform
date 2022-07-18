@@ -141,7 +141,7 @@ export default function Form({
     });
   }
 
-  function formSubmit(propertiesData, status, isPreview=false) {
+  function formSubmit(propertiesData, status, isPreview=false, verified=false) {
     if (filesToUpload.length !== uploadedImages.length) {
       setImgUploadError(true);
       return;
@@ -158,10 +158,11 @@ export default function Form({
       description: payment?.description,
     };
     const { config } = flutterwaveConfig(authState, value, t);
-    if(hasAppointment) {
+    if(hasAppointment && !verified) {
       setShowCalendly(true)
      return
     }
+    console.log(propertiesData, status)
     if (hasPayment) {
       setSubmittingPayment(true);
       window.FlutterwaveCheckout({
@@ -239,7 +240,10 @@ export default function Form({
         handleClose={() => handleMessageAlertClose(imgUploadError)}
       />
 
-      <CalendlyEmbed isOpen={showCalendly} />
+      <CalendlyEmbed
+        isOpen={showCalendly}
+        submitForm={() => formSubmit(formData, null, false, true)}
+      />
 
       {categoryFormOpen && (
         <CategoryForm
