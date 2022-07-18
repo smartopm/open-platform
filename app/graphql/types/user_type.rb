@@ -163,10 +163,6 @@ module Types
       context[:current_user].role.permissions
     end
 
-    def form_users
-      object.form_users.order(created_at: :desc)
-    end
-
     # Field for lead secondary mail
     def secondary_email
       batch_load(object, :contact_infos).then do |contact_infos|

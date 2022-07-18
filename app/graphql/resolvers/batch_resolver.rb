@@ -20,7 +20,7 @@ module Resolvers
     end
 
     def resolve(association_name, _args)
-      batch_load(@object, association_name)
+      batch_load(object, association_name)
     end
 
     private :object, :context

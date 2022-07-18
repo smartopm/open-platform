@@ -39,6 +39,7 @@ module Labels
       sql = "
         SELECT
           l.id,
+          community_id,
           short_desc,
           color,
           description,
