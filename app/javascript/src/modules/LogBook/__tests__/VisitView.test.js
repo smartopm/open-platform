@@ -130,7 +130,7 @@ describe('Should render Visits View Component', () => {
   };
 
   it('should render proper data', async () => {
-    const { getAllByTestId, getByText } = render(
+    const { getAllByTestId, getByText, queryByTestId } = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[mocks]} addTypename>
           <MemoryRouter>
@@ -142,6 +142,9 @@ describe('Should render Visits View Component', () => {
       </Context.Provider>
     );
     await waitFor(() => {
+      expect(queryByTestId('access_search')).toBeInTheDocument();
+      expect(queryByTestId('reload')).toBeInTheDocument();
+      expect(queryByTestId('add_button')).toBeInTheDocument();
       expect(getByText('logbook.total_entries')).toBeInTheDocument();
       expect(getByText('logbook.total_exits')).toBeInTheDocument();
       expect(getByText('logbook.total_in_city')).toBeInTheDocument();
@@ -169,7 +172,10 @@ describe('Should render Visits View Component', () => {
       expect(getAllByTestId('log_exit')[0]).not.toBeDisabled();
       expect(getAllByTestId('prev-btn')[0]).toBeInTheDocument();
       expect(getAllByTestId('next-btn')[0]).toBeInTheDocument();
-      
+
+      fireEvent.click(queryByTestId('access_search'));
+      fireEvent.click(queryByTestId('reload'));
+      fireEvent.click(queryByTestId('add_button'));
       fireEvent.click(getAllByTestId('log_exit')[0]);
       fireEvent.click(getAllByTestId('card')[3]);
       expect(mockHistory.push).toBeCalled();

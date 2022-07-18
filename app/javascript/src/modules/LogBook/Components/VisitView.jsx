@@ -274,13 +274,13 @@ export default function VisitView() {
   const rightPanelObj = [
     {
       mainElement: mobileMatches ? (
-        <IconButton color="primary" data-testid="search" onClick={() => setSearchOpen(!searchOpen)}>
+        <IconButton color="primary" data-testid="access_search" onClick={() => setSearchOpen(!searchOpen)}>
           <SearchIcon />
         </IconButton>
       ) : (
         <Button
           startIcon={<SearchIcon />}
-          data-testid="search"
+          data-testid="access_search"
           onClick={() => setSearchOpen(!searchOpen)}
         >
           {t('common:menu.search')}
@@ -290,11 +290,11 @@ export default function VisitView() {
     },
     {
       mainElement: mobileMatches ? (
-        <IconButton color="primary" data-testid="search" onClick={() => refetch()}>
+        <IconButton color="primary" data-testid="reload" onClick={() => refetch()}>
           <ReplayIcon />
         </IconButton>
       ) : (
-        <Button startIcon={<ReplayIcon />} data-testid="search" onClick={() => refetch()}>
+        <Button startIcon={<ReplayIcon />} data-testid="reload" onClick={() => refetch()}>
           {t('common:misc.reload')}
         </Button>
       ),
@@ -305,7 +305,7 @@ export default function VisitView() {
         <>
           <Button
             startIcon={!mobileMatches ? <AddIcon /> : undefined}
-            data-testid="search"
+            data-testid="add_button"
             onClick={e => menuData.handleMenu(e)}
             variant="contained"
             style={{ color: '#FFFFFF' }}
