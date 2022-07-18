@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import DatePickerDialog, {
   DateAndTimePickers,
-  ThemedTimePicker
+  ThemedTimePicker,
 } from '../../../components/DatePickerDialog';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import RadioInput from './FormProperties/RadioInput';
@@ -24,13 +24,14 @@ import {
   isUploaded,
   handleFileSelect,
   handleFileUpload,
-  removeBeforeUpload
+  removeBeforeUpload,
 } from '../utils';
 import MessageAlert from '../../../components/MessageAlert';
 import ListWrapper from '../../../shared/ListWrapper';
 import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
 import PaymentInput from './FormProperties/PaymentInput';
 import { currencies } from '../../../utils/constants';
+import InvitationInput from './FormProperties/InvitationInput';
 
 export default function RenderForm({
   formPropertiesData,
@@ -55,7 +56,7 @@ export default function RenderForm({
     startUpload,
     signature,
     filesToUpload,
-    setFilesToUpload
+    setFilesToUpload,
   } = useContext(FormContext);
 
   const { t } = useTranslation(['form', 'common']);
@@ -70,8 +71,8 @@ export default function RenderForm({
       [property.fieldName]: {
         value: { ...objectAccessor(formProperties, property.fieldName)?.value, [name]: checked },
         form_property_id: property.id,
-        type: 'checkbox'
-      }
+        type: 'checkbox',
+      },
     });
   }
 
@@ -86,7 +87,7 @@ export default function RenderForm({
     const { name, value } = event.target;
     setFormProperties({
       ...formProperties,
-      [name]: { value, form_property_id: property.id }
+      [name]: { value, form_property_id: property.id },
     });
   }
 
@@ -95,8 +96,8 @@ export default function RenderForm({
       ...formProperties,
       [property.fieldName]: {
         value: date,
-        form_property_id: property.id
-      }
+        form_property_id: property.id,
+      },
     });
   }
 
@@ -106,11 +107,10 @@ export default function RenderForm({
       ...formProperties,
       [property.fieldName]: {
         value: { checked: value, label: name },
-        form_property_id: property.id
-      }
+        form_property_id: property.id,
+      },
     });
   }
-
 
   function createPropertyObj(propertyId) {
     return {
@@ -118,7 +118,7 @@ export default function RenderForm({
       setFilesToUpload,
       propertyId,
       setMessageAlert,
-      setIsSuccessAlert
+      setIsSuccessAlert,
     };
   }
 
@@ -129,7 +129,7 @@ export default function RenderForm({
       setFormState,
       formState,
       propertyId,
-      startUpload
+      startUpload,
     };
   }
 
@@ -140,7 +140,7 @@ export default function RenderForm({
       formState,
       setFormState,
       filesToUpload,
-      setFilesToUpload
+      setFilesToUpload,
     };
   }
 
@@ -173,7 +173,7 @@ export default function RenderForm({
               handleValue={event => handleValueChange(event, formPropertiesData)}
               editable={editable}
               inputValidation={{
-                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
+                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
               }}
             />
           </ListWrapper>
@@ -217,7 +217,7 @@ export default function RenderForm({
             inputVariant="outlined"
             inputValidation={{
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
-              fieldName: formPropertiesData.fieldName
+              fieldName: formPropertiesData.fieldName,
             }}
             t={t}
           />
@@ -259,7 +259,7 @@ export default function RenderForm({
             textFieldStyle={{ background: '#F5F5F4', padding: '10px 15px', borderRadius: '10px' }}
             inputValidation={{
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
-              fieldName: formPropertiesData.fieldName
+              fieldName: formPropertiesData.fieldName,
             }}
             t={t}
           />
@@ -302,7 +302,7 @@ export default function RenderForm({
             textFieldStyle={{ background: '#F5F5F4', padding: '10px 15px', borderRadius: '10px' }}
             inputValidation={{
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
-              fieldName: formPropertiesData.fieldName
+              fieldName: formPropertiesData.fieldName,
             }}
             t={t}
           />
@@ -355,7 +355,7 @@ export default function RenderForm({
                 required: formPropertiesData.required,
                 fileCount: uploadedImages.filter(file => file.propertyId === formPropertiesData.id)
                   .length,
-                currentPropId: formState.currentPropId
+                currentPropId: formState.currentPropId,
               }}
               upload={event => handleFileSelect(event, createPropertyObj(formPropertiesData.id), t)}
               editable={editable}
@@ -364,7 +364,7 @@ export default function RenderForm({
               btnColor="primary"
               inputValidation={{
                 error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
-                fieldName: formPropertiesData.fieldName
+                fieldName: formPropertiesData.fieldName,
               }}
             />
           </ListWrapper>
@@ -421,7 +421,7 @@ export default function RenderForm({
               detail={{
                 type: 'signature',
                 status: signature.status,
-                required: formPropertiesData.required
+                required: formPropertiesData.required,
               }}
               signRef={signRef}
               onEnd={() => handleSignatureUpload(formPropertiesData.id)}
@@ -462,7 +462,7 @@ export default function RenderForm({
               value={null}
               handleValue={event => handleRadioValueChange(event, formPropertiesData)}
               inputValidation={{
-                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
+                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
               }}
             />
             <br />
@@ -502,7 +502,7 @@ export default function RenderForm({
               checkboxState={objectAccessor(formProperties, formPropertiesData.fieldName)}
               handleValue={event => handleCheckboxSelect(event, formPropertiesData)}
               inputValidation={{
-                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
+                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
               }}
             />
             <br />
@@ -543,7 +543,7 @@ export default function RenderForm({
               handleValue={event => handleValueChange(event, formPropertiesData)}
               editable={editable}
               inputValidation={{
-                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
+                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
               }}
             />
           </ListWrapper>
@@ -561,38 +561,64 @@ export default function RenderForm({
         )}
       </Grid>
     ),
-       payment: (
-         <Grid
-           container
-           spacing={3}
-           alignItems="center"
-           justifyContent="center"
-           key={formPropertiesData.id}
-         >
-           {editMode && (
-             <Grid item xs={1}>
-               <Typography color="textSecondary">{number}</Typography>
-             </Grid>
-           )}
-           <Grid item xs={editMode ? 10 : 12} className={classes.spaceBottom}>
-             <PaymentInput
-               properties={formPropertiesData}
-               communityCurrency={communityCurrency}
-             />
-           </Grid>
-           {editMode && (
-             <Grid item xs={1}>
-               <FormPropertyAction
-                 formId={formId}
-                 editMode={editMode}
-                 propertyId={formPropertiesData.id}
-                 refetch={refetch}
-                 categoryId={categoryId}
-               />
-             </Grid>
-           )}
-         </Grid>
-       )
+    payment: (
+      <Grid
+        container
+        spacing={3}
+        alignItems="center"
+        justifyContent="center"
+        key={formPropertiesData.id}
+      >
+        {editMode && (
+          <Grid item xs={1}>
+            <Typography color="textSecondary">{number}</Typography>
+          </Grid>
+        )}
+        <Grid item xs={editMode ? 10 : 12} className={classes.spaceBottom}>
+          <PaymentInput properties={formPropertiesData} communityCurrency={communityCurrency} />
+        </Grid>
+        {editMode && (
+          <Grid item xs={1}>
+            <FormPropertyAction
+              formId={formId}
+              editMode={editMode}
+              propertyId={formPropertiesData.id}
+              refetch={refetch}
+              categoryId={categoryId}
+            />
+          </Grid>
+        )}
+      </Grid>
+    ),
+    invitation: (
+      <Grid
+        container
+        spacing={3}
+        alignItems="center"
+        justifyContent="center"
+        key={formPropertiesData.id}
+      >
+        {editMode && (
+          <Grid item xs={1}>
+            <Typography color="textSecondary">{number}</Typography>
+          </Grid>
+        )}
+        <Grid item xs={editMode ? 10 : 12} className={classes.spaceBottom}>
+          <InvitationInput properties={formPropertiesData} />
+        </Grid>
+        {editMode && (
+          <Grid item xs={1}>
+            <FormPropertyAction
+              formId={formId}
+              editMode={editMode}
+              propertyId={formPropertiesData.id}
+              refetch={refetch}
+              categoryId={categoryId}
+            />
+          </Grid>
+        )}
+      </Grid>
+    ),
   };
   return (
     <Grid style={!editMode && !matches ? { padding: '0 120px' } : {}}>
@@ -606,15 +632,15 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     '& iframe': {
       height: '400px',
-      width: '600px'
-    }
+      width: '600px',
+    },
   },
   filePreviewMobile: {
     position: 'relative',
     '& iframe': {
       height: '300px',
-      width: '300px'
-    }
+      width: '300px',
+    },
   },
   iconButton: {
     right: 2,
@@ -623,16 +649,16 @@ const useStyles = makeStyles(() => ({
     background: 'white',
     position: 'absolute',
     '&:hover': {
-      background: 'white'
-    }
+      background: 'white',
+    },
   },
   closeButton: {
     height: '40px',
-    width: '40px'
+    width: '40px',
   },
   spaceBottom: {
-    margin: '10px 0'
-  }
+    margin: '10px 0',
+  },
 }));
 
 RenderForm.propTypes = {
@@ -645,7 +671,7 @@ RenderForm.propTypes = {
     fieldType: PropTypes.string,
     fieldName: PropTypes.string,
     adminUse: PropTypes.bool,
-    required: PropTypes.bool
+    required: PropTypes.bool,
   }).isRequired,
   number: PropTypes.number.isRequired,
   formDetailRefetch: PropTypes.func.isRequired,
