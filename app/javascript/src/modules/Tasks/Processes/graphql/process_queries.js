@@ -266,6 +266,27 @@ export const ProcessReplyComments = gql`
   }
 `;
 
+export const ProcessCommentsQuery = gql`
+  query processComments($processId: ID!) {
+    processComments(processId: $processId) {
+      id
+      body
+      createdAt
+      groupingId
+      taggedAttachments
+      user {
+        id
+        name
+        imageUrl
+      }
+      note {
+        id
+        body
+      }
+    }
+  }
+`;
+
 export const ProjectStagesQuery = gql`
   query projectStages($processId: ID!) {
     projectStages(processId: $processId)

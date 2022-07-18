@@ -143,6 +143,11 @@ module Types::Queries::Note
       argument :process_id, GraphQL::Types::ID, required: true
     end
 
+    field :process_comments, [Types::NoteCommentType], null: false do
+      description 'Retuns all comments in a process'
+      argument :process_id, GraphQL::Types::ID, required: true
+    end
+
     field :document_comments, [Types::NoteCommentType], null: false do
       description 'Retuns all comments where a document is tagged'
       argument :tagged_document_id, GraphQL::Types::ID, required: true
@@ -338,6 +343,23 @@ module Types::Queries::Note
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
+
+  def process_comments(process_id:)
+    unless permitted?(module: :note, permission: :can_fetch_process_comments)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    validate_process(process_id: process_id)
+
+    process_task_ids = []
+
+    projects_query(process_id).each do |project|
+      process_task_ids.concat(project_task_ids(parent_task: project))
+    end
+
+    Comments::NoteComment.includes(:note, :user).where(note_id: process_task_ids)
+  end
 
   def user_tasks
     unless permitted?(module: :note, permission: :can_get_own_tasks)
