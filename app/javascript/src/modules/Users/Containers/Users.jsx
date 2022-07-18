@@ -35,6 +35,7 @@ import UserSelectButton, {
 } from '../Components/UserHeader';
 import QueryBuilder from '../../../components/QueryBuilder';
 import PageWrapper from '../../../shared/PageWrapper';
+import SearchInput from '../../../shared/search/SearchInput';
 
 const limit = 25;
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000;
@@ -57,6 +58,7 @@ export default function UsersList() {
   const [menuAnchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
   const location = useLocation();
+  const [searchValue, setSearchValue] = useState('');
   const { t } = useTranslation(['users', 'common']);
   function handleReportDialog() {
     setSubstatusReportOpen(!substatusReportOpen);
@@ -529,6 +531,14 @@ export default function UsersList() {
             <>
               <div style={{ width: '50%' }}>
                 <UserSearch handleSearchClick={inputToSearch} filterObject={filterObject} />
+                <SearchInput
+                  title="users"
+                  filterRequired
+                  searchValue={searchValue}
+                  handleSearch={event => setSearchValue(event)}
+                  handleFilter={toggleFilterMenu}
+                  // handleClear={() => setSearchClear()}
+                />
               </div>
               <div
                 style={{
