@@ -119,14 +119,12 @@ module Types::Queries::User
                  .order(name: :asc)
                  .limit(limit)
                  .offset(offset)
-                 .with_attached_avatar
     else
       Users::User.allowed_users(context[:current_user])
                  .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
                  .order(name: :asc)
                  .limit(limit)
                  .offset(offset)
-                 .with_attached_avatar
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -155,14 +153,12 @@ module Types::Queries::User
                  .order(name: :asc)
                  .limit(limit)
                  .offset(offset)
-                 .with_attached_avatar
     else
       Users::User.allowed_users(context[:current_user])
                  .send(search_method, query)
                  .order(name: :asc)
                  .limit(limit)
                  .offset(offset)
-                 .with_attached_avatar
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -196,7 +192,6 @@ module Types::Queries::User
                .order(name: :asc)
                .limit(limit)
                .offset(offset)
-               .with_attached_avatar
   end
   # rubocop:enable Metrics/AbcSize
 
@@ -269,7 +264,7 @@ module Types::Queries::User
     users = context[:site_community].users
     users.where(user_type: 'visitor')
          .search_guest(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
-         .limit(5).with_attached_avatar
+         .limit(5)
   end
 
   def my_guests(query: nil)
@@ -294,7 +289,6 @@ module Types::Queries::User
                .search_lite(or: [{ query: (query.presence || '.') },
                                  { name: { matches: query } }])
                .order(name: :asc)
-               .with_attached_avatar
   end
 
   def my_hosts(user_id:)
@@ -306,7 +300,7 @@ module Types::Queries::User
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    user.invites.includes(:entry_time).order(created_at: :desc)
+    user.invites.order(created_at: :desc)
   end
 
   def user_permissions_check?(permission)
