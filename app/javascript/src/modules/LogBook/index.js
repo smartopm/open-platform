@@ -4,6 +4,7 @@ import LogBook from './Components/LogBook';
 import GuestsValidateRoutes from './GuestVerification';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 import GuestInvitationRoutes from './GuestInvitation';
+import InvitationsRoutes from './Invitations';
 
 const logBookPermissions = ['can_access_logbook'];
 
@@ -57,5 +58,5 @@ export default {
   featureName: 'LogBook',
   moduleName: 'gate_access',
   accessibleBy: [],
-  subMenu: [LogBooks, GuestInvitationRoutes],
+  subMenu: [LogBooks, GuestInvitationRoutes, InvitationsRoutes],
 };
