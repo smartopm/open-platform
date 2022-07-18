@@ -186,6 +186,24 @@ export default function ProcessCommentsPage() {
           {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
         </>
       )}
+      {viewType === 'list' && (
+        <>
+          {processCommentsLoading? <Spinner /> : (
+            processComments?.processComments?.length > 0 ? (
+              processComments.processComments.map(comment => (
+                <div key={comment.id}>
+                  <ProcessCommentItem listView commentdata={comment} />
+                </div>
+              ))
+            ) : (
+              <CenteredContent>{t('comments.no_comment')}</CenteredContent>
+            )
+          )}
+          {processCommentsError && (
+            <CenteredContent>{formatError(processCommentsError.message)}</CenteredContent>
+          )}
+        </>
+      )}
     </PageWrapper>
   );
 }

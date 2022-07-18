@@ -18,7 +18,7 @@ import {
 } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 
-export default function ProcessCommentItem({ commentdata, commentType }) {
+export default function ProcessCommentItem({ commentdata, commentType, listView }) {
   const { id: processId } = useParams();
   const statusColors = {
     Sent: 'info',
@@ -40,31 +40,33 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
         spacing={1}
         style={{ marginBottom: '30px', borderBottom: '1px solid #F5F4F5', paddingBottom: '15px' }}
       >
+        {!listView && (
+          <Grid
+            item
+            md={commentType === 'Sent' ? 1 : 2}
+            xs={commentType === 'Sent' ? 3 : 5}
+            sm={commentType === 'Sent' ? 1 : 2}
+          >
+            <Chip
+              label={objectAccessor(statusLabel, commentType)}
+              color={objectAccessor(statusColors, commentType)}
+              size="small"
+              style={{ fontSize: '14px' }}
+              data-testid="chip"
+            />
+          </Grid>
+        )}
         <Grid
           item
-          md={commentType === 'Sent' ? 1 : 2}
-          xs={commentType === 'Sent' ? 3 : 5}
-          sm={commentType === 'Sent' ? 1 : 2}
-        >
-          <Chip
-            label={objectAccessor(statusLabel, commentType)}
-            color={objectAccessor(statusColors, commentType)}
-            size="small"
-            style={{ fontSize: '14px' }}
-            data-testid="chip"
-          />
-        </Grid>
-        <Grid
-          item
-          md={commentType === 'Sent' ? 11 : 10}
-          xs={commentType === 'Sent' ? 9 : 7}
-          sm={commentType === 'Sent' ? 11 : 10}
-          style={commentType === 'Sent' ? {} : { marginLeft: '-25px' }}
+          md={commentType === 'Sent' ? 11 : listView ? 12 : 10}
+          xs={commentType === 'Sent' ? 9 : listView ? 12 : 7}
+          sm={commentType === 'Sent' ? 11 :  listView ? 12 : 10}
+          style={commentType === 'Sent' || listView ? {} : { marginLeft: '-25px' }}
           className={matches ? classes.card : undefined}
           data-testid="comment_date"
         >
           <Typography variant="caption">{dateToString(commentdata.createdAt)}</Typography>
-          {commentType !== 'Resolved' && (
+          {commentdata?.replyFrom && !listView && commentType !== 'Resolved' && (
             <Typography variant="caption" style={{ marginLeft: '15px' }}>
               {commentType === 'Received'
                 ? t('task:task.reply_submitted')
@@ -117,6 +119,11 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+ProcessCommentItem.defaultProps = {
+  listView: false,
+  commentType: 'List',
+}
+
 ProcessCommentItem.propTypes = {
   commentdata: PropTypes.shape({
     id: PropTypes.string,
@@ -136,5 +143,6 @@ ProcessCommentItem.propTypes = {
       body: PropTypes.string,
     }),
   }).isRequired,
-  commentType: PropTypes.string.isRequired,
+  commentType: PropTypes.string,
+  listView: PropTypes.bool,
 };

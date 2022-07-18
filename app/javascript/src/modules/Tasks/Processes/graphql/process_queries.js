@@ -279,6 +279,10 @@ export const ProcessCommentsQuery = gql`
         name
         imageUrl
       }
+      replyFrom {
+        id
+        name
+      }
       note {
         id
         body
