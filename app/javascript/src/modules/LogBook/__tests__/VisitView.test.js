@@ -129,13 +129,6 @@ describe('Should render Visits View Component', () => {
     error: new Error('Something wrong happened')
   };
 
-  // const props = {
-  //   handleAddObservation: jest.fn(),
-  //   observationDetails: {
-  //     loading: false,
-  //     refetch: false
-  //   }
-  // };
   it('should render proper data', async () => {
     const { getAllByTestId, getByText } = render(
       <Context.Provider value={authState}>
@@ -148,9 +141,10 @@ describe('Should render Visits View Component', () => {
         </MockedProvider>
       </Context.Provider>
     );
-    // initially it should not contain any guests, this is because we lazily load this query
-    // expect(getByText('logbook.no_invited_guests')).toBeInTheDocument();
     await waitFor(() => {
+      expect(getByText('logbook.total_entries')).toBeInTheDocument();
+      expect(getByText('logbook.total_exits')).toBeInTheDocument();
+      expect(getByText('logbook.total_in_city')).toBeInTheDocument();
       expect(getByText('Test another')).toBeInTheDocument();
       expect(getByText('Js user x')).toBeInTheDocument();
       expect(getByText('logbook:logbook.host:')).toBeInTheDocument();
@@ -201,6 +195,7 @@ describe('Should render Visits View Component', () => {
       </Context.Provider>
     );
     await waitFor(() => {
+      expect(getByText('Something wrong happened')).toBeInTheDocument();
       expect(getByText('logbook.no_invited_guests')).toBeInTheDocument();
     }, 100);
   });
