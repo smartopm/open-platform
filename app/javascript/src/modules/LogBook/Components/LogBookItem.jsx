@@ -191,7 +191,13 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
   }
 
   return (
-    <PageWrapper pageTitle={t('common:misc.log_book')}>
+    <PageWrapper pageTitle={t('common:misc.access')}>
+      <MessageAlert
+        type={!observationDetails.isError ? 'success' : 'error'}
+        message={observationDetails.message}
+        open={!!observationDetails.message}
+        handleClose={handleCloseAlert}
+      />
       <DialogWithImageUpload
         open={isObservationOpen}
         handleDialogStatus={() => handleCancelClose()}
