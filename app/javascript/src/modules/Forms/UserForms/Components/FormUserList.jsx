@@ -17,6 +17,7 @@ export default function FormUserList() {
           userFormsFilled={data?.submittedForms}
           userId={authState.user.id}
           currentUser={authState.user.id}
+          user={authState.user}
         />
       )
   );
