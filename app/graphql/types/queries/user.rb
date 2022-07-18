@@ -114,10 +114,9 @@ module Types::Queries::User
     end
 
     has_date_filter = query.to_s.include?('date_filter')
-    has_created_at_from_filter = query.to_s.include?('created_date_from_filter')
-    has_created_at_to_filter = query.to_s.include?('created_date_to_filter')
+    has_created_date_filter = query.to_s.include?('created_date_filter')
 
-    if query.present? && has_date_filter || has_created_at_from_filter || has_created_at_to_filter
+    if query.present? && has_date_filter || has_created_date_filter
       Users::User.allowed_users(context[:current_user])
                  .eager_load(:labels)
                  .heavy_search(query)
