@@ -177,7 +177,7 @@ export default function UsersList() {
               return `${property} >= "${startDate}" AND ${property} <= "${endDate}"`;
             }
             if (operator === '==') operator = '='; // make = the default operator
-            if (property === 'date_filter') {
+            if (property === 'login_after_filter') {
               operator = '>';
               value = dateToString(value);
             }
@@ -424,7 +424,7 @@ export default function UsersList() {
     role: 'user_type',
     label: 'labels',
     phoneNumber: 'phone_number',
-    loginAfter: 'date_filter',
+    loginAfter: 'login_after_filter',
     subStatus: 'sub_status',
   };
 

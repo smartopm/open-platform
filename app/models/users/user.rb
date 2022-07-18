@@ -38,7 +38,7 @@ module Users
     search_scope :heavy_search do
       attributes :name, :phone_number, :user_type, :email, :sub_status, :created_at
       attributes labels: ['labels.short_desc']
-      attributes date_filter: ['acting_event_log.created_at']
+      attributes login_after_filter: ['acting_event_log.created_at']
       attributes created_date_filter: :created_at
       scope { joins(:acting_event_log).eager_load(:labels) }
 
