@@ -165,18 +165,11 @@ export default function UsersList() {
           .map(option => {
             let operator = Object.keys(option)[0];
             // eslint-disable-next-line security/detect-object-injection
-            const property =
-              operator === '<='
-                ? filterFields[option[operator][1].var]
-                : filterFields[option[operator][0].var];
-
+            const property = filterFields[option[operator][0].var];
             let value = objectAccessor(option, operator)[1];
-            if (operator === '<=') {
-              const startDate = formatDateFields(property, objectAccessor(option, operator)[0]);
-              const endDate = formatDateFields(property, objectAccessor(option, operator)[2]);
-              return `${property} >= "${startDate}" AND ${property} <= "${endDate}"`;
-            }
+  
             if (property === 'created_date_filter' || property === 'login_after_filter') {
+              if (operator === '==') operator = '>';
               value = dateToString(value);
             }
             if (operator === '==') operator = '='; // make = the default operator
