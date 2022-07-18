@@ -1,9 +1,4 @@
-import {
-  useMediaQuery,
-  Button,
-  Card,
-  Grid,
- Avatar, Chip, Typography } from '@mui/material';
+import { useMediaQuery, Button } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,36 +7,32 @@ import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import { useQuery, useMutation } from 'react-apollo';
 import PageWrapper from '../../../../shared/PageWrapper';
-import { checkRequests } from '../../utils';
 import { GuestEntriesQuery } from '../../graphql/guestbook_queries';
 import useDebouncedValue from '../../../../shared/hooks/useDebouncedValue';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { formatError } from '../../../../utils/helpers';
 import SearchInput from '../../../../shared/search/SearchInput';
 import { Spinner } from '../../../../shared/Loading';
-import useLogbookStyles from '../../styles';
-import Text from '../../../../shared/Text';
-import { dateTimeToString, dateToString } from '../../../../components/DateContainer';
-import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import Paginate from '../../../../components/Paginate';
 import { EntryRequestGrant } from '../../../../graphql/mutations';
 import MessageAlert from '../../../../components/MessageAlert';
+import Invitation from './Invitation';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 export default function Invitations() {
   const history = useHistory();
   const limit = 20;
-  const authState = useContext(Context);
-  const timeZone = authState.user.community.timezone;
   const { t } = useTranslation(['logbook', 'common']);
   const theme = useTheme();
   const matches = useMediaQuery(() => theme.breakpoints.down('md'));
   const [searchOpen, setSearchOpen] = useState(false);
   const [offset, setOffset] = useState(0);
-  const classes = useLogbookStyles();
   const { value, dbcValue, setSearchValue } = useDebouncedValue();
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [loadingStatus, setLoadingInfo] = useState({ loading: false, currentId: '' });
   const [message, setMessage] = useState({ isError: false, detail: '' });
+  const authState = useContext(Context);
+  const tz = authState.user.community.timezone;
   const allUserPermissions = authState.user?.permissions || [];
   const modulePerms = allUserPermissions.find(mod => mod.module === 'entry_request')?.permissions;
   const permissions = new Set(modulePerms);
@@ -168,123 +159,18 @@ export default function Invitations() {
         <Spinner />
       ) : data?.scheduledRequests.length > 0 ? (
         data?.scheduledRequests.map(visit => (
-          <Card
+          <Invitation
             key={visit.id}
-            clickData={{ clickable: true, handleClick: () => handleCardClick(visit) }}
-            sx={{ mb: 2 }}
-          >
-            <Grid container spacing={1}>
-              <Grid item md={2} xs={5}>
-                {visit.thumbnailUrl ? (
-                  <Avatar
-                    alt={visit.guest?.name}
-                    src={visit.thumbnailUrl}
-                    variant="square"
-                    className={classes.avatar}
-                    data-testid="video_preview"
-                  />
-                ) : (
-                  <Avatar
-                    alt={visit.guest?.name}
-                    className={classes.avatar}
-                    variant="square"
-                    data-testid="request_preview"
-                  >
-                    {visit.name.charAt(0)}
-                  </Avatar>
-                )}
-              </Grid>
-              <Grid item md={2} xs={7}>
-                <Typography variant="caption" color="primary">
-                  {visit.name}
-                </Typography>
-                <br />
-                <Typography variant="caption">
-                  {t('logbook:logbook.host')}
-                  {' '}
-                </Typography>
-                {visit.multipleInvites ? (
-                  <Text
-                    color="primary"
-                    content={t('guest_book.multiple')}
-                    data-testid="multiple_host"
-                    onClick={event => handleViewUser(event, visit.guest, true)}
-                  />
-                ) : (
-                  <Text
-                    color="secondary"
-                    content={visit.user.name}
-                    data-testid="user_name"
-                    onClick={event => handleViewUser(event, visit.user, false)}
-                  />
-                )}
-                <div style={{ paddingTop: '7px' }} data-testid="request_status">
-                  <Chip
-                    data-testid="user-entry"
-                    label={
-                      visit.status === 'approved'
-                        ? t('guest_book.approved')
-                        : t('guest_book.pending')
-                    }
-                    color={visit.status === 'approved' ? 'primary' : 'secondary'}
-                    size="small"
-                  />
-                </div>
-              </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
-                <Typography variant="caption">
-                  {t('guest_book.start_of_visit', {
-                    date: dateToString(visit.closestEntryTime?.visitationDate),
-                  })}
-                </Typography>
-              </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
-                <Typography variant="caption">
-                  {t('guest_book.visit_time', {
-                    startTime: dateTimeToString(visit.closestEntryTime?.startsAt),
-                    endTime: dateTimeToString(visit.closestEntryTime?.endsAt),
-                  })}
-                </Typography>
-              </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
-                <Chip
-                  label={
-                    checkRequests(visit.closestEntryTime, t, timeZone).valid
-                      ? t('guest_book.valid')
-                      : t('guest_book.invalid_now')
-                  }
-                  style={{
-                    background: checkRequests(visit.closestEntryTime, t, timeZone).valid
-                      ? theme.palette.success.main
-                      : theme.palette.error.main,
-                    color: 'white',
-                    marginRight: '16px',
-                  }}
-                  size="small"
-                />
-              </Grid>
-              <Grid item md={2} xs={8} style={!matches ? { paddingTop: '8px' } : {}}>
-                <Button
-                  disabled={
-                    !checkRequests(visit.closestEntryTime, t, timeZone).valid ||
-                    (loadingStatus.loading && Boolean(loadingStatus.currentId)) ||
-                    visit.guest?.status === 'deactivated'
-                  }
-                  variant="outlined"
-                  color="primary"
-                  onClick={event => handleGrantAccess(event, visit)}
-                  disableElevation
-                  startIcon={
-                    loadingStatus.loading && loadingStatus.currentId === visit.id && <Spinner />
-                  }
-                  data-testid="grant_access_btn"
-                  sx={{ mt: 1 }}
-                >
-                  {t('access_actions.grant_access')}
-                </Button>
-              </Grid>
-            </Grid>
-          </Card>
+            theme={theme}
+            loadingStatus={loadingStatus}
+            visit={visit}
+            timeZone={tz}
+            handleCardClick={handleCardClick}
+            handleGrantAccess={handleGrantAccess}
+            handleViewUser={handleViewUser}
+            t={t}
+            matches={matches}
+          />
         ))
       ) : (
         <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
