@@ -9,7 +9,7 @@ const fieldTypes = {
     text: 'Text',
     time: 'Time',
     payment: 'Payment',
-    invitation: 'Invitation'
+    appointment: 'Appointment'
 };
 
 export default fieldTypes
