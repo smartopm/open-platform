@@ -239,7 +239,7 @@ export default function Form({
         handleClose={() => handleMessageAlertClose(imgUploadError)}
       />
 
-      {/* <CalendlyEmbed isOpen={showCalendly} /> */}
+      <CalendlyEmbed isOpen={showCalendly} />
 
       {categoryFormOpen && (
         <CategoryForm
