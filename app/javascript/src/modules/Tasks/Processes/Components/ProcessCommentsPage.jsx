@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
-import { Button, ButtonGroup, Typography } from '@mui/material';
+import { Button, ButtonGroup, IconButton, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useQuery, useLazyQuery } from 'react-apollo';
 import { ProcessCommentsQuery, ProcessReplyComments } from '../graphql/process_queries';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
+import MenuList from '../../../../shared/MenuList';
 import { formatError, objectAccessor, useParamsQuery } from '../../../../utils/helpers';
 import Paginate from '../../../../components/Paginate';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
@@ -17,7 +18,7 @@ import ProcessCommentItem from './ProcessCommentItem';
 export default function ProcessCommentsPage() {
   const { id: processId } = useParams();
   const theme = useTheme();
-  const matches = useTheme(theme.breakpoints.down('sm'));
+  const matches = useMediaQuery(theme.breakpoints.down('sm'));
   const history = useHistory();
   const path = useParamsQuery();
   const { t } = useTranslation(['process', 'task']);
@@ -26,6 +27,8 @@ export default function ProcessCommentsPage() {
   const [viewType, setViewType] = useState('tab');
   const limit = 50;
   const [offset, setOffset] = useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const anchorElOpen = Boolean(anchorEl);
 
   const { data, loading, error } = useQuery(ProcessReplyComments, {
     variables: { processId },
@@ -50,22 +53,45 @@ export default function ProcessCommentsPage() {
     resolved: 2
   };
 
-  function handleCommentsViewType(view) {
+  function handleCommentsViewType(e, view) {
     setViewType(view);
+    if (anchorElOpen) {
+      handleClose(e)
+    }
   }
+
+  const menuList = [
+    {
+      content: t('process:comments.list_view'),
+      handleClick: (e) => handleCommentsViewType(e, 'list')
+    },
+    {
+      content: t('process:comments.tab_view'),
+      handleClick: (e) =>handleCommentsViewType(e, 'tab')
+    }
+  ];
 
   const rightPanelObj = [
     {
-      mainElement: (
+      mainElement: matches ? (
+        <IconButton
+          aria-label="view option"
+          size="large"
+          onClick={(event) => menuData.handleViewMenu(event)}
+          data-testid='view-toggle-btn'
+        >
+          <VisibilityIcon />
+        </IconButton>
+      ) : (
         <ButtonGroup disableElevation color="primary" variant="outlined" aria-label="status button">
           <Button
-            onClick={() => handleCommentsViewType('list')}
+            onClick={(e) => handleCommentsViewType(e, 'list')}
             data-testid="comments-list-view"
           >
             {t('process:comments.list_view')}
           </Button>
           <Button
-            onClick={()=> handleCommentsViewType('tab')}
+            onClick={(e)=> handleCommentsViewType(e, 'tab')}
             data-testid="comments-tab-view"
           >
             {t('process:comments.tab_view')}
@@ -75,6 +101,24 @@ export default function ProcessCommentsPage() {
       key: 1,
     },
   ];
+
+  function handleViewMenu(event) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose(event) {
+    event.stopPropagation();
+    setAnchorEl(null);
+  }
+
+  const menuData = {
+    menuList,
+    handleViewMenu,
+    anchorEl,
+    open: anchorElOpen,
+    handleClose
+  };
 
   function handleTabValueChange(_event, newValue) {
     history.push(
@@ -226,6 +270,12 @@ export default function ProcessCommentsPage() {
           </CenteredContent>
         </>
       )}
+      <MenuList
+        open={menuData.open}
+        anchorEl={menuData.anchorEl}
+        handleClose={menuData.handleClose}
+        list={menuData.menuList}
+      />
     </PageWrapper>
   );
 }
