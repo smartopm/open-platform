@@ -28,8 +28,7 @@ export default function CampaignLabels({ handleLabelSelect }) {
             renderTags={(values, getTagProps) => {
               return values.map((option, index) => (
                 <Chip
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={index}
+                  key={option.id}
                   variant="outlined"
                   label={option.shortDesc || option}
                   {...getTagProps({ index })}

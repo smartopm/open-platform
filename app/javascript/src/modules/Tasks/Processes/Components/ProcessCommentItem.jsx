@@ -14,6 +14,7 @@ import {
   sanitizeText,
   removeNewLines,
   replaceDocumentMentions,
+  downloadCommentFile
 } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 
@@ -87,7 +88,7 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
           <Typography variant="caption" color="textSecondary" data-testid="body">
             {replaceDocumentMentions(
               commentdata,
-              `/processes/${processId}/projects?tab=documents&project_id=${commentdata.note.id}&comment_id=${commentdata.id}`
+              downloadCommentFile
             )}
           </Typography>
         </Grid>

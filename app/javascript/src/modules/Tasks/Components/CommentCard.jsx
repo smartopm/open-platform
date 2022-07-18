@@ -188,13 +188,6 @@ export default function CommentCard({
       });
   }
 
-  function documentRedirectPath(commentId) {
-    if (processId && projectId) {
-      return `/processes/${processId}/projects/${projectId}?tab=documents&project_id=${projectId}&comment_id=${commentId}`;
-    }
-    return null;
-  }
-
   return (
     <>
       <>
@@ -319,7 +312,6 @@ export default function CommentCard({
                                 <Typography component="span" variant="body2">
                                   {replaceDocumentMentions(
                                     com,
-                                    documentRedirectPath(com.id),
                                     taggedDocOnClick
                                   )}
                                 </Typography>

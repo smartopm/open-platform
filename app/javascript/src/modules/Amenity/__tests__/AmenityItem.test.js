@@ -31,7 +31,7 @@ describe('Amenity Item', () => {
 
     fireEvent.click(wrapper.queryByTestId('discussion-menu'));
 
-    // click the edit menu item 
+    // click the edit menu item
     fireEvent.click(wrapper.queryAllByTestId('menu_item')[0]);
     expect(handleEdit).toHaveBeenCalled();
     expect(handleEdit).toHaveBeenCalledWith(amenity, 'edit');

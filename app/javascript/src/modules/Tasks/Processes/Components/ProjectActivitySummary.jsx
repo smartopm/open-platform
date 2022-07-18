@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CenteredContent from '../../../../shared/CenteredContent';
 import CommentCard from '../../Components/CommentCard';
-import { formatError } from '../../../../utils/helpers';
+import { formatError, downloadCommentFile } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
 
 export default function ProjectActivitySummary({comments, commentsLoading, commentsError, commentsRefetch, commentsFetchMore}) {
@@ -51,6 +51,7 @@ export default function ProjectActivitySummary({comments, commentsLoading, comme
         <CommentCard
           comments={comments.projectComments}
           refetch={commentsRefetch}
+          taggedDocOnClick={downloadCommentFile}
         />
       )
         : (

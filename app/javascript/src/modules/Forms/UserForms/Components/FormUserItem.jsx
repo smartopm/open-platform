@@ -8,7 +8,7 @@ import CommentCard from '../../../Tasks/Components/CommentCard';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import DateContainer from '../../../../components/DateContainer';
-import { secureFileDownload } from '../../../../utils/helpers';
+import { downloadCommentFile } from '../../../../utils/helpers';
 
 export default function FormItem({
   formUser,
@@ -24,11 +24,6 @@ export default function FormItem({
   const hasNoComments = currentForm && !formData.loading && !hasComments;
   const commentsData = formData.data?.formComments;
 
-  function downloadFile(commentId, fileId) {
-    const currentComment = commentsData?.find(com => com.id === commentId);
-    const clickedDoc = currentComment?.taggedAttachments.find(doc => doc.id === fileId);
-    secureFileDownload(clickedDoc.url);
-  }
 
   return (
     <>
@@ -88,7 +83,7 @@ export default function FormItem({
         <CommentCard
           comments={commentsData}
           refetch={formData.refetch}
-          taggedDocOnClick={downloadFile}
+          taggedDocOnClick={downloadCommentFile}
         />
       ) : (
         hasNoComments && (

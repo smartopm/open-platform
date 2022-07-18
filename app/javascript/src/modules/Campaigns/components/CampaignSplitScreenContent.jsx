@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 /* eslint-disable max-statements */
 /* eslint-disable max-lines */
 import React, { useState, useEffect, useContext } from 'react';
@@ -446,11 +445,10 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
               </Grid>
               <Grid item sm={8} xs={6}>
                 {Boolean(label.length) &&
-                  label.map((labl, i) => (
+                  label.map((labl) => (
                     <Chip
                       data-testid="campaignChip-label"
-                      // eslint-disable-next-line react/no-array-index-key
-                      key={i}
+                      key={labl}
                       label={labl?.shortDesc || labl}
                       className={classes.chip}
                     />
@@ -582,9 +580,8 @@ CampaignSplitScreenContent.propTypes = {
   campaign: PropTypes.shape({
     id: PropTypes.string,
     status: PropTypes.string,
-    // eslint-disable-next-line react/forbid-prop-types
-    campaignMetrics: PropTypes.object
+    campaignMetrics: PropTypes.instanceOf(Object),
   }),
   refetch: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired
+  handleClose: PropTypes.func.isRequired,
 };

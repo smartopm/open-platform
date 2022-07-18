@@ -87,12 +87,10 @@ export default function ActionFlows() {
     return value.replace(/ /g, '_').toLowerCase();
   }
 
-  // eslint-disable-next-line no-shadow
-  function handleSave(data, metaData) {
+  function handleSave(dataObj, metaData) {
     const actionMetaData = {};
     Object.entries(metaData).forEach(([key, value]) => {
-      // eslint-disable-next-line security/detect-object-injection
-      actionMetaData[key] = {
+      actionMetaData[String(key)] = {
         name: key,
         value: isMetaDataAVariable({ key, value }) ? metaDataVariableValue(value) : value,
         type: isMetaDataAVariable({ key, value }) ? 'variable' : 'string'
@@ -100,17 +98,17 @@ export default function ActionFlows() {
     });
 
     const eventAction = {
-      action_name: data.actionType,
-      action_fields: actionMetaData
+      action_name: dataObj.actionType,
+      action_fields: actionMetaData,
     };
 
     let variables = {
-      title: data.title,
-      description: data.description,
-      eventType: data.eventType,
-      eventCondition: data.eventCondition,
-      eventConditionQuery: data.eventConditionQuery,
-      eventAction
+      title: dataObj.title,
+      description: dataObj.description,
+      eventType: dataObj.eventType,
+      eventCondition: dataObj.eventCondition,
+      eventConditionQuery: dataObj.eventConditionQuery,
+      eventAction,
     };
 
     let action = createActionFlow;
