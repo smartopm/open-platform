@@ -2,25 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
 import { Button, ButtonGroup, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useQuery, useLazyQuery } from 'react-apollo';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { ProcessCommentsQuery, ProcessReplyComments } from '../graphql/process_queries';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { formatError, objectAccessor, useParamsQuery } from '../../../../utils/helpers';
+import Paginate from '../../../../components/Paginate';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 import PageWrapper from '../../../../shared/PageWrapper';
 import ProcessCommentItem from './ProcessCommentItem';
 
 export default function ProcessCommentsPage() {
   const { id: processId } = useParams();
-  const matches = useMediaQuery('(max-width:600px)');
+  const theme = useTheme();
+  const matches = useTheme(theme.breakpoints.down('sm'));
   const history = useHistory();
   const path = useParamsQuery();
   const { t } = useTranslation(['process', 'task']);
   const [tabValue, setTabValue] = useState(0);
   const processName = path.get('process_name');
   const [viewType, setViewType] = useState('tab');
+  const limit = 50;
+  const [offset, setOffset] = useState(0);
 
   const { data, loading, error } = useQuery(ProcessReplyComments, {
     variables: { processId },
@@ -30,8 +35,7 @@ export default function ProcessCommentsPage() {
   const [loadProcessComments,
     { data: processComments, loading: processCommentsLoading, error: processCommentsError },
   ] = useLazyQuery(ProcessCommentsQuery, {
-    variables: { processId },
-    fetchPolicy: 'cache-and-network'
+    variables: { processId }
   });
 
   useEffect(() => {
@@ -53,24 +57,16 @@ export default function ProcessCommentsPage() {
   const rightPanelObj = [
     {
       mainElement: (
-        <ButtonGroup color="primary" aria-label="medium secondary button group">
+        <ButtonGroup disableElevation color="primary" variant="outlined" aria-label="status button">
           <Button
-            onClick={_e => handleCommentsViewType('list')}
-            variant="contained"
-            color="primary"
-            style={matches ? { color: '#FFFFFF', margin: '0 5px 0 8px' } : { color: '#FFFFFF' }}
+            onClick={() => handleCommentsViewType('list')}
             data-testid="comments-list-view"
-            disableElevation
           >
             {t('process:comments.list_view')}
           </Button>
           <Button
-            onClick={_e => handleCommentsViewType('tab')}
-            variant="contained"
-            color="primary"
-            style={matches ? { color: '#FFFFFF', margin: '0 5px 0 8px' } : { color: '#FFFFFF' }}
+            onClick={()=> handleCommentsViewType('tab')}
             data-testid="comments-tab-view"
-            disableElevation
           >
             {t('process:comments.tab_view')}
           </Button>
@@ -93,6 +89,17 @@ export default function ProcessCommentsPage() {
     pageName: t('breadcrumbs.comments')
   };
 
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) {
+        return;
+      }
+      setOffset(offset - limit);
+    } else if (action === 'next') {
+      setOffset(offset + limit);
+    }
+  }
+
   return (
     <PageWrapper
       oneCol
@@ -100,7 +107,13 @@ export default function ProcessCommentsPage() {
       breadCrumbObj={breadCrumbObj}
       rightPanelObj={rightPanelObj}
     >
-      <Typography variant="h5" color="textSecondary">{processName}</Typography>
+      <Typography
+        variant="h5"
+        color="textSecondary"
+        style={{marginBottom: '24px'}}
+      >
+        {processName}
+      </Typography>
       {viewType === 'tab' && (
         <>
           {loading ? (
@@ -202,6 +215,15 @@ export default function ProcessCommentsPage() {
           {processCommentsError && (
             <CenteredContent>{formatError(processCommentsError.message)}</CenteredContent>
           )}
+          <CenteredContent>
+            <Paginate
+              count={processComments?.processComments?.length}
+              offSet={offset}
+              limit={limit}
+              active={offset >= 1}
+              handlePageChange={paginate}
+            />
+          </CenteredContent>
         </>
       )}
     </PageWrapper>
