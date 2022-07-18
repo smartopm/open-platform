@@ -176,14 +176,11 @@ export default function UsersList() {
               const endDate = formatDateFields(property, objectAccessor(option, operator)[2]);
               return `${property} >= "${startDate}" AND ${property} <= "${endDate}"`;
             }
+            if (property === 'created_date_filter' || property === 'login_after_filter') {
+              value = dateToString(value);
+            }
             if (operator === '==') operator = '='; // make = the default operator
-            if (property === 'login_after_filter') {
-              operator = '>';
-              value = dateToString(value);
-            }
-            if (property === 'created_date_filter') {
-              value = dateToString(value);
-            }
+
             if (property === 'phone_number') operator = ':';
 
             return `${property} ${operator} "${value}"`;
