@@ -87,7 +87,8 @@
     "time": "Time",
     "scan_type": "Scan Type",
     "qr_timestamp": "QR Timestamp",
-    "user_type": "User Type"
+    "user_type": "User Type",
+    "logbook": "Logbook"
   },
   "access_actions": {
     "grant": "Grant",
