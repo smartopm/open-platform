@@ -16,7 +16,9 @@ import {
   cleanFileName,
   fileTypes,
   isUploaded,
-  isFileNameSelect
+  isFileNameSelect,
+  calendlyCallback,
+  isCalendlyEvent
 } from '../utils';
 
 describe('Utilities', () => {
@@ -217,12 +219,16 @@ describe('Utilities', () => {
     ]
 
     expect(checkCondition(category, properties, true)).toBe(true) // editmode always shows
-    expect(checkCondition(category, properties, false)).toBe(true) // not in editmode but no condition provided
-    expect(checkCondition(categoryWithWrongCondition, properties, false)).toBe(false) // condition has no matching property
-    expect(checkCondition(categoryWithPropertyId, properties, false)).toBe(false) // condition matches property but wrong condition
-    expect(checkCondition(categoryWithMatchingCondition, properties, false)).toBe(true) // condition matches all
+    // not in editmode but no condition provided
+    expect(checkCondition(category, properties, false)).toBe(true)
+    // condition has no matching property
+    expect(checkCondition(categoryWithWrongCondition, properties, false)).toBe(false)
+    // condition matches property but wrong condition
+    expect(checkCondition(categoryWithPropertyId, properties, false)).toBe(false)
+    // condition matches all
+    expect(checkCondition(categoryWithMatchingCondition, properties, false)).toBe(true)
 
-    // extract rendered text 
+    // extract rendered text
     expect(extractRenderedTextFromCategory(properties, [category, categoryWithPropertyId, categoryWithWrongCondition])).toEqual('Some category  ')
     expect(extractRenderedTextFromCategory(properties, [category, categoryWithMatchingCondition])).toEqual('Some category  and this also matches  ')
     expect(extractRenderedTextFromCategory(properties, [])).toEqual('')
@@ -529,4 +535,29 @@ describe('Utilities', () => {
     expect(isFileNameSelect([], undefined, '9238423421312')).toBe(false)
     expect(isFileNameSelect()).toBe(false)
   });
+  it('should check for calendly utilities', () => {
+    const calendlyEvent = {
+      origin: 'https://calendly.com',
+      data: {
+        event: 'calendly.event_scheduled'
+      }
+    }
+    const otherEvent = {
+      origin: 'https://google.com',
+      data: {
+        event: 'calendar.event_scheduled'
+      }
+    }
+
+    const submit1 = jest.fn()
+    const submit2 = jest.fn()
+    expect(isCalendlyEvent(calendlyEvent)).toBe(true)
+    expect(isCalendlyEvent(otherEvent)).toBe(false)
+
+    calendlyCallback(calendlyEvent, submit1)
+    expect(submit1).toBeCalled()
+
+    calendlyCallback(otherEvent, submit2)
+    expect(submit2).not.toBeCalled()
+  })
 });

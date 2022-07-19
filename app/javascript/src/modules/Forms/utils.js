@@ -396,9 +396,45 @@ export async function onImageRemove(imagePropertyId, file, propertyObj) {
   onNotUploadedImageRemove(file, propertyObj);
 }
 
+/**
+ *
+ * @param {object} file
+ * @param {boolean} isFileUploaded
+ * @param {string} formPropertyId
+ * @param {object} propertyObj
+ * @returns
+ */
 export function removeBeforeUpload(file, isFileUploaded, formPropertyId, propertyObj) {
   if (isFileUploaded) {
     return onImageRemove(formPropertyId, file, propertyObj);
   }
   return onNotUploadedImageRemove(file, propertyObj);
+}
+
+/**
+ * check if the event is from calendly so that we can decide what to
+ * @param {object} event
+ */
+
+ export function isCalendlyEvent(event) {
+  return (
+    event.origin === 'https://calendly.com' && event.data.event && event.data.event.indexOf('calendly.') === 0
+  );
+}
+
+/**
+ * A callback used for tracking calendly events and handling form submission
+ * @param {object} e
+ * @param {Function} submitForm
+ */
+export function calendlyCallback(e, submitForm) {
+  if (isCalendlyEvent(e)) {
+    if(e.data.event === 'calendly.event_scheduled') {
+      // attempt to close the calendly modal after submission
+      const closeBtn = document.getElementsByClassName('calendly-popup-close')[0]
+      closeBtn?.click()
+      // submit the form after confirming the appointment
+      submitForm()
+    }
+  }
 }
