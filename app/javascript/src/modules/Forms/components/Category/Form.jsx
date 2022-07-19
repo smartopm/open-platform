@@ -61,6 +61,7 @@ export default function Form({
     uploadedImages,
     filesToUpload,
     setImgUploadError,
+    formProperties
   } = useContext(FormContext);
   const authState = useContext(Context);
 
@@ -159,10 +160,12 @@ export default function Form({
     };
     const { config } = flutterwaveConfig(authState, value, t);
     if(hasAppointment && !verified) {
+      window.FormPropertyData = formData
+      window.FilledInProperties = formProperties
       setShowCalendly(true)
      return
     }
-    console.log(propertiesData, status)
+
     if (hasPayment) {
       setSubmittingPayment(true);
       window.FlutterwaveCheckout({
@@ -206,6 +209,8 @@ export default function Form({
         },
       });
     } else {
+      // By the time, data gets here after calendly modal it will be undefined.
+      // This needs to be fixed
       saveFormData(
         propertiesData,
         formId,

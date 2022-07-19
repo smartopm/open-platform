@@ -77,7 +77,7 @@ export default function FormContextProvider({ children }) {
 
   /**
    *
-   * @param {object} formData all form properties for this form being submitted
+   * @param {[object]} formData all form properties for this form being submitted
    * @param {String} formId form being submitted
    * @param {String} userId  the currently logged in user
    */
@@ -90,9 +90,11 @@ export default function FormContextProvider({ children }) {
       isSubmitting: true
     });
 
-    // eslint-disable-next-line no-unreachable
-    const fileSignType = formData.filter(item => item.fieldType === 'signature')[0];
-    const filledInProperties = extractValidFormPropertyValue(formProperties, 'submit');
+    // This is for calendly submission, the widget clears state for some reason
+    const formPropertyData = !formData.length ? window.FormPropertyData : formData
+
+    const fileSignType = formPropertyData.filter(item => item.fieldType === 'signature')[0];
+    const filledInProperties = extractValidFormPropertyValue(window.FilledInProperties, 'submit');
 
     // get signedBlobId as value and attach it to the form_property_id
     if (formState.signed && signature.signedBlobId) {
@@ -114,7 +116,7 @@ export default function FormContextProvider({ children }) {
     });
 
     // update all form values
-    formData.map(prop => addPropWithValue(filledInProperties, prop.id));
+    formPropertyData.map(prop => addPropWithValue(filledInProperties, prop.id));
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
 
     if (!validateFormFields(filledInProperties, categories, formStatus)) return false;
@@ -181,6 +183,7 @@ export default function FormContextProvider({ children }) {
         imgUploadError,
         setImgUploadError
       }}
+      displayName="FormContext"
     >
       {children}
     </FormContext.Provider>
