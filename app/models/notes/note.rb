@@ -36,6 +36,8 @@ module Notes
     belongs_to :note_list, class_name: 'Notes::NoteList', optional: true
     has_one :message, class_name: 'Notifications::Message', dependent: :destroy
     has_many :assignee_notes, dependent: :destroy
+    has_many :notifications,
+             class_name: 'Notifications::Notification', as: :notifable, dependent: :destroy
     has_many :assignees, through: :assignee_notes, source: :user
     has_many :note_comments, class_name: 'Comments::NoteComment', dependent: :destroy
     has_many :note_histories, dependent: :destroy

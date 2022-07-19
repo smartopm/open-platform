@@ -7,7 +7,8 @@ module Types
   # rubocop: disable Metrics/ClassLength
   class UserType < Types::BaseObject
     field :id, ID, null: false
-    field :community, Types::CommunityType, null: false
+    field :community, Types::CommunityType, null: false,
+                                            resolve: Resolvers::BatchResolver.load(:community)
     field :email, String, null: true, visible: { roles: %i[admin security_guard custodian
                                                            security_supervisor
                                                            marketing_admin], user: :id }
@@ -46,38 +47,51 @@ module Types
                                                           security_supervisor], user: :id }
     field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
     field :notes, [Types::NoteType], null: true,
-                                     visible: { roles: %i[admin marketing_admin], user: :id }
+                                     visible: { roles: %i[admin marketing_admin], user: :id },
+                                     resolve: Resolvers::BatchResolver.load(:notes)
     field :tasks, [Types::NoteType], null: true,
-                                     visible: { roles: %i[admin marketing_admin], user: :id }
+                                     visible: { roles: %i[admin marketing_admin], user: :id },
+                                     resolve: Resolvers::BatchResolver.load(:tasks)
     field :accounts, [Types::AccountType], null: true,
-                                           visible: { roles: %i[admin marketing_admin], user: :id }
+                                           visible: { roles: %i[admin marketing_admin], user: :id },
+                                           resolve: Resolvers::BatchResolver.load(:accounts)
     field :messages, [Types::MessageType], null: true,
-                                           visible: { roles: %i[admin], user: :id }
-    field :time_sheets, [Types::TimeSheetType], null: true, visible: { roles: %i[admin custodian],
-                                                                       user: :id }
+                                           visible: { roles: %i[admin], user: :id },
+                                           resolve: Resolvers::BatchResolver.load(:messages)
+    field :time_sheets, [Types::TimeSheetType], null: true,
+                                                visible: { roles: %i[admin custodian], user: :id },
+                                                resolve: Resolvers::BatchResolver.load(:time_sheets)
     field :businesses, [Types::BusinessType], null: true,
                                               visible: { roles: %i[admin marketing_admin],
-                                                         user: :id }
+                                                         user: :id },
+                                              resolve: Resolvers::BatchResolver.load(:businesses)
     field :labels, [Types::LabelType], null: true,
-                                       visible: { roles: %i[admin marketing_admin], user: :id }
+                                       visible: { roles: %i[admin marketing_admin], user: :id },
+                                       resolve: Resolvers::BatchResolver.load(:labels)
     field :form_users, [Types::FormUsersType], null: true,
                                                visible: { roles: %i[admin marketing_admin],
-                                                          user: :id }
-    field :contact_infos, [Types::ContactInfoType], null: true,
-                                                    visible: { roles: %i[admin marketing_admin],
-                                                               user: :id }
-    field :invoices, [Types::InvoiceType], null: true, visible: { roles: %i[admin],
-                                                                  user: :id }
-    field :substatus_logs, [Types::SubstatusLogType], null: true,
-                                                      visible: { roles: %i[admin marketing_admin],
-                                                                 user: :id }
+                                                          user: :id },
+                                               resolve: Resolvers::BatchResolver.load(:form_users)
+    field :contact_infos, [Types::ContactInfoType],
+          null: true,
+          visible: { roles: %i[admin marketing_admin], user: :id },
+          resolve: Resolvers::BatchResolver.load(:contact_infos)
+    field :invoices, [Types::InvoiceType], null: true, visible: { roles: %i[admin], user: :id },
+                                           resolve: Resolvers::BatchResolver.load(:invoices)
+    field :substatus_logs, [Types::SubstatusLogType],
+          null: true,
+          visible: { roles: %i[admin marketing_admin], user: :id },
+          resolve: Resolvers::BatchResolver.load(:substatus_logs)
     field :ext_ref_id, String, null: true,
                                visible: { roles: %i[admin custodian marketing_admin], user: :id }
     field :payment_plan, Boolean, null: false
     field :permissions, [Types::PermissionType], null: false
-    field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
-    field :invitees, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
-    field :request, Types::EntryRequestType, null: true
+    field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id },
+                                         resolve: Resolvers::BatchResolver.load(:invites)
+    field :invitees, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id },
+                                          resolve: Resolvers::BatchResolver.load(:invitees)
+    field :request, Types::EntryRequestType, null: true,
+                                             resolve: Resolvers::BatchResolver.load(:request)
     field :title, String, null: true
     field :linkedin_url, String, null: true
     field :country, String, null: true
@@ -122,9 +136,9 @@ module Types
     field :status, String, null: true
 
     def avatar_url
-      return nil unless object.avatar.attached?
-
-      host_url(object.avatar)
+      attachment_load('Users::User', :avatar, object.id).then do |avatar|
+        host_url(avatar) if avatar.present?
+      end
     end
 
     def host_url(type)
@@ -134,29 +148,37 @@ module Types
     end
 
     def payment_plan
-      object.payment_plans.active.present? || object.plan_payments.present?
+      batch_load(object, :payment_plans).then do |payment_plans|
+        batch_load(object, :plan_payments).then do |plan_payments|
+          active_payment_plan?(payment_plans) || plan_payments.present?
+        end
+      end
+    end
+
+    def active_payment_plan?(payment_plans)
+      payment_plans.any? { |plan| plan.status.eql?('active') }
     end
 
     def permissions
       context[:current_user].role.permissions
     end
 
-    def form_users
-      object.form_users.order(created_at: :desc)
-    end
-
     # Field for lead secondary mail
     def secondary_email
-      secondary_details('email').first&.info
+      batch_load(object, :contact_infos).then do |contact_infos|
+        secondary_details(contact_infos, 'email').first&.info
+      end
     end
 
     # Field for lead secondary phone number
     def secondary_phone_number
-      secondary_details('phone').first&.info
+      batch_load(object, :contact_infos).then do |contact_infos|
+        secondary_details(contact_infos, 'phone').first&.info
+      end
     end
 
-    def secondary_details(contact_type)
-      object.contact_infos.select { |info| info.contact_type.eql?(contact_type) }
+    def secondary_details(contact_infos, contact_type)
+      contact_infos.select { |info| info.contact_type.eql?(contact_type) }
     end
   end
   # rubocop: enable Metrics/ClassLength

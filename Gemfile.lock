@@ -150,6 +150,9 @@ GEM
       railties
       sprockets-rails
     graphql (1.11.6)
+    graphql-batch (0.5.1)
+      graphql (>= 1.10, < 3)
+      promise.rb (~> 0.7.2)
     graphql-guard (2.0.0)
       graphql (>= 1.10.0, < 2)
     hashdiff (1.0.1)
@@ -234,6 +237,7 @@ GEM
     pg (1.1.4)
     phonelib (0.7.0)
     polyglot (0.3.5)
+    promise.rb (0.7.4)
     pronto (0.11.0)
       gitlab (~> 4.4, >= 4.4.0)
       httparty (>= 0.13.7)
@@ -471,6 +475,7 @@ DEPENDENCIES
   flutterwave_sdk
   graphiql-rails
   graphql (= 1.11.6)
+  graphql-batch (~> 0.5.1)
   graphql-guard (~> 2.0.0)
   httparty
   jbuilder (~> 2.7)
