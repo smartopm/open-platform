@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -7,8 +7,8 @@ import makeStyles from '@mui/styles/makeStyles';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import { formatError } from '../../../../utils/helpers';
 import { TransferPaymentPlanMutation, TransferPaymentMutation } from '../../graphql/payment_plan_mutations';
-import MessageAlert from '../../../../components/MessageAlert';
 import { dateToString } from '../../../../components/DateContainer';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function PlanTransferConfirmDialog({
   open,
@@ -27,16 +27,9 @@ export default function PlanTransferConfirmDialog({
   const { t } = useTranslation(['common', 'payment']);
   const [transferPaymentPlan] = useMutation(TransferPaymentPlanMutation);
   const [transferPayment] = useMutation(TransferPaymentMutation);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
   const [mutationLoading, setMutationStatus] = useState(false);
 
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
-  }
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -54,16 +47,14 @@ export default function PlanTransferConfirmDialog({
     })
     .then(res => {
       const paymentPlanName = `${res.data?.transferPaymentPlan?.paymentPlan?.landParcel.parcelNumber} ${dateToString(res.data?.transferPaymentPlan?.paymentPlan?.startDate)}`;
-      setMessageAlert(t('common:misc.plan_transferred_successfully', { paymentPlanName }));
-      setIsSuccessAlert(true);
+      showSnackbar({ type: messageType.success, message: t('common:misc.plan_transferred_successfully', { paymentPlanName }) });
       handleClose();
       refetch();
       balanceRefetch();
       setMutationStatus(false);
     })
     .catch(err => {
-      setMessageAlert(formatError(err.message));
-      setIsSuccessAlert(false);
+      showSnackbar({ type: messageType.error, message: formatError(err.message) });
       handleClose();
       setMutationStatus(false);
     });
@@ -74,16 +65,14 @@ export default function PlanTransferConfirmDialog({
       variables: { paymentId, destinationPlanId }
     })
     .then(() => {
-      setMessageAlert(t('payment:misc.payment_transferred_successfully'));
-      setIsSuccessAlert(true);
+      showSnackbar({ type: messageType.success, message: t('payment:misc.payment_transferred_successfully')});
       handleClose();
       refetch();
       balanceRefetch();
       setMutationStatus(false);
     })
     .catch(err => {
-      setMessageAlert(formatError(err.message));
-      setIsSuccessAlert(false);
+      showSnackbar({ type: messageType.error, message: formatError(err.message) });
       handleClose();
       setMutationStatus(false);
     });
@@ -91,12 +80,6 @@ export default function PlanTransferConfirmDialog({
 
   return (
     <>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
       <CustomizedDialogs
         open={open}
         handleModal={handleClose}

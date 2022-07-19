@@ -1,11 +1,16 @@
+/* eslint-disable max-statements */
+/* eslint-disable max-lines */
 /* eslint-disable no-nested-ternary */
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { useLazyQuery } from 'react-apollo';
+import React, { useEffect, useState, useContext } from 'react';
+import { useQuery, useMutation, useApolloClient } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
+import SearchIcon from '@mui/icons-material/Search';
 import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
 import Grid from '@mui/material/Grid';
+import ReplayIcon from '@mui/icons-material/Replay';
 import Typography from '@mui/material/Typography';
 import { Avatar, Button, Chip, Divider, useTheme } from '@mui/material';
 import { CurrentGuestEntriesQuery } from '../graphql/guestbook_queries';
@@ -13,7 +18,7 @@ import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
 import { dateToString } from '../../../components/DateContainer';
 import Text from '../../../shared/Text';
-import { checkRequests, paginate } from '../utils';
+import { checkRequests } from '../utils';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
@@ -21,45 +26,162 @@ import Paginate from '../../../components/Paginate';
 import LogbookStats from './LogbookStats';
 import SearchInput from '../../../shared/search/SearchInput';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
+import PageWrapper from '../../../shared/PageWrapper';
+import MenuList from '../../../shared/MenuList';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import AddObservationNoteMutation from '../graphql/logbook_mutations';
+import MessageAlert from '../../../components/MessageAlert';
+import useFileUpload from '../../../graphql/useFileUpload';
+import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload';
 
-export default function VisitView({
-  tabValue,
-  limit,
-  offset,
-  timeZone,
-  handleAddObservation,
-  observationDetails
-}) {
+export default function VisitView() {
   const initialFilter = { type: 'allVisits', duration: null };
+  const [isObservationOpen, setIsObservationOpen] = useState(false);
+  const authState = useContext(AuthStateContext);
+  const allUserPermissions = authState.user?.permissions || [];
+  const modulePerms = allUserPermissions.find(mod => mod.module === 'entry_request')?.permissions;
+  const permissions = new Set(modulePerms);
+  const timeZone = authState.user.community.timezone;
+  const [searchOpen, setSearchOpen] = useState(false);
+  const limit = 20;
+  const [offset, setOffset] = useState(0);
+  const [clickedEvent, setClickedEvent] = useState({ refId: '', refType: '' });
+  const [anchorEl, setAnchorEl] = useState(null);
   const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
-  const {value, dbcValue, setSearchValue} = useDebouncedValue()
-  const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
-    CurrentGuestEntriesQuery,
-    {
-      variables: {
-        offset: dbcValue.length ? 0 : offset,
-        limit,
-        query: dbcValue.trim(),
-        type: statsTypeFilter.type,
-        duration: statsTypeFilter.duration
-      },
-      fetchPolicy: 'cache-and-network'
-    }
-  );
-
-  const { t } = useTranslation('logbook');
+  const { value, dbcValue, setSearchValue } = useDebouncedValue();
+  const { data, loading: guestsLoading, refetch, error } = useQuery(CurrentGuestEntriesQuery, {
+    variables: {
+      offset: dbcValue.length ? 0 : offset,
+      limit,
+      query: dbcValue.trim(),
+      type: statsTypeFilter.type,
+      duration: statsTypeFilter.duration,
+    },
+    fetchPolicy: 'cache-and-network',
+  });
+  const { t } = useTranslation(['logbook', 'common']);
   const [currentId, setCurrentId] = useState(null);
+  const anchorElOpen = Boolean(anchorEl);
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
-
   const classes = useLogbookStyles();
   const theme = useTheme();
+  const mobileMatches = useMediaQuery(theme.breakpoints.down('sm'));
+  const [imageUrls, setImageUrls] = useState([]);
+  const [blobIds, setBlobIds] = useState([]);
+  const [observationNote, setObservationNote] = useState('');
+  const [addObservationNote] = useMutation(AddObservationNoteMutation);
+  const [observationDetails, setDetails] = useState({
+    isError: false,
+    message: '',
+    loading: false,
+    refetch: false,
+  });
+
+  const { onChange, signedBlobId, url, status } = useFileUpload({
+    client: useApolloClient(),
+  });
+
+  function resetImageData() {
+    setImageUrls([]);
+    setBlobIds([]);
+  }
+  function handleCancelClose() {
+    setIsObservationOpen(false);
+    resetImageData();
+  }
+
+  function handleAddObservation(log) {
+    setClickedEvent({ refId: log.refId, refType: log.refType });
+    setIsObservationOpen(true);
+  }
+
+  function handleCloseButton(imgUrl) {
+    const images = [...imageUrls];
+    const filteredImages = images.filter(img => img !== imgUrl);
+    setImageUrls(filteredImages);
+  }
+
+  const modalDetails = {
+    title: t('observations.observation_title'),
+    inputPlaceholder: t('logbook.add_observation'),
+    uploadBtnText: t('observations.upload_image'),
+    subTitle: t('observations.add_your_observation'),
+    uploadInstruction: t('observations.upload_label'),
+  };
+
+  // eslint-disable-next-line consistent-return
+  function handleSaveObservation(log = clickedEvent, type) {
+    const exitNote = 'Exited';
+    if (type !== 'exit' && !observationNote) {
+      setIsObservationOpen(false);
+      return;
+    }
+    setDetails({ ...observationDetails, loading: true });
+
+    addObservationNote({
+      variables: {
+        note: type === 'exit' ? exitNote : observationNote,
+        id: log.refId,
+        refType: log.refType,
+        eventLogId: log.id,
+        attachedImages: blobIds
+      }
+    })
+    .then(() => {
+      setDetails({
+        ...observationDetails,
+        loading: false,
+        isError: false,
+        refetch: true,
+        message:
+          type === 'exit'
+            ? t('logbook:observations.created_observation_exit')
+            : t('logbook:observations.created_observation')
+      });
+      setObservationNote('');
+      setClickedEvent({ refId: '', refType: '' });
+      refetch();
+      setIsObservationOpen(false);
+      resetImageData();
+    })
+    .catch(err => {
+      setDetails({
+        ...observationDetails,
+        loading: false,
+        isError: true,
+        message: err.message
+      });
+      // reset state in case it errs and user chooses a different log
+      setObservationNote('');
+      setClickedEvent({ refId: '', refType: '' });
+      resetImageData();
+    });
+  }
+
+  useEffect(() => {
+    if (status === 'DONE') {
+      setImageUrls([...imageUrls, url]);
+      setBlobIds([...blobIds, signedBlobId]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
+
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) return;
+      setOffset(offset - limit);
+    } else if (action === 'next') {
+      setOffset(offset + limit);
+    }
+  }
+
 
   function handleCardClick(visit) {
     history.push({
       pathname: `/request/${visit.id}`,
-      search: `?tab=${tabValue}&type=guest`,
-      state: { from: 'guests', offset }
+      search: '?tab=2&type=guest',
+      state: { from: 'guests', offset },
     });
   }
 
@@ -67,10 +189,14 @@ export default function VisitView({
     event.stopPropagation();
     const log = {
       refId: visitId,
-      refType: 'Logs::EntryRequest'
+      refType: 'Logs::EntryRequest',
     };
     setCurrentId(visitId);
     handleAddObservation(log, 'exit');
+  }
+
+  function handleMenu(event) {
+    setAnchorEl(event.currentTarget);
   }
 
   function handleViewUser(event, user) {
@@ -78,31 +204,22 @@ export default function VisitView({
     history.push(`/user/${user.id}`);
   }
 
-  useEffect(() => {
-    if (observationDetails.refetch && tabValue === 2) {
-      refetch();
-    }
-  }, [observationDetails.refetch, refetch, tabValue]);
-
-  useEffect(() => {
-    if (tabValue === 2) {
-      loadGuests();
-    }
-  }, [tabValue, loadGuests, dbcValue, offset]);
-
+  function handleClose() {
+    setAnchorEl(null);
+  }
 
   function handleFilterData(filter, filterType = 'entryType') {
     const isDuration = filterType === 'duration';
     setStatType(current => ({
       ...statsTypeFilter,
       type: isDuration ? current.type : filter,
-      duration: isDuration ? filter : current.duration
+      duration: isDuration ? filter : current.duration,
     }));
   }
 
   function handleFilters() {
     setStatType(initialFilter);
-    setSearchValue("")
+    setSearchValue('');
   }
 
   const filterTypes = {
@@ -111,36 +228,176 @@ export default function VisitView({
     peoplePresent: t('logbook.total_in_city'),
     today: t('logbook.today'),
     past7Days: t('logbook.last_7_days'),
-    past30Days: t('logbook.last_30_days')
+    past30Days: t('logbook.last_30_days'),
   };
 
   const filters = [
     filterTypes[statsTypeFilter.type],
     filterTypes[statsTypeFilter.duration],
-    dbcValue
+    dbcValue,
+  ];
+
+  const breadCrumbObj = {
+    linkText: t('common:misc.access'),
+    linkHref: '/logbook',
+    pageName: t('common:menu.guard_post'),
+  };
+
+  const menuList = [
+    {
+      content: t('logbook.new_invite'),
+      isAdmin: false,
+      handleClick: () => history.push(`/logbook/guests/invite`),
+      isVisible: permissions.has('can_invite_guest'),
+    },
+    {
+      content: t('logbook.add_observation'),
+      isAdmin: false,
+      handleClick: () => handleAddObservationClick(),
+      isVisible: permissions.has('can_add_entry_request_note'),
+    },
+  ];
+
+  function handleAddObservationClick() {
+    setIsObservationOpen(true);
+    handleClose()
+  }
+
+  const menuData = {
+    menuList,
+    handleMenu,
+    anchorEl,
+    open: anchorElOpen,
+    handleClose,
+  };
+
+  const rightPanelObj = [
+    {
+      mainElement: mobileMatches ? (
+        <IconButton color="primary" data-testid="access_search" onClick={() => setSearchOpen(!searchOpen)}>
+          <SearchIcon />
+        </IconButton>
+      ) : (
+        <Button
+          startIcon={<SearchIcon />}
+          data-testid="access_search"
+          onClick={() => setSearchOpen(!searchOpen)}
+        >
+          {t('common:menu.search')}
+        </Button>
+      ),
+      key: 1,
+    },
+    {
+      mainElement: mobileMatches ? (
+        <IconButton color="primary" data-testid="reload" onClick={() => refetch()}>
+          <ReplayIcon />
+        </IconButton>
+      ) : (
+        <Button startIcon={<ReplayIcon />} data-testid="reload" onClick={() => refetch()}>
+          {t('common:misc.reload')}
+        </Button>
+      ),
+      key: 2,
+    },
+    {
+      mainElement: (
+        <>
+          <Button
+            startIcon={!mobileMatches ? <AddIcon /> : undefined}
+            data-testid="add_button"
+            onClick={e => menuData.handleMenu(e)}
+            variant="contained"
+            style={{ color: '#FFFFFF' }}
+          >
+            {mobileMatches ? <AddIcon /> : t('common:misc.add')}
+          </Button>
+          <MenuList
+            open={menuData.open}
+            anchorEl={menuData.anchorEl}
+            handleClose={menuData.handleClose}
+            list={menuData.menuList.filter(list => list.isVisible)}
+          />
+        </>
+      ),
+      key: 3,
+    },
   ];
 
   return (
-    <div style={{ marginTop: '20px' }}>
+    <PageWrapper
+      pageTitle={t('common:menu.guard_post')}
+      breadCrumbObj={breadCrumbObj}
+      rightPanelObj={rightPanelObj}
+    >
+      <MessageAlert
+        type={!observationDetails.isError ? 'success' : 'error'}
+        message={observationDetails.message}
+        open={!!observationDetails.message}
+        handleClose={() => setDetails({ ...observationDetails, message: '', refetch: false })}
+      />
+      <DialogWithImageUpload
+        open={isObservationOpen}
+        handleDialogStatus={() => handleCancelClose()}
+        observationHandler={{
+          value: observationNote,
+          handleChange: val => setObservationNote(val),
+        }}
+        imageOnchange={img => onChange(img)}
+        imageUrls={imageUrls}
+        status={status}
+        closeButtonData={{
+          closeButton: true,
+          handleCloseButton,
+        }}
+        modalDetails={modalDetails}
+      >
+        {observationDetails.loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <Button
+              onClick={() => handleCancelClose()}
+              color="secondary"
+              variant="outlined"
+              data-testid="cancel"
+            >
+              {t('common:form_actions.cancel')}
+            </Button>
+            <Button
+              onClick={() => handleSaveObservation()}
+              color="primary"
+              variant="contained"
+              data-testid="save"
+              style={{ color: 'white' }}
+              autoFocus
+            >
+              {t('common:form_actions.save')}
+            </Button>
+          </>
+        )}
+      </DialogWithImageUpload>
+      {searchOpen && (
+        <SearchInput
+          title={t('guest_book.visits')}
+          searchValue={value}
+          filterRequired={false}
+          handleSearch={event => setSearchValue(event.target.value)}
+          handleClear={handleFilters}
+          filters={filters}
+          fullWidthOnMobile
+          fullWidth={false}
+        />
+      )}
+      <br />
       <LogbookStats
-        tabValue={tabValue}
+        tabValue={2}
         shouldRefetch={observationDetails.refetch}
         handleFilter={handleFilterData}
         duration={statsTypeFilter.duration}
         isSmall={matches}
       />
       <Divider />
-      <br />
-      <SearchInput
-        title={t('guest_book.visits')}
-        searchValue={value}
-        filterRequired={false}
-        handleSearch={event => setSearchValue(event.target.value)}
-        handleClear={handleFilters}
-        filters={filters}
-        fullWidthOnMobile
-        fullWidth={false}
-      />
       <br />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
@@ -217,7 +474,7 @@ export default function VisitView({
               >
                 <Typography variant="caption">
                   {t('guest_book.entered_at', {
-                    time: dateToString(visit.grantedAt, 'YYYY-MM-DD HH:mm')
+                    time: dateToString(visit.grantedAt, 'YYYY-MM-DD HH:mm'),
                   })}
                 </Typography>
               </Grid>
@@ -231,7 +488,7 @@ export default function VisitView({
                 {visit.exitedAt ? (
                   <Typography variant="caption">
                     {t('guest_book.exited_at', {
-                      time: dateToString(visit.exitedAt, 'YYYY-MM-DD HH:mm')
+                      time: dateToString(visit.exitedAt, 'YYYY-MM-DD HH:mm'),
                     })}
                   </Typography>
                 ) : (
@@ -268,7 +525,7 @@ export default function VisitView({
                         ? theme.palette.success.main
                         : theme.palette.error.main,
                       color: 'white',
-                      marginRight: '16px'
+                      marginRight: '16px',
                     }}
                     data-testid="guest_validity"
                     size="small"
@@ -300,22 +557,10 @@ export default function VisitView({
           offSet={offset}
           limit={limit}
           active={offset >= 1}
-          handlePageChange={action => paginate(action, history, tabValue, { offset, limit })}
+          handlePageChange={paginate}
           count={data?.currentGuests?.length}
         />
       </CenteredContent>
-    </div>
+    </PageWrapper>
   );
 }
-
-VisitView.propTypes = {
-  tabValue: PropTypes.number.isRequired,
-  offset: PropTypes.number.isRequired,
-  limit: PropTypes.number.isRequired,
-  timeZone: PropTypes.string.isRequired,
-  handleAddObservation: PropTypes.func.isRequired,
-  observationDetails: PropTypes.shape({
-    loading: PropTypes.bool,
-    refetch: PropTypes.bool
-  }).isRequired
-};

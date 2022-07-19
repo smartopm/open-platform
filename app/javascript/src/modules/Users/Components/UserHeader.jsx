@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /* eslint-disable react/forbid-prop-types */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
@@ -15,8 +15,8 @@ import { dateToString } from '../../../utils/dateutil';
 import { Spinner } from '../../../shared/Loading';
 import MenuList from '../../../shared/MenuList';
 import UsersActionMenu from './UsersActionMenu';
-import MessageAlert from '../../../components/MessageAlert';
 import SearchInput from '../../../shared/search/SearchInput';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 const csvHeaders = [
   { label: 'Name', key: 'name' },
@@ -172,22 +172,14 @@ export function UserMenuitems({ menuObject }) {
 
 export function UserActionSelectMenu({ actionObject }) {
   const { t } = useTranslation(['users', 'common']);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   function copyToClipBoard() {
     navigator.clipboard.writeText(actionObject.selectedUsers.toString());
-    setMessageAlert(t('users.copy_id_message'));
-    setIsSuccessAlert(true);
+    showSnackbar({type: messageType.success, message: t('users.copy_id_message')});
   }
   return (
     <>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={() => setMessageAlert('')}
-        style={{ marginTop: '40px' }}
-      />
       <UsersActionMenu
         campaignCreateOption={actionObject.campaignCreateOption}
         selectedUsers={actionObject.selectedUsers}

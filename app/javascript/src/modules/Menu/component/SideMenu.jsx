@@ -113,12 +113,20 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
           userPermissionsModule?.permissions.includes('can_create_form')
         );
       }
+
+      if (userPermissionsModule?.permissions.includes('can_see_menu_item') && menuItem.hideFromMenu) {
+        return !menuItem.hideFromMenu.includes(userType);
+      }
       return userPermissionsModule?.permissions.includes('can_see_menu_item');
     }
 
     if (typeof menuItem.accessibleBy === 'function') {
       const ctx = createMenuContext(menuItem.featureName);
       return menuItem.accessibleBy(ctx).includes(userType);
+    }
+
+    if (menuItem.hideFromMenu) {
+      return !menuItem.hideFromMenu.includes(userType);
     }
 
     return menuItem.accessibleBy.includes(userType);

@@ -3,6 +3,7 @@ import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import { checkAllowedCommunityFeatures } from '../../../utils/helpers'
 import UserActionMenu from '../Components/UserActionMenu'
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar'
 
 jest.mock('../../../utils/helpers');
 
@@ -24,16 +25,18 @@ describe('user action menu component', () => {
   it('show correct action menu', () => {
     const container = render(
       <BrowserRouter>
-        <UserActionMenu
-          data={props.data}
-          router={jest.fn()}
-          anchorEl={document.createElement("button")}
-          handleClose={jest.fn()}
-          userType={props.userType}
-          CSMNumber="353453"
-          open
-          OpenMergeDialog={jest.fn()}
-        />
+        <MockedSnackbarProvider>
+          <UserActionMenu
+            data={props.data}
+            router={jest.fn()}
+            anchorEl={document.createElement("button")}
+            handleClose={jest.fn()}
+            userType={props.userType}
+            CSMNumber="353453"
+            open
+            OpenMergeDialog={jest.fn()}
+          />
+        </MockedSnackbarProvider>
       </BrowserRouter>
     )
     expect(container.queryByText('menu.user_edit')).toBeInTheDocument()
@@ -50,16 +53,18 @@ describe('user action menu component', () => {
     checkAllowedCommunityFeatures.mockReturnValue(true);
     const container = render(
       <BrowserRouter>
-        <UserActionMenu
-          data={props.data}
-          router={jest.fn()}
-          anchorEl={document.createElement('button')}
-          handleClose={jest.fn()}
-          userType={props.userType}
-          CSMNumber="353453"
-          open
-          OpenMergeDialog={jest.fn()}
-        />
+        <MockedSnackbarProvider>
+          <UserActionMenu
+            data={props.data}
+            router={jest.fn()}
+            anchorEl={document.createElement('button')}
+            handleClose={jest.fn()}
+            userType={props.userType}
+            CSMNumber="353453"
+            open
+            OpenMergeDialog={jest.fn()}
+          />
+        </MockedSnackbarProvider>
       </BrowserRouter>
     );
     expect(checkAllowedCommunityFeatures).toHaveBeenCalled();

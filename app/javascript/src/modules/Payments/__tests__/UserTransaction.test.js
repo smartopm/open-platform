@@ -10,6 +10,7 @@ import UserTransactionsList, {
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import { TransactionRevert } from '../graphql/payment_mutations';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('Render Transaction', () => {
   const transaction = {
@@ -97,14 +98,16 @@ describe('Render Transaction', () => {
       <MockedProvider mocks={mock} addTypename={false}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserTransactionsList
-              transaction={transaction}
-              currencyData={currency}
-              userType="admin"
-              userData={userData}
-              refetch={() => {}}
-              balanceRefetch={() => {}}
-            />
+            <MockedSnackbarProvider>
+              <UserTransactionsList
+                transaction={transaction}
+                currencyData={currency}
+                userType="admin"
+                userData={userData}
+                refetch={() => {}}
+                balanceRefetch={() => {}}
+              />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -128,14 +131,16 @@ describe('Render Transaction', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserTransactionsList
-              transaction={{}}
-              currencyData={currency}
-              userType="admin"
-              userData={userData}
-              refetch={() => {}}
-              balanceRefetch={() => {}}
-            />
+            <MockedSnackbarProvider>
+              <UserTransactionsList
+                transaction={{}}
+                currencyData={currency}
+                userType="admin"
+                userData={userData}
+                refetch={() => {}}
+                balanceRefetch={() => {}}
+              />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

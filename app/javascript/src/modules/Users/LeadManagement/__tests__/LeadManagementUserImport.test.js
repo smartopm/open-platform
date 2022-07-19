@@ -6,6 +6,8 @@ import LeadManagementUserImport from '../Containers/LeadManagementUserImport';
 import * as utils from '../../utils';
 import { ImportCreate } from '../../../../graphql/mutations';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
+import MockedSnackbarProvider, { mockedSnackbarProviderProps } from '../../../__mocks__/mock_snackbar';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 jest.mock('@rails/activestorage/src/file_checksum', async () => jest.fn());
 describe('LeadManagementUserImport component', () => {
@@ -47,7 +49,9 @@ describe('LeadManagementUserImport component', () => {
       <MockedProvider mocks={importCreateMutationMock} addTypename={false}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <LeadManagementUserImport />
+            <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+              <LeadManagementUserImport />
+            </SnackbarContext.Provider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -63,11 +67,12 @@ describe('LeadManagementUserImport component', () => {
     }, 10);
     expect(await screen.findByTestId('import-btn')).toBeInTheDocument();
     fireEvent.click(await screen.findByTestId('import-btn'));
-    expect(
-      await screen.findByText(
-        "Your import is currently being processed. You'll receive a mail when it's done."
-      )
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        type: mockedSnackbarProviderProps.messageType.success,
+        message: "Your import is currently being processed. You'll receive a mail when it's done."
+      });
+    }, 10);
   });
 
   it('should not upload  when csv file has name field errors', async () => {
@@ -135,7 +140,9 @@ describe('LeadManagementUserImport component', () => {
       <MockedProvider mocks={[]} addTypename={false}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <LeadManagementUserImport />
+            <MockedSnackbarProvider>
+              <LeadManagementUserImport />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -222,7 +229,9 @@ describe('LeadManagementUserImport component', () => {
       <MockedProvider mocks={[]} addTypename={false}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <LeadManagementUserImport />
+            <MockedSnackbarProvider>
+              <LeadManagementUserImport />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -345,7 +354,9 @@ describe('LeadManagementUserImport component', () => {
       <MockedProvider mocks={[]} addTypename={false}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <LeadManagementUserImport />
+            <MockedSnackbarProvider>
+              <LeadManagementUserImport />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

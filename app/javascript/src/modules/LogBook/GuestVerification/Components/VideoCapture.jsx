@@ -9,12 +9,12 @@ import RightArrow from '../../../../../../assets/images/right-arrow.svg';
 import Person from '../../../../../../assets/images/default_avatar.svg';
 import useFileUpload from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
-import MessageAlert from '../../../../components/MessageAlert';
 import { EntryRequestContext } from '../Context';
 import Video from '../../../../shared/Video';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../components/CenteredContent';
 import AccessCheck from '../../../Permissions/Components/AccessCheck';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function VideoCapture() {
   const [counter, setCounter] = useState(0);
@@ -26,10 +26,8 @@ export default function VideoCapture() {
   const requestContext = useContext(EntryRequestContext);
   const [recordingInstruction, setRecordingInstruction] = useState(videoDirection(t).left);
   const [updateRequest] = useMutation(EntryRequestUpdateMutation);
-  const [errorDetails, setDetails] = useState({
-    isError: false,
-    message: ''
-  });
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const { onChange, signedBlobId, status } = useFileUpload({
     client: useApolloClient()
@@ -79,26 +77,16 @@ export default function VideoCapture() {
     }
     updateRequest({ variables: { id: requestContext.request.id, videoBlobId: signedBlobId } })
       .then(() => {
-        setDetails({
-          ...errorDetails,
-          message: t('logbook:video_recording.video_recorded'),
-          isError: false
-        });
+        showSnackbar({ type: messageType.success, message: t('logbook:video_recording.video_recorded') });
         requestContext.updateRequest({ ...requestContext.request, videoBlobId: signedBlobId });
       })
       .catch(error => {
-        setDetails({ ...errorDetails, isError: true, message: error.message });
+        showSnackbar({ type: messageType.error, message: error.message });
       });
   }
 
   return (
     <div className={classes.root}>
-      <MessageAlert
-        type={!errorDetails.isError ? 'success' : 'error'}
-        message={errorDetails.message}
-        open={!!errorDetails.message}
-        handleClose={() => setDetails({ ...errorDetails, message: '' })}
-      />
       <Typography variant="h6">{t('logbook:video_recording.add_video_text')}</Typography>
       <Typography className={classes.title}>
         {t('logbook:video_recording.create_video_text')}

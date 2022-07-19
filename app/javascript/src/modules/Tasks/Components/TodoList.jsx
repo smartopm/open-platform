@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-statements */
 /* eslint-disable complexity */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, Grid, Button } from '@mui/material';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
@@ -28,7 +28,6 @@ import QueryBuilder from '../../../components/QueryBuilder';
 import { ModalDialog } from '../../../components/Dialog';
 import { formatError, objectAccessor, useParamsQuery } from '../../../utils/helpers';
 import useDebounce from '../../../utils/useDebounce';
-import MessageAlert from '../../../components/MessageAlert';
 import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
 import { TaskBulkUpdateAction, TaskQuickAction } from './TaskActionMenu';
 import TodoItem from './TodoItem';
@@ -41,6 +40,7 @@ import {
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import { TasksLiteQuery } from '../graphql/task_queries';
 import PageWrapper from '../../../shared/PageWrapper';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function TodoList({
   isDialogOpen,
@@ -68,7 +68,6 @@ export default function TodoList({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 500);
   const debouncedFilterInputText = useDebounce(userNameSearchTerm, 500);
-  const [taskUpdateStatus, setTaskUpdateStatus] = useState({ message: '', success: false });
   const [checkedOptions, setCheckOptions] = useState('none');
   const matches = useMediaQuery('(max-width:959px)');
   const smMatches = useMediaQuery('(max-width:1020px)');
@@ -92,6 +91,8 @@ export default function TodoList({
   const [bulkUpdating, setBulkUpdating] = useState(false);
   const [splitScreenOpen, setSplitScreenOpen] = useState(false);
   const { t } = useTranslation(['task', 'common']);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const path = useParamsQuery();
   const taskURLFilter = path.get('filter');
@@ -210,11 +211,7 @@ export default function TodoList({
           refetch();
         })
         .catch(error => {
-          setTaskUpdateStatus({
-            ...taskUpdateStatus,
-            success: false,
-            message: formatError(error.message)
-          });
+          showSnackbar({ type: messageType.error, message: formatError(error.message) });
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -230,20 +227,13 @@ export default function TodoList({
     taskUpdate({ variables: { id: selectedTaskId, completed } })
       .then(() => {
         refetch();
-        setTaskUpdateStatus({
-          ...taskUpdateStatus,
-          success: true,
-          message: `${t('task.task_marked_as')} ${
-            completed ? t('task.complete') : t('task.incomplete')
-          }`
+        showSnackbar({
+          type: messageType.success,
+          message: `${t('task.task_marked_as')} ${completed ? t('task.complete') : t('task.incomplete')}`
         });
       })
       .catch(error => {
-        setTaskUpdateStatus({
-          ...taskUpdateStatus,
-          success: false,
-          message: formatError(error.message)
-        });
+        showSnackbar({ type: messageType.error, message: formatError(error.message) });
       });
   }
 
@@ -255,7 +245,7 @@ export default function TodoList({
         }
       })
       .catch(err =>
-        setTaskUpdateStatus({ ...taskUpdateStatus, success: false, message: err.message })
+        showSnackbar({ type: messageType.error, message:  err.message })
       );
   }
 
@@ -354,16 +344,6 @@ export default function TodoList({
     }
   }
 
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setTaskUpdateStatus({
-      ...taskUpdateStatus,
-      message: ''
-    });
-  }
-
   function handleCheckOptions(option) {
     setCheckOptions(option);
     switch (option) {
@@ -390,21 +370,14 @@ export default function TodoList({
         handleRefetch();
         setBulkUpdating(false);
         setSelected([]);
-        setTaskUpdateStatus({
-          ...taskUpdateStatus,
-          success: true,
-          message: `${t('task.selected_task_marked_as')} ${
-            currentTile === 'completedTasks' ? t('task.incomplete') : t('task.complete')
-          }`
+        showSnackbar({
+          type: messageType.success,
+          message:  `${t('task.selected_task_marked_as')} ${currentTile === 'completedTasks' ? t('task.incomplete') : t('task.complete')}`
         });
       })
       .catch(err => {
         setBulkUpdating(false);
-        setTaskUpdateStatus({
-          ...taskUpdateStatus,
-          success: false,
-          message: formatError(err.message)
-        });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
@@ -432,7 +405,7 @@ export default function TodoList({
 
   function handleTaskNotFoundError(error) {
     setSplitScreenOpen(false);
-    setTaskUpdateStatus({ ...taskUpdateStatus, message: formatError(error.message) });
+    showSnackbar({ type: messageType.error, message: formatError(error.message) });
     history.push('/tasks');
   }
 
@@ -512,12 +485,6 @@ export default function TodoList({
       </Dialog>
       <PageWrapper pageTitle={t('common:table_headers.task')} rightPanelObj={rightPanelObj}>
         <div data-testid="todo-container">
-          <MessageAlert
-            type={taskUpdateStatus.success ? 'success' : 'error'}
-            message={taskUpdateStatus.message}
-            open={!!taskUpdateStatus.message}
-            handleClose={handleMessageAlertClose}
-          />
           <ModalDialog
             open={isDialogOpen}
             handleClose={handleModal}

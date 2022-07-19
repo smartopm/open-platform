@@ -8,6 +8,7 @@ import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
 import { EntryRequestContext } from '../../Context';
 import authState from '../../../../../__mocks__/authstate';
+import MockedSnackbarProvider from '../../../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Video Capture component', () => {
@@ -18,7 +19,9 @@ describe('Video Capture component', () => {
           <BrowserRouter>
             <MockedThemeProvider>
               <EntryRequestContext.Provider value={{ request: { id: 'somew2923' }, isGuestRequest: false }}>
-                <VideoCapture handleNext={() => {}} />
+                <MockedSnackbarProvider>
+                  <VideoCapture handleNext={() => {}} />
+                </MockedSnackbarProvider>
               </EntryRequestContext.Provider>
             </MockedThemeProvider>
           </BrowserRouter>

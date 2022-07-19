@@ -44,7 +44,6 @@ module Types::Queries::LeadLog
     validate_log_type(args[:log_type])
 
     context[:site_community].lead_logs
-                            .includes(:acting_user)
                             .where(user_id: args[:user_id], log_type: args[:log_type])
                             .ordered
                             .offset(offset)

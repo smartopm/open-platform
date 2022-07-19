@@ -9,6 +9,7 @@ import { UserLandParcels } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import { PaymentCreate } from '../../../graphql/mutations';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('It should test the payment modal component', () => {
   const open = true;
@@ -47,12 +48,14 @@ describe('It should test the payment modal component', () => {
       <BrowserRouter>
         <MockedProvider mocks={mock}>
           <MockedThemeProvider>
-            <PaymentModal
-              open={open}
-              handleModalClose={handleModalClose}
-              currencyData={currency}
-              refetch={jest.fn()}
-            />
+            <MockedSnackbarProvider>
+              <PaymentModal
+                open={open}
+                handleModalClose={handleModalClose}
+                currencyData={currency}
+                refetch={jest.fn()}
+              />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>
@@ -88,7 +91,9 @@ describe('Test Payment Details Screen', () => {
   it('should render payment details', () => {
     const container = render(
       <MockedThemeProvider>
-        <PaymentDetails inputValue={inputValue} totalAmount={200} currencyData={currency} />
+        <MockedSnackbarProvider>
+          <PaymentDetails inputValue={inputValue} totalAmount={200} currencyData={currency} />
+        </MockedSnackbarProvider>
       </MockedThemeProvider>
     );
     expect(container.queryByTestId('amount')).toBeInTheDocument();

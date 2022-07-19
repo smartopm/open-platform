@@ -14,9 +14,9 @@ import MenuList from '../../../shared/MenuList';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
 import { ActionDialog } from '../../../components/Dialog';
 import { ProcessDeleteMutation } from '../graphql/process_list_mutation';
-import MessageAlert from '../../../components/MessageAlert';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import PageWrapper from '../../../shared/PageWrapper';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function ProcessList() {
   const classes = useStyles();
@@ -30,8 +30,10 @@ export default function ProcessList() {
   const history = useHistory();
   const location = useLocation();
   const [processItem, setProcessItem] = useState(null);
-  const [alertOpen, setAlertOpen] = useState(false);
   const [info, setInfo] = useState({ loading: false, error: false, message: '' });
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [processDelete] = useMutation(ProcessDeleteMutation);
 
   const { data, loading, error, refetch } = useQuery(ProcessTemplatesQuery, {
@@ -113,22 +115,13 @@ export default function ProcessList() {
       variables: { id: processItem?.id }
     })
       .then(() => {
-        setInfo({
-          ...info,
-          message: t('templates.process_deleted'),
-          loading: false
-        });
-        setAlertOpen(true);
+        showSnackbar({ type: messageType.success, message: t('templates.process_deleted') });
+        setInfo({ ...info, loading: false });
         setOpen(!isDialogOpen);
         refetch();
       })
       .catch(err => {
-        setInfo({
-          ...info,
-          error: true,
-          message: formatError(err.message)
-        });
-        setAlertOpen(true);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
@@ -181,14 +174,6 @@ export default function ProcessList() {
             handlePageChange={paginate}
           />
         </CenteredContent>
-
-        <MessageAlert
-          type={info.error ? 'error' : 'success'}
-          message={info.message}
-          open={alertOpen}
-          handleClose={() => setAlertOpen(false)}
-        />
-
         <ActionDialog
           open={isDialogOpen}
           handleClose={handleDeleteProcessTemplate}

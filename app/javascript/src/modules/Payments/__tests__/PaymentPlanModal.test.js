@@ -7,6 +7,7 @@ import PaymentPlanModal, { CoOwners } from '../Components/UserTransactions/Payme
 import userMock from '../../../__mocks__/authstate';
 import { PaymentPlanCreateMutation } from '../../../graphql/mutations/land_parcel';
 import { Spinner } from '../../../shared/Loading';
+import { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar';
 
 describe('It should test the payment plan modal component', () => {
   const mock = [
@@ -41,8 +42,8 @@ describe('It should test the payment plan modal component', () => {
             userId={userMock.user.id}
             currency="kd"
             balanceRefetch={jest.fn()}
-            setMessage={jest.fn()}
-            openAlertMessage={jest.fn()}
+            showSnackbar={jest.fn()}
+            messageType={{...mockedSnackbarProviderProps.messageType}}
           />
         </MockedProvider>
       </BrowserRouter>

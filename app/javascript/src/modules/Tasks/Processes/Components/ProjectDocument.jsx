@@ -32,11 +32,11 @@ import {
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import { ActionDialog } from '../../../../components/Dialog';
 import { DeleteNoteDocument } from '../../../../graphql/mutations';
-import MessageAlert from '../../../../components/MessageAlert';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { checkLastItem } from '../utils';
 import { DocumentCommentsQuery } from '../graphql/process_queries';
 import CustomSkeleton from '../../../../shared/CustomSkeleton';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function ProjectDocument({ attachments, loading, refetch, error, heading }) {
   const { processId } = useParams();
@@ -44,7 +44,6 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
   const matches = useMediaQuery('(max-width:900px)');
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentDoc, setCurrentDoc] = useState('');
-  const [messageDetails, setMessageDetails] = useState({ isError: false, message: '' });
   const [taskDocumentDelete] = useMutation(DeleteNoteDocument);
   const [open, setOpen] = useState(false);
   const [openDocuments, setOpenDocuments] = useState([]);
@@ -52,6 +51,9 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
   const menuOpen = Boolean(anchorEl);
   const { t } = useTranslation('task');
   const authState = useContext(AuthStateContext);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const currentPath = useParamsQuery();
   const currentDocId = currentPath.get('document_id');
   const commentId = currentPath.get('comment_id');
@@ -110,12 +112,12 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
   function handleDeleteDocument() {
     taskDocumentDelete({ variables: { documentId: currentDoc?.id } })
       .then(() => {
-        setMessageDetails({ isError: false, message: t('document.document_deleted') });
+        showSnackbar({ type: messageType.success, message: t('document.document_deleted') });
         handleCloseDialog();
         refetch();
       })
       .catch(err => {
-        setMessageDetails({ isError: true, message: err.message });
+        showSnackbar({ type: messageType.error, message: err.message });
         handleCloseDialog();
       });
   }
@@ -144,12 +146,6 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
         message={t('document.delete_confirmation_message')}
         handleClose={handleCloseDialog}
         handleOnSave={handleDeleteDocument}
-      />
-      <MessageAlert
-        type={!messageDetails.isError ? 'success' : 'error'}
-        message={messageDetails.message}
-        open={!!messageDetails.message}
-        handleClose={() => setMessageDetails({ ...messageDetails, message: '' })}
       />
       {loading ? (
         <Spinner />

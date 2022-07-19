@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-use-before-define */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { Button, Typography } from '@mui/material';
@@ -12,18 +12,15 @@ import { useFetch } from '../../../utils/customHooks';
 import PostItem from './PostItem';
 import { dateToString } from '../../../components/DateContainer';
 import Tag from './Tag';
-import MessageAlert from '../../../components/MessageAlert';
 import { PostTagUser } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import { FollowPostTag } from '../../../graphql/mutations';
 import CenteredContent from '../../../shared/CenteredContent';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint }) {
   const classes = useStyles();
   const { response, error } = useFetch(`${wordpressEndpoint}/posts/?tag=${tagName}`);
-  const [messageAlert, setMessageAlert] = useState('');
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [isAlertOpen, setAlertOpen] = useState(false);
   const [mutationLoading, setMutationLoading] = useState(false);
   const [loadUserTags, { called, loading, data, error: lazyError, refetch }] = useLazyQuery(
     PostTagUser
@@ -31,6 +28,8 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
   const [followTag] = useMutation(FollowPostTag);
   const { t } = useTranslation('news');
   const history = useHistory();
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   useEffect(() => {
     if (open && tagName) {
@@ -53,38 +52,23 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
       variables: { tagName }
     })
       .then(() => {
-        setIsSuccessAlert(true);
-        setMessageAlert(
-          !data.userTags
-            ? t('news.following', { tag: tagName })
-            : t('news.unfollowing', { tag: tagName })
-        );
-        setAlertOpen(true);
+        showSnackbar({
+          type: messageType.success,
+          message: !data.userTags
+              ? t('news.following', { tag: tagName })
+              : t('news.unfollowing', { tag: tagName })
+        });
         setMutationLoading(false);
         refetch();
       })
       .catch(err => {
-        setMessageAlert(err.message);
-        setAlertOpen(true);
-        setIsSuccessAlert(true);
+        showSnackbar({ type: messageType.error, message: err.message });
         setMutationLoading(false);
       });
   }
 
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setAlertOpen(false);
-  }
   return (
     <>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={isAlertOpen}
-        handleClose={handleMessageAlertClose}
-      />
       <SwipeableDrawer
         anchor="right"
         open={open}

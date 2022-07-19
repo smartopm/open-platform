@@ -1,10 +1,11 @@
 import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { render, fireEvent, waitFor, act } from '@testing-library/react'
 
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import PlanTransferConfirmModal from '../Components/UserTransactions/PlanTransferConfirmDialog'
 import { TransferPaymentPlanMutation } from '../graphql/payment_plan_mutations'
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar'
 
 describe('It should test the plan transfer confirm modal component', () => {
   const PaymentData = {
@@ -36,24 +37,30 @@ describe('It should test the plan transfer confirm modal component', () => {
         }
       }
     }];
-    const container = render(
-      <BrowserRouter>
-        <MockedProvider mocks={mock} addTypename={false}>
-          <PlanTransferConfirmModal
-            open
-            handleClose={jest.fn()}
-            paymentsSummary={PaymentData}
-            paymentPlanId='12345'
-            destinationPlanId='67890'
-            refetch={jest.fn()}
-            balanceRefetch={jest.fn()}
-            handleModal={jest.fn()}
-            paymentId='dssdok74123'
-            transferType='plan'
-          />
-        </MockedProvider>
-      </BrowserRouter>
-    )
+
+    let container;
+    await act(async () => {
+      container = render(
+        <BrowserRouter>
+          <MockedProvider mocks={mock} addTypename={false}>
+            <MockedSnackbarProvider>
+              <PlanTransferConfirmModal
+                open
+                handleClose={jest.fn()}
+                paymentsSummary={PaymentData}
+                paymentPlanId='12345'
+                destinationPlanId='67890'
+                refetch={jest.fn()}
+                balanceRefetch={jest.fn()}
+                handleModal={jest.fn()}
+                paymentId='dssdok74123'
+                transferType='plan'
+              />
+            </MockedSnackbarProvider>
+          </MockedProvider>
+        </BrowserRouter>
+      )
+    })
 
     await waitFor(() => {
       expect(container.queryByTestId('content')).toBeInTheDocument();

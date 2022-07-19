@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
@@ -15,8 +15,8 @@ import { dateToString } from '../../../../components/DateContainer';
 import { Spinner } from '../../../../shared/Loading';
 import { AllocateGeneralFunds } from '../../graphql/payment_plan_mutations';
 import { formatError } from '../../../../utils/helpers';
-import MessageAlert from '../../../../components/MessageAlert';
 import CenteredContent from '../../../../shared/CenteredContent';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function AllocatePlanModal({ 
   open,
@@ -29,9 +29,10 @@ export default function AllocatePlanModal({
   const { t } = useTranslation(['common', 'payment']);
   const [paymentPlanId, setPaymentPlanId] = useState('');
   const [acceptanceCheckbox, setAcceptanceCheckbox] = useState(false)
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
   const [mutationLoading, setMutationStatus] = useState(false);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [loadPaymentPlans, { loading, data }] = useLazyQuery(UserLandParcelWithPlan, {
     variables: { userId },
     errorPolicy: 'all',
@@ -53,8 +54,7 @@ export default function AllocatePlanModal({
       variables: { paymentPlanId }
     })
     .then(() => {
-      setIsSuccessAlert(true);
-      setMessageAlert(t('common:misc.allocating_success'));
+      showSnackbar({ type: messageType.success, message: t('common:misc.allocating_success') });
       handleClose();
       paymentPlansRefetch();
       balanceRefetch();
@@ -62,8 +62,7 @@ export default function AllocatePlanModal({
       setMutationStatus(false);
     })
     .catch(err => {
-      setMessageAlert(formatError(err.message));
-      setIsSuccessAlert(false);
+      showSnackbar({ type: messageType.error, message: formatError(err.message) });
       handleClose();
       setMutationStatus(false);
     });
@@ -73,12 +72,6 @@ export default function AllocatePlanModal({
 
   return (
     <>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={() => setMessageAlert('')}
-      />
       <CustomizedDialogs
         open={open}
         handleModal={handleClose}

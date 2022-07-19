@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import { useLazyQuery } from 'react-apollo';
@@ -10,29 +10,31 @@ import { logbookEventLogsQuery } from '../graphql/guestbook_queries';
 import LogsReportView from './LogsReportView';
 import { dateToString } from '../../../components/DateContainer';
 import { formatCsvData } from '../utils';
-import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function GateFlowReport() {
   const [reportingDates, setReportingDates] = useState({ startDate: null, endDate: null });
   const theme = useTheme();
   const { t } = useTranslation(['common', 'logbook']);
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
-  const [message, setMessage] = useState({ isError: false, detail: '' });
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext)
 
   const [loadData, { loading, data, called }] = useLazyQuery(logbookEventLogsQuery, {
     variables: { ...reportingDates },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all',
     onCompleted: () =>
-      setMessage({
-        ...message,
-        detail: data?.logbookEventLogs.length
+      showSnackbar({
+        type: !data?.logbookEventLogs.length
+          ? messageType.error
+          : messageType.success,
+        message: data?.logbookEventLogs.length
           ? t('logbook:guest_book.export_data_successfully')
           : t('logbook:guest_book.export_no_data'),
-        isError: !data?.logbookEventLogs.length
       }),
-    onError: error => setMessage({ ...message, detail: formatError(error.message), isError: true })
+    onError: error => showSnackbar({ type: messageType.error, message: formatError(error.message) })
   });
 
   function handleChangeReportingDates(event) {
@@ -58,12 +60,6 @@ export default function GateFlowReport() {
 
   return (
     <>
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '' })}
-      />
       <LogsReportView
         startDate={reportingDates.startDate}
         endDate={reportingDates.endDate}

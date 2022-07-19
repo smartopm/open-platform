@@ -7,6 +7,7 @@ import AllocatePlanModal from '../Components/UserTransactions/AllocatePlanModal'
 import { UserLandParcelWithPlan } from '../../../graphql/queries'
 import { AllocateGeneralFunds } from '../graphql/payment_plan_mutations';
 import { Spinner } from '../../../shared/Loading';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar'
 
 describe('It should test the allocate plan modal component', () => {
   it('should render the allocate plan modal', async () => {
@@ -46,14 +47,16 @@ describe('It should test the allocate plan modal component', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider mocks={mocks} addTypename={false}>
-          <AllocatePlanModal
-            open
-            handleClose={jest.fn}
-            userId='ty2345'
-            balanceRefetch={jest.fn}
-            genRefetch={jest.fn}
-            paymentPlansRefetch={jest.fn}
-          />
+          <MockedSnackbarProvider>
+            <AllocatePlanModal
+              open
+              handleClose={jest.fn}
+              userId='ty2345'
+              balanceRefetch={jest.fn}
+              genRefetch={jest.fn}
+              paymentPlansRefetch={jest.fn}
+            />
+          </MockedSnackbarProvider>
         </MockedProvider>
       </BrowserRouter>
     )

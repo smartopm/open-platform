@@ -8,6 +8,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import SOSModal from '../component/SOSModal';
 import authState from '../../../__mocks__/authstate';
 import {CancelCommunityEmergencyMutation} from '../graphql/sos_mutation';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('SOSModal component', () => {
   jest.useFakeTimers();
@@ -32,7 +33,9 @@ describe('SOSModal component', () => {
         <ThemeProvider theme={theme}>
           <MockedProvider>
             <BrowserRouter>
-              <SOSModal open setOpen={setOpen} bind={bind} location={mockGeolocation} {...{ authState }} />
+              <MockedSnackbarProvider>
+                <SOSModal open setOpen={setOpen} bind={bind} location={mockGeolocation} {...{ authState }} />
+              </MockedSnackbarProvider>
             </BrowserRouter>
           </MockedProvider>
         </ThemeProvider>
@@ -60,7 +63,9 @@ describe('SOSModal component', () => {
         <ThemeProvider theme={theme}>
           <MockedProvider>
             <BrowserRouter>
-              <SOSModal open setOpen={setOpen} location={mockGeolocation} {...{ authState }} />
+              <MockedSnackbarProvider>
+                <SOSModal open setOpen={setOpen} location={mockGeolocation} {...{ authState }} />
+              </MockedSnackbarProvider>
             </BrowserRouter>
           </MockedProvider>
         </ThemeProvider>
@@ -101,7 +106,9 @@ describe('SOSModal component', () => {
         <ThemeProvider theme={theme}>
           <MockedProvider mocks={mocks} addTypename={false}>
             <BrowserRouter>
-              <SOSModal open setOpen={setOpen} location={mockGeolocation} {...{ authState }} />
+              <MockedSnackbarProvider>
+                <SOSModal open setOpen={setOpen} location={mockGeolocation} {...{ authState }} />
+              </MockedSnackbarProvider>
             </BrowserRouter>
           </MockedProvider>
         </ThemeProvider>

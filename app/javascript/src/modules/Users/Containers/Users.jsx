@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-object-injection */
 /* eslint-disable max-lines */
 /* eslint-disable complexity */
 /* eslint-disable max-statements */
@@ -22,9 +23,9 @@ import { ActionDialog } from '../../../components/Dialog';
 import { userType, subStatus } from '../../../utils/constants';
 import Paginate from '../../../components/Paginate';
 import UserListCard from '../Components/UserListCard';
-import { dateToString } from '../../../utils/dateutil';
+import { dateToString } from '../../../components/DateContainer';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import { objectAccessor, toTitleCase } from '../../../utils/helpers';
+import { objectAccessor, toTitleCase, formatDateFields } from '../../../utils/helpers';
 import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport';
 import UserSelectButton, {
   UserSearch,
@@ -156,22 +157,29 @@ export default function UsersList() {
     if (selectedOptions) {
       const andConjugate = selectedOptions.logic?.and;
       const orConjugate = selectedOptions.logic?.or;
+
       const availableConjugate = andConjugate || orConjugate;
       if (availableConjugate) {
         const conjugate = andConjugate ? 'AND' : 'OR';
         const query = availableConjugate
           .map(option => {
             let operator = Object.keys(option)[0];
-            // skipped nested object accessor here until fully tested
-            // eslint-disable-next-line security/detect-object-injection
-            const property = filterFields[option[operator][0].var];
-            let value = objectAccessor(option, operator)[1];
+            const property =
+              operator === '<='
+                ? filterFields[option[operator][1].var]
+                : filterFields[option[operator][0].var];
 
-            if (operator === '==') operator = '='; // make = the default operator
-            if (property === 'date_filter') {
-              operator = '>';
+            let value = objectAccessor(option, operator)[1];
+            if (operator === '<=') {
+              const startDate = formatDateFields(property, objectAccessor(option, operator)[0]);
+              const endDate = formatDateFields(property, objectAccessor(option, operator)[2]);
+              return `${property} >= "${startDate}" AND ${property} <= "${endDate}"`;
+            }
+            if (property === 'created_date_filter' || property === 'login_after_filter') {
               value = dateToString(value);
             }
+            if (operator === '==') operator = '='; // make = the default operator
+
             if (property === 'phone_number') operator = ':';
 
             return `${property} ${operator} "${value}"`;
@@ -325,6 +333,13 @@ export default function UsersList() {
   const queryBuilderConfig = {
     ...InitialConfig,
     fields: {
+      createdDate: {
+        label: 'Created Date',
+        type: 'date',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal', 'equal'],
+      },
+
       role: {
         label: 'Role',
         type: 'select',
@@ -401,10 +416,11 @@ export default function UsersList() {
   };
 
   const filterFields = {
+    createdDate: 'created_date_filter',
     role: 'user_type',
     label: 'labels',
     phoneNumber: 'phone_number',
-    loginAfter: 'date_filter',
+    loginAfter: 'login_after_filter',
     subStatus: 'sub_status',
   };
 

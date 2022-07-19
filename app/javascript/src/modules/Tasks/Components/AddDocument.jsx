@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import PropTypes from 'prop-types';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -6,11 +6,12 @@ import Typography from '@mui/material/Typography';
 import { useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { UpdateNote } from '../../../graphql/mutations';
-import MessageAlert from '../../../components/MessageAlert';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function AddDocument({ onChange, status, signedBlobId, taskId, refetch}) {
   const { t } = useTranslation('task');
-  const [messageDetails, setMessageDetails] = useState({ isError: false, message: '' });
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [taskUpdate] = useMutation(UpdateNote);
 
   function handleUploadDocument(event) {
@@ -20,7 +21,7 @@ export default function AddDocument({ onChange, status, signedBlobId, taskId, re
 
   useEffect(() => {
     if (status === 'ERROR') {
-      setMessageDetails({ isError: true, message: t('document.upload_error') });
+      showSnackbar({ type: messageType.error, message: t('document.upload_error') });
       return;
     }
 
@@ -30,19 +31,13 @@ export default function AddDocument({ onChange, status, signedBlobId, taskId, re
           refetch();
         })
         .catch(err => {
-          setMessageDetails({ isError: true, message: err.message });
+          showSnackbar({ type: messageType.error, message: err.message});
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, taskId, signedBlobId, taskUpdate, refetch]);
   return (
     <>
-      <MessageAlert
-        type={!messageDetails.isError ? 'success' : 'error'}
-        message={messageDetails.message}
-        open={!!messageDetails.message}
-        handleClose={() => setMessageDetails({ ...messageDetails, message: '' })}
-      />
       <IconButton
         edge="end"
         aria-label="add_document"
