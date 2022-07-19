@@ -75,7 +75,7 @@ Cypress.Commands.add("visitSubMenu", (menuItem, subMenuItem) => {
 })
 
 Cypress.Commands.add("myProfile", () => {
-  cy.visitMainMenu('.my-profile-menu-item')
+  cy.visitSubMenu('.account-menu-item', '.my-profile-menu-item')
 })
 
 Cypress.Commands.add("visitUserProfile", (user) => {
