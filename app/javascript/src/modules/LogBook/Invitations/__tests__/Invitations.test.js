@@ -114,7 +114,15 @@ describe('Should render Guests View Component', () => {
     fireEvent.click(container.getByTestId('SearchIcon'));
     await waitFor(() => {
       expect(container.getAllByText('search.search_for')[0]).toBeInTheDocument();
-      expect(container.getByTestId('search')).toBeInTheDocument();
+
+      const inputField = container.getByTestId('search');
+      expect(inputField).toBeInTheDocument();
+
+      fireEvent.change(inputField, { target: { value: 'name' } });
+      expect(inputField.value).toBe('name');
+      expect(container.getByTestId('clear_search')).toBeInTheDocument();
+      expect(container.getByTestId('ClearOutlinedIcon')).toBeInTheDocument();
+      fireEvent.click(container.getByTestId('clear_search'));
     });
 
     fireEvent.click(container.getAllByTestId('SearchIcon')[0]);
