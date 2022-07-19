@@ -15,7 +15,7 @@ import { FormCategoriesQuery } from '../../graphql/form_category_queries';
 import { Spinner } from '../../../../shared/Loading';
 import { FormContext } from '../../Context';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
-import { flattenFormProperties } from '../../utils';
+import { flattenFormProperties, getValueFromProperty } from '../../utils';
 import CategoryList from './CategoryList';
 import FormPreview from '../FormPreview';
 import MessageAlert from '../../../../components/MessageAlert';
@@ -74,6 +74,7 @@ export default function Form({
   // check if this submission includes a payment type
   const hasPayment = formData.some(field => field.fieldType === 'payment');
   const hasAppointment = formData.some(field => field.fieldType === 'appointment');
+  const appointmentValue = getValueFromProperty(formData, 'appointment')
 
   useEffect(() => {
     if (formState?.successfulSubmit && !formState?.isDraft) {
@@ -142,7 +143,7 @@ export default function Form({
     });
   }
 
-  function formSubmit(propertiesData, status, isPreview=false, verified=false) {
+  function formSubmit(propertiesData, status, isPreview=false, scheduled=false) {
     if (filesToUpload.length !== uploadedImages.length) {
       setImgUploadError(true);
       return;
@@ -153,13 +154,13 @@ export default function Form({
       return;
     }
     // Find the property that has a payment
-    const payment = propertiesData.find(field => field.fieldType === 'payment');
-    const value = {
-      amount: payment?.shortDesc,
-      description: payment?.description,
-    };
-    const { config } = flutterwaveConfig(authState, value, t);
-    if(hasAppointment && !verified) {
+    // const payment = propertiesData.find(field => field.fieldType === 'payment');
+    // Find the property that has appointment
+    // const appointment = propertiesData.find(field => field.fieldType === 'appointment');
+
+    const paymentValue = getValueFromProperty(propertiesData, 'payment')
+    const { config } = flutterwaveConfig(authState, paymentValue, t);
+    if(hasAppointment && !scheduled) {
       window.FormPropertyData = formData
       window.FilledInProperties = formProperties
       window.FormCategories = categoriesData.data?.formCategories
@@ -172,7 +173,7 @@ export default function Form({
       window.FlutterwaveCheckout({
         ...config,
         callback: response =>  {
-          saveTransactionLog(response, value)
+          saveTransactionLog(response, paymentValue)
             .then(() => {
               saveFormData(
                 propertiesData,
@@ -249,6 +250,7 @@ export default function Form({
       <CalendlyEmbed
         isOpen={showCalendly}
         submitForm={() => formSubmit(formData, null, false, true)}
+        appointmentValue={appointmentValue}
       />
 
       {categoryFormOpen && (

@@ -438,3 +438,19 @@ export function calendlyCallback(e, submitForm) {
     }
   }
 }
+
+
+/**
+ * Find a property and return its shortDesc and its description
+ * @param {object} properties
+ * @param {string} propertyName
+ * @returns an object consisting of shortDesc and description
+ */
+export function getValueFromProperty(properties, propertyName) {
+  const property = properties.find(field => field.fieldType === propertyName);
+  return {
+    amount: property?.shortDesc, // deprecate this and replace from other files
+    value: property?.shortDesc,
+    description: property?.description,
+  }
+}

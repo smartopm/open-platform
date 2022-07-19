@@ -153,6 +153,7 @@ export default function FormPropertyCreateForm({
       });
   }
 
+  const showValueInput = propertyData.fieldType === 'payment' || propertyData.fieldType === 'appointment'
   return (
     <>
       <form
@@ -206,19 +207,25 @@ export default function FormPropertyCreateForm({
               </Select>
             </FormControl>
           </Grid>
-          {propertyData.fieldType === 'payment' && (
+          {/* TODO: Refactor this to be more scalable */}
+          {showValueInput && (
             <Grid item md={12} xs={12}>
               <TextField
                 id="standard-short_desc"
-                label={t('form_fields.amount_to_pay')}
+                label={
+                  propertyData.fieldType === 'payment'
+                    ? t('form_fields.amount_to_pay')
+                    : t('form_fields.calendly_link')
+                }
                 variant="outlined"
                 value={propertyData.shortDesc}
                 onChange={handlePropertyValueChange}
                 name="shortDesc"
-                type="number"
+                type={propertyData.fieldType === 'payment' ? 'number' : 'url'}
                 style={{ width: '100%' }}
                 className="form-property-field-name-txt-input"
                 inputProps={{ 'data-testid': 'short_desc' }}
+                required={showValueInput}
                 margin="normal"
               />
             </Grid>

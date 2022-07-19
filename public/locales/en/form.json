@@ -127,7 +127,8 @@
     "property_field_name": "Property Name",
     "condition": "Condition",
     "condition_value": "Value",
-    "rendered_text_helper": "Hint: Add space after markdown titles"
+    "rendered_text_helper": "Hint: Add space after markdown titles",
+    "calendly_link": "Calendly Link"
   },
   "field_types": {
     "text": "Text",

@@ -8,7 +8,7 @@ describe('Calendly Embed', () => {
   };
   it('should render the embed properly', () => {
     const submit = jest.fn();
-    render(<CalendlyEmbed isOpen submitForm={submit} />);
+    render(<CalendlyEmbed isOpen submitForm={submit} appointmentValue={{ value: "https://calendly.com/dgdp-amenity1" }} />);
 
     expect(window.Calendly.initPopupWidget).toBeCalled();
   });

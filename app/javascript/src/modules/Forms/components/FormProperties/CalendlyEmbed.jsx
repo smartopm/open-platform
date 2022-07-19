@@ -2,16 +2,12 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { calendlyCallback } from '../../utils';
 
-export default function CalendlyEmbed({ isOpen, submitForm }) {
+export default function CalendlyEmbed({ isOpen, submitForm, appointmentValue }) {
   useEffect(() => {
     if (isOpen && window.Calendly) {
-       window.Calendly.initPopupWidget({
-        url:
-          'https://calendly.com/dgdp-amenity1/kiosk?hide_event_type_details=1&hide_gdpr_banner=1',
-      });
+      window.Calendly.initPopupWidget({ url: appointmentValue.value });
     }
-  }, [isOpen]);
-
+  }, [appointmentValue.value, isOpen]);
 
   useEffect(() => {
     window.addEventListener('message', event => calendlyCallback(event, submitForm));
@@ -20,10 +16,13 @@ export default function CalendlyEmbed({ isOpen, submitForm }) {
     };
   }, []);
 
-  return null
+  return null;
 }
 
 CalendlyEmbed.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   submitForm: PropTypes.func.isRequired,
+  appointmentValue: PropTypes.shape({
+    value: PropTypes.string,
+  }).isRequired,
 };
