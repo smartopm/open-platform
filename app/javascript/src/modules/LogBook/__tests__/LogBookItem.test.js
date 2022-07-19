@@ -92,7 +92,6 @@ describe('LogBook Component', () => {
       expect(container.queryAllByTestId('card')[0]).toBeInTheDocument();
       expect(container.queryByTestId('name')).toBeInTheDocument();
       expect(container.queryByTestId('speed_dial_btn')).toBeInTheDocument();
-      expect(container.queryByTestId('add_icon')).toBeInTheDocument();
       expect(container.queryByTestId('logbook_tabs')).toBeInTheDocument();
       expect(container.queryByTestId('observation_note')).toBeInTheDocument();
       expect(container.queryByTestId('created-at')).toBeInTheDocument();
