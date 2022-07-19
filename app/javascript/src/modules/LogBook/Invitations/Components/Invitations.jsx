@@ -13,25 +13,22 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import { formatError } from '../../../../utils/helpers';
 import SearchInput from '../../../../shared/search/SearchInput';
 import { Spinner } from '../../../../shared/Loading';
-import Paginate from '../../../../components/Paginate';
 import { EntryRequestGrant } from '../../../../graphql/mutations';
 import Invitation from './Invitation';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import AddObservationNoteMutation from '../../graphql/logbook_mutations';
-import { AllEventLogsQuery } from '../../../../graphql/queries';
 import ObservationModal from './ObservationModal';
 import useFileUpload from '../../../../graphql/useFileUpload';
 import { SnackbarContext } from '../../../../shared/snackbar/Context';
+import useFetchMoreRecords from '../../../../shared/hooks/useFetchMoreRecords';
 
 export default function Invitations() {
   const history = useHistory();
   const limit = 20;
-  const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
-  const { t } = useTranslation(['logbook', 'common']);
+  const { t } = useTranslation(['logbook', 'common', 'search']);
   const theme = useTheme();
   const matches = useMediaQuery(() => theme.breakpoints.down('md'));
   const [searchOpen, setSearchOpen] = useState(false);
-  const [offset, setOffset] = useState(0);
   const { value, dbcValue, setSearchValue } = useDebouncedValue();
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [loadingStatus, setLoadingInfo] = useState({ loading: false, currentId: '' });
@@ -40,8 +37,8 @@ export default function Invitations() {
   const allUserPermissions = authState.user?.permissions || [];
   const modulePerms = allUserPermissions.find(mod => mod.module === 'entry_request')?.permissions;
   const permissions = new Set(modulePerms);
-  const { data, loading: guestsLoading, error } = useQuery(GuestEntriesQuery, {
-    variables: { offset: dbcValue.length ? 0 : offset, limit, query: dbcValue.trim() },
+  const { data, loading: guestsLoading, error, fetchMore } = useQuery(GuestEntriesQuery, {
+    variables: { offset: 0, limit, query: dbcValue.trim() },
     fetchPolicy: 'cache-and-network',
   });
   const [clickedEvent, setClickedEvent] = useState({ refId: '', refType: '' });
@@ -60,6 +57,12 @@ export default function Invitations() {
   });
   const { showSnackbar, messageType } = useContext(SnackbarContext);
   const [imageUrls, setImageUrls] = useState([]);
+  const { loadMore, hasMoreRecord } = useFetchMoreRecords(fetchMore, 'scheduledRequests', {
+    offset: data?.scheduledRequests?.length,
+    limit,
+    query: dbcValue.trim(),
+  });
+
   const rightPanelObj = [
     {
       mainElement: (
@@ -97,18 +100,6 @@ export default function Invitations() {
     pageName: t('common:menu.invitations'),
   };
 
-  const eventsData = useQuery(AllEventLogsQuery, {
-    variables: {
-      subject: subjects,
-      refId: null,
-      refType: null,
-      offset,
-      limit: 20,
-      name: dbcValue.trim(),
-    },
-    fetchPolicy: 'cache-and-network',
-  });
-
   useEffect(() => {
     if (status === 'DONE') {
       setImageUrls([...imageUrls, url]);
@@ -125,24 +116,13 @@ export default function Invitations() {
   function handleCardClick(visit) {
     history.push({
       pathname: `/request/${visit.id}`,
-      state: { from: 'guests', offset },
+      state: { from: 'guests', offset: 0 },
     });
   }
 
   function handleViewUser(event, user, isMultiple = false) {
     event.stopPropagation();
     history.push(`/user/${user.id}${isMultiple ? '?tab=Invitations' : ''}`);
-  }
-
-  function paginate(action) {
-    if (action === 'prev') {
-      if (offset < limit) {
-        return;
-      }
-      setOffset(offset - limit);
-    } else if (action === 'next') {
-      setOffset(offset + limit);
-    }
   }
 
   function handleAddObservation(log) {
@@ -188,7 +168,6 @@ export default function Invitations() {
         });
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
-        eventsData.refetch();
         setIsObservationOpen(false);
         resetImageData();
       })
@@ -285,9 +264,10 @@ export default function Invitations() {
         </>
       )}
       <br />
-      {guestsLoading ? (
+      {guestsLoading && !data ? (
         <Spinner />
-      ) : data?.scheduledRequests.length > 0 ? (
+      ) : (
+        data?.scheduledRequests.length &&
         data?.scheduledRequests.map(visit => (
           <Invitation
             key={visit.id}
@@ -302,17 +282,19 @@ export default function Invitations() {
             matches={matches}
           />
         ))
-      ) : (
-        <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
       )}
       <CenteredContent>
-        <Paginate
-          offSet={offset}
-          limit={limit}
-          active={offset >= 1}
-          handlePageChange={paginate}
-          count={data?.scheduledRequests?.length}
-        />
+        {data?.scheduledRequests.length ? (
+          <Button
+            variant="outlined"
+            onClick={loadMore}
+            startIcon={guestsLoading && <Spinner />}
+            disabled={guestsLoading || !hasMoreRecord}
+          >
+            {t('search:search.load_more')}
+          </Button>
+        ) : (
+          t('logbook.no_invited_guests'))}
       </CenteredContent>
     </PageWrapper>
   );
