@@ -111,7 +111,7 @@ describe('Process Comment Page Component', () => {
             },
             {
               id: "01a23d49-d274-48a4-8676-7d3d727b718a",
-              body: "None reply required comment",
+              body: "Non reply required comment",
               createdAt: "2022-07-07T13:37:57+02:00",
               groupingId: null,
               taggedAttachments: null,
@@ -169,14 +169,54 @@ describe('Process Comment Page Component', () => {
       </MockedProvider>
     );
 
-    const tabViewBtn = screen.getByTestId('comments-list-view');
+    const listViewBtn = screen.getByTestId('comments-list-view');
+    const tabViewBtn = screen.getByTestId('comments-tab-view');
+    expect(listViewBtn).toBeInTheDocument();
     expect(tabViewBtn).toBeInTheDocument();
-    expect(screen.getByTestId('comments-tab-view')).toBeInTheDocument();
+
+    fireEvent.click(listViewBtn);
+    await waitFor(() => {
+      expect(screen.getByText(/Non reply required comment/)).toBeInTheDocument();
+      expect(screen.getByText(/Require reply comment pending reply/)).toBeInTheDocument();
+      expect(screen.getByText(/search:search.load_more/)).toBeInTheDocument();
+    });
 
     fireEvent.click(tabViewBtn);
     await waitFor(() => {
-      expect(screen.getByText(/None reply required comment/)).toBeInTheDocument();
-      expect(screen.getByText(/Require reply comment pending reply/)).toBeInTheDocument();
+      expect(screen.queryByText('process:comments.sent')).toBeInTheDocument();
+      expect(screen.queryByText('process:comments.received')).toBeInTheDocument();
+      expect(screen.queryByText('process:comments.resolved')).toBeInTheDocument();
+    });
+  });
+
+  it('toggles search input', async () => {
+    render(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <ProcessCommentPage />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    const searchBtn = screen.getByTestId('search-btn');
+    expect(searchBtn).toBeInTheDocument();
+    fireEvent.click(searchBtn);
+    await waitFor(() => { expect(screen.getByTestId('search')).toBeInTheDocument() });
+
+    const filterBtn = screen.getByTestId('filter');
+    expect(filterBtn).toBeInTheDocument();
+    fireEvent.click(filterBtn);
+    await waitFor(() => { expect(screen.getByTestId('query-builder')).toBeInTheDocument() });
+
+    fireEvent.click(searchBtn);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('search')).not.toBeInTheDocument()
+      expect(screen.queryByText('process:comments.sent')).toBeInTheDocument();
+      expect(screen.queryByText('process:comments.received')).toBeInTheDocument();
+      expect(screen.queryByText('process:comments.resolved')).toBeInTheDocument();
     });
   });
 });

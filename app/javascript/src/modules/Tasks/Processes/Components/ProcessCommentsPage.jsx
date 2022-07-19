@@ -130,13 +130,18 @@ export default function ProcessCommentsPage() {
     },
     {
       mainElement: matches ? (
-        <IconButton color="primary" data-testid="search" onClick={handleSearch}>
+        <IconButton
+          color="primary"
+          data-testid="search-btn-mobile"
+          onClick={handleSearch}
+          style={{marginTop: '4px'}}
+        >
           <SearchIcon />
         </IconButton>
       ) : (
         <Button
           startIcon={<SearchIcon />}
-          data-testid="search"
+          data-testid="search-btn"
           onClick={handleSearch}
         >
           {t('common:menu.search')}
