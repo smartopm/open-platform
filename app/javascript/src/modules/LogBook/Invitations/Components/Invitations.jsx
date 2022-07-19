@@ -125,14 +125,13 @@ export default function Invitations() {
   function handleCardClick(visit) {
     history.push({
       pathname: `/request/${visit.id}`,
-      search: 'tab=1&type=guest',
       state: { from: 'guests', offset },
     });
   }
 
   function handleViewUser(event, user, isMultiple = false) {
     event.stopPropagation();
-    history.push(`/user/${user.id}?tab=${isMultiple ? 'Invitations' : null}`);
+    history.push(`/user/${user.id}${isMultiple ? '?tab=Invitations' : ''}`);
   }
 
   function paginate(action) {

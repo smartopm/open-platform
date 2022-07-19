@@ -23,7 +23,7 @@ export default function Invitation({
   return (
     <Card
       key={visit.id}
-      clickData={{ clickable: true, handleClick: () => handleCardClick(visit) }}
+      clickdata={{ clickable: true, handleClick: () => handleCardClick(visit) }}
       sx={{ mb: 2 }}
     >
       <Grid container spacing={1}>
@@ -34,7 +34,7 @@ export default function Invitation({
               src={visit.thumbnailUrl}
               variant="square"
               className={classes.avatar}
-              data-testid="video_preview"
+              data-testid="image_preview"
             />
           ) : (
             <Avatar
@@ -112,6 +112,7 @@ export default function Invitation({
               marginRight: '16px',
             }}
             size="small"
+            data-testid="invitation-status"
           />
         </Grid>
         <Grid item md={2} xs={8} style={!matches ? { paddingTop: '8px' } : {}}>
@@ -137,12 +138,16 @@ export default function Invitation({
   );
 }
 
+Invitation.defaultProps = {
+  timeZone: null
+}
+
 Invitation.propTypes = {
-  visit: PropTypes.objectOf(PropTypes.object).isRequired,
-  t: PropTypes.objectOf(PropTypes.Object).isRequired,
-  theme: PropTypes.objectOf(PropTypes.Object).isRequired,
-  loadingStatus: PropTypes.objectOf(PropTypes.Object).isRequired,
-  timeZone: PropTypes.string.isRequired,
+  visit: PropTypes.shape(PropTypes.Object).isRequired,
+  t: PropTypes.func.isRequired,
+  theme: PropTypes.shape(PropTypes.Object).isRequired,
+  loadingStatus: PropTypes.shape(PropTypes.Object).isRequired,
+  timeZone: PropTypes.string,
   handleCardClick: PropTypes.func.isRequired,
   handleGrantAccess: PropTypes.func.isRequired,
   handleViewUser: PropTypes.func.isRequired,
