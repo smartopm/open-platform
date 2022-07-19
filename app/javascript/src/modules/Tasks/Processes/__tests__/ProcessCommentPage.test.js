@@ -82,7 +82,7 @@ describe('Process Comment Page Component', () => {
       request: {
         query: ProcessCommentsQuery,
         variables: {
-          limit: 50,
+          limit: 15,
           query: "",
         }
       },
@@ -149,13 +149,13 @@ describe('Process Comment Page Component', () => {
       expect(screen.queryAllByText('process:comments.received')[0]).toBeInTheDocument();
       expect(screen.queryAllByText('process:comments.resolved')[0]).toBeInTheDocument();
       expect(screen.queryByText('sent comment body')).toBeInTheDocument();
-
-      fireEvent.click(screen.queryAllByText('process:comments.received')[0]);
-      expect(screen.queryByText('received comment body')).toBeInTheDocument();
-
-      fireEvent.click(screen.queryAllByText('process:comments.resolved')[0]);
-      expect(screen.queryByText('received comment body')).toBeInTheDocument();
     });
+
+    fireEvent.click(screen.queryAllByText('process:comments.received')[0]);
+    await waitFor(() => { expect(screen.queryByText('received comment body')).toBeInTheDocument() });
+
+    fireEvent.click(screen.queryAllByText('process:comments.resolved')[0]);
+    await waitFor(() => { expect(screen.queryByText('received comment body')).toBeInTheDocument() });
   });
 
   it('renders the Process comments by list view', async () => {

@@ -166,7 +166,7 @@ export default function ProcessCommentsPage() {
 
   function handleTabValueChange(_event, newValue) {
     history.push(
-      `?tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`
+      `?tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}&&process_name=${processName}`
     );
     setTabValue(Number(newValue));
   }
@@ -346,7 +346,7 @@ export default function ProcessCommentsPage() {
             <CenteredContent>{formatError(processCommentsError.message)}</CenteredContent>
           )}
           <CenteredContent>
-            {processComments?.processComments.length && (
+            {processComments?.processComments.length ? (
               <Button
                 variant="outlined"
                 color="primary"
@@ -355,7 +355,7 @@ export default function ProcessCommentsPage() {
               >
                 {t('search:search.load_more')}
               </Button>
-            )}
+            ) : <span />}
           </CenteredContent>
         </>
       )}
