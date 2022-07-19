@@ -15,10 +15,9 @@ export default function CalendlyEmbed({ isOpen, submitForm }) {
     if (isCalendlyEvent(e)) {
       if(e.data.event === 'calendly.event_scheduled') {
         // attempt to close the calendly modal after submission
-        // calendly-popup-close
         const closeBtn = document.getElementsByClassName('calendly-popup-close')[0]
-        // submit the form from here
-        closeBtn.click()
+        closeBtn?.click()
+        // submit the form after confirming the appointment
         submitForm()
       }
     }
@@ -44,5 +43,4 @@ export default function CalendlyEmbed({ isOpen, submitForm }) {
 CalendlyEmbed.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   submitForm: PropTypes.func.isRequired,
-  close: PropTypes.func.isRequired,
 };
