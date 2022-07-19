@@ -7,6 +7,7 @@ import PaymentForm from '../Components/PaymentForm';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../../__mocks__/authstate';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../../__mocks__/mock_snackbar';
 
 describe('PaymentForm', () => {
   const userEvent = ReactTestUtils.Simulate;
@@ -15,7 +16,9 @@ describe('PaymentForm', () => {
       <MockedProvider>
         <Context.Provider value={userMock}>
           <MockedThemeProvider>
-            <PaymentForm />
+            <MockedSnackbarProvider>
+              <PaymentForm />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </Context.Provider>
       </MockedProvider>

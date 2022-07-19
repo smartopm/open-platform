@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 /* eslint-disable no-nested-ternary */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -17,13 +17,13 @@ import { dateTimeToString, dateToString } from '../../../components/DateContaine
 import Text from '../../../shared/Text';
 import { checkRequests, paginate } from '../utils';
 import { EntryRequestGrant } from '../../../graphql/mutations';
-import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import Paginate from '../../../components/Paginate';
 import useLogbookStyles from '../styles';
 import SearchInput from '../../../shared/search/SearchInput';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function GuestsView({
   tabValue,
@@ -42,11 +42,12 @@ export default function GuestsView({
   const { t } = useTranslation('logbook');
   const [loadingStatus, setLoadingInfo] = useState({ loading: false, currentId: '' });
   const [grantEntry] = useMutation(EntryRequestGrant);
-  const [message, setMessage] = useState({ isError: false, detail: '' });
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
   const classes = useLogbookStyles();
   const theme = useTheme();
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext)
 
 
   useEffect(() => {
@@ -69,15 +70,15 @@ export default function GuestsView({
       fetchPolicy: 'no-cache'
     })
       .then(() => {
-        setMessage({
-          isError: false,
-          detail: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
+        showSnackbar({
+          type: messageType.success,
+          message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
         });
         setLoadingInfo({ ...loadingStatus, loading: false });
         handleAddObservation(log);
       })
       .catch(err => {
-        setMessage({ isError: true, detail: err.message });
+        showSnackbar({ type: messageType.error, message: err.message });
         setLoadingInfo({ ...loadingStatus, loading: false });
       });
   }
@@ -100,13 +101,6 @@ export default function GuestsView({
       {error && !data?.scheduledRequests.length && (
         <CenteredContent>{formatError(error.message)}</CenteredContent>
       )}
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '' })}
-      />
-
       <SearchInput
         title={t('guest.guests')}
         searchValue={value}

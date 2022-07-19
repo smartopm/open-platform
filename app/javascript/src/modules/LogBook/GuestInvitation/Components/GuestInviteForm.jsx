@@ -1,8 +1,8 @@
 /* eslint-disable complexity */
+import React, { useContext, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import React, { useState } from 'react';
 import { useMutation } from 'react-apollo';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,6 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import GuestTime from '../../Components/GuestTime';
 import InvitationCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
-import MessageAlert from '../../../../components/MessageAlert';
 import { formatError, ifNotTest, setObjectValue } from '../../../../utils/helpers';
 import InviteeForm from './InviteeForm';
 import SearchInput from '../../../../shared/search/SearchInput';
@@ -21,6 +20,7 @@ import { UserChip } from '../../../Tasks/Components/UserChip';
 import {  validateGuest } from '../helpers';
 import useGuests from '../hooks/useGuests';
 import PageWrapper from '../../../../shared/PageWrapper';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function GuestInviteForm({inviteDetails, onUpdate, close, update}) {
   const initialData = { firstName: '', lastName: '', companyName: '', phoneNumber: null, isAdded: false };
@@ -34,7 +34,6 @@ export default function GuestInviteForm({inviteDetails, onUpdate, close, update}
     isLoading: inviteDetails?.loading,
     name: inviteDetails?.name
   });
-  const [details, setDetails] = useState({ message: '', isError: false });
   const [createInvitation] = useMutation(InvitationCreateMutation);
   const { t } = useTranslation(['logbook', 'common', 'discussion', 'search']);
   const [invitees, setInvitees] = useState([]);
@@ -44,6 +43,8 @@ export default function GuestInviteForm({inviteDetails, onUpdate, close, update}
   const theme = useTheme();
   const { data, loading, error } = useGuests(searchValue)
   const matchesSmall = useMediaQuery(theme.breakpoints.down('lg'));
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext)
 
   function handleInputChange(event, index) {
     const { name, value } = event.target;
@@ -93,7 +94,7 @@ export default function GuestInviteForm({inviteDetails, onUpdate, close, update}
     });
 
     if (!validInfo.valid && ifNotTest()) {
-      setDetails({ ...details, isError: true, message: validInfo.msg });
+      showSnackbar({ type: messageType.error, message: validInfo.msg });
       return
     }
     setGuestData({ ...guestData, isLoading: true });
@@ -110,18 +111,18 @@ export default function GuestInviteForm({inviteDetails, onUpdate, close, update}
     })
       .then(() => {
         setGuestData({ ...guestData, isLoading: false });
-        setDetails({ ...details, isError: false, message: t('guest.guest_invited') });
+        showSnackbar({ type: messageType.success, message: t('guest.guest_invited') });
         setTimeout(() => history.push('/logbook/guests'), 500);
       })
       .catch(err => {
         setGuestData({ ...guestData, isLoading: false });
-        setDetails({ ...details, message: formatError(err.message), isError: true });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
   function handleAddInvitee(guest) {
     if(!guest.firstName && !guest.companyName) {
-      setDetails({ ...details, message: t('guest.guest_name_required'), isError: true });
+      showSnackbar({ type: messageType.error, message: t('guest.guest_name_required') });
       return
     }
     setInvitees([...invitees, newGuest]);
@@ -151,12 +152,6 @@ export default function GuestInviteForm({inviteDetails, onUpdate, close, update}
   const noUserFound = searchValue && !loading && !data?.searchGuests.length;
   return (
     <PageWrapper pageTitle={t('logbook.guest_invite')} hideWrapper={update}>
-      <MessageAlert
-        type={!details.isError ? 'success' : 'error'}
-        message={details.message}
-        open={!!details.message}
-        handleClose={() => setDetails({ ...details, message: '' })}
-      />
       <Typography variant="subtitle1">
         {update ? t('guest.name_print', { name: guestData?.name }) : t('guest_book.schedule_visit')}
       </Typography>

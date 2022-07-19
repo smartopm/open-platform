@@ -8,6 +8,7 @@ import GuestsView from '../Components/GuestsView';
 import { GuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/userMock';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('Should render Guests View Component', () => {
   const mockHistory = {
@@ -114,15 +115,17 @@ describe('Should render Guests View Component', () => {
         <MockedProvider mocks={[mocks]} addTypename={false}>
           <MemoryRouter>
             <MockedThemeProvider>
-              <GuestsView
-                tabValue={1}
-                handleAddObservation={jest.fn()}
-                offset={0}
-                limit={50}
-                query=""
-                timeZone="Africa/Maputo"
-                speedDialOpen={false}
-              />
+              <MockedSnackbarProvider>
+                <GuestsView
+                  tabValue={1}
+                  handleAddObservation={jest.fn()}
+                  offset={0}
+                  limit={50}
+                  query=""
+                  timeZone="Africa/Maputo"
+                  speedDialOpen={false}
+                />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </MemoryRouter>
         </MockedProvider>
@@ -167,15 +170,17 @@ describe('Should render Guests View Component', () => {
         <MockedProvider mocks={[errorMock]} addTypename={false}>
           <MemoryRouter>
             <MockedThemeProvider>
-              <GuestsView
-                tabValue={1}
-                handleAddObservation={jest.fn()}
-                offset={0}
-                limit={50}
-                query=""
-                timeZone="Africa/Maputo"
-                speedDialOpen={false}
-              />
+              <MockedSnackbarProvider>
+                <GuestsView
+                  tabValue={1}
+                  handleAddObservation={jest.fn()}
+                  offset={0}
+                  limit={50}
+                  query=""
+                  timeZone="Africa/Maputo"
+                  speedDialOpen={false}
+                />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </MemoryRouter>
         </MockedProvider>

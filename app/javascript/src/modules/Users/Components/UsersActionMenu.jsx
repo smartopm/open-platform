@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
@@ -8,7 +8,7 @@ import { useTheme } from '@mui/styles';
 import { CustomizedDialogs, ActionDialog } from '../../../components/Dialog';
 import CreateLabel from '../../Labels/Components/CreateLabel';
 import CampaignIcon from '../../Campaigns/components/CampaignIcon';
-import MessageAlert from '../../../components/MessageAlert';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 const USERS_LABEL_WARNING_LIMIT = 2000;
 export default function UsersActionMenu({
@@ -25,9 +25,10 @@ export default function UsersActionMenu({
   const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false);
   const [selectedLabels, setSelectedLabels] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ isError: false, detail: '' });
   const { t } = useTranslation(['users', 'common']);
   const theme = useTheme();
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   function openLabelSelectModal() {
     setLabelSelectModalOpen(true);
@@ -44,12 +45,6 @@ export default function UsersActionMenu({
 
   return (
     <Grid container data-testid='user_action'>
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '' })}
-      />
       <CustomizedDialogs
         open={labelSelectModalOpen}
         handleModal={() => setLabelSelectModalOpen(false)}
@@ -63,7 +58,8 @@ export default function UsersActionMenu({
           handleLabelSelect={labels => setSelectedLabels(labels)}
           loading={loading}
           setLoading={setLoading}
-          setMessage={setMessage}
+          showSnackbar={showSnackbar}
+          messageType={messageType}
           data={labelsData}
           refetch={labelsRefetch}
         />

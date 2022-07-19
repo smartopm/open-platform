@@ -9,6 +9,7 @@ import { CommunityPlansQuery } from '../graphql/payment_query';
 import currency from '../../../__mocks__/currency';
 import { PaymentReminderMutation } from '../graphql/payment_plan_mutations';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar';
 
 describe('Plans List Item Component', () => {
   const subscriptionPlansData = {
@@ -102,8 +103,8 @@ describe('Plans List Item Component', () => {
               currencyData={currency}
               matches={false}
               setDisplaySubscriptionPlans={jest.fn()}
-              setMessage={jest.fn()}
-              setAlertOpen={jest.fn()}
+              showSnackbar={jest.fn()}
+              messageType={{...mockedSnackbarProviderProps.messageType}}
             />
           </MockedThemeProvider>
         </BrowserRouter>
@@ -138,8 +139,8 @@ describe('Plans List Item Component', () => {
           <SubscriptionPlans
             currencyData={currency}
             matches={false}
-            setMessage={jest.fn}
-            setAlertOpen={jest.fn}
+            showSnackbar={jest.fn}
+            messageType={{...mockedSnackbarProviderProps.messageType}}
             subscriptionPlansLoading={false}
             subscriptionPlansData={subscriptionPlansData}
             subscriptionPlansRefetch={jest.fn}

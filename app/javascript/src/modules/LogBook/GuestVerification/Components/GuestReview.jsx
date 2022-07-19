@@ -12,8 +12,8 @@ import { EntryRequestContext } from '../Context';
 import CenteredContent from '../../../../components/CenteredContent';
 import ImageUploadPreview from '../../../../shared/imageUpload/ImageUploadPreview';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
-import MessageAlert from '../../../../components/MessageAlert';
 import { checkUserInformation, checkInfo, validateAllSteps } from '../utils';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function RequestConfirmation({ handleGotoStep }) {
   const requestContext = useContext(EntryRequestContext);
@@ -22,10 +22,8 @@ export default function RequestConfirmation({ handleGotoStep }) {
   const req = requestContext.request;
   const matches = useMediaQuery('(max-width:800px)');
   const [updateRequest] = useMutation(EntryRequestUpdateMutation);
-  const [errorDetails, setDetails] = useState({
-    isError: false,
-    message: ''
-  });
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   function handleEdit(stepNumber) {
     if (requestContext.request?.imageUrls) {
@@ -41,11 +39,7 @@ export default function RequestConfirmation({ handleGotoStep }) {
     setLoading(true);
     updateRequest({ variables: { id: req.id, status: 'approved' } })
       .then(({ data }) => {
-        setDetails({
-          ...errorDetails,
-          message: t('review_screen.success_message'),
-          isError: false
-        });
+        showSnackbar({ type: messageType.success, message: t('review_screen.success_message') });
         requestContext.updateRequest({
           ...requestContext.request,
           status: data.result.entryRequest.status
@@ -53,18 +47,12 @@ export default function RequestConfirmation({ handleGotoStep }) {
         setLoading(false);
       })
       .catch(error => {
-        setDetails({ ...errorDetails, isError: true, message: error.message });
+        showSnackbar({ type: messageType.error, message: error.message });
         setLoading(false);
       });
   }
   return (
     <>
-      <MessageAlert
-        type={!errorDetails.isError ? 'success' : 'error'}
-        message={errorDetails.message}
-        open={!!errorDetails.message}
-        handleClose={() => setDetails({ ...errorDetails, message: '' })}
-      />
       <Grid container style={!matches ? { padding: '0 300px' } : { padding: '20px' }}>
         {checkInfo(req) ? (
           <Grid item xs={12} sm={12} style={{ marginBottom: '20px' }}>

@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import SubscriptionPlanModal from '../Components/SubscriptionPlanModal'
 import { SubscriptionPlanUpdate } from '../graphql/payment_mutations'
+import { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar'
 
 describe('It should test the subscription plan modal component', () => {
 
@@ -18,6 +19,7 @@ describe('It should test the subscription plan modal component', () => {
   }
 
   const handleModalClose = jest.fn()
+  const showSnackbar = jest.fn()
 
   it('should render test the subscription plan modal', async () => {
     const mock = [{
@@ -44,9 +46,9 @@ describe('It should test the subscription plan modal component', () => {
           <SubscriptionPlanModal
             open
             handleModalClose={handleModalClose}
-            setMessage={jest.fn()}
+            showSnackbar={showSnackbar}
+            messageType={{...mockedSnackbarProviderProps.messageType}}
             subscriptionPlansRefetch={jest.fn()}
-            openAlertMessage={jest.fn()}
             subscriptionData={subscriptionData}
           />
         </MockedProvider>
@@ -59,6 +61,11 @@ describe('It should test the subscription plan modal component', () => {
     await waitFor(
       () => {
         expect(handleModalClose).toBeCalled();
+        expect(showSnackbar).toBeCalledWith({
+          type: mockedSnackbarProviderProps.messageType.success,
+          message: 'misc.subscription_plan_updated'
+
+        });
       },
       { timeout: 100 }
     );

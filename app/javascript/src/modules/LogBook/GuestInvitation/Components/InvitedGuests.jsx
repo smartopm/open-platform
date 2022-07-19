@@ -1,6 +1,6 @@
+import React, { useContext, useState } from 'react';
 import { Dialog, DialogContent, DialogTitle, Grid, useMediaQuery, Button, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
-import React, { useContext, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -18,11 +18,11 @@ import { MyInvitedGuestsQuery } from '../graphql/queries';
 import { InvitationUpdateMutation } from '../graphql/mutations';
 import { useStyles } from '../styles';
 import GuestListCard from './GuestListCard';
-import MessageAlert from '../../../../components/MessageAlert';
 import { formatError , ifNotTest } from '../../../../utils/helpers';
 import { validateGuest } from '../helpers';
 import GuestInviteForm from './GuestInviteForm';
 import PageWrapper from '../../../../shared/PageWrapper';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function InvitedGuests() {
   const history = useHistory();
@@ -48,6 +48,8 @@ export default function InvitedGuests() {
   const [isLoading, setLoading] = useState(false);
   const matches = useMediaQuery(() => theme.breakpoints.down('md'));
   const [searchOpen, setSearchOpen] = useState(false);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext)
 
   function handleEditOpen() {
     handleMenuClose();
@@ -110,13 +112,13 @@ export default function InvitedGuests() {
       }
     })
       .then(() => {
-        setDetails({ ...details, isError: false, message: t('logbook.invite_updated_successful') });
+        showSnackbar({ type: messageType.success, message: t('logbook.invite_updated_successful') });
         setCurrentInvite({ ...currentInvite, loading: false });
         refetch();
       })
       .catch(err => {
         setCurrentInvite({ ...currentInvite, loading: false });
-        setDetails({ ...details, isError: true, message: formatError(err.message) });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
@@ -132,6 +134,7 @@ export default function InvitedGuests() {
     });
 
     if (!validInfo.valid && ifNotTest()) {
+      showSnackbar({ type: messageType.error, message: validInfo.msg });
       setDetails({ ...details, isError: true, message: validInfo.msg });
       updateList();
       return;
@@ -150,18 +153,14 @@ export default function InvitedGuests() {
       }
     })
       .then(() => {
-        setDetails({
-          ...details,
-          isError: false,
-          message: t('logbook.invite_updated_successful')
-        });
+        showSnackbar({ type: messageType.success, message: t('logbook.invite_updated_successful') });
         setCurrentInvite({ ...currentInvite, loading: false });
         setLoading(false);
         updateList();
       })
       .catch(err => {
         setCurrentInvite({ ...currentInvite, loading: false });
-        setDetails({ ...details, isError: true, message: formatError(err.message) });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setLoading(false);
       });
   }
@@ -245,12 +244,6 @@ export default function InvitedGuests() {
           {Boolean(details.message?.length) && <CenteredContent>{details.message}</CenteredContent>}
         </DialogContent>
       </Dialog>
-      <MessageAlert
-        type={!details.isError ? 'success' : 'error'}
-        message={details.message}
-        open={!!details.message}
-        handleClose={() => setDetails({ ...details, message: '' })}
-      />
 
       <MenuList
         open={menuData.open}

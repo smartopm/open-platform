@@ -7,6 +7,7 @@ import { PostDiscussionQuery } from '../../../graphql/queries';
 import PostPage from '../Components/PostPage';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import currentCommunityMock from '../../../__mocks__/currentCommunity';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -34,7 +35,9 @@ describe('NewsPage Component', () => {
         <MockedProvider mocks={[mocks, currentCommunityMock]} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <PostPage />
+              <MockedSnackbarProvider>
+                <PostPage />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>

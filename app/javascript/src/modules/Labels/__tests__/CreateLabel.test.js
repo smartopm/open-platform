@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event'
 import { MockedProvider } from '@apollo/react-testing';
 import CreateLabel from '../Components/CreateLabel';
 import { LabelCreate }from '../../../graphql/mutations';
+import { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar';
 
 describe('Create Label Component', () => {
   const data = {
@@ -47,7 +48,8 @@ describe('Create Label Component', () => {
           handleLabelSelect={jest.fn()}
           loading={false}
           setLoading={jest.fn()}
-          setMessage={jest.fn()}
+          showSnackbar={jest.fn()}
+          messageType={{...mockedSnackbarProviderProps}}
           data={data}
           refetch={jest.fn()}
         />

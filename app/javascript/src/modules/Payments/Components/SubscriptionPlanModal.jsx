@@ -22,8 +22,8 @@ export default function SubscriptionPlanModal({
   open,
   handleModalClose,
   subscriptionPlansRefetch,
-  setMessage,
-  openAlertMessage,
+  showSnackbar,
+  messageType,
   subscriptionData
 }) {
   const { t } = useTranslation(['payment', 'common']);
@@ -94,14 +94,12 @@ export default function SubscriptionPlanModal({
       .then(() => {
         handleModalClose();
         subscriptionPlansRefetch();
-        setMessage({ isError: false, detail: t('misc.subscription_plan_updated') });
-        openAlertMessage();
+        showSnackbar({ type: messageType.success, message: t('misc.subscription_plan_updated') });
         setInputValues(initialPlanState);
         setMutationloading(false);
       })
       .catch(err => {
-        setMessage({ isError: true, detail: formatError(err.message) });
-        openAlertMessage();
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setMutationloading(false);
       });
   }
@@ -120,14 +118,12 @@ export default function SubscriptionPlanModal({
       .then(() => {
         handleModalClose();
         subscriptionPlansRefetch();
-        setMessage({ isError: false, detail: t('misc.subscription_plan_created') });
-        openAlertMessage();
+        showSnackbar({ type: messageType.success, message: t('misc.subscription_plan_created') });
         setInputValues(initialPlanState);
         setMutationloading(false);
       })
       .catch(err => {
-        setMessage({ isError: true, detail: formatError(err.message) });
-        openAlertMessage();
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setMutationloading(false);
       });
   }
@@ -238,8 +234,11 @@ SubscriptionPlanModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   subscriptionPlansRefetch: PropTypes.func.isRequired,
-  setMessage: PropTypes.func.isRequired,
-  openAlertMessage: PropTypes.func.isRequired,
+  showSnackbar: PropTypes.func.isRequired,
+  messageType: PropTypes.shape({
+    success: PropTypes.string,
+    error: PropTypes.string,
+  }).isRequired,
   subscriptionData: PropTypes.shape({
     id: PropTypes.string,
     status: PropTypes.string,

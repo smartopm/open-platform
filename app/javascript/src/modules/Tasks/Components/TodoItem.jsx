@@ -3,7 +3,7 @@
 /* eslint-disable complexity */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -19,9 +19,9 @@ import { Context as AuthStateContext } from '../../../containers/Provider/AuthSt
 import OpenTaskDataList from '../Processes/Components/OpenTaskDataList';
 import TaskListDataList from '../TaskLists/Components/TaskListDataList';
 import { ActionDialog } from '../../../components/Dialog';
-import MessageAlert from '../../../components/MessageAlert';
 import { DeleteTaskList } from '../TaskLists/graphql/task_list_mutation';
 import ProjectDetailsAccordion from '../Processes/Components/ProjectDetailsAccordion';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function TodoItem({
   task,
@@ -50,6 +50,9 @@ export default function TodoItem({
   const history = useHistory();
   const location = useLocation();
   const authState = React.useContext(AuthStateContext);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const taskPermissions = authState?.user?.permissions?.find(
     permissionObject => permissionObject.module === 'note'
   );
@@ -65,8 +68,6 @@ export default function TodoItem({
     errorPolicy: 'all'
   });
   const [isDialogOpen, setOpen] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [info, setInfo] = useState({ loading: false, error: false, message: '' });
   const [taskListDelete] = useMutation(DeleteTaskList);
   const currentPath = useParamsQuery();
   const currentProjectId = currentPath.get('project_id');
@@ -162,22 +163,12 @@ export default function TodoItem({
       variables: { id: task.noteList?.id }
     })
       .then(() => {
-        setInfo({
-          ...info,
-          message: t('menu.task_list_deleted'),
-          loading: false
-        });
+        showSnackbar({ type: messageType.success, message: t('menu.task_list_deleted') });
         setTimeout(refetch, 500);
-        setAlertOpen(true);
         setOpen(!isDialogOpen);
       })
       .catch(err => {
-        setInfo({
-          ...info,
-          error: true,
-          message: formatError(err.message)
-        });
-        setAlertOpen(true);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
@@ -242,13 +233,6 @@ export default function TodoItem({
   return (
     <>
       <div style={{ marginBottom: '10px' }} key={task?.id}>
-        <MessageAlert
-          type={info.error ? 'error' : 'success'}
-          message={info.message}
-          open={alertOpen}
-          handleClose={() => setAlertOpen(false)}
-        />
-
         <ActionDialog
           open={isDialogOpen}
           handleClose={handleDeleteTaskList}

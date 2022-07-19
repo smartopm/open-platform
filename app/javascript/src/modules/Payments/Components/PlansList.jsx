@@ -55,8 +55,8 @@ export function PlansList({
   matches,
   currencyData,
   setDisplaySubscriptionPlans,
-  setMessage,
-  setAlertOpen
+  showSnackbar,
+  messageType,
 }) {
   const { t } = useTranslation(['payment', 'common']);
   const [searchValue, setSearchValue] = useState('');
@@ -65,7 +65,7 @@ export function PlansList({
   const [offset, setOffset] = useState(0);
   const classes = useStyles();
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
-  const [createPaymentRemider] = useMutation(PaymentReminderMutation);
+  const [createPaymentReminder] = useMutation(PaymentReminderMutation);
   const [paymentPlan, setPaymentPlan] = useState(null);
   const [mutationLoading, setMutationLoading] = useState(false);
   const authState = useContext(AuthStateContext);
@@ -135,7 +135,6 @@ export function PlansList({
   function handleAfterMutation() {
     setPaymentPlan(null);
     setMutationLoading(false);
-    setAlertOpen(true);
     setConfirmationModalOpen(false);
     setAnchorEl(null);
     clearSelection();
@@ -149,15 +148,15 @@ export function PlansList({
       variables = selectedPlans;
     }
     setMutationLoading(true);
-    createPaymentRemider({
+    createPaymentReminder({
       variables: { paymentReminderFields: variables }
     })
       .then(() => {
-        setMessage({ isError: false, detail: t('misc.email_sent') });
+        showSnackbar({ type: messageType.success, message: t('misc.email_sent') });
         handleAfterMutation();
       })
       .catch(error => {
-        setMessage({ isError: true, detail: formatError(error.message) });
+        showSnackbar({ type: messageType.error, message: formatError(error.message) });
         handleAfterMutation();
       });
   }
@@ -428,8 +427,8 @@ export function PlansList({
 
 export function SubscriptionPlans({
   matches,
-  setMessage,
-  setAlertOpen,
+  showSnackbar,
+  messageType,
   currencyData,
   subscriptionPlansLoading,
   subscriptionPlansData,
@@ -498,8 +497,8 @@ export function SubscriptionPlans({
           open={subscriptionModalOpen}
           handleModalClose={() => handleModalClose()}
           subscriptionPlansRefetch={subscriptionPlansRefetch}
-          setMessage={setMessage}
-          openAlertMessage={() => setAlertOpen(true)}
+          showSnackbar={showSnackbar}
+          messageType={messageType}
           subscriptionData={subData}
         />
       )}
@@ -685,14 +684,20 @@ PlansList.propTypes = {
     locale: PropTypes.string
   }).isRequired,
   setDisplaySubscriptionPlans: PropTypes.func.isRequired,
-  setMessage: PropTypes.func.isRequired,
-  setAlertOpen: PropTypes.func.isRequired
+  showSnackbar: PropTypes.func.isRequired,
+  messageType: PropTypes.shape({
+    success: PropTypes.string,
+    error: PropTypes.string,
+  }).isRequired,
 };
 
 SubscriptionPlans.propTypes = {
   matches: PropTypes.bool.isRequired,
-  setMessage: PropTypes.func.isRequired,
-  setAlertOpen: PropTypes.func.isRequired,
+  showSnackbar: PropTypes.func.isRequired,
+  messageType: PropTypes.shape({
+    success: PropTypes.string,
+    error: PropTypes.string,
+  }).isRequired,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,
     locale: PropTypes.string

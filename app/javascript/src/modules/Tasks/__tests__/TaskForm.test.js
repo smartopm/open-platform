@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
 import TaskForm from '../Components/TaskForm';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('task form component', () => {
   it('should render and have editable fields', () => {
@@ -19,7 +20,9 @@ describe('task form component', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <TaskForm {...props} />
+            <MockedSnackbarProvider>
+              <TaskForm {...props} />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

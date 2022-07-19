@@ -8,6 +8,7 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/authstate';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import { AllEventLogsQuery } from '../../../graphql/queries';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('LogBook Component', () => {
@@ -79,7 +80,9 @@ describe('LogBook Component', () => {
         <MockedProvider mocks={[eventLogMock]} addTypename={false}>
           <MockedThemeProvider>
             <BrowserRouter>
-              <LogBookItem {...props} />
+              <MockedSnackbarProvider>
+                <LogBookItem {...props} />
+              </MockedSnackbarProvider>
             </BrowserRouter>
           </MockedThemeProvider>
         </MockedProvider>

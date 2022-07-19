@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
@@ -13,13 +13,13 @@ import { dateToString } from '../../../components/DateContainer';
 import { formatError, formatMoney } from '../../../utils/helpers';
 import { StyledTab, StyledTabs, TabPanel } from '../../../components/Tabs';
 import { WalletTransactionUpdate } from '../../../graphql/mutations/transactions';
-import MessageAlert from '../../../components/MessageAlert';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../components/CenteredContent';
 import EventTimeLine from '../../../shared/TimeLine';
 import { paymentStatus } from '../../../utils/constants';
 import DatePickerDialog from '../../../components/DatePickerDialog';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData, isEditing, refetchTransactions }) {
   const initialValues = {
@@ -36,8 +36,10 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
   const [tabValue, setTabValue] = useState('Details');
   const [updateTransaction] = useMutation(WalletTransactionUpdate)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [response, setResponse] = useState({ isError: false, message: '' })
   const { t } = useTranslation('common')
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const changeLogs = useQuery(AllEventLogsQuery, {
     variables: {
       subject: ['payment_update'],
@@ -70,13 +72,13 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
     })
     .then(() => {
       setIsSubmitting(false)
-      setResponse({ ...response, message: 'Successfully Updated Payment' })
+      showSnackbar({ type: messageType.success, message: 'Successfully Updated Payment' });
       refetchTransactions()
       handleClose()
     })
     .catch(err => {
       setIsSubmitting(false)
-      setResponse({ isError: true, message: formatError(err.message) })
+      showSnackbar({ type: messageType.error, message: formatError(err.message) });
     })
   }
 
@@ -89,25 +91,11 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
     setTabValue(value);
   }
 
-  function handleAlertClose(_event, reason){
-    if (reason === 'clickaway') {
-      return;
-    }
-    setResponse({ ...response, message: '' })
-  }
-
   if (changeLogs.loading) return <Spinner />
   if (changeLogs.error) return <CenteredContent>{formatError(changeLogs?.error.message)}</CenteredContent>
 
   return (
     <>
-      <MessageAlert
-        type={response.isError ? 'error' : 'success'}
-        message={response.message}
-        open={!!response.message}
-        handleClose={handleAlertClose}
-      />
-
       <CustomizedDialogs
         handleModal={handleClose}
         open={detailsOpen}

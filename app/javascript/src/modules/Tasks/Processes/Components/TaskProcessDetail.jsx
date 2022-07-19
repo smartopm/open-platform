@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 /* eslint-disable max-statements */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useParams } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQuery } from 'react-apollo';
@@ -25,13 +25,13 @@ import ProjectProcessesSplitView from './ProjectProcessesSplitView';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import { getFormUrl } from '../utils';
-import MessageAlert from '../../../../components/MessageAlert';
 import { ProjectQuery, ProjectCommentsQuery } from '../graphql/process_queries';
 import ProjectDocument from './ProjectDocument';
 import { SubTasksQuery, TaskQuery, TaskDocumentsQuery } from '../../graphql/task_queries';
 import SearchInput from '../../../../shared/search/SearchInput';
 import useDebounce from '../../../../utils/useDebounce';
 import PageWrapper from '../../../../shared/PageWrapper';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function TaskProcessDetail() {
   const limit = 20;
@@ -44,11 +44,12 @@ export default function TaskProcessDetail() {
   const replyingDiscussion = path.get('replying_discussion');
   const [tabValue, setTabValue] = useState(0);
   const [searchText, setSearchText] = useState('');
-  const [messageAlert, setMessageAlert] = useState('');
   const debouncedSearchText = useDebounce(searchText, 300);
   const matches = useMediaQuery('(max-width:1000px)');
   const mobileMatches = useMediaQuery('(max-width:900px)');
   const [splitScreenOpen, setSplitScreenOpen] = useState(false);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const { data: projectData, error: projectDataError, loading: projectDataLoading } = useQuery(
     TaskQuery,
@@ -117,7 +118,7 @@ export default function TaskProcessDetail() {
 
   async function shareOnclick() {
     await navigator.clipboard.writeText(getFormUrl(projectData?.task?.formUser?.formId));
-    setMessageAlert('Link copied to clipboard');
+    showSnackbar({type: messageType.success, message: 'Link copied to clipboard'});
   }
 
   useEffect(() => {
@@ -163,12 +164,6 @@ export default function TaskProcessDetail() {
 
   return (
     <PageWrapper pageTitle={pageTitle}>
-      <MessageAlert
-        type="success"
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={() => setMessageAlert('')}
-      />
       <TaskContextProvider>
         <Grid
           container

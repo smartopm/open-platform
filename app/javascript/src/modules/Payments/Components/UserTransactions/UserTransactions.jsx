@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-underscore-dangle */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Grid from '@mui/material/Grid';
 import { useMutation } from 'react-apollo';
@@ -13,12 +13,12 @@ import Text, { GridText } from '../../../../shared/Text';
 import { dateToString } from '../../../../components/DateContainer';
 import CenteredContent from '../../../../components/CenteredContent';
 import { formatMoney, formatError } from '../../../../utils/helpers';
-import MessageAlert from '../../../../components/MessageAlert';
 import MenuList from '../../../../shared/MenuList';
 import { TransactionRevert } from '../../graphql/payment_mutations';
 import DeleteDialogueBox from '../../../../shared/dialogs/DeleteDialogue';
 import TransactionDetails from './TransactionDetails';
 import { TransactionMobileDataList } from './PaymentMobileDataList';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function UserTransactionsList({
   transaction,
@@ -34,13 +34,13 @@ export default function UserTransactionsList({
   const [revertModalOpen, setRevertModalOpen] = useState(false);
   const [revertTransactionLoading, setRevertTransactionLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [messageAlert, setMessageAlert] = useState('');
   const anchorElOpen = Boolean(anchorEl);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [revertTransaction] = useMutation(TransactionRevert);
   const [transDetailOpen, setTransDetailOpen] = useState(false);
   const [transData, setTransData] = useState({});
   const matches = useMediaQuery('(max-width:600px)');
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const transactionHeader = [
     { title: 'Date', value: t('common:table_headers.date'), col: 1 },
@@ -85,16 +85,14 @@ export default function UserTransactionsList({
     })
       .then(() => {
         setAnchorEl(null);
-        setMessageAlert('Transaction reverted');
-        setIsSuccessAlert(true);
+        showSnackbar({ type: messageType.success, message: 'Transaction reverted' });
         setRevertModalOpen(false);
         setRevertTransactionLoading(false);
         refetch();
         balanceRefetch();
       })
       .catch(err => {
-        setMessageAlert(formatError(err.message));
-        setIsSuccessAlert(false);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setRevertTransactionLoading(false);
       });
   }
@@ -107,13 +105,6 @@ export default function UserTransactionsList({
       handleClick: event => handleClick(event, transaction, userData)
     }
   ];
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
-  }
 
   function handleClose(event) {
     event.stopPropagation();
@@ -147,12 +138,6 @@ export default function UserTransactionsList({
           currencyData={currencyData}
         />
       )}
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
       <DeleteDialogueBox
         open={revertModalOpen}
         handleClose={event => handleRevertClose(event)}

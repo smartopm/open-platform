@@ -14,13 +14,13 @@ import { UserMeetingsQuery, UserEventsQuery } from '../graphql/queries';
 import { UpdateUserMutation } from '../../../../graphql/mutations/user';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
-import MessageAlert from '../../../../components/MessageAlert';
 import { formatError } from '../../../../utils/helpers';
 import LeadEvent from './LeadEvent';
 import ButtonComponent from '../../../../shared/buttons/Button';
 import { MenuProps, secondaryInfoUserObject } from '../../utils';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import Investments from './Investments';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsData }) {
   const [meetingName, setMeetingName] = useState('');
@@ -29,12 +29,14 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
   const [eventName, setEventName] = useState('');
   const authState = useContext(AuthStateContext);
   const communityDivisionTargets = authState?.user?.community?.leadMonthlyTargets;
-  const [message, setMessage] = useState({ isError: false, detail: '' });
   const [leadFormData, setLeadFormData] = useState(data);
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
   const [leadDataUpdate, { loading: divisionLoading }] = useMutation(UpdateUserMutation);
   const { t } = useTranslation('common');
   const mobile = useMediaQuery('(max-width:800px)');
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const {
     data: meetingsData,
     loading: meetingsLoading,
@@ -93,24 +95,22 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         }
       })
         .then(() => {
-          setMessage({
-            ...message,
-            isError: false,
-            detail: t('common:misc.misc_successfully_added', { type: t('common:menu.division') })
+          showSnackbar({
+            type: messageType.success,
+            message: t('common:misc.misc_successfully_added', { type: t('common:menu.division') })
           });
           refetch();
           refetchLeadLabelsData();
         })
         .catch(err => {
-          setMessage({ ...message, isError: true, detail: formatError(err.message) });
+          showSnackbar({ type: messageType.error, message: formatError(err.message) });
         });
     } else {
       eventCreate({ variables: { userId, name, logType } })
         .then(() => {
-          setMessage({
-            ...message,
-            isError: false,
-            detail: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
+          showSnackbar({
+            type: messageType.success,
+            message: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
           });
           setMeetingName('');
           setEventName('');
@@ -118,7 +118,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
           refetchMeetings();
         })
         .catch(err => {
-          setMessage({ ...message, isError: true, detail: formatError(err.message) });
+          showSnackbar({ type: messageType.error, message: formatError(err.message) });
         });
     }
   }
@@ -131,13 +131,6 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
 
   return (
     <form style={{ margin: '0 -25px 0 -25px' }}>
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '' })}
-      />
-
       {communityDivisionTargets && communityDivisionTargets?.length >= 2 ? (
         <Grid container>
           <Grid item md={12} xs={12}>
