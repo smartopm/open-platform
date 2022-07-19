@@ -58,10 +58,10 @@ describe('Invitation Component', () => {
         },
         error: {
           main: '',
-        }
-      }
+        },
+      },
     },
-    loadingStatus: {},
+    loadingStatus: {}
   };
 
   it('should render an invitation card', () => {
@@ -92,5 +92,60 @@ describe('Invitation Component', () => {
     expect(container.getByText('guest_book.visit_time')).toBeInTheDocument();
     expect(container.getByText('guest_book.invalid_now')).toBeInTheDocument();
     expect(container.getByText('access_actions.grant_access')).toBeInTheDocument();
+  });
+
+  it('should render first character of visit name as avatar', () => {
+    const customProps = { ...props, visit: { ...props.visit, thumbnailUrl: null } };
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <Invitation {...customProps} />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    expect(container.getByTestId('request_preview')).toBeInTheDocument();
+  });
+
+  it('should render user name if not multiple invites', () => {
+    const customProps = { ...props, visit: { ...props.visit, multipleInvites: false, status: 'canceled' } };
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <Invitation {...customProps} />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    expect(container.getByTestId('user_name')).toBeInTheDocument();
+    expect(container.getByText('guest_book.pending')).toBeInTheDocument();
+  });
+
+  it('should render spinner instead as start icon for grant access btn', () => {
+    const customProps = {
+      ...props,
+      loadingStatus: { loading: true, currentId: 'a91dbad4-eeb4' },
+    };
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <Invitation {...customProps} />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    expect(container.getByTestId('loader')).toBeInTheDocument();
   });
 });
