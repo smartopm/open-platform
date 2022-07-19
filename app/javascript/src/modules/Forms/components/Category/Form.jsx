@@ -82,7 +82,7 @@ export default function Form({
         history.push('/');
       }, 3000);
     }
-  }, [formState.isDraft, formState.successfulSubmit]);
+  }, [formState.isDraft, formState.successfulSubmit, hasAppointment]);
 
   function handleEditCategory(category) {
     setCategoryFormOpen(true);
@@ -162,6 +162,7 @@ export default function Form({
     if(hasAppointment && !verified) {
       window.FormPropertyData = formData
       window.FilledInProperties = formProperties
+      window.FormCategories = categoriesData.data?.formCategories
       setShowCalendly(true)
      return
     }
