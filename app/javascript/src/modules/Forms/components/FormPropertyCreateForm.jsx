@@ -241,9 +241,9 @@ export default function FormPropertyCreateForm({
               style={{ width: '100%' }}
               className="form-property-field-name-txt-input"
               inputProps={{ 'data-testid': 'long_desc' }}
+              required={propertyData.fieldType === 'invitation'}
               margin="normal"
               multiline
-              required={propertyData.fieldType === 'invitation'}
             />
           </Grid>
           <Grid item md={12} xs={12}>
