@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 
-export default function InvitationInput({ properties }) {
+export default function AppointmentInput({ properties }) {
   return (
     <>
       <Typography variant="caption">{properties.fieldName}</Typography>
@@ -12,7 +12,7 @@ export default function InvitationInput({ properties }) {
   );
 }
 
-InvitationInput.propTypes = {
+AppointmentInput.propTypes = {
   properties: PropTypes.shape({
     fieldName: PropTypes.string,
     longDesc: PropTypes.string,

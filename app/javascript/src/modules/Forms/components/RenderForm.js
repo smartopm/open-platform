@@ -27,7 +27,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
 import PaymentInput from './FormProperties/PaymentInput';
 import { currencies } from '../../../utils/constants';
-import InvitationInput from './FormProperties/InvitationInput';
+import AppointmentInput from './FormProperties/AppointmentInput';
 import FormPropertyWrapper from './FormProperties/FormPropertyWrapper';
 
 export default function RenderForm({
@@ -318,7 +318,7 @@ export default function RenderForm({
       />
     ),
     payment: <PaymentInput properties={formPropertiesData} communityCurrency={communityCurrency} />,
-    appointment: <InvitationInput properties={formPropertiesData} />,
+    appointment: <AppointmentInput properties={formPropertiesData} />,
   };
   return (
     <Grid style={!editMode && !matches ? { padding: '0 120px' } : {}}>
