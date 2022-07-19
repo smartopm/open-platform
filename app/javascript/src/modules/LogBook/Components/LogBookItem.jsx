@@ -19,8 +19,6 @@ import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import Paginate from '../../../components/Paginate';
 import GuestsView from './GuestsView';
-import VisitView from './VisitView';
-import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
 import { accessibleMenus, paginate } from '../utils';
 import GateFlowReport from './GateFlowReport';
@@ -192,12 +190,6 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
 
   return (
     <PageWrapper pageTitle={t('common:misc.access')}>
-      <MessageAlert
-        type={!observationDetails.isError ? 'success' : 'error'}
-        message={observationDetails.message}
-        open={!!observationDetails.message}
-        handleClose={handleCloseAlert}
-      />
       <DialogWithImageUpload
         open={isObservationOpen}
         handleDialogStatus={() => handleCancelClose()}
