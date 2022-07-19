@@ -13,10 +13,10 @@ import { ProcessCommentsQuery, ProcessReplyComments } from '../graphql/process_q
 import SearchInput from '../../../../shared/search/SearchInput';
 import { Spinner } from '../../../../shared/Loading';
 import useDebouncedValue from '../../../../shared/hooks/useDebouncedValue';
+import useFetchMoreRecords from '../../../../shared/hooks/useFetchMoreRecords';
 import CenteredContent from '../../../../shared/CenteredContent';
 import MenuList from '../../../../shared/MenuList';
 import { formatError, handleQueryOnChange, objectAccessor, useParamsQuery } from '../../../../utils/helpers';
-import Paginate from '../../../../components/Paginate';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 import PageWrapper from '../../../../shared/PageWrapper';
 import ProcessCommentItem from './ProcessCommentItem';
@@ -29,12 +29,11 @@ export default function ProcessCommentsPage() {
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
   const history = useHistory();
   const path = useParamsQuery();
-  const { t } = useTranslation(['common', 'process', 'task']);
+  const { t } = useTranslation(['common', 'process', 'task', 'search']);
   const [tabValue, setTabValue] = useState(0);
   const processName = path.get('process_name');
   const [viewType, setViewType] = useState('tab');
-  const limit = 50;
-  const [offset, setOffset] = useState(0);
+  const limit = 15;
   const [anchorEl, setAnchorEl] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -48,10 +47,18 @@ export default function ProcessCommentsPage() {
   });
 
   const [loadProcessComments,
-    { data: processComments, loading: processCommentsLoading, error: processCommentsError },
+    {
+      fetchMore,
+      data: processComments,
+      loading: processCommentsLoading,
+      error: processCommentsError
+    },
   ] = useLazyQuery(ProcessCommentsQuery, {
-    variables: { processId, limit: 50, query: value }
+    variables: { processId, limit, query: value }
   });
+
+  const variables = { offset: processComments?.processComments?.length };
+  const { loadMore, hasMoreRecord } = useFetchMoreRecords(fetchMore, 'processComments', variables);
 
   useEffect(() => {
     if (viewType === 'list') {
@@ -181,17 +188,6 @@ export default function ProcessCommentsPage() {
 
   function queryOnChange(selectedOptions) {
     setSearchValue(handleQueryOnChange(selectedOptions, commentsFilterFields));
-  }
-
-  function paginate(action) {
-    if (action === 'prev') {
-      if (offset < limit) {
-        return;
-      }
-      setOffset(offset - limit);
-    } else if (action === 'next') {
-      setOffset(offset + limit);
-    }
   }
 
   return (
@@ -350,13 +346,16 @@ export default function ProcessCommentsPage() {
             <CenteredContent>{formatError(processCommentsError.message)}</CenteredContent>
           )}
           <CenteredContent>
-            <Paginate
-              count={processComments?.processComments?.length}
-              offSet={offset}
-              limit={limit}
-              active={offset >= 1}
-              handlePageChange={paginate}
-            />
+            {processComments?.processComments.length && (
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={loadMore}
+                disabled={processCommentsLoading || !hasMoreRecord}
+              >
+                {t('search:search.load_more')}
+              </Button>
+            )}
           </CenteredContent>
         </>
       )}
