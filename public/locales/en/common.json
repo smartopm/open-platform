@@ -314,7 +314,8 @@
     "transaction_logs": "Transaction Logs",
     "add_payment": "Add Payment",
     "access": "Access",
-    "reload": "Reload"
+    "reload": "Reload",
+    "logs": "Logs"
   },
   "menu": {
     "invoice": "Invoice",
