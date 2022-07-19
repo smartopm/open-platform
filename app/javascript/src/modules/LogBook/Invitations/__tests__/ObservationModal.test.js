@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import { MockedProvider } from '@apollo/react-testing';
 import { useTranslation } from 'react-i18next';
@@ -38,7 +38,7 @@ describe('ObservationModal Component', () => {
     expect(container.getAllByTestId('loader').length).toBeGreaterThan(0);
   });
 
-  it('should render observation modal for creating an observation', async () => {
+  it('should render observation modal for creating an observation', () => {
     const newProps = { ...props, observationDetails: { loading: false } }
     const container = render(
       <Context.Provider value={authState}>
@@ -50,15 +50,18 @@ describe('ObservationModal Component', () => {
       </Context.Provider>
     );
 
-    await waitFor(() => {
-      expect(container.getByTestId('entry-dialog')).toBeInTheDocument();
-      expect(container.getByText('observations.observation_title')).toBeInTheDocument();
-      expect(container.getByText('observations.add_your_observation')).toBeInTheDocument();
-      expect(container.getByTestId('entry-dialog-field')).toBeInTheDocument();
-      expect(container.getByTestId('upload_label')).toBeInTheDocument();
-      expect(container.getAllByTestId('upload_button').length).toBeGreaterThan(0);
-      expect(container.getByTestId('upload_label')).toBeInTheDocument();
-      expect(container.getByTestId('save')).toBeInTheDocument();
-    })
+    expect(container.getByTestId('entry-dialog')).toBeInTheDocument();
+    expect(container.getByTestId('entry-dialog-title')).toBeInTheDocument();
+    expect(container.getByTestId('entry-dialog-close-icon')).toBeInTheDocument();
+    expect(container.getByTestId('CloseIcon')).toBeInTheDocument();
+    expect(container.getByText('observations.add_your_observation')).toBeInTheDocument();
+    expect(container.getAllByText('logbook.add_observation').length).toBeGreaterThan(0);
+    expect(container.getByText('observations.observation_title')).toBeInTheDocument();
+    expect(container.getByText('observations.observation_title')).toBeInTheDocument();
+    expect(container.getByText('Note')).toBeInTheDocument();
+    expect(container.getByTestId('entry-dialog-field')).toBeInTheDocument();
+    expect(container.getAllByTestId('upload_button').length).toBeGreaterThan(0);
+    expect(container.getByTestId('upload_label')).toBeInTheDocument();
+    expect(container.getByTestId('save')).toBeInTheDocument();
   });
 });
