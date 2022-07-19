@@ -59,7 +59,7 @@ describe('Side Nav component', () => {
     expect(container.queryAllByTestId('sidenav-container')).toHaveLength(1);
 
     expect(container.queryByText('misc.users')).toBeInTheDocument();
-    expect(container.queryByText('misc.log_book')).toBeInTheDocument();
+    expect(container.queryByText('misc.access')).toBeInTheDocument();
     expect(container.queryByText('misc.time_card')).toBeInTheDocument();
     expect(container.queryByText('misc.action_flows')).toBeInTheDocument();
     expect(container.queryByText('menu.community')).toBeInTheDocument();
