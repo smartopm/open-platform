@@ -130,7 +130,7 @@ describe('Should render Visits View Component', () => {
   };
 
   it('should render proper data', async () => {
-    const { getAllByTestId, getByText, queryByTestId } = render(
+    const { getAllByTestId, getByText, getByTestId } = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[mocks]} addTypename>
           <MemoryRouter>
@@ -142,9 +142,9 @@ describe('Should render Visits View Component', () => {
       </Context.Provider>
     );
     await waitFor(() => {
-      expect(queryByTestId('access_search')).toBeInTheDocument();
-      expect(queryByTestId('reload')).toBeInTheDocument();
-      expect(queryByTestId('add_button')).toBeInTheDocument();
+      expect(getByTestId('access_search')).toBeInTheDocument();
+      expect(getByTestId('reload')).toBeInTheDocument();
+      expect(getByTestId('add_button')).toBeInTheDocument();
       expect(getByText('logbook.total_entries')).toBeInTheDocument();
       expect(getByText('logbook.total_exits')).toBeInTheDocument();
       expect(getByText('logbook.total_in_city')).toBeInTheDocument();
@@ -173,9 +173,21 @@ describe('Should render Visits View Component', () => {
       expect(getAllByTestId('prev-btn')[0]).toBeInTheDocument();
       expect(getAllByTestId('next-btn')[0]).toBeInTheDocument();
 
-      fireEvent.click(queryByTestId('access_search'));
-      fireEvent.click(queryByTestId('reload'));
-      fireEvent.click(queryByTestId('add_button'));
+      fireEvent.click(getByTestId('add_button'));
+      expect(getByText('logbook.new_invite')).toBeInTheDocument();
+      expect(getByText('logbook.add_observation')).toBeInTheDocument();
+
+      fireEvent.click(getByText('logbook.new_invite'));
+      expect(mockHistory.push).toBeCalled();
+
+      fireEvent.click(getByText('logbook.add_observation'));
+      expect(getByText('observations.add_your_observation')).toBeInTheDocument();
+      fireEvent.change(getByTestId('entry-dialog-field'), {
+        target: { value: 'This is an observation' }
+      });
+      expect(getByTestId('entry-dialog-field').value).toBe('This is an observation');
+      fireEvent.click(getByTestId('save'));
+
       fireEvent.click(getAllByTestId('log_exit')[0]);
       fireEvent.click(getAllByTestId('card')[3]);
       expect(mockHistory.push).toBeCalled();
@@ -185,6 +197,11 @@ describe('Should render Visits View Component', () => {
       expect(getAllByTestId('user_name')[0].textContent).toContain('Js user x');
       expect(mockHistory.push).toBeCalled();
       expect(mockHistory.push).toBeCalledWith('/user/162f7517'); // check if it routes to the user page
+
+      fireEvent.click(getAllByTestId('next-btn')[0]);
+      fireEvent.click(getByTestId('access_search'));
+      expect(getByTestId('search')).toBeInTheDocument();
+      fireEvent.click(getByTestId('reload'));
     }, 100);
   });
 
