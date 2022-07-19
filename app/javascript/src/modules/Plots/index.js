@@ -13,7 +13,7 @@ export default {
   styleProps: {
     icon: <MapIcon />
   },
-  name: t => t('menu.plot', { count: 0 }),
+  name: t => t('menu.my_properties'),
   featureName: 'Properties',
   accessibleBy: [
     'client',

@@ -15,7 +15,7 @@ export default {
     path: '/amenities',
     component: RenderAmenities
   },
-  name: t => t('misc.amenity', { count: 0 }),
+  name: t => t('misc.book_amenity', { count: 0 }),
   featureName: 'Amenity',
   moduleName: 'amenity',
   accessibleBy: []

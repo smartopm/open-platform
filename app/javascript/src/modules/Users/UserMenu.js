@@ -53,7 +53,7 @@ const userMenus = [
       path: '/user/:id?tab=Plots',
       component: <span />
     },
-    name: t => t('menu.plot', { count: 0 }),
+    name: t => t('menu.properties'),
     featureName: 'Properties',
     accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx })
   },
