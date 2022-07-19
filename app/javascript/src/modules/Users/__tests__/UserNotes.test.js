@@ -4,6 +4,7 @@ import { render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import UserNotes from '../Components/UserNotes';
 import { UserNotesQuery } from '../../../graphql/queries';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('user notes component', () => {
   it('should render correct notes details', async () => {
@@ -28,7 +29,9 @@ describe('user notes component', () => {
 
     const container = render(
       <MockedProvider mocks={[notesMock]} addTypename={false}>
-        <UserNotes userId="some29384293812" tabValue={2} />
+        <MockedSnackbarProvider>
+          <UserNotes userId="some29384293812" tabValue={2} />
+        </MockedSnackbarProvider>
       </MockedProvider>
     );
     await waitFor(() => {

@@ -13,17 +13,17 @@ module Types
     field :seen_at, GraphQL::Types::ISO8601DateTime, null: true
     field :header, String, null: true
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def header
-      case object.category
-      when 'comment', 'reply_requested'
-        object.notifable&.note&.body
-      when 'task'
-        object.notifable&.body
-      when 'message'
-        object.notifable&.sender&.name
+      batch_load(object, :notifable).then do |notifable|
+        case object.category
+        when 'comment', 'reply_requested'
+          notifable&.body
+        when 'task'
+          notifable&.body
+        when 'message'
+          batch_load(notifable, :sender).then(&:name)
+        end
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
   end
 end

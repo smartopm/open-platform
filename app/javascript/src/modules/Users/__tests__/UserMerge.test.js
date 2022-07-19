@@ -3,6 +3,8 @@ import { render, fireEvent } from '@testing-library/react'
 
 import { MockedProvider } from '@apollo/react-testing'
 import UserMerge from '../Components/UserMerge'
+import { SnackbarContext } from '../../../shared/snackbar/Context'
+import { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar'
 
 describe('user merge component', () => {
   it('should should include callable buttons', () => {
@@ -13,7 +15,9 @@ describe('user merge component', () => {
     }
     const container = render(
       <MockedProvider mocks={[]}>
-        <UserMerge {...props} />
+        <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+          <UserMerge {...props} />
+        </SnackbarContext.Provider>
       </MockedProvider>
     )
     const mergeBtn = container.queryByText('users:users.merge_user')
@@ -25,8 +29,9 @@ describe('user merge component', () => {
     expect(closeHandler).toHaveBeenCalled()
     fireEvent.click(mergeBtn)
     // since no user will be selected expect an error
-    expect(
-      container.queryByText('errors.no_user_selected')
-    ).toBeInTheDocument()
+    expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+      type: mockedSnackbarProviderProps.messageType.error,
+      message: 'errors.no_user_selected'
+    });
   })
 })

@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import GateFlowReport from '../Components/GateFlowReport';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import { logbookEventLogsQuery } from '../graphql/guestbook_queries';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('GateFlowReport', () => {
   it('should properly render the logs report view', async () => {
@@ -22,7 +23,9 @@ describe('GateFlowReport', () => {
     const wrapper = render(
       <MockedProvider mocks={[eventsMock]}>
         <MockedThemeProvider>
-          <GateFlowReport />
+          <MockedSnackbarProvider>
+            <GateFlowReport />
+          </MockedSnackbarProvider>
         </MockedThemeProvider>
       </MockedProvider>
     );

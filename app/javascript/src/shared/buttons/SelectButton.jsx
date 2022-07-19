@@ -26,7 +26,8 @@ export default function SelectButton({
   selectedKey,
   handleClick,
   style,
-  mobileIcon
+  mobileIcon,
+  testId
 }) {
   const [openSubMenu, setOpenSubMenu] = useState({ isOpen: false, name: '' });
   const [buttonText, setButtonText] = useState(null);
@@ -67,7 +68,7 @@ export default function SelectButton({
           <Button>{buttonText || defaultButtonText}</Button>
           <Button
             onClick={e => handleClick(e)}
-            data-testid="arrow-icon"
+            data-testid={`${testId || 'arrow-icon'}`}
             className="option_menu_toggler"
           >
             <ArrowDropDownIcon />
@@ -165,7 +166,8 @@ SelectButton.defaultProps = {
   anchorRef: {},
   style: {},
   mobileIcon: undefined,
-  options: []
+  options: [],
+  testId: null
 };
 
 SelectButton.propTypes = {
@@ -193,5 +195,6 @@ SelectButton.propTypes = {
   selectedKey: PropTypes.string,
   handleClick: PropTypes.func.isRequired,
   style: PropTypes.shape({}),
-  mobileIcon: PropTypes.node
+  mobileIcon: PropTypes.node,
+  testId: PropTypes.string
 };

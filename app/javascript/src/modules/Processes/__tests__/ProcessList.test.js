@@ -11,6 +11,7 @@ import { ProcessTemplatesQuery } from '../graphql/process_list_queries';
 import processMock from '../__mocks__/processMock';
 import ProcessList from '../Components/ProcessList';
 import { ProcessDeleteMutation } from '../graphql/process_list_mutation';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Process Template Lists', () => {
@@ -80,7 +81,9 @@ describe('Process Template Lists', () => {
         <Context.Provider value={adminUser}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProcessList />
+              <MockedSnackbarProvider>
+                <ProcessList />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -97,7 +100,9 @@ describe('Process Template Lists', () => {
         <Context.Provider value={adminUser}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProcessList />
+              <MockedSnackbarProvider>
+                <ProcessList />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -119,7 +124,9 @@ describe('Process Template Lists', () => {
         <Context.Provider value={adminUser}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProcessList />
+              <MockedSnackbarProvider>
+                <ProcessList />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -141,7 +148,9 @@ describe('Process Template Lists', () => {
         <Context.Provider value={adminUser}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProcessList />
+              <MockedSnackbarProvider>
+                <ProcessList />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -159,7 +168,9 @@ describe('Process Template Lists', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProcessList />
+              <MockedSnackbarProvider>
+                <ProcessList />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>

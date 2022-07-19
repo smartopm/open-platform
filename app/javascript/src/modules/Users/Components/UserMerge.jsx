@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Grid, Typography, TextField } from '@mui/material';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -8,18 +8,18 @@ import { MergeUsersMutation } from '../../../graphql/mutations';
 import { ModalDialog } from '../../../components/Dialog';
 import useDebounce from '../../../utils/useDebounce';
 import { UsersLiteQuery } from '../../../graphql/queries';
-import MessageAlert from '../../../components/MessageAlert';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function UserMerge({ userId, close }) {
   const [merge] = useMutation(MergeUsersMutation);
   const [loading, setLoading] = useState(false);
   const [open, setConfirmOpen] = useState(false);
-  const [message, setMessage] = useState("");
   const [searchedUser, setSearchUser] = useState('');
   const [duplicateUserId, setDuplicateUserId] = useState(null)
   const debouncedValue = useDebounce(searchedUser, 500);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const { t } = useTranslation(['common', 'users'])
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
     variables: { query: debouncedValue, limit: 10 },
@@ -34,41 +34,26 @@ export default function UserMerge({ userId, close }) {
       variables: { id: userId, duplicateId: duplicateUserId }
     })
       .then(() => {
-          setLoading(false);
-      setIsSuccessAlert(true)
-      setMessage(t('users:users.user_merged'));
-      // delay the closing of the modal to allow the success message to show
-      setTimeout(() => close(), 1000)
+        setLoading(false);
+        showSnackbar({type: messageType.success, message: t('users:users.user_merged') });
+        // delay the closing of the modal to allow the success message to show
+        setTimeout(() => close(), 1000)
       })
       .catch(err => {
-        setMessage(err.message);
+        showSnackbar({type: messageType.error, message: err.message });
         setLoading(false);
-        setIsSuccessAlert(false)
       });
-  }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessage("");
   }
 
   function handleConfirmMerge() {
     if (!duplicateUserId) {
-      setMessage(t('errors.no_user_selected'));
+      showSnackbar({type: messageType.error, message: t('errors.no_user_selected') });
       return;
     }
     setConfirmOpen(!open);
   }
   return (
     <>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={message}
-        open={!!message}
-        handleClose={handleMessageAlertClose}
-      />
       <ModalDialog
         open={open}
         handleClose={() => setConfirmOpen(!open)}

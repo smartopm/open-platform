@@ -16,7 +16,6 @@ import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import Paginate from '../../../components/Paginate';
 import VisitView from './VisitView';
-import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
 import { accessibleMenus, paginate } from '../utils';
 import GateFlowReport from './GateFlowReport';
@@ -27,6 +26,7 @@ import { AllEventLogsQuery } from '../../../graphql/queries';
 import SearchInput from '../../../shared/search/SearchInput';
 import PageWrapper from '../../../shared/PageWrapper';
 import ObservationModal from '../Invitations/Components/ObservationModal';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 const limit = 20;
 const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
@@ -54,6 +54,8 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
   const { value, dbcValue, setSearchValue } = useDebouncedValue();
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext)
 
   const eventsData = useQuery(AllEventLogsQuery, {
     variables: {
@@ -141,16 +143,13 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
       }
     })
       .then(() => {
-        setDetails({
-          ...observationDetails,
-          loading: false,
-          isError: false,
-          refetch: true,
-          message:
-            type === 'exit'
+        showSnackbar({
+          type: messageType.success,
+          message: type === 'exit'
               ? t('logbook:observations.created_observation_exit')
               : t('logbook:observations.created_observation')
         });
+        setDetails({ ...observationDetails, loading: false, refetch: true });
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
         eventsData.refetch();
@@ -158,12 +157,8 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
         resetImageData();
       })
       .catch(err => {
-        setDetails({
-          ...observationDetails,
-          loading: false,
-          isError: true,
-          message: err.message
-        });
+        showSnackbar({ type: messageType.error, message: err.message });
+        setDetails({ ...observationDetails, loading: false });
         // reset state in case it errs and user chooses a different log
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
@@ -184,19 +179,8 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
     resetImageData();
   }
 
-  function handleCloseAlert() {
-    // clear and allow visit view to properly refetch
-    setDetails({ ...observationDetails, message: '', refetch: false });
-  }
-
   return (
     <PageWrapper pageTitle={t('common:misc.log_book')}>
-      <MessageAlert
-        type={!observationDetails.isError ? 'success' : 'error'}
-        message={observationDetails.message}
-        open={!!observationDetails.message}
-        handleClose={handleCloseAlert}
-      />
       <ObservationModal
         isObservationOpen={isObservationOpen}
         handleCancelClose={handleCancelClose}

@@ -29,13 +29,13 @@ import {
   EntryRequestUpdateMutation,
   SendGuestQrCodeMutation
 } from '../graphql/logbook_mutations';
-import MessageAlert from '../../../components/MessageAlert';
 import { checkInValidRequiredFields, defaultRequiredFields , checkRequests } from '../utils';
 import QRCodeConfirmation from './QRCodeConfirmation';
 import FeatureCheck, { featureCheckHelper } from '../../Features';
 import { EntryRequestContext } from '../GuestVerification/Context';
 import { initialRequestState } from '../GuestVerification/constants'
 import AccessCheck from '../../Permissions/Components/AccessCheck';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 
 export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest, handleNext }) {
@@ -76,6 +76,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const [emailError, setEmailError] = useState(false);
   const showCancelBtn = previousRoute || tabValue || !!guestListRequest
 
+  const { showSnackbar, messageType } = useContext(SnackbarContext)
+
   useEffect(() => {
     if (formData.reason === 'other') {
       setReasonModal(true);
@@ -89,14 +91,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       if (requestValidity.valid) {
         grantEntry({ variables: { id: formData.id } })
           .then(() => {
-            setDetails({
-              ...observationDetails,
-              isError: false,
-              scanLoading: true,
-              message: t('logbook:logbook.success_message', {
-                action: t('logbook:logbook.granted')
-              })
-            });
+            showSnackbar({ type: messageType.success, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })});
+            setDetails({ ...observationDetails, scanLoading: true });
             setTimeout(() => {
               setDetails({
                 ...observationDetails,
@@ -108,12 +104,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             }, 1000);
           })
           .catch(err => {
-            setDetails({
-              ...observationDetails,
-              isError: true,
-              scanLoading: true,
-              message: err.message
-            });
+            showSnackbar({ type: messageType.error, message: err.message });
+            setDetails({ ...observationDetails, scanLoading: true });
             setTimeout(() => {
               setDetails({
                 ...observationDetails,
@@ -125,12 +117,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             }, 1000);
           });
       } else {
-        setDetails({
-          ...observationDetails,
-          isError: true,
-          scanLoading: true,
-          message: requestValidity.title
-        });
+        showSnackbar({ type: messageType.error, message: requestValidity.title });
+        setDetails({ ...observationDetails, scanLoading: true });
         setTimeout(() => {
           setDetails({ ...observationDetails, isError: false, scanLoading: false, message: '' });
           history.push(`/logbook?tab=1`);
@@ -170,14 +158,11 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       }
     })
       .then(() => {
-        setDetails({
-          ...observationDetails,
-          message: t('qrcode_confirmation.qr_code_sent')
-        });
+        showSnackbar({ type: messageType.success, message: t('qrcode_confirmation.qr_code_sent') });
         setTimeout(() => closeQrModal(), 100);
       })
       .catch(error => {
-        setDetails({ ...observationDetails, isError: true, message: error.message });
+        showSnackbar({ type: messageType.error, message: error.message });
       });
   }
 
@@ -210,11 +195,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           setRequestId(response.data.result.entryRequest.id);
           setLoading(false)
           if (isGuestRequest) {
-            setDetails({
-              ...observationDetails,
-              isError: false,
-              message: t('logbook:logbook.registered_guest_created')
-            });
+            showSnackbar({ type: messageType.success, message: t('logbook:logbook.registered_guest_created') });
             setGuestRequest(response.data.result.entryRequest);
             setQrModal(true);
             return false
@@ -236,7 +217,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         })
         .catch(err => {
           setLoading(false)
-          setDetails({ ...observationDetails, isError: true, message: err.message });
+          showSnackbar({ type: messageType.error, message: err.message });
         })
     );
   }
@@ -251,11 +232,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       // eslint-disable-next-line no-shadow
       .then((response) => {
         setLoading(false);
-        setDetails({
-          ...observationDetails,
-          message: t('logbook:logbook.registered_guest_updated')
-        });
-        setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
+        showSnackbar({ type: messageType.success, message: t('logbook:logbook.registered_guest_updated') });
         const res = response.data.result.entryRequest
         requestContext.updateRequest({
           ...requestContext.request, ...res
@@ -266,7 +243,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       })
       .catch(error => {
         setLoading(false);
-        setDetails({ ...observationDetails, isError: true, message: error.message });
+        showSnackbar({ type: messageType.error, message: error.message });
       });
   }
 
@@ -283,15 +260,12 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     handleCreateRequest('deny')
     .then(requestId => denyEntry({ variables: { id: requestId } }))
       .then(() => {
-        setDetails({
-          ...observationDetails,
-          message: t('logbook:logbook.success_message', { action: t('logbook:logbook.denied') })
-        });
+        showSnackbar({ type: messageType.success, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.denied') }) });
         setLoading(false);
       })
       .catch(error => {
         setLoading(false);
-        setDetails({ ...observationDetails, isError: true, message: error.message });
+        showSnackbar({ type: messageType.error, message: error.message });
       });
   }
 
@@ -384,12 +358,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         emailHandler={{ value: qrCodeEmail, handleEmailChange: setQrCodeEmail }}
         sendQrCode={sendQrCode}
         guestRequest={guestRequest}
-      />
-      <MessageAlert
-        type={!observationDetails.isError ? 'success' : 'error'}
-        message={observationDetails.message}
-        open={!!observationDetails.message}
-        handleClose={() => setDetails({ ...observationDetails, message: '' })}
       />
       <ModalDialog
         handleClose={() => setModal(false)}

@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-one-expression-per-line */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useMutation, useQuery } from 'react-apollo';
@@ -13,11 +13,11 @@ import { useTranslation } from 'react-i18next';
 import { DealDetailsQuery, LeadInvestmentsQuery, InvestmentStatsQuery } from '../graphql/queries';
 import CreateEvent from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
-import MessageAlert from '../../../../components/MessageAlert';
 import { formatError } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import ButtonComponent from '../../../../shared/buttons/Button';
 import CenteredContent from '../../../../shared/CenteredContent';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function Investments({ userId }) {
   const { t } = useTranslation('common');
@@ -26,7 +26,9 @@ export default function Investments({ userId }) {
   const [investmentTarget, setInvestmentTarget] = useState('');
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
-  const [message, setMessage] = useState({ isError: false, detail: '' });
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
 
   function handleSubmitInvestment(e) {
@@ -84,12 +86,9 @@ export default function Investments({ userId }) {
         },
       })
         .then(() => {
-          setMessage({
-            ...message,
-            isError: false,
-            detail: t('common:misc.misc_successfully_created', {
-              type: t('common:menu.investment'),
-            }),
+          showSnackbar({
+            type: messageType.success,
+            message: t('common:misc.misc_successfully_created', { type: t('common:menu.investment') })
           });
           setInvestmentTarget('');
           setDealSize('');
@@ -97,7 +96,7 @@ export default function Investments({ userId }) {
           refetchLeadInvestments();
         })
         .catch(err => {
-          setMessage({ ...message, isError: true, detail: formatError(err.message) });
+          showSnackbar({ type: messageType.error, message: formatError(err.message) });
         });
     }
     if (logType === 'investment') {
@@ -111,12 +110,9 @@ export default function Investments({ userId }) {
         },
       })
         .then(() => {
-          setMessage({
-            ...message,
-            isError: false,
-            detail: t('common:misc.misc_successfully_created', {
-              type: t('common:menu.investment_expense'),
-            }),
+          showSnackbar({
+            type: messageType.success,
+            message:  t('common:misc.misc_successfully_created', { type: t('common:menu.investment_expense') })
           });
           setDescription('');
           setAmount('');
@@ -124,7 +120,7 @@ export default function Investments({ userId }) {
           refetchInvestmentStats();
         })
         .catch(err => {
-          setMessage({ ...message, isError: true, detail: formatError(err.message) });
+          showSnackbar({ type: messageType.error, message: formatError(err.message) });
         });
     }
   }
@@ -138,12 +134,6 @@ export default function Investments({ userId }) {
 
   return (
     <>
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '' })}
-      />
       <Grid container>
         <Grid item md={12} xs={12} style={{ marginBottom: '30px' }}>
           <Grid

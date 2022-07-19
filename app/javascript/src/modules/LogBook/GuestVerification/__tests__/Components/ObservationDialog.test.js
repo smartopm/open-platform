@@ -7,6 +7,7 @@ import { EntryRequestContext } from '../../Context';
 import ObservationDialog from '../../Components/ObservationDialog';
 import AddObservationNoteMutation from '../../../graphql/logbook_mutations';
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Observation Dialog component', () => {
@@ -48,7 +49,9 @@ describe('Observation Dialog component', () => {
             }}
           >
             <MockedThemeProvider>
-              <ObservationDialog />
+              <MockedSnackbarProvider>
+                <ObservationDialog />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </EntryRequestContext.Provider>
         </MockedProvider>
@@ -68,7 +71,6 @@ describe('Observation Dialog component', () => {
     fireEvent.click(container.queryByTestId('save_and_record_other'));
 
     await waitFor(() => {
-      expect(container.queryByText('Success')).toBeInTheDocument();
       expect(mockHistory.push).toBeCalled();
     }, 10);
   });

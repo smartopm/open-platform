@@ -10,6 +10,7 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/authstate';
 import { PlansPaymentsQuery, SubscriptionPlansQuery } from '../graphql/payment_query';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('Payment List Item Component', () => {
   const transactions = [
@@ -82,7 +83,9 @@ describe('Payment List Item Component', () => {
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <PaymentList currencyData={currency} />
+              <MockedSnackbarProvider>
+                <PaymentList currencyData={currency} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Chip,
   TextField,
@@ -24,7 +24,7 @@ import DateContainer, { dateToString, dateTimeToString } from '../../../componen
 import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import RemindMeLaterMenu from './RemindMeLaterMenu';
 import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
-import MessageAlert from '../../../components/MessageAlert';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 /**
  *
@@ -54,8 +54,8 @@ export default function Task({
 
   const [setReminder] = useMutation(TaskReminderMutation);
   const [reminderTime, setReminderTime] = useState(null);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const history = useHistory();
 
@@ -80,13 +80,6 @@ export default function Task({
     return `${dateToString(time)}, ${dateTimeToString(time)}`;
   }
 
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
-  }
-
   function setTaskReminder(hour) {
     setReminder({
       variables: { noteId: note.id, hour }
@@ -97,8 +90,7 @@ export default function Task({
         setReminderTime(timeFormat(timeScheduled));
       })
       .catch(err => {
-        setMessageAlert(err.message);
-        setIsSuccessAlert(false);
+        showSnackbar({ type: messageType.error, message: err.message });
       });
   }
 
@@ -122,12 +114,6 @@ export default function Task({
 
   return (
     <>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
       <Grid container direction="column" justifyContent="flex-start">
         <Grid item xs={12}>
           <Typography variant="subtitle1" gutterBottom>

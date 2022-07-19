@@ -9,6 +9,7 @@ import MockedThemeProvider from '../../../../__mocks__/mock_theme';
 import EntryRequestContextProvider from '../../Context';
 import { createClient } from '../../../../../utils/apollo';
 import authState from '../../../../../__mocks__/authstate';
+import MockedSnackbarProvider from '../../../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Id Capture component', () => {
@@ -18,9 +19,11 @@ describe('Id Capture component', () => {
         <Context.Provider value={authState}>
           <ApolloProvider client={createClient}>
             <MockedThemeProvider>
-              <EntryRequestContextProvider value={{ request: { imageUrls: [] } }}>
-                <IdCapture handleNext={jest.fn()} />
-              </EntryRequestContextProvider>
+              <MockedSnackbarProvider>
+                <EntryRequestContextProvider value={{ request: { imageUrls: [] } }}>
+                  <IdCapture handleNext={jest.fn()} />
+                </EntryRequestContextProvider>
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </ApolloProvider>
         </Context.Provider>

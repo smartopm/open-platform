@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable security/detect-object-injection */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +16,6 @@ import Grid from '@mui/material/Grid';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import PaymentCreate from '../../graphql/payment_mutations';
 import { UserLandParcelWithPlan, UsersLiteQuery } from '../../../../graphql/queries';
-import MessageAlert from '../../../../components/MessageAlert';
 import {
   extractCurrency,
   formatError,
@@ -30,6 +29,7 @@ import useDebounce from '../../../../utils/useDebounce';
 import UserAutoResult from '../../../../shared/UserAutoResult';
 import SwitchInput from '../../../Forms/components/FormProperties/SwitchInput';
 import { dateToString } from '../../../../components/DateContainer';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 const initialValues = {
   transactionType: '',
@@ -62,8 +62,6 @@ export default function PaymentModal({
   const [inputValue, setInputValue] = useState(initialValues);
   const [plotInputValue, setPlotInputValue] = useState([]);
   const [createPayment] = useMutation(PaymentCreate);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
   const [promptOpen, setPromptOpen] = useState(false);
   const [paymentData, setPaymentData] = useState({});
   const [isError, setIsError] = useState(false);
@@ -75,6 +73,9 @@ export default function PaymentModal({
   const [mutationLoading, setMutationStatus] = useState(false);
   const { t } = useTranslation(['payment', 'common']);
   const matches = useMediaQuery('(max-width:800px)');
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   function confirm(event) {
     event.preventDefault();
 
@@ -90,16 +91,14 @@ export default function PaymentModal({
     if (inputValue.pastPayment && !receiptCheck) {
       setIsError(true);
       setIsSubmitting(true);
-      setIsSuccessAlert(false);
-      setMessageAlert('Receipt Number cannot be blank');
+      showSnackbar({ type: messageType.error, message: 'Receipt Number cannot be blank' });
       return;
     }
 
     if (inputValue.pastPayment && !amountCheck) {
       setIsError(true);
       setIsSubmitting(true);
-      setIsSuccessAlert(false);
-      setMessageAlert('Amount cannot be blank');
+      showSnackbar({ type: messageType.error, message: 'Amount cannot be blank' });
       return;
     }
 
@@ -230,8 +229,7 @@ export default function PaymentModal({
       }
     })
       .then(res => {
-        setMessageAlert('Payment made successfully');
-        setIsSuccessAlert(true);
+        showSnackbar({ type: messageType.success, message: 'Payment made successfully' });
         handleModalClose();
         refetch();
         walletRefetch();
@@ -246,8 +244,7 @@ export default function PaymentModal({
       })
       .catch(err => {
         setIsConfirm(false);
-        setMessageAlert(formatError(err.message));
-        setIsSuccessAlert(false);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setMutationStatus(false);
       });
   }
@@ -269,25 +266,12 @@ export default function PaymentModal({
     return '';
   }
 
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
-  }
-
   function handlePromptClose() {
     setPromptOpen(false);
   }
 
   return (
     <>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
       <ReceiptModal
         open={promptOpen}
         handleClose={() => handlePromptClose()}

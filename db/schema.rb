@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_04_125407) do
+ActiveRecord::Schema.define(version: 2022_07_18_125556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -175,6 +175,7 @@ ActiveRecord::Schema.define(version: 2022_07_04_125407) do
     t.boolean "include_reply_link", default: false
     t.uuid "email_templates_id"
     t.integer "total_opened", default: 0
+    t.integer "total_scheduled", default: 0
     t.index ["campaign_type"], name: "index_campaigns_on_campaign_type"
     t.index ["community_id", "status"], name: "index_campaigns_on_community_id_and_status"
     t.index ["community_id"], name: "index_campaigns_on_community_id"

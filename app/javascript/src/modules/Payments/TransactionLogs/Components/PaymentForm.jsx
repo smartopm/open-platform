@@ -9,23 +9,23 @@ import PageWrapper from '../../../../shared/PageWrapper';
 import { currencies } from '../../../../utils/constants';
 import { extractCurrency, formatError, objectAccessor } from '../../../../utils/helpers';
 import { TransactionLogCreateMutation } from '../graphql/transaction_logs_mutation';
-import MessageAlert from '../../../../components/MessageAlert';
 import flutterwaveConfig, { closeFlutterwaveModal } from '../utils';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function PaymentForm() {
   const { t } = useTranslation(['common', 'task', 'payment']);
   const authState = useContext(Context);
   const [createTransactionLog] = useMutation(TransactionLogCreateMutation);
-  const initialMessage = { isError: false, detail: '' };
   const initialInputValue = {
     invoiceNumber: '',
     amount: '',
     description: '',
     accountName: '',
   };
-  const [message, setMessage] = useState(initialMessage);
   const [inputValue, setInputValue] = useState(initialInputValue);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const communityCurrency = objectAccessor(currencies, authState.user.community.currency);
   const currencyData = { locale: authState.user.community.locale, currency: communityCurrency };
@@ -58,10 +58,10 @@ export default function PaymentForm() {
       },
     })
       .then(() => {
-        setMessage({ isError: false, detail: t('payment:misc.payment_successful') });
+        showSnackbar({ type: messageType.success, message: t('payment:misc.payment_successful') });
         setInputValue(initialInputValue);
       })
-      .catch(error => setMessage({ isError: true, detail: formatError(error.message) }))
+      .catch(error => showSnackbar({ type: messageType.error, message: formatError(error.message) }))
       .finally(() => {
         setHasSubmitted(false);
         closeFlutterwaveModal();
@@ -70,12 +70,6 @@ export default function PaymentForm() {
 
   return (
     <PageWrapper oneCol pageTitle={t('payment:misc.make_a_payment')}>
-      <MessageAlert
-        type={!message.isError ? 'success' : 'error'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage(initialMessage)}
-      />
       <form onSubmit={handlePayment} data-testid="payment_form">
         <TextField
           margin="normal"

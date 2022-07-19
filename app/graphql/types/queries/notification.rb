@@ -22,7 +22,6 @@ module Types::Queries::Notification
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     unseen_notifications = context[:current_user].notifications
-                                                 .includes(notifable: :sender)
                                                  .active
                                                  .where(seen_at: nil)
                                                  .offset(offset)
@@ -30,7 +29,6 @@ module Types::Queries::Notification
                                                  .ordered
 
     seen_notifications = context[:current_user].notifications
-                                               .includes(notifable: :sender)
                                                .active
                                                .where('seen_at > ?', 24.hours.ago)
                                                .ordered_by_seen_at

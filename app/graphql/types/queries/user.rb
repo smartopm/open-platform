@@ -113,22 +113,21 @@ module Types::Queries::User
             I18n.t('errors.unauthorized')
     end
 
-    if query.present? && query.include?('date_filter')
+    login_after_filter = query.to_s.include?('login_after_filter')
+    has_created_date_filter = query.to_s.include?('created_date_filter')
+
+    if query.present? && login_after_filter || has_created_date_filter
       Users::User.allowed_users(context[:current_user])
-                 .eager_load(:labels)
                  .heavy_search(query)
                  .order(name: :asc)
                  .limit(limit)
                  .offset(offset)
-                 .with_attached_avatar
     else
       Users::User.allowed_users(context[:current_user])
-                 .eager_load(:labels)
                  .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
                  .order(name: :asc)
                  .limit(limit)
                  .offset(offset)
-                 .with_attached_avatar
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -157,14 +156,12 @@ module Types::Queries::User
                  .order(name: :asc)
                  .limit(limit)
                  .offset(offset)
-                 .with_attached_avatar
     else
       Users::User.allowed_users(context[:current_user])
                  .send(search_method, query)
                  .order(name: :asc)
                  .limit(limit)
                  .offset(offset)
-                 .with_attached_avatar
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -187,7 +184,6 @@ module Types::Queries::User
                ).order(name: :asc)
   end
 
-  # rubocop:disable Metrics/MethodLength
   def users_lite(offset: 0, limit: 50, query: nil)
     unless permitted?(module: :user, permission: :can_get_users_lite)
       raise GraphQL::ExecutionError,
@@ -195,14 +191,11 @@ module Types::Queries::User
     end
 
     Users::User.allowed_users(context[:current_user])
-               .includes(:accounts)
                .search_lite(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
                .order(name: :asc)
                .limit(limit)
                .offset(offset)
-               .with_attached_avatar
   end
-  # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
   def find_community_user(id)
@@ -274,7 +267,7 @@ module Types::Queries::User
     users = context[:site_community].users
     users.where(user_type: 'visitor')
          .search_guest(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
-         .limit(5).with_attached_avatar
+         .limit(5)
   end
 
   def my_guests(query: nil)
@@ -283,7 +276,6 @@ module Types::Queries::User
     end
 
     context[:current_user].invitees
-                          .includes(:guest, :host, :entry_time)
                           .search(or: [{ query: (query.presence || '.') },
                                        { guest: { matches: query } }])
                           .order(created_at: :desc)
@@ -300,7 +292,6 @@ module Types::Queries::User
                .search_lite(or: [{ query: (query.presence || '.') },
                                  { name: { matches: query } }])
                .order(name: :asc)
-               .with_attached_avatar
   end
 
   def my_hosts(user_id:)
@@ -312,7 +303,7 @@ module Types::Queries::User
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    user.invites.includes(:host, :entry_time).order(created_at: :desc)
+    user.invites.order(created_at: :desc)
   end
 
   def user_permissions_check?(permission)

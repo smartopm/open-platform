@@ -30,6 +30,8 @@ class Campaign < ApplicationRecord
     attributes :name, :created_at
   end
 
+  after_save :save_total_scheduled, if: -> { saved_changes.key?('user_id_list') }
+
   def clean_message
     self.user_id_list = '' if user_id_list.blank?
     self.message = message.gsub(/[\u2019\u201c\u201d]/, '\'') if campaign_type == 'sms' &&
@@ -42,6 +44,10 @@ class Campaign < ApplicationRecord
 
   def campaign_admin_user
     community.sub_administrator || Users::User.find_by(name: 'Mutale Chibwe', state: 'valid')
+  end
+
+  def save_total_scheduled
+    update(total_scheduled: target_list.uniq.size)
   end
 
   def target_list
@@ -113,7 +119,7 @@ class Campaign < ApplicationRecord
       batch_time: batch_time,
       start_time: start_time,
       end_time: end_time,
-      total_scheduled: target_list.uniq.size,
+      total_scheduled: total_scheduled,
       total_sent: message_count,
       total_clicked: total_clicked,
       total_opened: total_opened,

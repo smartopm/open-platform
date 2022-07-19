@@ -8,6 +8,7 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/authstate';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import { AllEventLogsQuery } from '../../../graphql/queries';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('LogBook Component', () => {
@@ -79,7 +80,9 @@ describe('LogBook Component', () => {
         <MockedProvider mocks={[eventLogMock]} addTypename={false}>
           <MockedThemeProvider>
             <BrowserRouter>
-              <LogBookItem {...props} />
+              <MockedSnackbarProvider>
+                <LogBookItem {...props} />
+              </MockedSnackbarProvider>
             </BrowserRouter>
           </MockedThemeProvider>
         </MockedProvider>
@@ -89,14 +92,12 @@ describe('LogBook Component', () => {
       expect(container.queryAllByTestId('card')[0]).toBeInTheDocument();
       expect(container.queryByTestId('name')).toBeInTheDocument();
       expect(container.queryByTestId('speed_dial_btn')).toBeInTheDocument();
-      expect(container.queryByTestId('add_icon')).toBeInTheDocument();
       expect(container.queryByTestId('logbook_tabs')).toBeInTheDocument();
       expect(container.queryByTestId('observation_note')).toBeInTheDocument();
       expect(container.queryByTestId('created-at')).toBeInTheDocument();
       expect(container.queryAllByText('misc.previous')[0]).toBeInTheDocument();
       expect(container.queryAllByText('misc.next')[0]).toBeInTheDocument();
       expect(container.queryByText('logbook.log_view')).toBeInTheDocument();
-      expect(container.queryByText('guest.guests')).toBeInTheDocument();
       expect(container.queryByText('logbook.visit_view')).toBeInTheDocument();
       expect(container.queryByText('common:misc.statistics')).toBeInTheDocument();
       expect(container.queryByText('common:misc.show common:misc.all')).toBeInTheDocument();
@@ -109,7 +110,7 @@ describe('LogBook Component', () => {
       expect(container.queryAllByText('search.search_for')[0]).toBeInTheDocument();
       expect(container.queryByTestId('refresh_btn')).toBeInTheDocument();
       expect(container.queryByTestId('refresh_btn')).not.toBeDisabled()
-      
+
       fireEvent.change(container.queryByLabelText('simple tabs example'));
 
       fireEvent.change(container.queryAllByTestId('menu-list')[0]);

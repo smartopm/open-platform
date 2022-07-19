@@ -15,13 +15,13 @@ import SearchInput from '../../../../shared/search/SearchInput';
 import { Spinner } from '../../../../shared/Loading';
 import Paginate from '../../../../components/Paginate';
 import { EntryRequestGrant } from '../../../../graphql/mutations';
-import MessageAlert from '../../../../components/MessageAlert';
 import Invitation from './Invitation';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import AddObservationNoteMutation from '../../graphql/logbook_mutations';
 import { AllEventLogsQuery } from '../../../../graphql/queries';
 import ObservationModal from './ObservationModal';
 import useFileUpload from '../../../../graphql/useFileUpload';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function Invitations() {
   const history = useHistory();
@@ -35,7 +35,6 @@ export default function Invitations() {
   const { value, dbcValue, setSearchValue } = useDebouncedValue();
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [loadingStatus, setLoadingInfo] = useState({ loading: false, currentId: '' });
-  const [message, setMessage] = useState({ isError: false, detail: '' });
   const authState = useContext(Context);
   const tz = authState.user.community.timezone;
   const allUserPermissions = authState.user?.permissions || [];
@@ -59,6 +58,7 @@ export default function Invitations() {
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient(),
   });
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
   const [imageUrls, setImageUrls] = useState([]);
   const rightPanelObj = [
     {
@@ -179,6 +179,13 @@ export default function Invitations() {
               ? t('logbook:observations.created_observation_exit')
               : t('logbook:observations.created_observation')
         });
+        showSnackbar({
+          type: messageType.success,
+          message:
+            type === 'exit'
+              ? t('logbook:observations.created_observation_exit')
+              : t('logbook:observations.created_observation'),
+        });
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
         eventsData.refetch();
@@ -192,6 +199,7 @@ export default function Invitations() {
           isError: true,
           message: err.message
         });
+        showSnackbar({ type: messageType.error, message: err.message });
         // reset state in case it errs and user chooses a different log
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
@@ -214,15 +222,15 @@ export default function Invitations() {
       fetchPolicy: 'no-cache',
     })
       .then(() => {
-        setMessage({
-          isError: false,
-          detail: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') }),
+        showSnackbar({
+          type: messageType.success,
+          message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') }),
         });
         setLoadingInfo({ ...loadingStatus, loading: false });
         handleAddObservation(log);
       })
       .catch(err => {
-        setMessage({ isError: true, detail: err.message });
+        showSnackbar({ type: messageType.error, message: err.message });
         setLoadingInfo({ ...loadingStatus, loading: false });
       });
   }
@@ -246,12 +254,6 @@ export default function Invitations() {
       {error && !data?.scheduledRequests.length && (
         <CenteredContent>{formatError(error.message)}</CenteredContent>
       )}
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '' })}
-      />
 
       <ObservationModal
         isObservationOpen={isObservationOpen}

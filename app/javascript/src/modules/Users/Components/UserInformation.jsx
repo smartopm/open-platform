@@ -81,6 +81,7 @@ export default function UserInformation({
       selectedKey={selectedKey}
       defaultButtonText={t('common:right_menu.contact_info')}
       mobileIcon={<MoreVertIcon />}
+      testId="user_profile_option_menu"
     />
   );
 
