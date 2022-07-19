@@ -43,6 +43,7 @@ const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log']
 
 export default function LogBookItem({ router, offset, tabValue, handleTabValue }) {
   const authState = useContext(AuthStateContext);
+  const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
   const [searchOpen, setSearchOpen] = useState(false);
   const theme = useTheme();
@@ -52,6 +53,7 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
   const eventLogPermissions = allUserPermissions.find(mod => mod.module === 'event_log')
     ?.permissions;
   const permissions = new Set(modulePerms);
+  const anchorElOpen = Boolean(anchorEl);
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
   const [open, setOpen] = useState(false);
   const [isObservationOpen, setIsObservationOpen] = useState(false);
@@ -203,6 +205,19 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
   function handleCloseAlert() {
     // clear and allow visit view to properly refetch
     setDetails({ ...observationDetails, message: '', refetch: false });
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
+  function handleAddObservationClick() {
+    setIsObservationOpen(true);
+    handleClose()
+  }
+
+  function handleMenu(event) {
+    setAnchorEl(event.currentTarget);
   }
 
   const menuList = [
