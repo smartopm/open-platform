@@ -1,11 +1,14 @@
 import { useEffect } from 'react';
 import { useLazyQuery } from 'react-apollo';
-import { UsersLiteQuery } from '../../../../graphql/queries';
+import { UsersDetails } from '../../../../graphql/queries';
 import useDebounce from '../../../../utils/useDebounce';
 
 export default function useUser(searchValue) {
   const debouncedValue = useDebounce(searchValue, 500);
-  const [searchUsers, { data, loading, error }] = useLazyQuery(UsersLiteQuery, {
+  const [
+    searchUsers,
+    { data: userSearchData, loading: userLoading, error: userError },
+  ] = useLazyQuery(UsersDetails, {
     variables: { query: debouncedValue, limit: 10 },
     errorPolicy: 'all',
     fetchPolicy: 'network-only',
@@ -16,5 +19,5 @@ export default function useUser(searchValue) {
     }
   }, [debouncedValue]);
 
-  return { data, loading, error };
+  return { userSearchData, userLoading, userError };
 }
