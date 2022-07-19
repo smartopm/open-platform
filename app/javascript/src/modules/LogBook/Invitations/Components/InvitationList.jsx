@@ -14,7 +14,7 @@ import { formatError } from '../../../../utils/helpers';
 import SearchInput from '../../../../shared/search/SearchInput';
 import { Spinner } from '../../../../shared/Loading';
 import { EntryRequestGrant } from '../../../../graphql/mutations';
-import Invitation from './Invitation';
+import Invitation from './InvitationItem';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import AddObservationNoteMutation from '../../graphql/logbook_mutations';
 import ObservationModal from './ObservationModal';

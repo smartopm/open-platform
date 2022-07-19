@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import { useTranslation } from 'react-i18next';
-import Invitation from '../Components/Invitation';
+import Invitation from '../Components/InvitationItem';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';

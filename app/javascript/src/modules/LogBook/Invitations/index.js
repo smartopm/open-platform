@@ -1,6 +1,6 @@
 import React from 'react';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
-import Invitations from './Components/Invitations';
+import Invitations from './Components/InvitationList';
 
 const guestListPermissions = ['can_access_guest_list'];
 const currentModule = 'entry_request';

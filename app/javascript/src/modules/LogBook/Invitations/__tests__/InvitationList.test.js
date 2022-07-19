@@ -3,7 +3,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 
 import { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
-import Invitations from '../Components/Invitations';
+import Invitations from '../Components/InvitationList';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import { GuestEntriesQuery } from '../../graphql/guestbook_queries';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
@@ -13,7 +13,7 @@ describe('Should render Guests View Component', () => {
   const mocks = {
     request: {
       query: GuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '' },
+      variables: { offset: 0 },
     },
     result: {
       data: {
@@ -88,7 +88,7 @@ describe('Should render Guests View Component', () => {
     },
   };
 
-  it('should render proper pagewrapper for invitations page', async () => {
+  it('should render no invited guests since all invitations are invalid', async () => {
     const container = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[mocks]} addTypename={false}>
@@ -107,9 +107,12 @@ describe('Should render Guests View Component', () => {
     expect(container.getByTestId('page_title')).toBeInTheDocument();
     expect(container.getByTestId('SearchIcon')).toBeInTheDocument();
     expect(container.getByTestId('AddIcon')).toBeInTheDocument();
-    expect(container.getByTestId('prev-btn')).toBeInTheDocument();
-    expect(container.getByTestId('next-btn')).toBeInTheDocument();
     expect(container.getByTestId('loader')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(container.queryByText('search:search.load_more')).not.toBeInTheDocument();
+      expect(container.queryByText('logbook.no_invited_guests')).toBeInTheDocument();
+    });
 
     fireEvent.click(container.getByTestId('SearchIcon'));
     await waitFor(() => {
