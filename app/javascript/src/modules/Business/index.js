@@ -18,7 +18,7 @@ export default {
     path: '/businesses',
     component: RenderBusinesses
   },
-  name: t => t('misc.business'),
+  name: t => t('misc.business_directory'),
   featureName: 'Business',
   moduleName: "business",
   accessibleBy: []
