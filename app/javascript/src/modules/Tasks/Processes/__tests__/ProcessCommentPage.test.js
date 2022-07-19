@@ -22,7 +22,6 @@ describe('Process Comment Page Component', () => {
                 body: 'sent comment body',
                 createdAt: '2020-12-28T22:00:00Z',
                 groupingId: '67ue',
-
                 taggedAttachments: [{ id: '4567', url: 'https://sent-download.com/url' }],
                 user: {
                   id: 'yu678',
@@ -81,7 +80,11 @@ describe('Process Comment Page Component', () => {
     },
     {
       request: {
-        query: ProcessCommentsQuery
+        query: ProcessCommentsQuery,
+        variables: {
+          limit: 50,
+          query: "",
+        }
       },
       result: {
         data: {
@@ -142,16 +145,16 @@ describe('Process Comment Page Component', () => {
     expect(screen.queryByTestId('loader')).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.queryAllByText('comments.sent')[0]).toBeInTheDocument();
-      expect(screen.queryAllByText('comments.received')[0]).toBeInTheDocument();
-      expect(screen.queryAllByText('comments.resolved')[0]).toBeInTheDocument();
-      expect(screen.queryAllByText('comments.sent')[1]).toBeInTheDocument();
+      expect(screen.queryAllByText('process:comments.sent')[0]).toBeInTheDocument();
+      expect(screen.queryAllByText('process:comments.received')[0]).toBeInTheDocument();
+      expect(screen.queryAllByText('process:comments.resolved')[0]).toBeInTheDocument();
+      expect(screen.queryByText('sent comment body')).toBeInTheDocument();
 
-      fireEvent.click(screen.queryAllByText('comments.received')[0]);
-      expect(screen.queryAllByText('comments.received')[1]).toBeInTheDocument();
+      fireEvent.click(screen.queryAllByText('process:comments.received')[0]);
+      expect(screen.queryByText('received comment body')).toBeInTheDocument();
 
-      fireEvent.click(screen.queryAllByText('comments.resolved')[0]);
-      expect(screen.queryAllByText('comments.resolved')[1]).toBeInTheDocument();
+      fireEvent.click(screen.queryAllByText('process:comments.resolved')[0]);
+      expect(screen.queryByText('received comment body')).toBeInTheDocument();
     });
   });
 

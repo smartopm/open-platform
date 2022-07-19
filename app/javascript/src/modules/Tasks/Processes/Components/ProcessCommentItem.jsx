@@ -62,7 +62,7 @@ export default function ProcessCommentItem({ commentdata, commentType, listView 
           xs={commentType === 'Sent' ? 9 : listView ? 12 : 7}
           sm={commentType === 'Sent' ? 11 :  listView ? 12 : 10}
           style={commentType === 'Sent' || listView ? {} : { marginLeft: '-25px' }}
-          className={matches ? classes.card : undefined}
+          className={matches && !listView ? classes.card : undefined}
           data-testid="comment_date"
         >
           <Typography variant="caption">{dateToString(commentdata.createdAt)}</Typography>

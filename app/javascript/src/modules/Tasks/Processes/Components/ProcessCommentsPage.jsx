@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable max-statements */
 /* eslint-disable max-lines */
 import React, { useState, useEffect } from 'react';
@@ -205,14 +206,14 @@ export default function ProcessCommentsPage() {
           <>
             <Grid
               item
-              md={4}
-              xs={8}
+              md={6}
+              xs={12}
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
             >
               <SearchInput
                 filterRequired
                 title={t('task:processes.comments')}
-                searchValue={value}
+                searchValue={value || ''}
                 handleSearch={event => setSearchValue(event.target.value)}
                 handleClear={() => setSearchValue('')}
                 filters={[dbcValue]}
@@ -221,39 +222,29 @@ export default function ProcessCommentsPage() {
                 data-testid="search_input"
               />
             </Grid>
-            <div
+            <Grid
+              item
+              md={4}
+              xs={12}
               style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      position: 'relative'
-                    }}
-              data-testid="filter_container"
+                display: displayBuilder,
+
+              }}
             >
-              <Grid
-                container
-                style={{
-                        width: '200%',
-                        position: 'absolute',
-                        zIndex: 1,
-                        marginTop: '-2px',
-                        display: displayBuilder
-                      }}
-              >
-                <QueryBuilder
-                  handleOnChange={queryOnChange}
-                  builderConfig={commentsBuilderConfig}
-                  initialQueryValue={commentsBuilderInitialValue}
-                  addRuleLabel={t('common:misc.add_filter')}
-                />
-              </Grid>
-            </div>
+              <QueryBuilder
+                handleOnChange={queryOnChange}
+                builderConfig={commentsBuilderConfig}
+                initialQueryValue={commentsBuilderInitialValue}
+                addRuleLabel={t('common:misc.add_filter')}
+              />
+            </Grid>
           </>
         )}
       </Grid>
       <Typography
         variant="h5"
         color="textSecondary"
-        style={{marginBottom: '24px'}}
+        style={matches ? {marginBottom: '12px', marginTop: '5px'} : {marginTop: '10px', marginBottom: '24px'}}
       >
         {processName}
       </Typography>
@@ -307,7 +298,7 @@ export default function ProcessCommentsPage() {
                 </div>
               ))
             ) : (
-              <CenteredContent>{t('comments.no_comment')}</CenteredContent>
+              <CenteredContent>{t('process:comments.no_comment')}</CenteredContent>
             )}
                 </div>
               </TabPanel>
@@ -320,7 +311,7 @@ export default function ProcessCommentsPage() {
                 </div>
               ))
             ) : (
-              <CenteredContent>{t('comments.no_comment')}</CenteredContent>
+              <CenteredContent>{t('process:comments.no_comment')}</CenteredContent>
             )}
                 </div>
               </TabPanel>
@@ -333,7 +324,7 @@ export default function ProcessCommentsPage() {
                 </div>
               ))
             ) : (
-              <CenteredContent>{t('comments.no_comment')}</CenteredContent>
+              <CenteredContent>{t('process:comments.no_comment')}</CenteredContent>
             )}
                 </div>
               </TabPanel>
@@ -352,7 +343,7 @@ export default function ProcessCommentsPage() {
                 </div>
               ))
             ) : (
-              <CenteredContent>{t('comments.no_comment')}</CenteredContent>
+              <CenteredContent>{t('process:comments.no_comment')}</CenteredContent>
             )
           )}
           {processCommentsError && (
