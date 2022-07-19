@@ -35,7 +35,7 @@ import UserSelectButton, {
 import QueryBuilder from '../../../components/QueryBuilder';
 import PageWrapper from '../../../shared/PageWrapper';
 import SearchInput from '../../../shared/search/SearchInput';
-import useUser from '../../LogBook/GuestInvitation/hooks/useUser';
+import useUsers from '../../LogBook/GuestInvitation/hooks/useUsers';
 
 const limit = 25;
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000;
@@ -67,7 +67,7 @@ export default function UsersList() {
     setAnchorEl(null);
   }
 
-  const { userSearchData, userLoading, userError } = useUser(searchValue);
+  const { userSearchData, userLoading, userError } = useUsers(searchValue);
   const currentQueryPath = decodeURIComponent(location.search).replace('?', '');
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
