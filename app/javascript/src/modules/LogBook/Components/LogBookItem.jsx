@@ -1,9 +1,16 @@
+/* eslint-disable max-statements */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import { useHistory } from 'react-router-dom';
 import Button from '@mui/material/Button';
+import SearchIcon from '@mui/icons-material/Search';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
+import ReplayIcon from '@mui/icons-material/Replay';
+import AddIcon from '@mui/icons-material/Add';
 import PersonIcon from '@mui/icons-material/Person';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -29,12 +36,17 @@ import { AllEventLogsQuery } from '../../../graphql/queries';
 import SearchInput from '../../../shared/search/SearchInput';
 import PageWrapper from '../../../shared/PageWrapper';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
+import MenuList from '../../../shared/MenuList';
 
 const limit = 20;
 const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
 
 export default function LogBookItem({ router, offset, tabValue, handleTabValue }) {
   const authState = useContext(AuthStateContext);
+  const history = useHistory();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const theme = useTheme();
+  const mobileMatches = useMediaQuery(theme.breakpoints.down('sm'));
   const allUserPermissions = authState.user?.permissions || [];
   const modulePerms = allUserPermissions.find(mod => mod.module === 'entry_request')?.permissions;
   const eventLogPermissions = allUserPermissions.find(mod => mod.module === 'event_log')
@@ -188,8 +200,95 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
     resetImageData();
   }
 
+  function handleCloseAlert() {
+    // clear and allow visit view to properly refetch
+    setDetails({ ...observationDetails, message: '', refetch: false });
+  }
+
+  const menuList = [
+    {
+      content: t('logbook.new_invite'),
+      isAdmin: false,
+      handleClick: () => history.push(`/logbook/guests/invite`),
+      isVisible: permissions.has('can_invite_guest'),
+    },
+    {
+      content: t('logbook.add_observation'),
+      isAdmin: false,
+      handleClick: () => handleAddObservationClick(),
+      isVisible: permissions.has('can_add_entry_request_note'),
+    },
+  ];
+
+  const menuData = {
+    menuList,
+    handleMenu,
+    anchorEl,
+    open: anchorElOpen,
+    handleClose,
+  };
+
+  const rightPanelObj = [
+    {
+      mainElement: mobileMatches ? (
+        <IconButton color="primary" data-testid="access_search" onClick={() => setSearchOpen(!searchOpen)}>
+          <SearchIcon />
+        </IconButton>
+      ) : (
+        <Button
+          startIcon={<SearchIcon />}
+          data-testid="access_search"
+          onClick={() => setSearchOpen(!searchOpen)}
+        >
+          {t('common:menu.search')}
+        </Button>
+      ),
+      key: 1,
+    },
+    {
+      mainElement: mobileMatches ? (
+        <IconButton color="primary" data-testid="reload" onClick={() => refetch()}>
+          <ReplayIcon />
+        </IconButton>
+      ) : (
+        <Button startIcon={<ReplayIcon />} data-testid="reload" onClick={() => refetch()}>
+          {t('common:misc.reload')}
+        </Button>
+      ),
+      key: 2,
+    },
+    {
+      mainElement: (
+        <>
+          <Button
+            startIcon={!mobileMatches ? <AddIcon /> : undefined}
+            data-testid="add_button"
+            onClick={e => menuData.handleMenu(e)}
+            variant="contained"
+            style={{ color: '#FFFFFF' }}
+          >
+            {mobileMatches ? <AddIcon /> : t('common:misc.add')}
+          </Button>
+          <MenuList
+            open={menuData.open}
+            anchorEl={menuData.anchorEl}
+            handleClose={menuData.handleClose}
+            list={menuData.menuList.filter(list => list.isVisible)}
+          />
+        </>
+      ),
+      key: 3,
+    },
+  ];
+
   return (
-    <PageWrapper pageTitle={t('common:misc.access')}>
+    <PageWrapper pageTitle={t('common:misc.log_book')} rightPanelObj={rightPanelObj}>
+      <MessageAlert
+        type={!observationDetails.isError ? 'success' : 'error'}
+        message={observationDetails.message}
+        open={!!observationDetails.message}
+        handleClose={handleCloseAlert}
+      />
       <DialogWithImageUpload
         open={isObservationOpen}
         handleDialogStatus={() => handleCancelClose()}
