@@ -60,7 +60,11 @@
     <div id="root">
     </div>
       <%= javascript_include_tag "application", defer: true %>
-      <div class="alert text-center" id="btnSection" role="alert">
+      <div
+        class="alert text-center"
+        id="btnSection" role="alert"
+        style="background: <%= current_community.theme_colors["primaryColor"]%>"
+        >
         <span id="btn">Click here to add this application to your home screen </span> <span id="closeBtn">close</span>
       </div>
 
