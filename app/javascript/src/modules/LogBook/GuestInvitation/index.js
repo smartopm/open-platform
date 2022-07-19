@@ -1,4 +1,5 @@
 import React from 'react';
+import HailIcon from '@mui/icons-material/Hail';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import GuestSearch from './Components/GuestSearch';
 import InvitedGuests from './Components/InvitedGuests';
@@ -28,13 +29,14 @@ const GuestInvitationRoutes = {
     component: RenderGuestList
   },
   styleProps: {
-    icon: null,
-    className: 'guest-list-sub-menu-item'
+    icon: <HailIcon />,
+    className: 'guest-list-sub-menu-item',
   },
-  name: (t) => t('menu.guest_list'),
+  name: (t) => t('menu.my_guests'),
   featureName: 'Guest List',
   moduleName: 'guest_list',
   accessibleBy: [],
+  hideFromMenu: ['admin'],
   subRoutes: [
     {
       routeProps: {

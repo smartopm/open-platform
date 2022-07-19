@@ -92,7 +92,6 @@ describe('LogBook Component', () => {
       expect(container.queryAllByTestId('card')[0]).toBeInTheDocument();
       expect(container.queryByTestId('name')).toBeInTheDocument();
       expect(container.queryByTestId('speed_dial_btn')).toBeInTheDocument();
-      expect(container.queryByTestId('add_icon')).toBeInTheDocument();
       expect(container.queryByTestId('logbook_tabs')).toBeInTheDocument();
       expect(container.queryByTestId('observation_note')).toBeInTheDocument();
       expect(container.queryByTestId('created-at')).toBeInTheDocument();
@@ -100,14 +99,6 @@ describe('LogBook Component', () => {
       expect(container.queryAllByText('misc.next')[0]).toBeInTheDocument();
       expect(container.queryByText('logbook.log_view')).toBeInTheDocument();
       expect(container.queryByText('guest.guests')).toBeInTheDocument();
-      expect(container.queryByText('logbook.visit_view')).toBeInTheDocument();
-      expect(container.queryByText('common:misc.statistics')).toBeInTheDocument();
-      expect(container.queryByText('common:misc.show common:misc.all')).toBeInTheDocument();
-      expect(container.queryAllByText('common:misc.timeframe')[0]).toBeInTheDocument();
-      expect(container.queryByText('logbook.total_entries')).toBeInTheDocument();
-      expect(container.queryByText('logbook.total_exits')).toBeInTheDocument();
-      expect(container.queryByText('logbook.total_in_city')).toBeInTheDocument();
-      // This is because the query has not been triggered unless the tabValue matches
       expect(container.queryAllByText('logbook.no_invited_guests')[0]).toBeInTheDocument();
       expect(container.queryAllByText('search.search_for')[0]).toBeInTheDocument();
       expect(container.queryByTestId('refresh_btn')).toBeInTheDocument();

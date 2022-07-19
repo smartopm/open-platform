@@ -1,10 +1,14 @@
 import React from 'react';
 import PersonIcon from '@mui/icons-material/Person';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Users from './Containers/Users';
 import UserShow from './Containers/UserShow';
 import AccessCheck from '../Permissions/Components/AccessCheck';
+import MyMessages from '../Messages/MyMessages';
+import MyForms from '../Forms/UserForms';
+import GuestInvitationRoutes from '../LogBook/GuestInvitation';
 
 const user = { module: 'user' };
 
@@ -64,7 +68,8 @@ export const Profile = {
   name: t => t('menu.my_profile'),
   featureName: 'Profile',
   moduleName: 'profile',
-  accessibleBy: []
+  accessibleBy: [],
+  hideFromMenu: ['admin']
 };
 
 export const Logout = {
@@ -79,4 +84,19 @@ export const Logout = {
   featureName: 'Logout',
   moduleName: 'logout',
   accessibleBy: []
+};
+
+export const MyAccount = {
+  routeProps: {
+    path: '',
+    component: <span />
+  },
+  styleProps: {
+    icon: <ManageAccountsIcon />,
+    className: 'account-menu-item'
+  },
+  name: t => t('menu.my_account'),
+  featureName: 'Profile',
+  accessibleBy: ['admin'],
+  subMenu: [Profile, GuestInvitationRoutes, MyMessages, MyForms]
 };

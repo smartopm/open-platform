@@ -26,6 +26,7 @@ import { switchGuards } from '../../../graphql/mutations';
 import { Footer } from '../../../components/Footer';
 import FeatureCheck from '../../Features';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
+import PageWrapper from '../../../shared/PageWrapper';
 
 // TODO: move to shared directory
 export const BootstrapInput = withStyles(() => ({
@@ -92,7 +93,7 @@ export function HomeGuard({ translate }) {
   if (loading) return <Spinner />;
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   return (
-    <div>
+    <PageWrapper pageTitle={translate('dashboard.dashboard')}>
       <Grid
         container
         style={{ display: 'flex', justifyContent: 'center' }}
@@ -269,7 +270,7 @@ export function HomeGuard({ translate }) {
           </div>
         </Grid>
       </Grid>
-    </div>
+    </PageWrapper>
   );
 }
 

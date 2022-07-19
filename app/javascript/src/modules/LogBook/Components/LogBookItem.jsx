@@ -19,7 +19,6 @@ import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import Paginate from '../../../components/Paginate';
 import GuestsView from './GuestsView';
-import VisitView from './VisitView';
 import CenteredContent from '../../../shared/CenteredContent';
 import { accessibleMenus, paginate } from '../utils';
 import GateFlowReport from './GateFlowReport';
@@ -190,7 +189,7 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
   }
 
   return (
-    <PageWrapper pageTitle={t('common:misc.log_book')}>
+    <PageWrapper pageTitle={t('common:misc.access')}>
       <DialogWithImageUpload
         open={isObservationOpen}
         handleDialogStatus={() => handleCancelClose()}
@@ -263,7 +262,6 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
               >
                 <StyledTab label={t('logbook.log_view')} {...a11yProps(0)} />
                 <StyledTab label={t('guest.guests')} {...a11yProps(1)} />
-                <StyledTab label={t('logbook.visit_view')} {...a11yProps(2)} />
               </StyledTabs>
             </Grid>
           </Grid>
@@ -304,16 +302,6 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
               limit={limit}
               timeZone={authState.user.community.timezone}
               speedDialOpen={open}
-            />
-          </TabPanel>
-          <TabPanel pad value={tabValue} index={2}>
-            <VisitView
-              tabValue={tabValue}
-              handleAddObservation={handleExitEvent}
-              offset={offset}
-              limit={limit}
-              timeZone={authState.user.community.timezone}
-              observationDetails={observationDetails}
             />
           </TabPanel>
         </Grid>
