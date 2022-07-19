@@ -18,7 +18,8 @@ import {
   isUploaded,
   isFileNameSelect,
   calendlyCallback,
-  isCalendlyEvent
+  isCalendlyEvent,
+  getValueFromProperty
 } from '../utils';
 
 describe('Utilities', () => {
@@ -559,5 +560,17 @@ describe('Utilities', () => {
 
     calendlyCallback(otherEvent, submit2)
     expect(submit2).not.toBeCalled()
+  })
+  it('should get and return proper values', () => {
+    const properties = [
+      {
+        shortDesc: 'amount or link',
+        description: 'this is a description',
+        fieldType: 'some'
+      }
+    ]
+
+    expect(getValueFromProperty(properties, 'some').description).toBe('this is a description')
+    expect(getValueFromProperty(properties, 'some').value).toBe('amount or link')
   })
 });
