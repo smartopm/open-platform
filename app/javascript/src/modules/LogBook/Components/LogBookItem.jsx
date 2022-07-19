@@ -249,7 +249,7 @@ export default function LogBookItem({ router, offset, tabValue }) {
         <Button
           startIcon={<ReplayIcon />}
           data-testid="reload"
-          onClick={() => eventsData.refetch()()}
+          onClick={() => eventsData.refetch()}
         >
           {t('common:misc.reload')}
         </Button>
