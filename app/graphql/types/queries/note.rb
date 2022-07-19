@@ -146,6 +146,9 @@ module Types::Queries::Note
     field :process_comments, [Types::NoteCommentType], null: false do
       description 'Retuns all comments in a process'
       argument :process_id, GraphQL::Types::ID, required: true
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+      argument :query, GraphQL::Types::String, required: false
     end
 
     field :document_comments, [Types::NoteCommentType], null: false do
@@ -343,7 +346,7 @@ module Types::Queries::Note
   end
   # rubocop:enable Metrics/AbcSize
 
-  def process_comments(process_id:, offset: 0, limit: 50)
+  def process_comments(process_id:, offset: 0, limit: 25, query: nil)
     unless permitted?(module: :note, permission: :can_fetch_process_comments)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
@@ -358,8 +361,9 @@ module Types::Queries::Note
     end
 
     Comments::NoteComment
-      .includes(:note, :user)
+      .includes(:note, :user, :reply_from)
       .where(note_id: process_task_ids)
+      .search(query)
       .limit(limit)
       .offset(offset)
   end

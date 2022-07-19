@@ -267,8 +267,8 @@ export const ProcessReplyComments = gql`
 `;
 
 export const ProcessCommentsQuery = gql`
-  query processComments($processId: ID!) {
-    processComments(processId: $processId) {
+  query processComments($processId: ID!, $offset: Int,  $limit: Int, $query: String ) {
+    processComments(processId: $processId, limit: $limit, offset: $offset, query: $query) {
       id
       body
       createdAt
