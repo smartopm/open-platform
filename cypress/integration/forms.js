@@ -48,6 +48,7 @@ describe('Custom Forms', () => {
     cy.get('[data-testid=no-form-available]').should('contain', 'No Forms');
 
     // Create a new Form
+    cy.wait(1000);
     cy.get('.new-permit-request-form-btn').click();
     cy.get('[data-testid=title]').type('Cypress Form');
     cy.get('[data-testid=description]').type('Simple Cypress Form');
