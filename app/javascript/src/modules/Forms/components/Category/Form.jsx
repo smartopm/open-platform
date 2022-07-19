@@ -153,11 +153,6 @@ export default function Form({
       setFormState({ ...formState, previewable: formDetailData.form?.preview });
       return;
     }
-    // Find the property that has a payment
-    // const payment = propertiesData.find(field => field.fieldType === 'payment');
-    // Find the property that has appointment
-    // const appointment = propertiesData.find(field => field.fieldType === 'appointment');
-
     const paymentValue = getValueFromProperty(propertiesData, 'payment')
     const { config } = flutterwaveConfig(authState, paymentValue, t);
     if(hasAppointment && !scheduled) {
@@ -211,8 +206,6 @@ export default function Form({
         },
       });
     } else {
-      // By the time, data gets here after calendly modal it will be undefined.
-      // This needs to be fixed
       saveFormData(
         propertiesData,
         formId,
