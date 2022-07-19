@@ -139,9 +139,10 @@
     "manage_forms": "Manage Forms",
     "time_card": "Time Card",
     "log_book": "Log Book",
-    "referrals": "Referrals",
+    "referrals": "Refer a friend",
     "discussions": "Discussions",
     "business": "Business",
+    "business_directory": "Business Directory",
     "support": "Support",
     "labels": "Labels",
     "posts": "Posts",
@@ -297,6 +298,7 @@
     "see_more_articles": "See More Articles",
     "amenity": "Amenity",
     "amenity_plural": "Amenities",
+    "book_amenity": "Book Amenity",
     "copy_info": "Copy link to the QR Code for web or email use.",
     "download_info": "Download file of the QR Code to print out.",
     "add_new": "Add New",
@@ -312,7 +314,9 @@
     "form_amount": "Form Amount",
     "no_history": "No Transaction Log Available",
     "transaction_logs": "Transaction Logs",
-    "add_payment": "Add Payment"
+    "add_payment": "Add Payment",
+    "access": "Access",
+    "reload": "Reload"
   },
   "menu": {
     "invoice": "Invoice",
@@ -333,6 +337,7 @@
     "payment_plural": "Payments",
     "plot": "Plot",
     "plot_plural": "Plots",
+    "my_properties": "My Properties",
     "form": "My Form",
     "form_plural": "My Forms",
     "customer_journey": "Customer Journey",
@@ -425,7 +430,12 @@
     "delete_task": "Delete Task",
     "task_deleted": "Task deleted successfully",
     "task_delete_confirmation_message": "Are you sure you want to delete this task?",
-    "task_list_in_use": "Cannot delete this Task List as it is in use by a process."
+    "task_list_in_use": "Cannot delete this Task List as it is in use by a process.",
+    "my_forms": "My Forms",
+    "my_account": "My Account",
+    "my_guest": "My Guest",
+    "guard_post": "Guard Post",
+    "get_support": "Get Support"
   },
   "user_types": {
     "admin": "Admin",

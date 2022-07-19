@@ -13,5 +13,6 @@ export default {
   },
   name: t => t('menu.my_messages'),
   featureName: 'Messages',
-  accessibleBy: allUserTypes
+  accessibleBy: allUserTypes,
+  hideFromMenu: ['admin']
 };

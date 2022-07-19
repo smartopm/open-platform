@@ -9,6 +9,8 @@ import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../../../__mocks__/authstate';
 import { SearchGuestsQuery } from '../../graphql/queries';
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
+import { SnackbarContext } from '../../../../../shared/snackbar/Context';
+import MockedSnackbarProvider, { mockedSnackbarProviderProps } from '../../../../__mocks__/mock_snackbar';
 
 describe('Guest Invitation Form', () => {
   const mockHistory = {
@@ -82,7 +84,9 @@ describe('Guest Invitation Form', () => {
         <Context.Provider value={userMock}>
           <MockedProvider mocks={[createInviteMock, searchGuestsMock]} addTypename={false}>
             <MockedThemeProvider>
-              <GuestInviteForm />
+              <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+                <GuestInviteForm />
+              </SnackbarContext.Provider>
             </MockedThemeProvider>
           </MockedProvider>
         </Context.Provider>
@@ -127,7 +131,9 @@ describe('Guest Invitation Form', () => {
         <Context.Provider value={userMock}>
           <MockedProvider mocks={[createInviteMock, searchGuestsMock]} addTypename={false}>
             <MockedThemeProvider>
-              <GuestInviteForm {...props} />
+              <MockedSnackbarProvider>
+                <GuestInviteForm {...props} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </MockedProvider>
         </Context.Provider>

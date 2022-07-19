@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
 import UserSelectButton, { UserProcessCSV, UserMenuitems, UserActionSelectMenu, UserSearch } from '../Components/UserHeader';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('User Detail Component', () => {
   const InitialConfig = MuiConfig;
@@ -132,9 +133,11 @@ describe('User Detail Component', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserActionSelectMenu
-              actionObject={actionObject}
-            />
+            <MockedSnackbarProvider>
+              <UserActionSelectMenu
+                actionObject={actionObject}
+              />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

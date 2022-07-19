@@ -9,7 +9,7 @@ import {
   Select,
   TextField
 } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
@@ -18,19 +18,20 @@ import { ProcessFormsQuery, ProcessTaskListsQuery } from '../graphql/process_lis
 import CenteredContent from '../../../shared/CenteredContent';
 import { ProcessCreateMutation, ProcessUpdateMutation } from '../graphql/process_list_mutation';
 import { formatError } from '../../../utils/helpers';
-import MessageAlert from '../../../components/MessageAlert';
 import PageWrapper from '../../../shared/PageWrapper';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function ProcessAction() {
   const matches = useMediaQuery('(max-width:900px)');
   const history = useHistory();
   const location = useLocation();
   const { t } = useTranslation(['process', 'common']);
-  const [alertOpen, setAlertOpen] = useState(false);
   const [action, setAction] = useState('create');
   const processInitialData = { processName: '', formId: '', noteListId: '' };
   const [processData, setProcessData] = useState(processInitialData);
   const [info, setInfo] = useState({ loading: false, error: false, message: '' });
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   useEffect(() => {
     if (location.pathname === '/processes/templates/edit') {
@@ -67,16 +68,6 @@ export default function ProcessAction() {
     });
   }
 
-  function handleClose() {
-    setInfo({
-      ...info,
-      error: false,
-      message: ''
-    });
-
-    setAlertOpen(false);
-  }
-
   function handleProcessCreate({ processName, formId, noteListId }) {
     processCreate({
       variables: {
@@ -93,12 +84,8 @@ export default function ProcessAction() {
         history.push('/processes/templates');
       })
       .catch(err => {
-        setInfo({
-          ...info,
-          error: true,
-          message: formatError(err.message)
-        });
-        setAlertOpen(true);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
+        setInfo({...info, loading: false });
       });
   }
 
@@ -112,21 +99,13 @@ export default function ProcessAction() {
       }
     })
       .then(() => {
-        setInfo({
-          ...info,
-          message: t('templates.process_updated'),
-          loading: false
-        });
-        setAlertOpen(true);
+        showSnackbar({ type: messageType.success, message: t('templates.process_updated') });
+        setInfo({...info, loading: false });
         history.push('/processes/templates');
       })
       .catch(err => {
-        setInfo({
-          ...info,
-          error: true,
-          message: formatError(err.message)
-        });
-        setAlertOpen(true);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
+        setInfo({...info, loading: false });
       });
   }
 
@@ -162,12 +141,6 @@ export default function ProcessAction() {
       pageTitle={action === 'edit' ? t('templates.edit_process') : t('templates.create_process')}
       breadCrumbObj={breadCrumbObj}
     >
-      <MessageAlert
-        type={info.error ? 'error' : 'success'}
-        message={info.message}
-        open={alertOpen}
-        handleClose={handleClose}
-      />
       <Container>
         <Grid
           container

@@ -43,9 +43,12 @@ module Mutations
       end
 
       def attachment(blob)
+        # for files greater than 2mb, use 60s for service_urls_expire_in
+        expires_at = blob.byte_size > 2_097_152 ? 60.seconds : ActiveStorage.service_urls_expire_in
+
         {
-          upload_url: blob.service_url_for_direct_upload,
-          url: blob.service_url,
+          upload_url: blob.service_url_for_direct_upload(expires_in: expires_at),
+          url: blob.service_url(expires_in: expires_at),
           # NOTE: we pass headers as JSON since they have no schema
           headers: blob.service_headers_for_direct_upload.to_json,
           blob_id: blob.id,

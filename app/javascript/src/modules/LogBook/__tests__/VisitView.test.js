@@ -21,7 +21,7 @@ describe('Should render Visits View Component', () => {
   const mocks = {
     request: {
       query: CurrentGuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '', type: 'allVisits', duration: null }
+      variables: { offset: 0, limit: 20, query: '', type: 'allVisits', duration: null }
     },
     result: {
       data: {
@@ -119,7 +119,7 @@ describe('Should render Visits View Component', () => {
   const errorMock = {
     request: {
       query: CurrentGuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '', type: 'allVisits', duration: null }
+      variables: { offset: 0, limit: 20, query: '', type: 'allVisits', duration: null }
     },
     result: {
       data: {
@@ -129,35 +129,25 @@ describe('Should render Visits View Component', () => {
     error: new Error('Something wrong happened')
   };
 
-  const props = {
-    handleAddObservation: jest.fn(),
-    observationDetails: {
-      loading: false,
-      refetch: false
-    }
-  };
   it('should render proper data', async () => {
-    const { getAllByTestId, getByText } = render(
+    const { getAllByTestId, getByText, getByTestId } = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[mocks]} addTypename>
           <MemoryRouter>
             <MockedThemeProvider>
-              <VisitView
-                tabValue={2}
-                offset={0}
-                limit={50}
-                query=""
-                timeZone="Africa/Maputo"
-                {...props}
-              />
+              <VisitView />
             </MockedThemeProvider>
           </MemoryRouter>
         </MockedProvider>
       </Context.Provider>
     );
-    // initially it should not contain any guests, this is because we lazily load this query
-    expect(getByText('logbook.no_invited_guests')).toBeInTheDocument();
     await waitFor(() => {
+      expect(getByTestId('access_search')).toBeInTheDocument();
+      expect(getByTestId('reload')).toBeInTheDocument();
+      expect(getByTestId('add_button')).toBeInTheDocument();
+      expect(getByText('logbook.total_entries')).toBeInTheDocument();
+      expect(getByText('logbook.total_exits')).toBeInTheDocument();
+      expect(getByText('logbook.total_in_city')).toBeInTheDocument();
       expect(getByText('Test another')).toBeInTheDocument();
       expect(getByText('Js user x')).toBeInTheDocument();
       expect(getByText('logbook:logbook.host:')).toBeInTheDocument();
@@ -182,10 +172,23 @@ describe('Should render Visits View Component', () => {
       expect(getAllByTestId('log_exit')[0]).not.toBeDisabled();
       expect(getAllByTestId('prev-btn')[0]).toBeInTheDocument();
       expect(getAllByTestId('next-btn')[0]).toBeInTheDocument();
-      
+
+      fireEvent.click(getByTestId('add_button'));
+      expect(getByText('logbook.new_invite')).toBeInTheDocument();
+      expect(getByText('logbook.add_observation')).toBeInTheDocument();
+
+      fireEvent.click(getByText('logbook.new_invite'));
+      expect(mockHistory.push).toBeCalled();
+
+      fireEvent.click(getByText('logbook.add_observation'));
+      expect(getByText('observations.add_your_observation')).toBeInTheDocument();
+      fireEvent.change(getByTestId('entry-dialog-field'), {
+        target: { value: 'This is an observation' }
+      });
+      expect(getByTestId('entry-dialog-field').value).toBe('This is an observation');
+      fireEvent.click(getByTestId('save'));
+
       fireEvent.click(getAllByTestId('log_exit')[0]);
-      expect(props.handleAddObservation).toBeCalled();
-      
       fireEvent.click(getAllByTestId('card')[3]);
       expect(mockHistory.push).toBeCalled();
       expect(getAllByTestId('card')[0]).toBeInTheDocument();
@@ -194,7 +197,12 @@ describe('Should render Visits View Component', () => {
       expect(getAllByTestId('user_name')[0].textContent).toContain('Js user x');
       expect(mockHistory.push).toBeCalled();
       expect(mockHistory.push).toBeCalledWith('/user/162f7517'); // check if it routes to the user page
-    }, 10);
+
+      fireEvent.click(getAllByTestId('next-btn')[0]);
+      fireEvent.click(getByTestId('access_search'));
+      expect(getByTestId('search')).toBeInTheDocument();
+      fireEvent.click(getByTestId('reload'));
+    }, 100);
   });
 
   it('should render error if something went wrong', async () => {
@@ -203,14 +211,7 @@ describe('Should render Visits View Component', () => {
         <MemoryRouter>
           <MockedProvider mocks={[errorMock]} addTypename>
             <MockedThemeProvider>
-              <VisitView
-                tabValue={2}
-                offset={0}
-                limit={50}
-                query=""
-                timeZone="Africa/Maputo"
-                {...props}
-              />
+              <VisitView />
             </MockedThemeProvider>
           </MockedProvider>
         </MemoryRouter>
@@ -219,6 +220,6 @@ describe('Should render Visits View Component', () => {
     await waitFor(() => {
       expect(getByText('Something wrong happened')).toBeInTheDocument();
       expect(getByText('logbook.no_invited_guests')).toBeInTheDocument();
-    }, 10);
+    }, 100);
   });
 });

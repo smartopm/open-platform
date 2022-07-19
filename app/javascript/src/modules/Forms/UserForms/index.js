@@ -29,5 +29,6 @@ export default {
   name: t => t('menu.form', { count: 0 }),
   featureName: 'MyForms',
   moduleName: currentModule,
-  accessibleBy: []
+  accessibleBy: [],
+  hideFromMenu: ['admin']
 };

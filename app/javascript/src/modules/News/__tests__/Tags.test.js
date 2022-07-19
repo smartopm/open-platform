@@ -6,6 +6,7 @@ import Tag from '../Components/Tag'
 import TagPosts from '../Components/TagPosts'
 import { PostTagUser } from '../../../graphql/queries'
 import  { useFetch }  from '../../../utils/customHooks'
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar'
 
 jest.mock('../../../utils/customHooks')
 const mck = jest.fn()
@@ -79,7 +80,9 @@ describe('TagPosts', () => {
           mocks={mocks}
           addTypename={false}
         >
-          <TagPosts {...props} />
+          <MockedSnackbarProvider>
+            <TagPosts {...props} />
+          </MockedSnackbarProvider>
         </MockedProvider>
       )
     })

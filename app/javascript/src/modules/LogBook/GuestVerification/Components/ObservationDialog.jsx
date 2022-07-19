@@ -9,9 +9,9 @@ import DialogWithImageUpload from '../../../../shared/dialogs/DialogWithImageUpl
 import { Spinner } from '../../../../shared/Loading';
 import useFileUpload from '../../../../graphql/useFileUpload';
 import { EntryRequestContext } from '../Context';
-import MessageAlert from '../../../../components/MessageAlert';
 import AddObservationNoteMutation from '../../graphql/logbook_mutations';
 import { initialRequestState } from '../constants';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function ObservationDialog() {
   const history = useHistory();
@@ -19,9 +19,12 @@ export default function ObservationDialog() {
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { updateRequest, request, observationDetails, setDetails } = useContext(
+  const { updateRequest, request } = useContext(
     EntryRequestContext
   );
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
   const { t } = useTranslation('logbook');
   const observationAction = observationNote ? 'Save' : 'Skip';
@@ -67,20 +70,12 @@ export default function ObservationDialog() {
       }
     })
       .then(() => {
-        setDetails({
-          ...observationDetails,
-          isError: false,
-          message: t('observations.created_observation')
-        });
+        showSnackbar({ type: messageType.success, message: t('observations.created_observation') });
         setIsLoading(false);
         resetForm(to);
       })
       .catch(error => {
-        setDetails({
-          ...observationDetails,
-          isError: true,
-          message: error.message
-        });
+        showSnackbar({ type: messageType.error, message: error.message });
         setIsLoading(false);
       });
   }
@@ -93,12 +88,6 @@ export default function ObservationDialog() {
 
   return (
     <>
-      <MessageAlert
-        type={!observationDetails.isError ? 'success' : 'error'}
-        message={observationDetails.message}
-        open={!!observationDetails.message}
-        handleClose={() => setDetails({ ...observationDetails, message: '' })}
-      />
       <DialogWithImageUpload
         open={request.isObservationOpen}
         handleDialogStatus={() =>

@@ -3,7 +3,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import LogBook from './Components/LogBook';
 import GuestsValidateRoutes from './GuestVerification';
 import AccessCheck from '../Permissions/Components/AccessCheck';
-import GuestInvitationRoutes from './GuestInvitation';
+import GuardPost from './Components/VisitView'
 
 const logBookPermissions = ['can_access_logbook'];
 
@@ -27,6 +27,14 @@ function RenderLogBook() {
   )
 }
 
+function RenderGuardPost() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={logBookPermissions}>
+      <GuardPost />
+    </AccessCheck>
+  )
+}
+
 const LogBooks = {
   routeProps: {
     path: '/logbook',
@@ -36,11 +44,26 @@ const LogBooks = {
   styleProps: {
     icon: <MenuBookIcon />,
   },
-  name: (t) => t('misc.log_book'),
+  name: (t) => t('misc.access'),
   featureName: 'LogBook',
   accessibleBy: [],
   moduleName: currentModule,
   subRoutes: [...GuestsValidateRoutes],
+};
+
+const GuardPosts = {
+  routeProps: {
+    path: '/guard_post',
+    component: RenderGuardPost,
+    exact: true,
+  },
+  styleProps: {
+    icon: <MenuBookIcon />,
+  },
+  name: (t) => t('menu.guard_post'),
+  featureName: 'LogBook',
+  accessibleBy: [],
+  moduleName: currentModule,
 };
 
 export default {
@@ -53,9 +76,9 @@ export default {
     icon: <MenuBookIcon />,
     className: 'logbook-menu-item'
   },
-  name: (t) => t('misc.log_book'),
+  name: (t) => t('misc.access'),
   featureName: 'LogBook',
   moduleName: 'gate_access',
   accessibleBy: [],
-  subMenu: [LogBooks, GuestInvitationRoutes],
+  subMenu: [LogBooks, GuardPosts],
 };

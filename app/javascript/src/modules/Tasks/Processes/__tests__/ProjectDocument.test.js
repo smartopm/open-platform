@@ -8,6 +8,7 @@ import ProjectDocument from '../Components/ProjectDocument';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import { DocumentCommentsQuery } from '../graphql/process_queries';
+import MockedSnackbarProvider from '../../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -69,7 +70,9 @@ describe('Project Document Component', () => {
         <MockedProvider mocks={documentCommentsMock} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProjectDocument attachments={attachments} loading={false} refetch={jest.fn()} />
+              <MockedSnackbarProvider>
+                <ProjectDocument attachments={attachments} loading={false} refetch={jest.fn()} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -102,7 +105,9 @@ describe('Project Document Component', () => {
         <MockedProvider>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProjectDocument attachments={[]} loading={false} refetch={jest.fn()} />
+              <MockedSnackbarProvider>
+                <ProjectDocument attachments={[]} loading={false} refetch={jest.fn()} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -118,7 +123,9 @@ describe('Project Document Component', () => {
         <MockedProvider>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProjectDocument attachments={[]} loading refetch={jest.fn()} />
+              <MockedSnackbarProvider>
+                <ProjectDocument attachments={[]} loading refetch={jest.fn()} />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -134,12 +141,14 @@ describe('Project Document Component', () => {
         <MockedProvider>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProjectDocument
-                attachments={[]}
-                loading={false}
-                refetch={jest.fn()}
-                error="sample error message"
-              />
+              <MockedSnackbarProvider>
+                <ProjectDocument
+                  attachments={[]}
+                  loading={false}
+                  refetch={jest.fn()}
+                  error="sample error message"
+                />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>

@@ -59,7 +59,7 @@ describe('Side Nav component', () => {
     expect(container.queryAllByTestId('sidenav-container')).toHaveLength(1);
 
     expect(container.queryByText('misc.users')).toBeInTheDocument();
-    expect(container.queryByText('misc.log_book')).toBeInTheDocument();
+    expect(container.queryByText('misc.access')).toBeInTheDocument();
     expect(container.queryByText('misc.time_card')).toBeInTheDocument();
     expect(container.queryByText('misc.action_flows')).toBeInTheDocument();
     expect(container.queryByText('menu.community')).toBeInTheDocument();
@@ -72,7 +72,7 @@ describe('Side Nav component', () => {
     // toggle the menu and make sure new menus will show
     fireEvent.click(container.queryByText('menu.community'));
     expect(container.queryByText('misc.campaigns')).toBeInTheDocument();
-    expect(container.queryByText('misc.business')).toBeInTheDocument();
+    expect(container.queryByText('misc.business_directory')).toBeInTheDocument();
     expect(container.queryByText('misc.news')).toBeInTheDocument();
     expect(container.queryByText('misc.labels')).toBeInTheDocument();
     expect(container.queryByText('misc.discussions')).toBeInTheDocument();

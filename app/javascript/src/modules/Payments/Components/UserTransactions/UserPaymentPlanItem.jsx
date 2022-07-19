@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useLazyQuery } from 'react-apollo';
@@ -33,7 +33,6 @@ import {
 import Text from '../../../../shared/Text';
 import Label from '../../../../shared/label/Label';
 import { invoiceStatus } from '../../../../utils/constants';
-import MessageAlert from '../../../../components/MessageAlert';
 import PaymentPlanUpdateMutation, {
   PaymentPlanCancelMutation
 } from '../../graphql/payment_plan_mutations';
@@ -50,6 +49,7 @@ import PlanDetail from './PlanDetail';
 import TransactionDetails from './TransactionDetails';
 import TransferPlanModal from './TransferPlanModal';
 import PlanMobileDataList, { PaymentMobileDataList } from './PaymentMobileDataList';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function UserPaymentPlanItem({
   plans,
@@ -82,8 +82,6 @@ export default function UserPaymentPlanItem({
   });
   const [confirmPlanCancelOpen, setConfirmPlanCancelOpen] = useState(false);
   const [TransferPlanModalOpen, setTransferPlanModalOpen] = useState(false);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
   const [transferType, setTransferType] = useState('');
   const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
   const [cancelPaymentPlan] = useMutation(PaymentPlanCancelMutation);
@@ -92,6 +90,9 @@ export default function UserPaymentPlanItem({
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   const anchorElOpen = Boolean(anchor);
   const planAnchorElOpen = Boolean(planAnchor);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [loadReceiptDetails, { loading, error, data }] = useLazyQuery(ReceiptPayment, {
     variables: { userId, id: paymentId },
     fetchPolicy: 'no-cache',
@@ -208,22 +209,14 @@ export default function UserPaymentPlanItem({
       }
     })
       .then(() => {
-        setPlanDetails({
-          ...details,
-          isLoading: false,
-          isError: false,
-          info: t('misc.payment_cancelled')
-        });
+        showSnackbar({ type: messageType.success, message: t('misc.payment_cancelled')})
+        setPlanDetails({...details, isLoading: false });
         refetch();
         balanceRefetch();
       })
       .catch(err => {
-        setPlanDetails({
-          ...details,
-          isLoading: false,
-          isError: true,
-          info: formatError(err.message)
-        });
+        showSnackbar({ type: messageType.error, message: formatError(err.message)})
+        setPlanDetails({...details, isLoading: false });
       });
   }
 
@@ -296,22 +289,14 @@ export default function UserPaymentPlanItem({
       }
     })
       .then(() => {
-        setPlanDetails({
-          ...details,
-          isLoading: false,
-          isError: false,
-          info: t('misc.pay_day_updated')
-        });
+        showSnackbar({ type: messageType.success, message: t('misc.pay_day_updated')})
+        setPlanDetails({ ...details, isLoading: false });
         refetch();
         balanceRefetch();
       })
       .catch(err => {
-        setPlanDetails({
-          ...details,
-          isLoading: false,
-          isError: true,
-          info: formatError(err.message)
-        });
+        showSnackbar({ type: messageType.error, message: formatError(err.message)})
+        setPlanDetails({ ...details, isLoading: false });
       });
   }
 
@@ -319,13 +304,6 @@ export default function UserPaymentPlanItem({
     event.stopPropagation();
     setAnchor(null);
   }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
-  };
 
   const menuData = {
     menuList,
@@ -368,16 +346,10 @@ export default function UserPaymentPlanItem({
           currencyData={currencyData}
           updatePaymentPlan={updatePaymentPlan}
           plansRefetch={refetch}
-          setMessageAlert={setMessageAlert}
-          setIsSuccessAlert={setIsSuccessAlert}
+          showSnackbar={showSnackbar}
+          messageType={messageType}
         />
       )}
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
       <TransferPlanModal
         open={TransferPlanModalOpen}
         handleModalClose={handleTransferPlanModalClose}
@@ -419,12 +391,6 @@ export default function UserPaymentPlanItem({
         message={t('misc.about_to_cancel')}
         handleClose={handleCloseConfirmModal}
         handleOnSave={handleCancelPlan}
-      />
-      <MessageAlert
-        type={!details.isError ? 'success' : 'error'}
-        message={details.info}
-        open={!!details.info}
-        handleClose={() => setPlanDetails({ ...details, info: '' })}
       />
       <Menu
         id="set-payment-date-menu"

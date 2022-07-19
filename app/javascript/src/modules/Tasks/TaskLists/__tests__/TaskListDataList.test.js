@@ -10,7 +10,7 @@ import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
 import { SubTasksQuery } from '../../graphql/task_queries';
 import { DeleteTask } from '../../graphql/task_mutation';
-import SnackbarProvider from '../../../../shared/snackbar/Context';
+import MockedSnackbarProvider from '../../../__mocks__/mock_snackbar';
 
 describe('Task Data components', () => {
   const task = {
@@ -84,13 +84,15 @@ describe('Task Data components', () => {
         <MockedProvider>
           <Context.Provider value={authState}>
             <MockedThemeProvider>
-              <TodoItem
-                task={task}
-                handleTaskDetails={() => {}}
-                handleAddSubTask={jest.fn()}
-                handleTodoClick={jest.fn}
-                createTaskListSubTask
-              />
+              <MockedSnackbarProvider>
+                <TodoItem
+                  task={task}
+                  handleTaskDetails={() => {}}
+                  handleAddSubTask={jest.fn()}
+                  handleTodoClick={jest.fn}
+                  createTaskListSubTask
+                />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </Context.Provider>
         </MockedProvider>
@@ -114,15 +116,13 @@ describe('Task Data components', () => {
         <MockedProvider mocks={mocks} addTypename={false}>
           <Context.Provider value={authState}>
             <MockedThemeProvider>
-              <SnackbarProvider>
-                <TaskListDataList
-                  task={task}
-                  handleTodoClick={jest.fn()}
-                  handleAddSubTask={jest.fn()}
-                  openSubTask
-                  handleOpenSubTasksClick={jest.fn()}
-                />
-              </SnackbarProvider>
+              <TaskListDataList
+                task={task}
+                handleTodoClick={jest.fn()}
+                handleAddSubTask={jest.fn()}
+                openSubTask
+                handleOpenSubTasksClick={jest.fn()}
+              />
             </MockedThemeProvider>
           </Context.Provider>
         </MockedProvider>
@@ -182,13 +182,15 @@ describe('Task Data components', () => {
         <MockedProvider mocks={subTaskMock} addTypename={false}>
           <Context.Provider value={authState}>
             <MockedThemeProvider>
-              <TodoItem
-                task={taskWithOrderedSubTasks}
-                handleTaskDetails={() => {}}
-                handleAddSubTask={jest.fn()}
-                handleTodoClick={jest.fn}
-                createTaskListSubTask
-              />
+              <MockedSnackbarProvider>
+                <TodoItem
+                  task={taskWithOrderedSubTasks}
+                  handleTaskDetails={() => {}}
+                  handleAddSubTask={jest.fn()}
+                  handleTodoClick={jest.fn}
+                  createTaskListSubTask
+                />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </Context.Provider>
         </MockedProvider>

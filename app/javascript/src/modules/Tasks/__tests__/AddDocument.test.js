@@ -6,6 +6,8 @@ import { MockedProvider } from '@apollo/react-testing';
 import AddDocument from '../Components/AddDocument';
 import authState from '../../../__mocks__/authstate';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
+import MockedSnackbarProvider, { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -15,13 +17,15 @@ describe('Add Document', () => {
       <Context.Provider value={authState}>
         <MockedProvider>
           <BrowserRouter>
-            <AddDocument
-              onChange={jest.fn()}
-              status="DONE"
-              signedBlobId="302df8c3-27bb-4175-adc1-43857e9"
-              taskId="302df8c3-27bb-4175-adc1-43857e972eb4"
-              refetch={jest.fn()}
-            />
+            <MockedSnackbarProvider>
+              <AddDocument
+                onChange={jest.fn()}
+                status="DONE"
+                signedBlobId="302df8c3-27bb-4175-adc1-43857e9"
+                taskId="302df8c3-27bb-4175-adc1-43857e972eb4"
+                refetch={jest.fn()}
+              />
+            </MockedSnackbarProvider>
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -38,20 +42,25 @@ describe('Add Document', () => {
       <Context.Provider value={authState}>
         <MockedProvider>
           <BrowserRouter>
-            <AddDocument
-              onChange={jest.fn()}
-              status="ERROR"
-              signedBlobId="302df8c3-27bb-4175-adc1-43857e9"
-              taskId="302df8c3-27bb-4175-adc1-43857e972eb4"
-              refetch={jest.fn()}
-            />
+            <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+              <AddDocument
+                onChange={jest.fn()}
+                status="ERROR"
+                signedBlobId="302df8c3-27bb-4175-adc1-43857e9"
+                taskId="302df8c3-27bb-4175-adc1-43857e972eb4"
+                refetch={jest.fn()}
+              />
+            </SnackbarContext.Provider>
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
     );
 
     await waitFor(() => {
-      expect(screen.queryByText('document.upload_error')).toBeInTheDocument();
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        type: mockedSnackbarProviderProps.messageType.error,
+        message: 'document.upload_error'
+      });
     });
   });
 });

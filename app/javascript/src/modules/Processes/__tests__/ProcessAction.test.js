@@ -8,6 +8,8 @@ import { Context } from '../../../containers/Provider/AuthStateProvider'
 import authState from '../../../__mocks__/authstate'
 import { ProcessFormsQuery, ProcessTaskListsQuery } from '../graphql/process_list_queries';
 import ProcessAction from '../Components/ProcessAction';
+import MockedSnackbarProvider, { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 const processMock = {
   id: "c5da1e74-ab0e-4010-903e-e6b28a3081ce",
@@ -61,7 +63,9 @@ describe('Create Process Form', () => {
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProcessAction />
+              <MockedSnackbarProvider>
+                <ProcessAction />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -112,7 +116,9 @@ describe('Edit Process Form', () => {
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProcessAction />
+              <MockedSnackbarProvider>
+                <ProcessAction />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -153,7 +159,9 @@ describe('Edit Process Form', () => {
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProcessAction />
+              <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+                <ProcessAction />
+              </SnackbarContext.Provider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -167,7 +175,7 @@ describe('Edit Process Form', () => {
     fireEvent.click(submitBtn);
 
     await waitFor(() => {
-      expect(screen.queryByTestId('message-alert')).toBeInTheDocument();
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalled();
     });
   });
 });

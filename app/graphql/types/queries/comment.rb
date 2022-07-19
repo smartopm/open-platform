@@ -6,7 +6,7 @@ module Types::Queries::Comment
 
   included do
     # Get comments for wordpress posts
-    field :post_comments, [Types::CommentType], null: true do
+    field :post_comments, [Types::PostType], null: true do
       description 'Get all comment entries per post'
       argument :post_id, String, required: true
       argument :offset, Integer, required: false
@@ -28,13 +28,15 @@ module Types::Queries::Comment
       argument :limit, Integer, required: false
     end
   end
+
+  # TODO(Refactor: This is no longer "comments", they are now "posts")
   def post_comments(post_id:, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     discs = community_discussions(post_id, 'post')
     return [] if discs.nil?
 
-    discs.comments.by_not_deleted.limit(limit).offset(offset)
+    discs.posts.not_deleted.limit(limit).offset(offset)
   end
 
   def discuss_comments(id:, offset: 0, limit: 100)

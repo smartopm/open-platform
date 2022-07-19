@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
-import React, { useState, useEffect } from 'react';
-import { Grid, Snackbar } from '@mui/material';
+import React, { useState, useEffect, useContext } from 'react';
+import { Grid } from '@mui/material';
 import { makeStyles, useTheme } from '@mui/styles';
 import { useMutation, useLazyQuery, useApolloClient, useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -17,11 +17,13 @@ import TaskDocuments from './TaskDocuments';
 import TaskInfoTop from './TaskInfoTop';
 import TaskSubTask from './TaskSubTask';
 import TaskDetailAccordion from './TaskDetailAccordion';
-import { useParamsQuery } from '../../../utils/helpers';
+import { formatError, useParamsQuery } from '../../../utils/helpers';
 import { SubTasksQuery, TaskDocumentsQuery } from '../graphql/task_queries';
 import AddSubTask from './AddSubTask';
 import useFileUpload from '../../../graphql/useFileUpload';
 import AddDocument from './AddDocument';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
+import { addHourToCurrentTime } from '../utils';
 
 const initialData = {
   user: '',
@@ -47,13 +49,11 @@ export default function TaskDetail({
   const [title, setTitle] = useState('');
   const limit = 3;
   const [description, setDescription] = useState('');
-  const [, setErrorMessage] = useState('');
   const [taskType, setTaskType] = useState('');
   const [selectedDate, setDate] = useState(new Date());
   const [taskStatus, setTaskStatus] = useState(false);
   const [userData, setData] = useState(initialData);
   const [taskUpdate] = useMutation(UpdateNote);
-  const [updated, setUpdated] = useState(false);
   const [autoCompleteOpen, setOpen] = useState(false);
   const [setReminder] = useMutation(TaskReminderMutation);
   const [reminderTime, setReminderTime] = useState(null);
@@ -66,6 +66,8 @@ export default function TaskDetail({
 
   const [anchorEl, setAnchorEl] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext)
 
   // Todo: figure out why reusing the customautocomplete component does not work for task update
   const [searchedUser, setSearchUser] = useState('');
@@ -137,11 +139,11 @@ export default function TaskDetail({
       variables: { id: data.id, completed: !taskStatus }
     })
       .then(() => {
-        setUpdated(true);
+        showSnackbar({ type: messageType.success, message: t('task.update_successful') });
         refetch();
       })
       .catch(err => {
-        setErrorMessage(err);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
@@ -158,12 +160,12 @@ export default function TaskDetail({
       }
     })
       .then(() => {
-        setUpdated(true);
+        showSnackbar({ type: messageType.success, message: t('task.update_successful') });
         refetch();
         historyRefetch();
       })
       .catch(err => {
-        setErrorMessage(err);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
@@ -194,12 +196,12 @@ export default function TaskDetail({
     })
       .then(() => {
         handleClose();
-        const timeScheduled = new Date(Date.now() + hour * 60 * 60000).toISOString();
+        const timeScheduled = addHourToCurrentTime(hour);
         setReminderTime(timeFormat(timeScheduled));
-        setUpdated(true);
+        showSnackbar({ type: messageType.success, message: t('task.update_successful') });
         refetch();
       })
-      .catch(err => setErrorMessage(err));
+      .catch(err => showSnackbar({ type: messageType.error, message: formatError(err.message) }));
   }
 
   function currentActiveReminder() {
@@ -207,7 +209,7 @@ export default function TaskDetail({
       assigneeNote => assigneeNote.userId === currentUser.id
     );
 
-    const timeScheduled = reminderTime || assignedNote?.reminderTime;
+    const timeScheduled = reminderTime || new Date(assignedNote?.reminderTime);
     let formattedTime = null;
     if (timeScheduled && new Date(timeScheduled).getTime() > new Date().getTime()) {
       formattedTime = timeFormat(timeScheduled);
@@ -236,20 +238,11 @@ export default function TaskDetail({
 
   useEffect(() => {
     setDefaultData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [data]);
 
   return (
     <div data-testid='task-detail'>
       <form>
-        <Snackbar
-          open={updated}
-          autoHideDuration={3000}
-          onClose={() => setUpdated(!updated)}
-          color="primary"
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          message={t('task.update_successful')}
-        />
         <Grid style={{ paddingBottom: '20px' }}>
           <div className={classes.section} data-testid="task-info-section">
             <TaskInfoTop

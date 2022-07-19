@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -21,8 +21,8 @@ import ListHeader from '../../../../shared/list/ListHeader';
 import ButtonComponent from '../../../../shared/buttons/Button';
 import Transactions from './Transactions';
 import PaymentPlanModal from './PaymentPlanModal';
-import MessageAlert from '../../../../components/MessageAlert';
 import GeneralPlanList from './GeneralPlanList'
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function PaymentPlans({ userId, user, userData }) {
   const { t } = useTranslation(['payment', 'common']);
@@ -45,9 +45,10 @@ export default function PaymentPlans({ userId, user, userData }) {
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   const [offset, setOffset] = useState(Number(page) || 0);
   const [planModalOpen, setPlanModalOpen] = useState(false);
-  const [message, setMessage] = useState({ isError: false, detail: '' });
-  const [alertOpen, setAlertOpen] = useState(false);
   const [filtering, setFiltering] = useState(false);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [loadPlans, { loading, error, data, refetch }] = useLazyQuery(UserPlans, {
     variables: { userId, limit, offset },
     fetchPolicy: 'no-cache',
@@ -230,12 +231,6 @@ export default function PaymentPlans({ userId, user, userData }) {
                     </div>
                    )}
                 </div>
-                <MessageAlert
-                  type={message.isError ? 'error' : 'success'}
-                  message={message.detail}
-                  open={alertOpen}
-                  handleClose={() => setAlertOpen(false)}
-                />
                 {planModalOpen && (
                   <PaymentPlanModal
                     open={planModalOpen}
@@ -245,8 +240,8 @@ export default function PaymentPlans({ userId, user, userData }) {
                     currency={currency}
                     paymentPlansRefetch={refetch}
                     landParcelsData={landParcelsData}
-                    setMessage={setMessage}
-                    openAlertMessage={() => setAlertOpen(true)}
+                    showSnackbar={showSnackbar}
+                    messageType={messageType}
                     balanceRefetch={balanceRefetch}
                     genRefetch={genRefetch}
                   />

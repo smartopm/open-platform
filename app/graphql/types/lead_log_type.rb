@@ -7,8 +7,9 @@ module Types
   class LeadLogType < Types::BaseObject
     field :id, ID, null: false
     field :name, String, null: true
-    field :user, Types::UserType, null: false
-    field :acting_user, Types::UserType, null: false
+    field :user, Types::UserType, null: false, resolve: Resolvers::BatchResolver.load(:user)
+    field :acting_user, Types::UserType, null: false,
+                                         resolve: Resolvers::BatchResolver.load(:acting_user)
     field :log_type, String, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :amount, GraphQL::Types::Float, null: true

@@ -8,8 +8,8 @@ import { ImportCreate } from '../../../graphql/mutations';
 import CenteredContent from '../../../components/CenteredContent';
 import Loading from '../../../shared/Loading';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import MessageAlert from '../../../components/MessageAlert';
 import PageWrapper from '../../../shared/PageWrapper'
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate);
@@ -19,8 +19,8 @@ export default function UsersImport() {
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const { token } = useContext(Context);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   function createImport() {
     setIsLoading(true);
@@ -29,27 +29,19 @@ export default function UsersImport() {
     })
       .then(() => {
         setIsLoading(false);
-        setMessageAlert(
-          "Your import is currently being processed. You'll receive a mail when it's done."
-        );
-        setIsSuccessAlert(true);
+        showSnackbar({
+          type: messageType.success,
+          message: "Your import is currently being processed. You'll receive a mail when it's done."
+        });
       })
       .catch(err => {
         setIsLoading(false);
-        setMessageAlert(err.message);
-        setIsSuccessAlert(false);
+        showSnackbar({type: messageType.error, message: err.message });
       });
   }
 
   function onCancel() {
     return history.push('/users');
-  }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
   }
 
   function processCsv(evt) {
@@ -73,12 +65,6 @@ export default function UsersImport() {
 
   return (
     <PageWrapper>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
       <Grid container style={{ margin: '5px auto', width: '95%' }}>
         <Grid item md={6}>
           You can upload a .csv file with users. The following are the expected fields with

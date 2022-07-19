@@ -4,6 +4,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import UsersImport from '../Containers/UsersImport';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 jest.mock('@rails/activestorage/src/file_checksum', async () => jest.fn());
 describe('UsersImport component', () => {
@@ -12,7 +13,9 @@ describe('UsersImport component', () => {
       <MockedProvider mocks={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UsersImport />
+            <MockedSnackbarProvider>
+              <UsersImport />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -27,7 +30,9 @@ describe('UsersImport component', () => {
       <MockedProvider mocks={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UsersImport />
+            <MockedSnackbarProvider>
+              <UsersImport />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -46,7 +51,9 @@ describe('UsersImport component', () => {
       <MockedProvider mocks={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UsersImport />
+            <MockedSnackbarProvider>
+              <UsersImport />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

@@ -23,8 +23,8 @@ export default function PlanDetail({
   currencyData,
   updatePaymentPlan,
   plansRefetch,
-  setMessageAlert,
-  setIsSuccessAlert
+  showSnackbar,
+  messageType
 }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)');
@@ -84,15 +84,13 @@ export default function PlanDetail({
           setMutationLoading(false);
           setEditing(false);
           handleModalClose();
-          setMessageAlert(t('misc.payment_plan_updated'));
-          setIsSuccessAlert(true);
+          showSnackbar({ type: messageType.success, message: t('misc.payment_plan_updated') });
           plansRefetch();
         })
         .catch(err => {
           setMutationLoading(false);
           setEditing(false);
-          setMessageAlert(formatError(err.message));
-          setIsSuccessAlert(false);
+          showSnackbar({ type: messageType.error, message: formatError(err.message) });
           handleModalClose();
         });
     }
@@ -398,7 +396,10 @@ PlanDetail.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   plansRefetch: PropTypes.func.isRequired,
-  setMessageAlert: PropTypes.func.isRequired,
-  setIsSuccessAlert: PropTypes.func.isRequired,
+  showSnackbar: PropTypes.func.isRequired,
+  messageType: PropTypes.shape({
+    success: PropTypes.string,
+    error: PropTypes.string,
+  }).isRequired,
   updatePaymentPlan: PropTypes.func.isRequired
 };

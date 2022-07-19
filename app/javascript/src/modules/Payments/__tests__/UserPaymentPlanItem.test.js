@@ -10,6 +10,8 @@ import PaymentPlanUpdateMutation from '../graphql/payment_plan_mutations';
 import authState from '../../../__mocks__/authstate';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 describe('Render Payment Plan Item', () => {
   const { t } = useTranslation('common');
@@ -56,6 +58,7 @@ describe('Render Payment Plan Item', () => {
       result: { data: { paymentPlanUpdate: { paymentPlan: { id: plan.id } } } }
     };
     const refetch = jest.fn();
+    const balanceRefetch = jest.fn();
     const currentUser = {
       userType: 'admin',
       permissions: [
@@ -74,14 +77,16 @@ describe('Render Payment Plan Item', () => {
         <MockedProvider mocks={[requestMock]} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <PaymentPlan
-                plans={plans}
-                currencyData={currency}
-                userId={user.userId}
-                currentUser={currentUser}
-                refetch={refetch}
-                balanceRefetch={() => {}}
-              />
+              <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+                <PaymentPlan
+                  plans={plans}
+                  currencyData={currency}
+                  userId={user.userId}
+                  currentUser={currentUser}
+                  refetch={refetch}
+                  balanceRefetch={balanceRefetch}
+                />
+              </SnackbarContext.Provider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -114,8 +119,12 @@ describe('Render Payment Plan Item', () => {
     expect(container.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(container.queryByText('misc.pay_day_updated')).toBeInTheDocument();
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        type: mockedSnackbarProviderProps.messageType.success,
+        message: 'misc.pay_day_updated'
+      });
       expect(refetch).toBeCalled();
+      expect(balanceRefetch).toBeCalled();
 
 
     expect(container.getAllByTestId('pay-menu')[0]).toBeInTheDocument();

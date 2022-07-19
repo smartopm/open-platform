@@ -1,7 +1,7 @@
 /* eslint-disable max-statements */
 /* eslint-disable max-lines */
 /* eslint-disable complexity */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import { Button, Grid, Chip, Typography, IconButton, useMediaQuery, MenuItem } from '@mui/material';
@@ -27,8 +27,8 @@ import UserAutoResult from '../../../shared/UserAutoResult';
 import { dateToString } from '../../../components/DateContainer';
 import AutoSaveField from '../../../shared/AutoSaveField';
 import { UpdateNote } from '../../../graphql/mutations';
-import MessageAlert from '../../../components/MessageAlert';
 import MenuList from '../../../shared/MenuList';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function TaskInfoTop({
   currentUser,
@@ -62,11 +62,10 @@ export default function TaskInfoTop({
   const [editingBody, setEditingBody] = useState(false);
   const [editingDueDate, setEditingDueDate] = useState(false);
   const [editingOrderNumber, setEditingOrderNumber] = useState(false);
-  const [taskStatus, setTaskStatus] = useState(data?.status);
-  const [updateDetails, setUpdateDetails] = useState({
-    isError: false,
-    message: ''
-  });
+  const [taskStatus, setTaskStatus] = useState(data.status);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const taskStatuses = {
     not_started: t('task.not_started'),
     in_progress: t('task.in_progress'),
@@ -120,13 +119,13 @@ export default function TaskInfoTop({
       variables: { id: data.id, [property]: convertedValue }
     })
       .then(() => {
-        setUpdateDetails({ isError: false, message: t('task.update_successful') });
+        showSnackbar({ type: messageType.success, message: t('task.update_successful') });
         setTimeout(() => {
           refetch();
         }, 500);
       })
       .catch(err => {
-        setUpdateDetails({ isError: true, message: formatError(err?.message) });
+        showSnackbar({ type: messageType.error, message: formatError(err?.message) });
       });
   }
 
@@ -144,12 +143,6 @@ export default function TaskInfoTop({
 
   return (
     <>
-      <MessageAlert
-        type={!updateDetails.isError ? 'success' : 'error'}
-        message={updateDetails.message}
-        open={!!updateDetails.message}
-        handleClose={() => setUpdateDetails({ ...updateDetails, message: '' })}
-      />
       <MenuList
         open={menuData.open}
         anchorEl={menuData.anchorEl}

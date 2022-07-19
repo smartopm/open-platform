@@ -8,6 +8,7 @@ import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
 import userMock from '../../../../../__mocks__/authstate';
 import { EntryRequestContext } from '../../Context';
+import MockedSnackbarProvider from '../../../../__mocks__/mock_snackbar';
 
 describe('Review component', () => {
   it('should render correctly', async () => {
@@ -16,21 +17,24 @@ describe('Review component', () => {
         <Context.Provider value={userMock}>
           <MockedProvider>
             <MockedThemeProvider>
-              <EntryRequestContext.Provider
-                value={{
-                  request: {
-                    id: 'somew2923',
-                    name: 'sme name',
-                    email: 'email@email.com',
-                    primaryNumber: '1234456',
-                    imageUrls: ['sample1', 'sample2'],
-                    videoUrl: 'sample3'
-                  },
-                  isGuestRequest: false
-                }}
-              >
-                <RequestConfirmation handleGotoStep={jest.fn()} />
-              </EntryRequestContext.Provider>
+              <MockedSnackbarProvider>
+                <EntryRequestContext.Provider
+                  value={{
+                    request: {
+                      id: 'somew2923',
+                      name: 'sme name',
+                      email: 'email@email.com',
+                      primaryNumber: '1234456',
+                      imageUrls: ['sample1', 'sample2'],
+                      videoUrl: 'sample3'
+                    },
+                    isGuestRequest: false
+                  }}
+                >
+                  
+                  <RequestConfirmation handleGotoStep={jest.fn()} />
+                </EntryRequestContext.Provider>
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </MockedProvider>
         </Context.Provider>
