@@ -24,6 +24,16 @@ RSpec.describe Types::Queries::Comment do
     let!(:another_user_discussion) do
       create(:discussion, user_id: current_user.id, community_id: current_user.community_id)
     end
+    let!(:discussion_post1) do
+      current_user.posts.create(content: 'This is an awesome comment',
+                                discussion_id: user_discussion.id,
+                                status: 'active',
+                                community_id: current_user.community_id)
+    end
+    let!(:discussion_post2) do
+      current_user.posts.create(content: 'This is an awesome but deleted comment',
+                                discussion_id: user_discussion.id, status: 'deleted')
+    end
     let!(:user_comments) do
       current_user.comments.create(content: 'This is an awesome comment',
                                    discussion_id: user_discussion.id,
@@ -75,7 +85,7 @@ RSpec.describe Types::Queries::Comment do
                                          site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'postComments').length).to eql 1
-      expect(result.dig('data', 'postComments', 0, 'id')).to eql user_comments.id
+      expect(result.dig('data', 'postComments', 0, 'id')).to eql discussion_post1.id
       expect(result.dig('data', 'postComments', 0, 'discussionId')).to eql user_discussion.id
       expect(result.dig('data', 'postComments', 0, 'content')).to eql 'This is an awesome comment'
       expect(result.dig('data', 'postComments', 0, 'user', 'id')).to eql current_user.id

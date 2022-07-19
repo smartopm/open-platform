@@ -49,7 +49,7 @@ export default function PostPage() {
     variables: { postId: id }
   });
   const { loading, data, refetch, fetchMore } = useQuery(PostCommentsQuery, {
-    variables: { discussionId: id, limit }
+    variables: { postId: id, limit }
   });
   const communityQuery = useQuery(CurrentCommunityQuery);
   const [discuss] = useMutation(DiscussionMutation);
