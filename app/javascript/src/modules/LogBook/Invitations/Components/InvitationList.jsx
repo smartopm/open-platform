@@ -259,8 +259,7 @@ export default function Invitations() {
       <br />
       {guestsLoading && !data ? (
         <Spinner />
-      ) : (
-        data?.scheduledRequests.length &&
+      ) : data?.scheduledRequests.length ? (
         data?.scheduledRequests.map(visit => (
           <Invitation
             key={visit.id}
@@ -274,9 +273,11 @@ export default function Invitations() {
             matches={matches}
           />
         ))
+      ) : (
+        <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
       )}
       <CenteredContent>
-        {data?.scheduledRequests.length ? (
+        {data?.scheduledRequests.length > 0 && (
           <Button
             variant="outlined"
             onClick={loadMore}
@@ -285,8 +286,7 @@ export default function Invitations() {
           >
             {t('search:search.load_more')}
           </Button>
-        ) : (
-          t('logbook.no_invited_guests'))}
+        )}
       </CenteredContent>
     </PageWrapper>
   );
