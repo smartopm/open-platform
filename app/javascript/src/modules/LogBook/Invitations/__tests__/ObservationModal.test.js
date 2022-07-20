@@ -116,5 +116,10 @@ describe('ObservationModal Component', () => {
     await waitFor(() => {
       expect(props.handleSaveObservation).toHaveBeenCalled();
     });
+
+    fireEvent.click(container.getByTestId('cancel'));
+    await waitFor(() => {
+      expect(props.handleCancelClose).toHaveBeenCalled();
+    });
   });
 });
