@@ -25,6 +25,12 @@ import SearchInput from '../../../shared/search/SearchInput';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
 
+
+/**
+ * @Deprecated because there is a separate page (component) for viewing all guests/invitations
+ * @param {*} param0
+ * @returns
+ */
 export default function GuestsView({
   tabValue,
   handleAddObservation,
