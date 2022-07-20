@@ -36,7 +36,7 @@ const GuestInvitationRoutes = {
   featureName: 'Guest List',
   moduleName: 'guest_list',
   accessibleBy: [],
-  hideFromMenu: ['admin'],
+  hideFromMenu: ['admin', 'site_manager'],
   subRoutes: [
     {
       routeProps: {
