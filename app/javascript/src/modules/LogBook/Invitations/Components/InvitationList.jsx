@@ -95,7 +95,7 @@ export default function Invitations() {
   ];
 
   const breadCrumbObj = {
-    linkText: t('logbook:log_title.logbook'),
+    linkText: t('common:misc.access'),
     linkHref: '/logbook',
     pageName: t('common:menu.invitations'),
   };

@@ -102,7 +102,7 @@ describe('Should render Guests View Component', () => {
     );
 
     expect(container.getByTestId('page_breadcrumb')).toBeInTheDocument();
-    expect(container.getByText('logbook:log_title.logbook')).toBeInTheDocument();
+    expect(container.getByText('common:misc.access')).toBeInTheDocument();
     expect(container.getByTestId('page_name')).toBeInTheDocument();
     expect(container.getByTestId('page_title')).toBeInTheDocument();
     expect(container.getByTestId('SearchIcon')).toBeInTheDocument();
