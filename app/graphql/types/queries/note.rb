@@ -143,6 +143,14 @@ module Types::Queries::Note
       argument :process_id, GraphQL::Types::ID, required: true
     end
 
+    field :process_comments, [Types::NoteCommentType], null: false do
+      description 'Retuns all comments in a process'
+      argument :process_id, GraphQL::Types::ID, required: true
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+      argument :query, GraphQL::Types::String, required: false
+    end
+
     field :document_comments, [Types::NoteCommentType], null: false do
       description 'Retuns all comments where a document is tagged'
       argument :tagged_document_id, GraphQL::Types::ID, required: true
@@ -230,13 +238,13 @@ module Types::Queries::Note
     end
 
     # Admins will see all comments in the project that require reply
-    Comments::NoteComment
-      .where(
-        note_id: task_ids,
-        reply_required: true,
-        replied_at: nil,
-      )
-      .limit(limit).offset(offset)
+    Comments::NoteComment.includes(:note)
+                         .where(
+                           note_id: task_ids,
+                           reply_required: true,
+                           replied_at: nil,
+                         )
+                         .limit(limit).offset(offset)
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
@@ -324,7 +332,7 @@ module Types::Queries::Note
       resolved: [],
     }
 
-    projects_query(process_id).each do |project|
+    projects_query_lite(process_id).each do |project|
       process_task_ids.concat(project_task_ids(parent_task: project))
     end
 
@@ -337,6 +345,28 @@ module Types::Queries::Note
     process_reply_comments
   end
   # rubocop:enable Metrics/AbcSize
+
+  def process_comments(process_id:, offset: 0, limit: 25, query: nil)
+    unless permitted?(module: :note, permission: :can_fetch_process_comments)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    validate_process(process_id: process_id)
+
+    process_task_ids = []
+
+    projects_query_lite(process_id).each do |project|
+      process_task_ids.concat(project_task_ids(parent_task: project))
+    end
+
+    Comments::NoteComment
+      .includes(:note, :user, :reply_from)
+      .where(note_id: process_task_ids)
+      .search(query)
+      .limit(limit)
+      .offset(offset)
+  end
   # rubocop:enable Metrics/MethodLength
 
   def user_tasks
@@ -380,15 +410,16 @@ module Types::Queries::Note
   end
 
   def user_replied_requested_comments(task_ids)
-    Comments::NoteComment.where(
-      note_id: task_ids,
-      reply_required: true,
-      user_id: context[:current_user],
-    ).or(Comments::NoteComment.where(
-           note_id: task_ids,
-           reply_required: true,
-           reply_from_id: context[:current_user],
-         ))
+    Comments::NoteComment.includes(:note, :user)
+                         .where(
+                           note_id: task_ids,
+                           reply_required: true,
+                           user_id: context[:current_user],
+                         ).or(Comments::NoteComment.includes(:note, :user).where(
+                                note_id: task_ids,
+                                reply_required: true,
+                                reply_from_id: context[:current_user],
+                              ))
   end
 
   # rubocop:disable Metrics/MethodLength
@@ -460,7 +491,7 @@ module Types::Queries::Note
       sent: [],
       received: [],
       resolved: [],
-      others: Comments::NoteComment.where(
+      others: Comments::NoteComment.includes(:note).where(
         note_id: task_ids,
         reply_required: false,
       ),
@@ -683,6 +714,18 @@ module Types::Queries::Note
   end
   # rubocop:enable Metrics/MethodLength
 
+  def projects_query_lite(process_id)
+    process_form_users = context[:site_community].process_form_users(process_id)&.pluck(:id)
+
+    context[:site_community]
+      .notes
+      .includes(
+        :sub_notes,
+      )
+      .where(parent_note_id: nil, form_user_id: process_form_users)
+      .for_site_manager(current_user)
+  end
+
   def authorize
     return if permitted?(module: :note, permission: :can_fetch_task_by_id)
 
@@ -698,7 +741,7 @@ module Types::Queries::Note
   end
 
   def project_tagged_comments(task_ids)
-    Comments::NoteComment.where(
+    Comments::NoteComment.includes(:note, :reply_from).where(
       reply_from: context[:current_user],
       note_id: task_ids,
       reply_required: true,
@@ -713,7 +756,7 @@ module Types::Queries::Note
                      .includes(:parent_note)
                      .where(id: task_ids)
 
-    Comments::NoteComment.where(
+    Comments::NoteComment.includes(:note).where(
       note_id: assigned_tasks.pluck(:id),
       reply_required: true,
       replied_at: nil,

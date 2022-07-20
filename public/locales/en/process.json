@@ -36,6 +36,8 @@
     "received": "Received",
     "resolved": "Resolved",
     "reply_submitted": "Reply Submitted",
-    "no_comment": "No comments available"
+    "no_comment": "No comments available",
+    "list_view": "View all comments",
+    "tab_view": "View by Reply status"
   }
 }

@@ -1744,7 +1744,7 @@ RSpec.describe Types::Queries::Note do
         end
       end
 
-      describe 'Processes comments' do
+      describe 'Processes Reply comments' do
         let(:process_reply_comments_query) do
           <<~GQL
             query processReplyComments($processId: ID!) {
@@ -1766,6 +1766,22 @@ RSpec.describe Types::Queries::Note do
                 resolved {
                   id
                   body
+                }
+              }
+            }
+          GQL
+        end
+
+        let(:process_comments_query) do
+          <<~GQL
+            query processComments($processId: ID!) {
+              processComments(processId: $processId) {
+                id
+                body
+                createdAt
+                replyFrom {
+                  id
+                  name
                 }
               }
             }

@@ -82,7 +82,7 @@ export default function QueryBuilder({
   }
 
   return (
-    <div style={{ outline: 'none' }}>
+    <div style={{ outline: 'none' }} data-testid="query-builder">
       <Query
         {...config}
         value={treeConfig.tree}
