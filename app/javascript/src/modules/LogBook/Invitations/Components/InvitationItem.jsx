@@ -25,6 +25,7 @@ export default function Invitation({
       key={visit.id}
       clickdata={{ clickable: true, handleClick: () => handleCardClick(visit) }}
       sx={{ mb: 2 }}
+      data-testid="visit_card"
     >
       <Grid container spacing={1}>
         <Grid item md={2} xs={5}>

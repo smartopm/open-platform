@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 
 import { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
@@ -8,9 +8,13 @@ import Invitation from '../Components/InvitationItem';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
+import { checkRequests } from '../../utils';
+
+jest.mock('../../utils');
 
 describe('Invitation Component', () => {
   const { t } = useTranslation(['common', 'logbook']);
+  checkRequests.mockReturnValue({ valid: false, title: 'valid', color: '#000' });
   const props = {
     visit: {
       id: 'a91dbad4-eeb4',
@@ -64,7 +68,7 @@ describe('Invitation Component', () => {
     loadingStatus: {}
   };
 
-  it('should render an invitation card', () => {
+  it('should render an invitation card', async () => {
     const container = render(
       <Context.Provider value={authState}>
         <MockedProvider>
@@ -92,6 +96,11 @@ describe('Invitation Component', () => {
     expect(container.getByText('guest_book.visit_time')).toBeInTheDocument();
     expect(container.getByText('guest_book.invalid_now')).toBeInTheDocument();
     expect(container.getByText('access_actions.grant_access')).toBeInTheDocument();
+
+    fireEvent.click(container.getByTestId('multiple_host'));
+    await waitFor(() => {
+      expect(props.handleViewUser).toHaveBeenCalled();
+    })
   });
 
   it('should render first character of visit name as avatar', () => {
@@ -109,6 +118,7 @@ describe('Invitation Component', () => {
     );
 
     expect(container.getByTestId('request_preview')).toBeInTheDocument();
+    expect(container.getByTestId('visit_card')).toBeInTheDocument();
   });
 
   it('should render user name if not multiple invites', () => {
@@ -147,5 +157,30 @@ describe('Invitation Component', () => {
     );
 
     expect(container.getByTestId('loader')).toBeInTheDocument();
+    expect(container.getByTestId('grant_access_btn')).toBeDisabled();
+  });
+
+  it('should enable grant access button for an invitation', async () => {
+    checkRequests.mockReturnValue({ valid: true, title: 'valid', color: '#000' });
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <Invitation {...props} />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    const accessBtn = container.getByTestId('grant_access_btn');
+    expect(accessBtn).not.toBeDisabled();
+    expect(container.getByText('guest_book.valid')).toBeInTheDocument();
+
+    fireEvent.click(accessBtn);
+    await waitFor(() => {
+      expect(props.handleGrantAccess).toHaveBeenCalled();
+    })
   });
 });
