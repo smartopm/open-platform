@@ -50,7 +50,6 @@ describe('Invitation Component', () => {
       multipleInvites: true,
     },
     timeZone: 'Africa/Lagos',
-    handleCardClick: jest.fn(),
     handleGrantAccess: jest.fn(),
     handleViewUser: jest.fn(),
     t,
@@ -103,7 +102,7 @@ describe('Invitation Component', () => {
     })
   });
 
-  it('should render first character of visit name as avatar', () => {
+  it('should render first character of visit name as avatar', async() => {
     const customProps = { ...props, visit: { ...props.visit, thumbnailUrl: null } };
     const container = render(
       <Context.Provider value={authState}>
@@ -118,10 +117,9 @@ describe('Invitation Component', () => {
     );
 
     expect(container.getByTestId('request_preview')).toBeInTheDocument();
-    expect(container.getByTestId('visit_card')).toBeInTheDocument();
   });
 
-  it('should render user name if not multiple invites', () => {
+  it('should render user name if not multiple invites', async() => {
     const customProps = { ...props, visit: { ...props.visit, multipleInvites: false, status: 'canceled' } };
     const container = render(
       <Context.Provider value={authState}>
@@ -137,6 +135,11 @@ describe('Invitation Component', () => {
 
     expect(container.getByTestId('user_name')).toBeInTheDocument();
     expect(container.getByText('guest_book.pending')).toBeInTheDocument();
+
+    fireEvent.click(container.getByTestId('user_name'));
+    await waitFor(() => {
+      expect(props.handleViewUser).toHaveBeenCalled();
+    });
   });
 
   it('should render spinner instead as start icon for grant access btn', () => {

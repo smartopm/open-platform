@@ -10,7 +10,6 @@ import { Spinner } from '../../../../shared/Loading';
 export default function Invitation({
   visit,
   timeZone,
-  handleCardClick,
   handleGrantAccess,
   handleViewUser,
   t,
@@ -23,9 +22,7 @@ export default function Invitation({
   return (
     <Card
       key={visit.id}
-      clickdata={{ clickable: true, handleClick: () => handleCardClick(visit) }}
       sx={{ mb: 2 }}
-      data-testid="visit_card"
     >
       <Grid container spacing={1}>
         <Grid item md={2} xs={5}>
@@ -149,7 +146,6 @@ Invitation.propTypes = {
   theme: PropTypes.shape(PropTypes.Object).isRequired,
   loadingStatus: PropTypes.shape(PropTypes.Object).isRequired,
   timeZone: PropTypes.string,
-  handleCardClick: PropTypes.func.isRequired,
   handleGrantAccess: PropTypes.func.isRequired,
   handleViewUser: PropTypes.func.isRequired,
   matches: PropTypes.bool.isRequired,

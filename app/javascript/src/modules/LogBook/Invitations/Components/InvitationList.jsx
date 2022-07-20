@@ -113,13 +113,6 @@ export default function Invitations() {
     setBlobIds([]);
   }
 
-  function handleCardClick(visit) {
-    history.push({
-      pathname: `/request/${visit.id}`,
-      state: { from: 'guests', offset: 0 },
-    });
-  }
-
   function handleViewUser(event, user, isMultiple = false) {
     event.stopPropagation();
     history.push(`/user/${user.id}${isMultiple ? '?tab=Invitations' : ''}`);
@@ -275,7 +268,6 @@ export default function Invitations() {
             loadingStatus={loadingStatus}
             visit={visit}
             timeZone={tz}
-            handleCardClick={handleCardClick}
             handleGrantAccess={handleGrantAccess}
             handleViewUser={handleViewUser}
             t={t}
