@@ -44,7 +44,7 @@ const LogBooks = {
   styleProps: {
     icon: <MenuBookIcon />,
   },
-  name: (t) => t('misc.access'),
+  name: (t) => t('misc.logs'),
   featureName: 'LogBook',
   accessibleBy: [],
   moduleName: currentModule,

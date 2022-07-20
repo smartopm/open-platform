@@ -91,36 +91,31 @@ describe('LogBook Component', () => {
     await waitFor(() => {
       expect(container.queryAllByTestId('card')[0]).toBeInTheDocument();
       expect(container.queryByTestId('name')).toBeInTheDocument();
-      expect(container.queryByTestId('speed_dial_btn')).toBeInTheDocument();
-      expect(container.queryByTestId('logbook_tabs')).toBeInTheDocument();
       expect(container.queryByTestId('observation_note')).toBeInTheDocument();
       expect(container.queryByTestId('created-at')).toBeInTheDocument();
       expect(container.queryAllByText('misc.previous')[0]).toBeInTheDocument();
       expect(container.queryAllByText('misc.next')[0]).toBeInTheDocument();
-      expect(container.queryByText('logbook.log_view')).toBeInTheDocument();
-      expect(container.queryByText('guest.guests')).toBeInTheDocument();
-      expect(container.queryAllByText('logbook.no_invited_guests')[0]).toBeInTheDocument();
-      expect(container.queryAllByText('search.search_for')[0]).toBeInTheDocument();
-      expect(container.queryByTestId('refresh_btn')).toBeInTheDocument();
-      expect(container.queryByTestId('refresh_btn')).not.toBeDisabled()
-      
-      fireEvent.change(container.queryByLabelText('simple tabs example'));
+      expect(container.getByTestId('add_button')).toBeInTheDocument();
+
+      fireEvent.click(container.getByTestId('add_button'));
+      expect(container.getByText('logbook.new_invite')).toBeInTheDocument();
+      expect(container.getAllByText('logbook.add_observation')[0]).toBeInTheDocument();
+
+      fireEvent.click(container.getAllByText('logbook.add_observation')[0]);
+      expect(container.getByText('observations.add_your_observation')).toBeInTheDocument();
+      fireEvent.change(container.getByTestId('entry-dialog-field'), {
+        target: { value: 'This is an observation' }
+      });
+      expect(container.getByTestId('entry-dialog-field').value).toBe('This is an observation');
+      fireEvent.click(container.getByTestId('save'));
+      fireEvent.click(container.getByTestId('access_search'));
+      expect(container.getByTestId('search')).toBeInTheDocument();
+      fireEvent.click(container.getByTestId('reload'));
 
       fireEvent.change(container.queryAllByTestId('menu-list')[0]);
       expect(container.queryAllByText('logbook.view_details')[0]).toBeInTheDocument();
       expect(container.queryAllByText('logbook.add_observation')[0]).toBeInTheDocument();
-
-      fireEvent.click(container.queryAllByText('logbook.add_observation')[0]);
-      expect(container.queryByText('observations.add_your_observation')).toBeInTheDocument();
-
-      fireEvent.change(container.queryByTestId('entry-dialog-field'), {
-        target: { value: 'This is an observation' }
-      });
-      expect(container.queryByTestId('entry-dialog-field').value).toBe('This is an observation');
-      fireEvent.click(container.queryByTestId('save'));
-
       fireEvent.click(container.queryAllByTestId('next-btn')[0]);
-
     }, 20);
   });
 });

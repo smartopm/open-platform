@@ -101,15 +101,12 @@ describe('Guest Invitation Form', () => {
 
     fireEvent.change(getByTestId('search'), { target: { value: '090909090' } });
 
-    fireEvent.click(getByTestId('invite_button'));
-    // await waitFor(() => {
-    //   expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
-    //     type: mockedSnackbarProviderProps.messageType.success,
-    //     message: 'guest.guest_invited'
-    //   });
-    //   expect(mockHistory.push).toBeCalled();
-    //   expect(mockHistory.push).toBeCalledWith('/logbook/guests');
-    // }, 50);
+    // fireEvent.click(getByTestId('invite_button'));
+    //   await waitFor(() => {
+    //     expect(getAllByText('guest.guest_invited')[0]).toBeInTheDocument();
+    //     expect(mockHistory.push).toBeCalled();
+    //     expect(mockHistory.push).toBeCalledWith('/logbook/guests');
+    //   }, 50);
   });
 
   it('should render the same form for guest update', async () => {

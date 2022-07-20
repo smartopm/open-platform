@@ -5,7 +5,15 @@ require 'host_env'
 module Comments
   # Notes specific Comments
   class NoteComment < ApplicationRecord
+    include SearchCop
     include NoteHistoryRecordable
+
+    search_scope :search do
+      attributes :body
+      attributes user: 'user.name'
+      attributes reply_from: 'user.name'
+      attributes note: 'note.body'
+    end
 
     belongs_to :note, class_name: 'Notes::Note'
     belongs_to :user, class_name: 'Users::User'

@@ -139,9 +139,10 @@
     "manage_forms": "Manage Forms",
     "time_card": "Time Card",
     "log_book": "Log Book",
-    "referrals": "Referrals",
+    "referrals": "Refer a friend",
     "discussions": "Discussions",
     "business": "Business",
+    "business_directory": "Business Directory",
     "support": "Support",
     "labels": "Labels",
     "posts": "Posts",
@@ -297,6 +298,7 @@
     "see_more_articles": "See More Articles",
     "amenity": "Amenity",
     "amenity_plural": "Amenities",
+    "book_amenity": "Book Amenity",
     "copy_info": "Copy link to the QR Code for web or email use.",
     "download_info": "Download file of the QR Code to print out.",
     "add_new": "Add New",
@@ -314,7 +316,8 @@
     "transaction_logs": "Transaction Logs",
     "add_payment": "Add Payment",
     "access": "Access",
-    "reload": "Reload"
+    "reload": "Reload",
+    "logs": "Logs"
   },
   "menu": {
     "invoice": "Invoice",
@@ -335,6 +338,7 @@
     "payment_plural": "Payments",
     "plot": "Plot",
     "plot_plural": "Plots",
+    "my_properties": "My Properties",
     "form": "My Form",
     "form_plural": "My Forms",
     "customer_journey": "Customer Journey",
@@ -431,7 +435,8 @@
     "my_forms": "My Forms",
     "my_account": "My Account",
     "my_guest": "My Guest",
-    "guard_post": "Guard Post"
+    "guard_post": "Guard Post",
+    "get_support": "Get Support"
   },
   "user_types": {
     "admin": "Admin",

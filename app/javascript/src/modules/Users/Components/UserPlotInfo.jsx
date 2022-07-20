@@ -109,7 +109,6 @@ const useStyles = makeStyles(theme => ({
     listStyle: 'none',
     background: '#fafefe',
     padding: '10px',
-    width: '30%',
     margin: '10px',
     textAlign: 'center',
     border: `2px solid ${theme.palette.primary.main}`,

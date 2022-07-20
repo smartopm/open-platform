@@ -376,31 +376,50 @@ DoubleGDP:
         - can_access_own_forms
         - can_fetch_form_task_comments
   site_manager:
-    gate_access:
+    note:
       permissions:
         - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_view_create_task_button
+        - can_view_create_sub_task_button
+        - can_access_tasks
+        - can_view_task_lists
+        - can_delete_note
+    task_list:
+      permissions:
+        - can_see_menu_item
+        - can_view_task_lists
+        - can_create_task_lists
+        - can_edit_task_list
+        - can_delete_task_list
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
     profile:
       permissions:
         - can_see_menu_item
-    entry_request:
-      permissions:
-        - can_access_guest_list
-        - can_create_entry_request
-        - can_update_entry_request
-        - can_view_entry_requests
-        - can_view_entry_request
-        - can_invite_guest
-        - can_go_through_guest_verification
-        - can_update_invitation
-    guest_list:
+    community:
       permissions:
         - can_see_menu_item
-    user:
-      permissions:
-        - can_view_own_profile
-        - can_edit_own_profile
-        - can_view_guests
-        - can_search_guests
     discussion:
       permissions:
         - can_access_all_discussions
@@ -414,9 +433,43 @@ DoubleGDP:
     logout:
       permissions:
         - can_see_menu_item
-    event_log:
+    user:
       permissions:
-        - can_fetch_logbook_events
+        - can_get_users_lite
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_view_guests
+        - can_search_guests
+    my_forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_own_forms
+        - can_fetch_form_task_comments
+    amenity:
+      permissions:
+        - can_create_amenity
+        - can_access_amenities
+        - can_see_menu_item
+        - can_edit_amenities
+        - can_delete_amenities
+    entry_request:
+      permissions:
+        - can_see_menu_item
+        - can_access_guest_list
+        - can_access_logbook
+        - can_create_entry_request
+        - can_update_entry_request
+        - can_view_entry_requests
+        - can_view_entry_request
+        - can_invite_guest
+        - can_go_through_guest_verification
+        - can_update_invitation
+    gate_access:
+      permissions:
+        - can_see_menu_item
+    guest_list:
+      permissions:
+        - can_see_menu_item
   consultant:
     note:
       permissions:
@@ -1022,6 +1075,10 @@ Greenpark:
     user:
       permissions:
         - can_get_users_lite
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_view_guests
+        - can_search_guests
     my_forms:
       permissions:
         - can_see_menu_item
@@ -1034,6 +1091,24 @@ Greenpark:
         - can_see_menu_item
         - can_edit_amenities
         - can_delete_amenities
+    entry_request:
+      permissions:
+        - can_see_menu_item
+        - can_access_guest_list
+        - can_access_logbook
+        - can_create_entry_request
+        - can_update_entry_request
+        - can_view_entry_requests
+        - can_view_entry_request
+        - can_invite_guest
+        - can_go_through_guest_verification
+        - can_update_invitation
+    gate_access:
+      permissions:
+        - can_see_menu_item
+    guest_list:
+      permissions:
+        - can_see_menu_item
   site_worker:
     note:
       permissions:

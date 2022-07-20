@@ -24,6 +24,6 @@ describe('Amenity List', () => {
   });
   it('exports necessary info', () => {
     expect(RoutesInfo.routeProps.path).toBe('/amenities');
-    expect(RoutesInfo.name(t)).toBe('misc.amenity');
+    expect(RoutesInfo.name(t)).toBe('misc.book_amenity');
   });
 });

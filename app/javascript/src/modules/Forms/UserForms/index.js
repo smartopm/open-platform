@@ -30,5 +30,5 @@ export default {
   featureName: 'MyForms',
   moduleName: currentModule,
   accessibleBy: [],
-  hideFromMenu: ['admin']
+  hideFromMenu: ['admin', 'site_manager']
 };

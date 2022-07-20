@@ -266,6 +266,31 @@ export const ProcessReplyComments = gql`
   }
 `;
 
+export const ProcessCommentsQuery = gql`
+  query processComments($processId: ID!, $offset: Int,  $limit: Int, $query: String ) {
+    processComments(processId: $processId, limit: $limit, offset: $offset, query: $query) {
+      id
+      body
+      createdAt
+      groupingId
+      taggedAttachments
+      user {
+        id
+        name
+        imageUrl
+      }
+      replyFrom {
+        id
+        name
+      }
+      note {
+        id
+        body
+      }
+    }
+  }
+`;
+
 export const ProjectStagesQuery = gql`
   query projectStages($processId: ID!) {
     projectStages(processId: $processId)
