@@ -77,29 +77,41 @@ export default function FormContextProvider({ children }) {
 
   /**
    *
-   * @param {object} formData all form properties for this form being submitted
+   * @param {[object]} formData all form properties for this form being submitted
    * @param {String} formId form being submitted
    * @param {String} userId  the currently logged in user
    */
-  function saveFormData(formData, formId, userId, categories, formStatus = null, hasAgreedToTerms) {
+  function saveFormData(
+    formData,
+    formId,
+    userId,
+    categories = window.FormCategories,
+    formStatus = null,
+    hasAgreedToTerms
+  ) {
     if (filesToUpload.length !== uploadedImages.length) {
       return setImgUploadError(true);
     }
     setFormState({
       ...formState,
-      isSubmitting: true
+      isSubmitting: true,
     });
 
-    // eslint-disable-next-line no-unreachable
-    const fileSignType = formData.filter(item => item.fieldType === 'signature')[0];
-    const filledInProperties = extractValidFormPropertyValue(formProperties, 'submit');
+    // This is for calendly submission, the widget clears state for some reason
+    const formPropertyData = !formData.length ? window.FormPropertyData : formData;
+
+    const fileSignType = formPropertyData.filter(item => item.fieldType === 'signature')[0];
+    const filledInProperties = extractValidFormPropertyValue(
+      window.FilledInProperties || formProperties,
+      'submit'
+    );
 
     // get signedBlobId as value and attach it to the form_property_id
     if (formState.signed && signature.signedBlobId) {
       const newValue = {
         value: signature.signedBlobId,
         form_property_id: fileSignType.id,
-        image_blob_id: signature.signedBlobId
+        image_blob_id: signature.signedBlobId,
       };
       filledInProperties.push(newValue);
     }
@@ -114,7 +126,7 @@ export default function FormContextProvider({ children }) {
     });
 
     // update all form values
-    formData.map(prop => addPropWithValue(filledInProperties, prop.id));
+    formPropertyData.map(prop => addPropWithValue(filledInProperties, prop.id));
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
 
     if (!validateFormFields(filledInProperties, categories, formStatus)) return false;
@@ -125,8 +137,8 @@ export default function FormContextProvider({ children }) {
         userId,
         status: formStatus,
         propValues: cleanFormData,
-        hasAgreedToTerms
-      }
+        hasAgreedToTerms,
+      },
     })
       // eslint-disable-next-line no-shadow
       .then(({ data }) => {
@@ -136,7 +148,7 @@ export default function FormContextProvider({ children }) {
             error: true,
             info: data.formUserCreate.error,
             alertOpen: true,
-            isSubmitting: false
+            isSubmitting: false,
           });
           return;
         }
@@ -149,7 +161,7 @@ export default function FormContextProvider({ children }) {
           isSubmitting: false,
           previewable: false,
           successfulSubmit: true,
-          isDraft: formStatus === 'draft'
+          isDraft: formStatus === 'draft',
         });
       })
       .catch(err => {
@@ -158,10 +170,10 @@ export default function FormContextProvider({ children }) {
           error: true,
           info: err.message.replace(/GraphQL error:/, ''),
           alertOpen: true,
-          isSubmitting: false
+          isSubmitting: false,
         });
       });
-    return false
+    return false;
   }
   return (
     <FormContext.Provider
@@ -181,6 +193,7 @@ export default function FormContextProvider({ children }) {
         imgUploadError,
         setImgUploadError
       }}
+      displayName="FormContext"
     >
       {children}
     </FormContext.Provider>
