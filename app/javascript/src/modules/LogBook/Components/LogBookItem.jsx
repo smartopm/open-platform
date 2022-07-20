@@ -15,7 +15,6 @@ import IconButton from '@mui/material/IconButton';
 import LogEvents from './LogEvents';
 import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload';
 import useFileUpload from '../../../graphql/useFileUpload';
-import { Spinner } from '../../../shared/Loading';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import Paginate from '../../../components/Paginate';
@@ -31,6 +30,7 @@ import SearchInput from '../../../shared/search/SearchInput';
 import PageWrapper from '../../../shared/PageWrapper';
 import MenuList from '../../../shared/MenuList';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
+import { Spinner } from '../../../shared/Loading';
 
 const limit = 20;
 const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
@@ -297,6 +297,7 @@ export default function LogBookItem({ router, offset, tabValue }) {
         }}
         imageOnchange={img => onChange(img)}
         imageUrls={imageUrls}
+        onChange={onChange}
         status={status}
         closeButtonData={{
           closeButton: true,
@@ -381,4 +382,3 @@ LogBookItem.propTypes = {
   offset: PropTypes.number.isRequired,
   tabValue: PropTypes.number.isRequired,
 };
-

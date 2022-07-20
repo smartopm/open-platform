@@ -3,6 +3,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import LogBook from './Components/LogBook';
 import GuestsValidateRoutes from './GuestVerification';
 import AccessCheck from '../Permissions/Components/AccessCheck';
+import InvitationsRoutes from './Invitations';
 import GuardPost from './Components/VisitView'
 
 const logBookPermissions = ['can_access_logbook'];
@@ -80,5 +81,5 @@ export default {
   featureName: 'LogBook',
   moduleName: 'gate_access',
   accessibleBy: [],
-  subMenu: [LogBooks, GuardPosts],
+  subMenu: [LogBooks, GuardPosts, InvitationsRoutes],
 };

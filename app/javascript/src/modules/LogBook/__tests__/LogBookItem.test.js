@@ -95,7 +95,6 @@ describe('LogBook Component', () => {
       expect(container.queryByTestId('created-at')).toBeInTheDocument();
       expect(container.queryAllByText('misc.previous')[0]).toBeInTheDocument();
       expect(container.queryAllByText('misc.next')[0]).toBeInTheDocument();
-      expect(container.getByTestId('add_button')).toBeInTheDocument();
 
       fireEvent.click(container.getByTestId('add_button'));
       expect(container.getByText('logbook.new_invite')).toBeInTheDocument();
