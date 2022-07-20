@@ -2,7 +2,7 @@ import React from 'react';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import Invitations from './Components/InvitationList';
 
-const guestListPermissions = ['can_access_guest_list'];
+const guestListPermissions = ['can_view_entry_requests'];
 const currentModule = 'entry_request';
 
 function RenderInvitations() {
