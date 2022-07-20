@@ -235,4 +235,75 @@ describe('Form that creates other forms component', () => {
     expect(container.queryAllByText('form_fields.amount_to_pay')[0]).toBeInTheDocument();
     expect(container.queryAllByText('form_fields.description')[0]).toBeInTheDocument();
   });
+
+  it('should have a calendly input', async () => {
+    const closeMock = jest.fn();
+    const refetchMock = jest.fn();
+    const paymentFieldMock = {
+      request: {
+        query: FormPropertyQuery,
+        variables: { formId: '39c3b38e-136d-42e0', formPropertyId: '5290d212-edf8-4c1e-a20b' },
+      },
+      result: {
+        data: {
+          formProperty: {
+            id: '5290d212-edf8-4c1e-a20b',
+            fieldName: 'Last Name',
+            groupingId: 'Id-id2312',
+            fieldType: 'appointment',
+            fieldValue: [
+              {
+                value: '',
+                label: '',
+              },
+            ],
+            required: true,
+            adminUse: false,
+            order: '1',
+            __typename: 'FormProperties',
+          },
+        },
+      },
+    };
+
+    const formCategoriesMock = {
+      request: {
+        query: LiteFormCategories,
+        variables: { formId: '39c3b38e-136d-42e0' },
+      },
+      result: {
+        data: {
+          formCategories: [
+            {
+              id: '5290d212',
+              fieldName: 'Some Category',
+              __typename: "Categories",
+            },
+          ],
+        },
+      },
+    };
+    const container = render(
+      <MockedProvider
+        mocks={[paymentFieldMock, createPropertyMock, formCategoriesMock]}
+        addTypename
+      >
+        <MockedSnackbarProvider>
+          <FormPropertyCreateForm
+            formId={createPropertyMock.request.variables.formId}
+            categoryId=""
+            refetch={refetchMock}
+            close={closeMock}
+          />
+        </MockedSnackbarProvider>
+      </MockedProvider>
+    );
+    ReactTestUtils.Simulate.change(container.queryByTestId('field_type_selector'), {
+      target: { value: 'appointment' },
+    });
+    expect(container.queryByText('form_fields.field_name')).toBeInTheDocument();
+    // There should be an amount field when field_type === appointment
+    expect(container.queryAllByText('form_fields.calendly_link')[0]).toBeInTheDocument();
+    expect(container.queryAllByText('form_fields.description')[0]).toBeInTheDocument();
+  });
 });

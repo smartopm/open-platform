@@ -55,7 +55,7 @@ describe('Render Form Component', () => {
       number: 1,
       formDetailRefetch: () => {}
     };
-  
+
     const wrapper = render(
       <MockedProvider>
         <Context.Provider value={userMock}>
@@ -76,7 +76,7 @@ describe('Render Form Component', () => {
     fireEvent.change(inputElement, { target: { files: [file] } });
     expect(wrapper.queryByText('form:errors.wrong_file_type')).not.toBeInTheDocument();
   });
-  
+
   it('should contain proper form properies with upload field and returns errors for wrong file type', () => {
     const props = {
       formPropertiesData: {
@@ -92,7 +92,7 @@ describe('Render Form Component', () => {
       number: 1,
       formDetailRefetch: () => {}
     };
-  
+
     const wrapper = render(
       <MockedProvider>
         <Context.Provider value={userMock}>
@@ -104,7 +104,7 @@ describe('Render Form Component', () => {
         </Context.Provider>
       </MockedProvider>
     );
-  
+
     expect(wrapper.getByText('Resume')).toBeInTheDocument();
     expect(wrapper.getByText('form:misc.select_file')).toBeInTheDocument();
   });

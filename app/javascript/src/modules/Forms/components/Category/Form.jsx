@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 /* eslint-disable max-lines */
 /* eslint-disable complexity */
 import React, { useState, useContext, useEffect } from 'react';
@@ -14,7 +15,7 @@ import { FormCategoriesQuery } from '../../graphql/form_category_queries';
 import { Spinner } from '../../../../shared/Loading';
 import { FormContext } from '../../Context';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
-import { flattenFormProperties } from '../../utils';
+import { flattenFormProperties, getValueFromProperty } from '../../utils';
 import CategoryList from './CategoryList';
 import FormPreview from '../FormPreview';
 import MessageAlert from '../../../../components/MessageAlert';
@@ -26,6 +27,7 @@ import TermsAndCondition from '../TermsAndCondition';
 import flutterwaveConfig, { closeFlutterwaveModal } from '../../../Payments/TransactionLogs/utils';
 import { TransactionLogCreateMutation } from '../../../Payments/TransactionLogs/graphql/transaction_logs_mutation';
 import ListWrapper from '../../../../shared/ListWrapper';
+import CalendlyEmbed from '../FormProperties/CalendlyEmbed';
 
 export default function Form({
   editMode,
@@ -40,6 +42,7 @@ export default function Form({
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
   const [hasAgreedToTerms, setHasAgreedToTerms] = useState(false);
+  const [showCalendly, setShowCalendly] = useState(false)
   const [submittingPayment, setSubmittingPayment] = useState(false)
   const [data, setFormData] = useState({});
   const { t } = useTranslation(['common', 'form', 'payment']);
@@ -58,6 +61,7 @@ export default function Form({
     uploadedImages,
     filesToUpload,
     setImgUploadError,
+    formProperties
   } = useContext(FormContext);
   const authState = useContext(Context);
 
@@ -69,6 +73,8 @@ export default function Form({
   const formData = flattenFormProperties(categoriesData.data?.formCategories);
   // check if this submission includes a payment type
   const hasPayment = formData.some(field => field.fieldType === 'payment');
+  const hasAppointment = formData.some(field => field.fieldType === 'appointment');
+  const appointmentValue = getValueFromProperty(formData, 'appointment')
 
   useEffect(() => {
     if (formState?.successfulSubmit && !formState?.isDraft) {
@@ -77,7 +83,7 @@ export default function Form({
         history.push('/');
       }, 3000);
     }
-  }, [formState.isDraft, formState.successfulSubmit]);
+  }, [formState.isDraft, formState.successfulSubmit, hasAppointment]);
 
   function handleEditCategory(category) {
     setCategoryFormOpen(true);
@@ -137,7 +143,7 @@ export default function Form({
     });
   }
 
-  function formSubmit(propertiesData, status, isPreview=false) {
+  function formSubmit(propertiesData, status, isPreview=false, scheduled=false) {
     if (filesToUpload.length !== uploadedImages.length) {
       setImgUploadError(true);
       return;
@@ -146,20 +152,23 @@ export default function Form({
     if (formDetailData?.form?.preview && !isPreview) {
       setFormState({ ...formState, previewable: formDetailData.form?.preview });
       return;
-    }    
-    // Find the property that has a payment
-    const payment = propertiesData.find(field => field.fieldType === 'payment');
-    const value = {
-      amount: payment?.shortDesc,
-      description: payment?.description,
-    };
-    const { config } = flutterwaveConfig(authState, value, t);
+    }
+    const paymentValue = getValueFromProperty(propertiesData, 'payment')
+    const { config } = flutterwaveConfig(authState, paymentValue, t);
+    if(hasAppointment && !scheduled) {
+      window.FormPropertyData = formData
+      window.FilledInProperties = formProperties
+      window.FormCategories = categoriesData.data?.formCategories
+      setShowCalendly(true)
+     return
+    }
+
     if (hasPayment) {
       setSubmittingPayment(true);
       window.FlutterwaveCheckout({
         ...config,
         callback: response =>  {
-          saveTransactionLog(response, value)
+          saveTransactionLog(response, paymentValue)
             .then(() => {
               saveFormData(
                 propertiesData,
@@ -183,7 +192,7 @@ export default function Form({
             })
             .finally(() => closeFlutterwaveModal())
         },
-        // If the modal was closed before proceeding with the payment, 
+        // If the modal was closed before proceeding with the payment,
         // then we should allow to resubmit the payment
         onclose: (inComplete) => {
           setSubmittingPayment(!inComplete);
@@ -230,6 +239,13 @@ export default function Form({
         open={formState.alertOpen || !!error || imgUploadError}
         handleClose={() => handleMessageAlertClose(imgUploadError)}
       />
+
+      <CalendlyEmbed
+        isOpen={showCalendly}
+        submitForm={() => formSubmit(formData, null, false, true)}
+        appointmentValue={appointmentValue}
+      />
+
       {categoryFormOpen && (
         <CategoryForm
           data={data}
@@ -268,6 +284,7 @@ export default function Form({
       <div
         data-testid="category-list-container"
         style={formState.isSubmitting ? { opacity: '0.3', pointerEvents: 'none' } : {}}
+        id="calendly"
       >
         <CategoryList
           categoriesData={categoriesData}
