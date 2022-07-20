@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 
 import { MockedProvider } from '@apollo/react-testing';
 import { useTranslation } from 'react-i18next';
@@ -63,5 +63,58 @@ describe('ObservationModal Component', () => {
     expect(container.getAllByTestId('upload_button').length).toBeGreaterThan(0);
     expect(container.getByTestId('upload_label')).toBeInTheDocument();
     expect(container.getByTestId('save')).toBeInTheDocument();
+  });
+
+  it('should call appropriate prop methods per event', async () => {
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider>
+          <MockedThemeProvider>
+            <ObservationModal {...props} />
+          </MockedThemeProvider>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    fireEvent.change(container.getByTestId('entry-dialog-field'), {
+      target: { value: 'My Note Here' },
+    });
+    await waitFor(() => {
+      expect(props.setObservationNote).toHaveBeenCalled();
+    })
+
+    fireEvent.click(container.getByTestId('entry-dialog-close-icon'));
+    await waitFor(() => {
+      expect(props.handleCancelClose).toHaveBeenCalled();
+    })
+  });
+
+  it('should call save observation handler when the save button is clicked', async () => {
+    const newProps = { ...props, observationDetails: { loading: false } };
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider>
+          <MockedThemeProvider>
+            <ObservationModal {...newProps} />
+          </MockedThemeProvider>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    fireEvent.change(container.getByTestId('entry-dialog-field'), {
+      target: { value: 'My Note Here' },
+    });
+
+    fireEvent.change(document.querySelector('[type="file"]'), {
+      target: { files: new File(['(⌐□_□)'], 'newFile.png', { type: 'image/png' }) },
+    });
+    await waitFor(() => {
+      expect(props.onChange).toHaveBeenCalled();
+    })
+
+    fireEvent.click(container.getByTestId('save'));
+    await waitFor(() => {
+      expect(props.handleSaveObservation).toHaveBeenCalled();
+    });
   });
 });
