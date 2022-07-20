@@ -456,6 +456,7 @@ DoubleGDP:
       permissions:
         - can_see_menu_item
         - can_access_guest_list
+        - can_access_logbook
         - can_create_entry_request
         - can_update_entry_request
         - can_view_entry_requests
@@ -1094,6 +1095,7 @@ Greenpark:
       permissions:
         - can_see_menu_item
         - can_access_guest_list
+        - can_access_logbook
         - can_create_entry_request
         - can_update_entry_request
         - can_view_entry_requests
