@@ -45,7 +45,7 @@ const GuestInvitationRoutes = {
         exact: true
       },
       name: 'Visit Request',
-      featureName: 'LogBook',
+      featureName: 'Guest List',
       accessibleBy: [],
     }
   ],
