@@ -142,7 +142,7 @@ describe('Tasks page', () => {
       // Mark as complete
       cy.visit('/tasks');
       cy.contains('Cypress test task');
-      cy.get('[data-testid=task_completion_toggle_button]').click();
+      cy.get('[data-testid=task_completion_toggle_button]').click({multiple: true, force: true});
       cy.contains('Cypress test task').should('not.exist');
       cy.visit('tasks?filter=completedTasks');
       cy.contains('Cypress test task');
