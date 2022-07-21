@@ -56,8 +56,8 @@ describe('test useUser', () => {
     const { result, waitFor } = apolloHookWrapper([userQueryMock]);
 
     await waitFor(() => {
-      expect(result?.current?.userLoading).toBe(false);
-      expect(result?.current?.userError).toBeUndefined();
+      expect(result?.current?.userSearchLoading).toBe(false);
+      expect(result?.current?.userSearchError).toBeUndefined();
       expect(result?.current?.userSearchData).toBeDefined();
     });
   });

@@ -67,7 +67,7 @@ export default function UsersList() {
     setAnchorEl(null);
   }
 
-  const { userSearchData, userLoading, userError } = useUsers(searchValue);
+  const { userSearchData, userSearchLoading, userSearchError } = useUsers(searchValue);
   const currentQueryPath = decodeURIComponent(location.search).replace('?', '');
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
@@ -318,8 +318,8 @@ export default function UsersList() {
     createCampaign();
   }
 
-  if (labelsLoading || userLoading) return <Spinner />;
-  const err = error || labelsError || userError;
+  if (labelsLoading || userSearchLoading) return <Spinner />;
+  const err = error || labelsError || userSearchError === undefined;
   if (err) {
     return <ErrorPage error={err?.message} />;
   }
@@ -605,7 +605,7 @@ export default function UsersList() {
                 />
               )}
 
-              {!userLoading && !userError && searchValue && userSearchData && (
+              {!userSearchLoading && !userSearchError && searchValue && userSearchData && (
                 <UserListCard
                   userData={userSearchData}
                   currentUserType={authState.user.userType}
