@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import SearchFilterList from './SearchFilterList';
-import { filterOptions } from '../../modules/LogBook/utils';
 
 /**
  * SearchInput Component
@@ -37,14 +36,16 @@ export default function SearchInput({
   filters,
   fullWidthOnMobile,
   fullWidth,
-  filterMenu
+  filterMenu,
+  filterOptions
 }) {
   const { t } = useTranslation(['logbook', 'search', 'common']);
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
 
-  function handleFilterClick() {
-    if (filterMenu) setOpen(prevOpen => !prevOpen);
+  function handleFilterClick(event) {
+    if (filterMenu) { setOpen(prevOpen => !prevOpen); }
+    else { handleFilter(event); }
   }
 
   function handleFilterSelect(event, filter) {
@@ -92,7 +93,7 @@ export default function SearchInput({
                 {filterRequired && (
                   <IconButton
                     aria-label="toggle filter visibility"
-                    onClick={handleFilterClick}
+                    onClick={(e) => handleFilterClick(e)}
                     edge="end"
                     data-testid="filter"
                     size="large"
@@ -130,7 +131,7 @@ export default function SearchInput({
                   id="composition-menu"
                   aria-labelledby="query-filter-icon"
                 >
-                  {filterOptions(t).map((option, i) => (
+                  {filterOptions?.map((option, i) => (
                     <MenuItem
                       data-testid={`${i}-${option.title}`}
                       key={option.value}
@@ -159,6 +160,7 @@ SearchInput.defaultProps = {
   fullWidth: true,
   filters: [],
   filterMenu: false,
+  filterOptions: [],
 };
 
 SearchInput.propTypes = {
@@ -173,4 +175,5 @@ SearchInput.propTypes = {
   fullWidthOnMobile: PropTypes.bool,
   fullWidth: PropTypes.bool,
   filterMenu: PropTypes.bool,
+  filterOptions: PropTypes.arrayOf(PropTypes.object)
 };

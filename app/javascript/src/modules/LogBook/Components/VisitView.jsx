@@ -18,7 +18,7 @@ import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
 import { dateToString } from '../../../components/DateContainer';
 import Text from '../../../shared/Text';
-import { checkRequests } from '../utils';
+import { checkRequests, filterOptions } from '../utils';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
@@ -389,6 +389,7 @@ export default function VisitView() {
             fullWidth={false}
             handleFilter={handleFilterData}
             filterMenu
+            filterOptions={filterOptions(t)}
           />
         </>
       )}
