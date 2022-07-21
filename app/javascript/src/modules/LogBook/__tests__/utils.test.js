@@ -7,7 +7,8 @@ import {
   accessibleMenus,
   checkVisitorsName,
   paginate,
-  formatCsvData
+  formatCsvData,
+  filterOptions
 } from '../utils';
 
 describe('logbook utils', () => {
@@ -259,5 +260,15 @@ describe('logbook utils', () => {
     expect(formatCsvData(data, subjects)[0]).toHaveProperty('logDate', '2022-03-14 21:11')
     expect(formatCsvData(data, subjects)[0]).toHaveProperty('guard', 'Some user')
     expect(formatCsvData(data, subjects)[1]).toHaveProperty('host', 'Host User')
+  });
+
+  it('should return an array of filterMenu items', () => {
+    const t = jest.fn();
+    const items = filterOptions(t);
+    expect(items).toHaveLength(4);
+    expect(items[0].value).toEqual('All');
+    expect(items[1].value).toEqual('today');
+    expect(items[2].value).toEqual('past7Days');
+    expect(items[3].value).toEqual('past30Days');
   });
 });
