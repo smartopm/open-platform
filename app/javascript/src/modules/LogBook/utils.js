@@ -157,3 +157,29 @@ export function formatCsvData(csvData, subjects) {
     reason: val.entryRequest?.reason
   }));
 }
+
+/**
+ * A reusable function to return list of filter menu options
+ * @param {function} t translation object instance
+ * @returns array of filter objects
+ */
+export function filterOptions(t) {
+  return [
+    {
+      title: t('common:misc.all'),
+      value: 'All',
+    },
+    {
+      title: t('logbook.today'),
+      value: 'today',
+    },
+    {
+      title: t('logbook.last_7_days'),
+      value: 'past7Days',
+    },
+    {
+      title: t('logbook.last_30_days'),
+      value: 'past30Days',
+    },
+  ];
+}

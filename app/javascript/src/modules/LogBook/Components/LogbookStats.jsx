@@ -10,6 +10,7 @@ import { LogbookStatsQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import CardComponent from '../../../shared/Card';
 import useLogbookStyles from '../styles';
+import { filterOptions } from '../utils';
 
 
 export default function LogbookStats({ tabValue, shouldRefetch, handleFilter, duration, isSmall }) {
@@ -51,25 +52,6 @@ export default function LogbookStats({ tabValue, shouldRefetch, handleFilter, du
     }
   ];
 
-  const filterOptions = [
-    {
-      title: t('common:misc.all'),
-      value: 'All'
-    },
-    {
-      title: t('logbook.today'),
-      value: 'today'
-    },
-    {
-      title: t('logbook.last_7_days'),
-      value: 'past7Days'
-    },
-    {
-      title: t('logbook.last_30_days'),
-      value: 'past30Days'
-    },
-  ]
-
   if (loading) return <Spinner />;
   return (
     <Grid container spacing={isSmall ? 0.5 : 4}>
@@ -84,7 +66,7 @@ export default function LogbookStats({ tabValue, shouldRefetch, handleFilter, du
             size="small"
             onChange={handleDurationFilter}
           >
-            {filterOptions.map((option, i) => (
+            {filterOptions(t).map((option, i) => (
               <MenuItem data-testid={`${i}-${option.title}`} key={option.value} value={option.value}>
                 {
                  `${t('common:misc.show')} ${option.title}`
