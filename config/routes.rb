@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get "/csv_import_sample/lead_download", to: "csv_export#download_lead_sample_csv"
   post "/sendgrid/webhook/:token", to: "sendgrid#webhook"
   post "/flutterwave/webhook", to: 'flutterwave#webhook'
+  post "/twilio/webhook", to: 'twilio#webhook'
 
   # Oauth routes
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }, class_name: "Users::User"

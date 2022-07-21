@@ -36,6 +36,7 @@ gem 'tzinfo-data', '~> 1.2021', '>= 1.2021.2'
 
 gem 'vonage', "~> 7.7.0"
 gem 'sendgrid-ruby', "~> 6.6.1"
+gem 'twilio-ruby', '~> 5.69.0'
 
 # For S3 file uploads in ActiveStorage
 gem "aws-sdk-s3", '~> 1.113.0', require: false
