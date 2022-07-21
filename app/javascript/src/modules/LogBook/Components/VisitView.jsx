@@ -22,16 +22,16 @@ import { checkRequests, filterOptions } from '../utils';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
-import Paginate from '../../../components/Paginate';
 import SearchInput from '../../../shared/search/SearchInput';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import PageWrapper from '../../../shared/PageWrapper';
 import MenuList from '../../../shared/MenuList';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
-import MessageAlert from '../../../components/MessageAlert';
 import useFileUpload from '../../../graphql/useFileUpload';
-import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload';
+import ObservationModal from '../Invitations/Components/ObservationModal';
+import useFetchMoreRecords from '../../../shared/hooks/useFetchMoreRecords';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function VisitView() {
   const initialFilter = { type: 'allVisits', duration: null };
@@ -43,14 +43,14 @@ export default function VisitView() {
   const timeZone = authState.user.community.timezone;
   const [searchOpen, setSearchOpen] = useState(false);
   const limit = 20;
-  const [offset, setOffset] = useState(0);
   const [clickedEvent, setClickedEvent] = useState({ refId: '', refType: '' });
   const [anchorEl, setAnchorEl] = useState(null);
   const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
   const { value, dbcValue, setSearchValue } = useDebouncedValue();
-  const { data, loading: guestsLoading, refetch, error } = useQuery(CurrentGuestEntriesQuery, {
+  const { data, loading: guestsLoading, refetch, error, fetchMore } = useQuery(
+    CurrentGuestEntriesQuery, {
     variables: {
-      offset: dbcValue.length ? 0 : offset,
+      offset: 0,
       limit,
       query: dbcValue.trim(),
       type: statsTypeFilter.type,
@@ -58,7 +58,7 @@ export default function VisitView() {
     },
     fetchPolicy: 'cache-and-network',
   });
-  const { t } = useTranslation(['logbook', 'common']);
+  const { t } = useTranslation(['logbook', 'common', 'search']);
   const [currentId, setCurrentId] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
   const history = useHistory();
@@ -76,10 +76,15 @@ export default function VisitView() {
     loading: false,
     refetch: false,
   });
-
+  const { loadMore, hasMoreRecord } = useFetchMoreRecords(fetchMore, 'currentGuests', {
+    offset: data?.currentGuests?.length,
+    limit,
+    query: dbcValue.trim(),
+  });
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient(),
   });
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   function resetImageData() {
     setImageUrls([]);
@@ -101,14 +106,6 @@ export default function VisitView() {
     setImageUrls(filteredImages);
   }
 
-  const modalDetails = {
-    title: t('observations.observation_title'),
-    inputPlaceholder: t('logbook.add_observation'),
-    uploadBtnText: t('observations.upload_image'),
-    subTitle: t('observations.add_your_observation'),
-    uploadInstruction: t('observations.upload_label'),
-  };
-
   // eslint-disable-next-line consistent-return
   function handleSaveObservation(log = clickedEvent, type) {
     const exitNote = 'Exited';
@@ -127,16 +124,23 @@ export default function VisitView() {
         attachedImages: blobIds
       }
     })
-    .then(() => {
-      setDetails({
-        ...observationDetails,
-        loading: false,
-        isError: false,
-        refetch: true,
+      .then(() => {
+        setDetails({
+          ...observationDetails,
+          loading: false,
+          isError: false,
+          refetch: true,
+          message:
+            type === 'exit'
+              ? t('logbook:observations.created_observation_exit')
+              : t('logbook:observations.created_observation'),
+        });
+      showSnackbar({
+        type: messageType.success,
         message:
           type === 'exit'
             ? t('logbook:observations.created_observation_exit')
-            : t('logbook:observations.created_observation')
+            : t('logbook:observations.created_observation'),
       });
       setObservationNote('');
       setClickedEvent({ refId: '', refType: '' });
@@ -144,13 +148,14 @@ export default function VisitView() {
       setIsObservationOpen(false);
       resetImageData();
     })
-    .catch(err => {
+      .catch(err => {
       setDetails({
         ...observationDetails,
         loading: false,
         isError: true,
-        message: err.message
+        message: err.message,
       });
+      showSnackbar({ type: messageType.error, message: err.message });
       // reset state in case it errs and user chooses a different log
       setObservationNote('');
       setClickedEvent({ refId: '', refType: '' });
@@ -166,21 +171,11 @@ export default function VisitView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  function paginate(action) {
-    if (action === 'prev') {
-      if (offset < limit) return;
-      setOffset(offset - limit);
-    } else if (action === 'next') {
-      setOffset(offset + limit);
-    }
-  }
-
-
   function handleCardClick(visit) {
     history.push({
       pathname: `/request/${visit.id}`,
       search: '?tab=2&type=guest',
-      state: { from: 'guests', offset },
+      state: { from: 'guests', offset: 0 },
     });
   }
 
@@ -327,53 +322,20 @@ export default function VisitView() {
       breadCrumbObj={breadCrumbObj}
       rightPanelObj={rightPanelObj}
     >
-      <MessageAlert
-        type={!observationDetails.isError ? 'success' : 'error'}
-        message={observationDetails.message}
-        open={!!observationDetails.message}
-        handleClose={() => setDetails({ ...observationDetails, message: '', refetch: false })}
-      />
-      <DialogWithImageUpload
-        open={isObservationOpen}
-        handleDialogStatus={() => handleCancelClose()}
-        observationHandler={{
-          value: observationNote,
-          handleChange: val => setObservationNote(val),
-        }}
-        imageOnchange={img => onChange(img)}
+
+      <ObservationModal
+        isObservationOpen={isObservationOpen}
+        handleCancelClose={handleCancelClose}
+        observationNote={observationNote}
+        setObservationNote={setObservationNote}
         imageUrls={imageUrls}
+        onChange={onChange}
         status={status}
-        closeButtonData={{
-          closeButton: true,
-          handleCloseButton,
-        }}
-        modalDetails={modalDetails}
-      >
-        {observationDetails.loading ? (
-          <Spinner />
-        ) : (
-          <>
-            <Button
-              onClick={() => handleCancelClose()}
-              color="secondary"
-              variant="outlined"
-              data-testid="cancel"
-            >
-              {t('common:form_actions.cancel')}
-            </Button>
-            <Button
-              onClick={() => handleSaveObservation()}
-              color="primary"
-              variant="contained"
-              data-testid="save"
-              style={{ color: 'white' }}
-              autoFocus
-            >
-              {t('common:form_actions.save')}
-            </Button>
-          </>
-        )}
-      </DialogWithImageUpload>
+        handleCloseButton={handleCloseButton}
+        observationDetails={observationDetails}
+        t={t}
+        handleSaveObservation={handleSaveObservation}
+      />
 
       {searchOpen && (
         <>
@@ -396,7 +358,7 @@ export default function VisitView() {
 
       <br />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
-      {guestsLoading ? (
+      {guestsLoading && !data ? (
         <Spinner />
       ) : data?.currentGuests?.length > 0 ? (
         data?.currentGuests.map(visit => (
@@ -549,13 +511,16 @@ export default function VisitView() {
         <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
       )}
       <CenteredContent>
-        <Paginate
-          offSet={offset}
-          limit={limit}
-          active={offset >= 1}
-          handlePageChange={paginate}
-          count={data?.currentGuests?.length}
-        />
+        {data?.currentGuests?.length > 0 && (
+          <Button
+            variant="outlined"
+            onClick={loadMore}
+            startIcon={guestsLoading && <Spinner />}
+            disabled={guestsLoading || !hasMoreRecord}
+          >
+            {t('search:search.load_more')}
+          </Button>
+        )}
       </CenteredContent>
     </PageWrapper>
   );
