@@ -20,7 +20,7 @@ describe('test useUser', () => {
   const userQueryMock = {
     request: {
       query: UsersDetails,
-      variables: { query: 'Anonymous', limit: 10 },
+      variables: { query: 'Anonymous', limit: 10, offset: 0 },
     },
     result: {
       data: {

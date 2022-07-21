@@ -317,9 +317,8 @@ export default function UsersList() {
     }
     createCampaign();
   }
-
   if (labelsLoading || userSearchLoading) return <Spinner />;
-  const err = error || labelsError || userSearchError === undefined;
+  const err = error || labelsError || userSearchError;
   if (err) {
     return <ErrorPage error={err?.message} />;
   }

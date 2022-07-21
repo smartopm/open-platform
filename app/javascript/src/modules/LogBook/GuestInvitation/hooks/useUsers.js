@@ -11,7 +11,7 @@ export default function useUsers(searchValue) {
     error: userSearchError,
     refetch,
   } = useQuery(UsersDetails, {
-    variables: { query: debouncedValue, limit: 10 },
+    variables: { limit: 10, offset: 0, query: debouncedValue },
     fetchPolicy: 'network-only',
   });
   useEffect(() => {
