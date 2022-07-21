@@ -12,7 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Grid from '@mui/material/Grid';
 import ReplayIcon from '@mui/icons-material/Replay';
 import Typography from '@mui/material/Typography';
-import { Avatar, Button, Chip, Divider, useTheme } from '@mui/material';
+import { Avatar, Button, Chip, useTheme } from '@mui/material';
 import { CurrentGuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
@@ -23,7 +23,6 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
 import Paginate from '../../../components/Paginate';
-import LogbookStats from './LogbookStats';
 import SearchInput from '../../../shared/search/SearchInput';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import PageWrapper from '../../../shared/PageWrapper';
@@ -375,29 +374,25 @@ export default function VisitView() {
           </>
         )}
       </DialogWithImageUpload>
+
       {searchOpen && (
-        <SearchInput
-          title={t('guest_book.visits')}
-          searchValue={value}
-          filterRequired
-          handleSearch={event => setSearchValue(event.target.value)}
-          handleClear={handleFilters}
-          filters={filters}
-          fullWidthOnMobile
-          fullWidth={false}
-          handleFilter={() => {}}
-          filterMenu
-        />
+        <>
+          <br />
+          <SearchInput
+            title={t('guest_book.visits')}
+            searchValue={value}
+            filterRequired
+            handleSearch={event => setSearchValue(event.target.value)}
+            handleClear={handleFilters}
+            filters={filters}
+            fullWidthOnMobile
+            fullWidth={false}
+            handleFilter={handleFilterData}
+            filterMenu
+          />
+        </>
       )}
-      <br />
-      <LogbookStats
-        tabValue={2}
-        shouldRefetch={observationDetails.refetch}
-        handleFilter={handleFilterData}
-        duration={statsTypeFilter.duration}
-        isSmall={matches}
-      />
-      <Divider />
+
       <br />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (

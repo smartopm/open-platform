@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import SearchFilterList from './SearchFilterList';
+import { filterOptions } from '../../modules/LogBook/utils';
 
 /**
  * SearchInput Component
@@ -38,13 +39,17 @@ export default function SearchInput({
   fullWidth,
   filterMenu
 }) {
-  const { t } = useTranslation('search');
+  const { t } = useTranslation(['logbook', 'search', 'common']);
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
 
-  function handleFilterClick(event) {
-    if(filterMenu) setOpen(prevOpen => !prevOpen);
-    handleFilter(event);
+  function handleFilterClick() {
+    if (filterMenu) setOpen(prevOpen => !prevOpen);
+  }
+
+  function handleFilterSelect(event, filter) {
+    handleClose(event);
+    handleFilter(filter, 'duration');
   }
 
   function handleClose(event) {
@@ -59,15 +64,15 @@ export default function SearchInput({
       <Grid item xs={fullWidthOnMobile ? 12 : 10} md={fullWidth ? 12 : 5}>
         <FormControl fullWidth variant="outlined">
           <InputLabel htmlFor="outlined-adornment-filter">
-            {t('search.search_for', { title })}
+            {t('search:search.search_for', { title })}
           </InputLabel>
           <OutlinedInput
             id="outlined-adornment-filter"
             type="search"
-            label={t('search.search_for', { title })}
+            label={t('search:search.search_for', { title })}
             value={searchValue}
             onChange={handleSearch}
-            placeholder={t('search.type_your_search')}
+            placeholder={t('search:search.type_your_search')}
             inputProps={{ 'data-testid': 'search' }}
             onClick={handleClick}
             startAdornment={<SearchIcon style={{ color: '#a1a1a1', marginRight: 8 }} />}
@@ -117,10 +122,7 @@ export default function SearchInput({
         disablePortal
       >
         {({ TransitionProps }) => (
-          <Grow
-            {...TransitionProps}
-            style={{transformOrigin: 'left top'}}
-          >
+          <Grow {...TransitionProps} style={{ transformOrigin: 'left top' }}>
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList
@@ -128,9 +130,15 @@ export default function SearchInput({
                   id="composition-menu"
                   aria-labelledby="query-filter-icon"
                 >
-                  <MenuItem onClick={(e) => console.log(e.target.value)}>Profile</MenuItem>
-                  <MenuItem onClick={(e) => console.log(e.target.value)}>My account</MenuItem>
-                  <MenuItem onClick={(e) => console.log(e.target.value)}>Logout</MenuItem>
+                  {filterOptions(t).map((option, i) => (
+                    <MenuItem
+                      data-testid={`${i}-${option.title}`}
+                      key={option.value}
+                      onClick={(event) => handleFilterSelect(event, option.value)}
+                    >
+                      {`${t('common:misc.show')} ${option.title}`}
+                    </MenuItem>
+                  ))}
                 </MenuList>
               </ClickAwayListener>
             </Paper>
