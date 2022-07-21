@@ -64,6 +64,8 @@ describe('UserForm Component', () => {
       expect(container.queryByLabelText('common:misc.customer_journey_stage')).toBeInTheDocument();
       expect(container.queryByTestId('submit_btn')).not.toBeDisabled();
       expect(container.queryByTestId('submit_btn')).toHaveTextContent('common:form_actions.submit');
+      expect(container.queryByText('common:misc.referrals')).not.toBeInTheDocument();
+      expect(container.queryByText('menu.user_edit')).toBeInTheDocument();
     }, 10);
 
     ReactTestUtils.Simulate.change(container.queryByTestId('username'), {
@@ -164,6 +166,8 @@ describe('UserForm Component', () => {
 
     expect(container.queryByTestId('primary_phone').value).toContain('090909090909');
     expect(container.queryByTestId('referralText')).toHaveTextContent('common:misc.referral_text');
+    expect(container.queryByText('common:misc.referrals')).toBeInTheDocument();
+    expect(container.queryByText('menu.user_edit')).not.toBeInTheDocument();
     expect(container.queryByTestId('referralBtn')).not.toBeDisabled();
     expect(container.queryByTestId('referralBtn')).toHaveTextContent('common:misc.refer');
     expect(formatContactType('0233082', 'phone')).toMatchObject({

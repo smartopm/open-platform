@@ -264,7 +264,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
   }
 
   return (
-    <PageWrapper pageTitle={t('menu.user_edit')}>
+    <PageWrapper pageTitle={isFromRef ? t('common:misc.referrals') : t('menu.user_edit')}>
       <ModalDialog
         handleClose={handleModal}
         handleConfirm={handleModalConfirm}
@@ -318,8 +318,8 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
         {isFromRef && (
           <div className="form-group">
             <TextField
-              className="form-control"
-              label={t('common:form_fields.client_name')}
+              fullWidth
+              label={t('common:misc.client_name')}
               type="text"
               onChange={event => setData({ ...data, name: event.target.value })}
               value={authState.user?.name || ''}
