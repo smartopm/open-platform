@@ -1,23 +1,29 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import {
   FormControl,
   Grid,
+  Grow,
   IconButton,
   InputAdornment,
   InputLabel,
-  OutlinedInput
+  MenuItem,
+  MenuList,
+  OutlinedInput,
+  Paper,
+  Popper
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearOutlined from '@mui/icons-material/ClearOutlined';
 import FilterListOutlined from '@mui/icons-material/FilterListOutlined';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import SearchFilterList from './SearchFilterList';
 
 /**
  * SearchInput Component
  * Prefer to use a debounced value on filters, to avoid showing each letter as the user is typing
- * @returns 
+ * @returns
  */
 export default function SearchInput({
   title,
@@ -29,12 +35,28 @@ export default function SearchInput({
   handleClick,
   filters,
   fullWidthOnMobile,
-  fullWidth
+  fullWidth,
+  filterMenu
 }) {
   const { t } = useTranslation('search');
+  const anchorRef = useRef(null);
+  const [open, setOpen] = useState(false);
+
+  function handleFilterClick(event) {
+    if(filterMenu) setOpen(prevOpen => !prevOpen);
+    handleFilter(event);
+  }
+
+  function handleClose(event) {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+    setOpen(false);
+  }
+
   return (
     <Grid container spacing={2} alignItems="center">
-      <Grid item xs={fullWidthOnMobile ? 12 : 10} md={fullWidth ? 12 :5}>
+      <Grid item xs={fullWidthOnMobile ? 12 : 10} md={fullWidth ? 12 : 5}>
         <FormControl fullWidth variant="outlined">
           <InputLabel htmlFor="outlined-adornment-filter">
             {t('search.search_for', { title })}
@@ -61,31 +83,60 @@ export default function SearchInput({
                   >
                     <ClearOutlined />
                   </IconButton>
-            )}
+                )}
                 {filterRequired && (
                   <IconButton
                     aria-label="toggle filter visibility"
-                    onClick={(e) => handleFilter(e)}
+                    onClick={handleFilterClick}
                     edge="end"
                     data-testid="filter"
                     size="large"
+                    aria-controls={filterMenu && open ? 'filter-menu' : undefined}
+                    aria-haspopup={filterMenu && open ? 'true' : false}
+                    aria-expanded={filterMenu && open ? 'true' : undefined}
+                    ref={filterMenu ? anchorRef : undefined}
+                    id="query-filter-icon"
                   >
                     <FilterListOutlined />
                   </IconButton>
-            )}
+                )}
               </InputAdornment>
-        )}
+            )}
           />
         </FormControl>
-
       </Grid>
       <Grid item xs={12} md={7}>
-        <SearchFilterList
-          handleClearFilters={handleClear}
-          filters={filters}
-          isSmall={false}
-        />
+        <SearchFilterList handleClearFilters={handleClear} filters={filters} isSmall={false} />
       </Grid>
+      <Popper
+        open={open}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        placement="bottom-end"
+        transition
+        disablePortal
+      >
+        {({ TransitionProps }) => (
+          <Grow
+            {...TransitionProps}
+            style={{transformOrigin: 'left top'}}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList
+                  autoFocusItem={open}
+                  id="composition-menu"
+                  aria-labelledby="query-filter-icon"
+                >
+                  <MenuItem onClick={(e) => console.log(e.target.value)}>Profile</MenuItem>
+                  <MenuItem onClick={(e) => console.log(e.target.value)}>My account</MenuItem>
+                  <MenuItem onClick={(e) => console.log(e.target.value)}>Logout</MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
     </Grid>
   );
 }
@@ -99,6 +150,7 @@ SearchInput.defaultProps = {
   fullWidthOnMobile: false,
   fullWidth: true,
   filters: [],
+  filterMenu: false,
 };
 
 SearchInput.propTypes = {
@@ -112,4 +164,5 @@ SearchInput.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string),
   fullWidthOnMobile: PropTypes.bool,
   fullWidth: PropTypes.bool,
+  filterMenu: PropTypes.bool,
 };

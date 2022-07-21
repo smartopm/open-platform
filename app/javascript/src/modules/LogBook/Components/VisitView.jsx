@@ -223,9 +223,7 @@ export default function VisitView() {
   }
 
   const filterTypes = {
-    peopleEntered: t('logbook.total_entries'),
-    peopleExited: t('logbook.total_exits'),
-    peoplePresent: t('logbook.total_in_city'),
+    all: t('logbook.all'),
     today: t('logbook.today'),
     past7Days: t('logbook.last_7_days'),
     past30Days: t('logbook.last_30_days'),
@@ -381,12 +379,14 @@ export default function VisitView() {
         <SearchInput
           title={t('guest_book.visits')}
           searchValue={value}
-          filterRequired={false}
+          filterRequired
           handleSearch={event => setSearchValue(event.target.value)}
           handleClear={handleFilters}
           filters={filters}
           fullWidthOnMobile
           fullWidth={false}
+          handleFilter={() => {}}
+          filterMenu
         />
       )}
       <br />
