@@ -17,6 +17,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
+import Tooltip from '@mui/material/Tooltip';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useMutation } from 'react-apollo';
 import Avatar from '../../../components/Avatar';
@@ -191,15 +192,53 @@ export default function UserItem({
               </IconButton>
             </Grid>
           )}
+
           <Grid item md={3} sm={6} xs={12}>
-            <Typography
-              variant="body2"
-              data-testid="user_email"
-              gutterBottom
-              className={isMobile ? classes.emailWithElipsisMobile : classes.emailWithElipsis}
-            >
-              {user.email}
-            </Typography>
+            {user?.email?.length > 26 && !isMobile ? (
+              <Tooltip
+                title={user?.email}
+                arrow
+                placement="bottom"
+                componentsProps={{
+                  tooltip: {
+                    sx: {
+                      bgcolor: 'primary',
+                      '& .MuiTooltip-arrow': {
+                        color: 'primary',
+                      },
+                    },
+                  },
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  data-testid="user_email"
+                  gutterBottom
+                  className={classes.emailWithElipsis}
+                >
+                  {user.email}
+                </Typography>
+              </Tooltip>
+            ) : isMobile ? (
+              <Typography
+                variant="body2"
+                data-testid="user_email"
+                gutterBottom
+                className={classes.emailWithElipsisMobile}
+              >
+                {user.email}
+              </Typography>
+            ) : (
+              <Typography
+                variant="body2"
+                data-testid="user_email"
+                gutterBottom
+                className={classes.emailWithElipsis}
+              >
+                {user.email}
+              </Typography>
+            )}
+
             <Typography
               component="span"
               variant="body2"
