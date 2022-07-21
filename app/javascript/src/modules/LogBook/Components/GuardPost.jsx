@@ -1,6 +1,5 @@
 /* eslint-disable max-statements */
 /* eslint-disable max-lines */
-/* eslint-disable no-nested-ternary */
 import React, { useEffect, useState, useContext } from 'react';
 import { useQuery, useMutation, useApolloClient } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +32,7 @@ import ObservationModal from '../Invitations/Components/ObservationModal';
 import useFetchMoreRecords from '../../../shared/hooks/useFetchMoreRecords';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
 
-export default function VisitView() {
+export default function GuardPost() {
   const initialFilter = { type: 'allVisits', duration: null };
   const [isObservationOpen, setIsObservationOpen] = useState(false);
   const authState = useContext(AuthStateContext);

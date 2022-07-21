@@ -5,7 +5,7 @@ import { render, waitFor, fireEvent } from '@testing-library/react';
 import routeData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
-import VisitView from '../Components/VisitView';
+import GuardPost from '../Components/GuardPost';
 import { CurrentGuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import authState from '../../../__mocks__/authstate';
@@ -135,7 +135,7 @@ describe('Should render Visits View Component', () => {
         <MockedProvider mocks={[mocks]} addTypename>
           <MemoryRouter>
             <MockedThemeProvider>
-              <VisitView />
+              <GuardPost />
             </MockedThemeProvider>
           </MemoryRouter>
         </MockedProvider>
@@ -192,7 +192,7 @@ describe('Should render Visits View Component', () => {
       fireEvent.click(getAllByTestId('card')[3]);
       expect(mockHistory.push).toBeCalled();
       expect(getAllByTestId('card')[0]).toBeInTheDocument();
-      
+
       fireEvent.click(getAllByTestId('user_name')[0]);
       expect(getAllByTestId('user_name')[0].textContent).toContain('Js user x');
       expect(mockHistory.push).toBeCalled();
@@ -211,7 +211,7 @@ describe('Should render Visits View Component', () => {
         <MemoryRouter>
           <MockedProvider mocks={[errorMock]} addTypename>
             <MockedThemeProvider>
-              <VisitView />
+              <GuardPost />
             </MockedThemeProvider>
           </MockedProvider>
         </MemoryRouter>
