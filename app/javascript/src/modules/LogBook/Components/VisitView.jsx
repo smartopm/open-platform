@@ -91,11 +91,6 @@ export default function VisitView() {
     resetImageData();
   }
 
-  function handleAddObservation(log) {
-    setClickedEvent({ refId: log.refId, refType: log.refType });
-    setIsObservationOpen(true);
-  }
-
   function handleCloseButton(imgUrl) {
     const images = [...imageUrls];
     const filteredImages = images.filter(img => img !== imgUrl);
@@ -192,7 +187,7 @@ export default function VisitView() {
       refType: 'Logs::EntryRequest',
     };
     setCurrentId(visitId);
-    handleAddObservation(log, 'exit');
+    handleSaveObservation(log, 'exit');
   }
 
   function handleMenu(event) {
