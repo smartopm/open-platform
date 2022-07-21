@@ -36,4 +36,8 @@ Required community assets: @vanessa43
     - [ ] https://gitlab.com/doublegdp/app/-/blob/master/lib/host_env.rb#L8
     - [ ] https://gitlab.com/doublegdp/app/-/blob/master/app/controllers/service_worker_controller.rb
     - [ ] https://gitlab.com/doublegdp/app/-/blob/master/app/models/community.rb
-
+- [ ] Create a "Generic Template" email template for the community
+    - [ ] Get a design from Vanessa
+    - [ ] Check an [existing one](https://demo.doublegdp.com/mail_templates/c0c68da8-53fc-4600-a385-142d95b3ccf7) for paddings, margins and other necessary stylings
+- [ ] Create action-flows for necessary notifications (email and sms) - Check the [available ones](https://demo.doublegdp.com/action_flows) and replicate
+- [ ] If applicable, create “Report an Issue” form and make it a quick link on the dashboard
