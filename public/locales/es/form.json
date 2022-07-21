@@ -35,6 +35,7 @@
     "wrong_file_type": "Tipo de archivo incorrecto."
   },
   "field_types": {
+    "appointment": "Cita",
     "checkbox": "Caja",
     "date": "Fecha",
     "datetime": "Fecha con hora",
@@ -51,6 +52,7 @@
   "form_fields": {
     "admins_only": "Solo para Administradores",
     "amount_to_pay": "Monto a Pagar",
+    "calendly_link": "Enlace de Calendly",
     "condition": "Condición ",
     "condition_value": "Valor",
     "description": "Descripción",
