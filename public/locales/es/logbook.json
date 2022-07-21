@@ -148,6 +148,7 @@
     "description": "Descripción",
     "guard": "Guardia de seguridad",
     "host": "Anfitrión",
+    "logbook": "Libro de Registros",
     "nrc": "Tarjeta de Identidad",
     "qr_timestamp": "Codigo QR",
     "reason": "Motivo",
