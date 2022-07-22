@@ -21,7 +21,6 @@ import {
   userSubStatus,
   userStatus
 } from '../../../utils/constants';
-import { extractCountry } from '../../../utils/helpers'
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { UserQuery } from '../../../graphql/queries';
@@ -30,7 +29,7 @@ import useFileUpload from '../../../graphql/useFileUpload';
 import crudHandler from '../../../graphql/crud_handler';
 import { Spinner } from '../../../shared/Loading';
 import FormOptionInput, { FormOptionWithOwnActions } from '../../Forms/components/FormOptionInput';
-import { saniteError, validateEmail } from '../../../utils/helpers';
+import { saniteError, validateEmail, extractCountry } from '../../../utils/helpers';
 import { ModalDialog } from '../../../components/Dialog';
 import CenteredContent from '../../../shared/CenteredContent';
 import { UpdateUserMutation } from '../../../graphql/mutations/user';
