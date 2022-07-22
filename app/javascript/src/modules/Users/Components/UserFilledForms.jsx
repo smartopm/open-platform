@@ -21,8 +21,8 @@ export default function UserFilledForms({ userId, currentUser, user }) {
     fetchPolicy: 'network-only',
   });
 
-  const { data: userFormsFilled, err, formUsersLoading } = useQuery(SubmittedFormsQuery, {
-    variables: { userId: "09077f53-4ee1-4416-b76a-9bd27f6104e1" },
+  const { data: userFormsFilled, error: err, loading: formUsersLoading } = useQuery(SubmittedFormsQuery, {
+    variables: { userId: userId !== currentUser ? userId : currentUser },
     fetchPolicy: 'network-only',
   })
 
@@ -102,7 +102,7 @@ export default function UserFilledForms({ userId, currentUser, user }) {
 
   const isProfileForms = tab === 'Forms';
 
-  if (error || err ) return <CenteredContent>{formatError(error.message || err.message)}</CenteredContent>;
+  if (error || err ) return <CenteredContent>{formatError(error?.message || err.message)}</CenteredContent>;
 
   return (
     <PageWrapper

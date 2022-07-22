@@ -66,7 +66,7 @@ module Types::Queries::Form
     end
 
     field :submitted_forms, [Types::FormUsersType], null: true do
-      description 'Get all form submissions for current user'
+      description 'Get all form submissions for user'
       argument :user_id, GraphQL::Types::ID, required: true
     end
 

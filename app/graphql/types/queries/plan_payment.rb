@@ -39,7 +39,6 @@ module Types::Queries::PlanPayment
     context[:site_community].plan_payments
                             .exluding_general_payments
                             .send(search_method, filtered_query(query))
-                            .includes(:user, :user_transaction, payment_plan: :land_parcel)
                             .order(created_at: :desc)
                             .limit(limit).offset(offset)
   end
@@ -65,7 +64,6 @@ module Types::Queries::PlanPayment
     payments = context[:site_community].plan_payments
                                        .exluding_general_payments
                                        .not_cancelled
-                                       .eager_load(:user)
     case query
     when 'today'
       payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
