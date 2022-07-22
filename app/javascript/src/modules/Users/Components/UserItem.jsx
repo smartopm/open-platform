@@ -193,8 +193,8 @@ export default function UserItem({
             </Grid>
           )}
 
-          <Grid item md={3} sm={6} xs={12}>
-            {user?.email?.length > 26 && !isMobile ? (
+          <Grid item md={isMobile ? 3 : 4} sm={6} xs={12}>
+            {user?.email?.length > 40 && !isMobile ? (
               <Tooltip
                 title={user?.email}
                 arrow
@@ -281,9 +281,14 @@ export default function UserItem({
             )}
           </Grid>
           {!mdDownHidden && (
-            <Grid item md={1} sm={1} className={classes.iconButton}>
+            <Grid
+              item
+              md={1}
+              sm={1}
+              style={{ textAlign: isMobile ? 'right' : 'left', paddingLeft: !isMobile && 40 }}
+            >
               <IconButton
-                className={classes.menuButton}
+                style={{ textAlign: isMobile ? 'right' : 'left' }}
                 aria-label={`more-${user.name}`}
                 aria-controls="long-menu"
                 aria-haspopup="true"
@@ -341,9 +346,6 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#FFFFFF',
     cursor: 'pointer',
   },
-  iconButton: {
-    textAlign: 'right',
-  },
   menuButton: {
     float: 'right',
   },
@@ -400,7 +402,7 @@ const useStyles = makeStyles(() => ({
   },
 
   emailWithElipsis: {
-    maxWidth: '25ch',
+    maxWidth: '40ch',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
