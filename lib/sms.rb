@@ -2,6 +2,7 @@
 
 require 'vonage'
 
+
 # Library to initialize and send SMS messages using Vonage/Twilio
 class Sms
   class UninitializedError < StandardError; end
@@ -22,8 +23,19 @@ class Sms
 
     return if Rails.env.test?
 
+    account_sid = Rails.application.credentials.twilio_account_sid
+    auth_token = Rails.application.credentials.twilio_token
+
     to = clean_number(to)
     client = Vonage::Client.new(api_key: config[:api_key], api_secret: config[:api_secret])
+    twilio_client = Twilio::REST::Client.new(account_sid, auth_token)
+
+    puts "15103935860 =========================================="
+    message = twilio_client.messages.create(
+        to: 'whatsapp:+260971500748',
+        from: 'whatsapp:+15103287793',
+        body: message
+      )
 
     # We temporarily removed the validation of numbers as it wasn't working well for CM
     # We are also suppressing the error since invalid numbers throw an error with new gem
@@ -31,7 +43,8 @@ class Sms
       # TODO: We need to allow alphanumeric codes to be sent to US numers
       # This is an urgent fix and this will be resolved properly
       # client.sms.send(from: 'DoubleGDP', to: to, text: message)
-      client.sms.send(from: config[:from], to: to, text: message)
+      # client.sms.send(from: config[:from], to: to, text: message)
+      message.sid
     rescue StandardError
     end
   end

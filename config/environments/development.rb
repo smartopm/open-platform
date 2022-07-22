@@ -83,6 +83,7 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
 
   config.hosts << /[a-z0-9]+\.dgdp\.site/
+  config.hosts << "bb8d-41-223-119-41.in.ngrok.io"
 
   Rails.application.routes.default_url_options[:host] = ENV['HOST'] || 'dev.dgdp.site'
   Rails.application.routes.default_url_options[:protocol] = 'https'
