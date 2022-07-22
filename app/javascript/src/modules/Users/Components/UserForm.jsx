@@ -21,6 +21,7 @@ import {
   userSubStatus,
   userStatus
 } from '../../../utils/constants';
+import { extractCountry } from '../../../utils/helpers'
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { UserQuery } from '../../../graphql/queries';
@@ -264,7 +265,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
   }
 
   return (
-    <PageWrapper pageTitle={isFromRef ? t('common:misc.referrals') : t('menu.user_edit')}>
+    <PageWrapper oneCol={isFromRef} pageTitle={isFromRef ? t('common:misc.referrals') : t('menu.user_edit')}>
       <ModalDialog
         handleClose={handleModal}
         handleConfirm={handleModalConfirm}
@@ -315,25 +316,21 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
           </div>
         )}
 
-        {isFromRef && (
-          <div className="form-group">
-            <TextField
-              fullWidth
-              label={t('common:misc.client_name')}
-              type="text"
-              onChange={event => setData({ ...data, name: event.target.value })}
-              value={authState.user?.name || ''}
-              disabled
-              name="name"
-              inputProps={{ 'data-testid': 'clientName' }}
-              required
-            />
-          </div>
-        )}
+        {
+          isFromRef && (
+            <Typography
+              variant="body2"
+              style={{ marginBottom: 15 }}
+              data-testid="referralText"
+            >
+              {t('common:misc.referral_text', { communityName: authState.user?.community.name })}
+            </Typography>
+          )
+        }
         <div className="form-group">
           <TextField
             fullWidth
-            label={t('common:form_fields.full_name')}
+            label={isFromRef ? t('common:form_fields.friends_full_name') : t('common:form_fields.full_name')}
             type="text"
             onChange={event => setData({ ...data, name: event.target.value })}
             value={data.name || ''}
@@ -344,7 +341,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
         </div>
         <div className="form-group">
           <label className="MuiFormLabel-root MuiInputLabel-shrink MuiInputLabel-root">
-            {t('common:form_fields.primary_number')}
+            {isFromRef ? t('common:form_fields.phone_number') : t('common:form_fields.primary_number')}
             <span
               aria-hidden="true"
               className="MuiFormLabel-asterisk
@@ -355,13 +352,14 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
           </label>
           <PhoneInput
             value={data.phoneNumber || ''}
-            inputStyle={{ width: '100%' }}
+            inputStyle={{ width: '100%', height: '4em' }}
             enableSearch
             inputProps={{
               name: 'phoneNumber',
               required: true,
               'data-testid': 'primary_phone'
             }}
+            country={extractCountry(authState?.user?.community?.locale)}
             placeholder={t('common:form_placeholders.phone_number')}
             onChange={value => setData({ ...data, phoneNumber: value })}
             preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
@@ -370,7 +368,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
         <div className="form-group">
           <TextField
             fullWidth
-            label={t('common:form_fields.primary_email')}
+            label={isFromRef ? t('common:form_fields.email_address') : t('common:form_fields.primary_email')}
             name="email"
             type="email"
             onChange={event => setData({ ...data, email: event.target.value })}
@@ -610,25 +608,13 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
         )}
         {isFromRef && (
           <div className="d-flex row justify-content-center">
-            <div
-              className="col-8 p-0 justify-content-center"
-              style={{ width: 256, marginRight: '10%' }}
-            >
-              <Typography
-                color="textSecondary"
-                variant="body2"
-                style={{ fontSize: 13 }}
-                data-testid="referralText"
-              >
-                {t('common:misc.referral_text', { communityName: authState.user?.community.name })}
-              </Typography>
-            </div>
             <Button
               variant="contained"
               type="submit"
               className={`${css(styles.getStartedButton)} enz-lg-btn`}
               data-testid="referralBtn"
               color="primary"
+              disabled={submitting}
             >
               <span>{t('common:misc.refer')}</span>
             </Button>
@@ -656,7 +642,8 @@ const styles = StyleSheet.create({
     height: 51,
     boxShadow: 'none',
     marginTop: 50,
-    alignItems: 'center'
+    alignItems: 'center',
+    color: '#FFFFFF'
   },
   selectInput: {
     width: '100%'
