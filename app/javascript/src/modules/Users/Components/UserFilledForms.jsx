@@ -8,17 +8,23 @@ import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import FormItem from '../../Forms/UserForms/Components/FormUserItem';
 import { FormsQuery, SubmittedFormCommentsQuery } from '../../Forms/graphql/forms_queries';
+import { SubmittedFormsQuery } from '../../Forms/UserForms/graphql/userform_queries';
 import CenteredContent from '../../../shared/CenteredContent';
 import SelectButton from '../../../shared/buttons/SelectButton';
 import { formatError, useParamsQuery } from '../../../utils/helpers';
 import PageWrapper from '../../../shared/PageWrapper';
 import { Spinner } from '../../../shared/Loading';
 
-export default function UserFilledForms({ userFormsFilled, userId, currentUser, user }) {
+export default function UserFilledForms({ userId, currentUser, user }) {
   const { data, error, loading } = useQuery(FormsQuery, {
     variables: { userId: userId !== currentUser ? userId : currentUser },
     fetchPolicy: 'network-only',
   });
+
+  const { data: userFormsFilled, err, formUsersLoading } = useQuery(SubmittedFormsQuery, {
+    variables: { userId: "09077f53-4ee1-4416-b76a-9bd27f6104e1" },
+    fetchPolicy: 'network-only',
+  })
 
   const history = useHistory();
   const path = useParamsQuery();
@@ -96,7 +102,7 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser, 
 
   const isProfileForms = tab === 'Forms';
 
-  if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+  if (error || err ) return <CenteredContent>{formatError(error.message || err.message)}</CenteredContent>;
 
   return (
     <PageWrapper
@@ -107,12 +113,12 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser, 
       oneCol={!isProfileForms}
       breadCrumbObj={breadCrumbObj}
     >
-      {loading ? (
+      {loading || formUsersLoading ? (
         <Spinner />
       ) : (
         <div style={isProfileForms && !mobile ? { padding: '0 15%' } : {}}>
-          {!userFormsFilled ||
-            (!userFormsFilled.length && (
+          {!userFormsFilled?.submittedForms ||
+            (!userFormsFilled?.submittedForms?.length && (
               <>
                 <Grid
                   container
@@ -146,8 +152,8 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser, 
           </Grid>
 
           <div>
-            {userFormsFilled?.length >= 1 &&
-              userFormsFilled.map(
+            {userFormsFilled?.submittedForms?.length >= 1 &&
+              userFormsFilled?.submittedForms?.map(
                 userForm =>
                   (userForm.status !== 'draft' || userForm.userId === currentUser) &&
                   userForm.form && (
@@ -172,19 +178,10 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser, 
 }
 
 UserFilledForms.defaultProps = {
-  userFormsFilled: [],
   user: undefined
 };
 
 UserFilledForms.propTypes = {
-  userFormsFilled: PropTypes.arrayOf(
-    PropTypes.shape({
-      form: PropTypes.shape({
-        id: PropTypes.string,
-        name: PropTypes.string,
-      }),
-    })
-  ),
   userId: PropTypes.string.isRequired,
   currentUser: PropTypes.string.isRequired,
   user: PropTypes.shape({

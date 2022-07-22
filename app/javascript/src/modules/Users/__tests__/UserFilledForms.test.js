@@ -4,15 +4,16 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
 import UserFilledForms from '../Components/UserFilledForms';
 import { FormsQuery } from '../../Forms/graphql/forms_queries';
+import { SubmittedFormsQuery } from '../../Forms/UserForms/graphql/userform_queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/authstate';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('UserFilledForms component', () => {
-  const mocks = {
+  const mockData = {
     request: {
       query: FormsQuery,
-      variables: { userId: '3954jefsdfs' }
+      variables: { userId: '09077f53-4ee1-4416-b76a-9bd27f6104e1' }
     },
     result: {
       data: {
@@ -39,26 +40,37 @@ describe('UserFilledForms component', () => {
   };
 
   it('should render a list of forms filled by the user', async () => {
-    const userFormsFilled = [
-      {
-        id: '1',
-        form: {
-          name: 'Form One',
-          id: '34243242'
-        },
-        createdAt: '2020-10-10',
-        commentsCount: 2
+    const submittedFormsMock = {
+      request: {
+        query: SubmittedFormsQuery,
+        variables: { userId: '09077f53-4ee1-4416-b76a-9bd27f6104e1' }
+      },
+      result: {
+        data: {
+          submittedForms: [
+            {
+              id: '1',
+              form: {
+                name: 'Form One',
+                id: '34243242'
+              },
+              status: 'pending',
+              userId: '09077f53-4ee1-4416-b76a-9bd27f6104e1',
+              createdAt: '2020-10-10',
+              commentsCount: 2,
+            }
+          ]
+        }
       }
-    ];
+    };
 
     const rendered = render(
-      <MockedProvider mocks={[mocks]} addTypename={false}>
+      <MockedProvider mocks={[mockData, submittedFormsMock]} addTypename={false}>
         <Context.Provider value={userMock}>
           <BrowserRouter>
             <MockedThemeProvider>
               <UserFilledForms
-                userFormsFilled={userFormsFilled}
-                userId="3954jefsdfs"
+                userId="09077f53-4ee1-4416-b76a-9bd27f6104e1"
                 currentUser="9238492318921"
               />
             </MockedThemeProvider>
@@ -74,14 +86,25 @@ describe('UserFilledForms component', () => {
     });
   });
   it('should not contain form list when list is empty', async () => {
+    const submittedFormsMock = {
+      request: {
+        query: SubmittedFormsQuery,
+        variables: { userId: '09077f53-4ee1-4416-b76a-9bd27f6104e1' }
+      },
+      result: {
+        data: {
+          submittedForms: []
+        }
+      }
+    };
+    
     const rendered = render(
-      <MockedProvider mocks={[mocks]} addTypename={false}>
+      <MockedProvider mocks={[mockData, submittedFormsMock]} addTypename={false}>
         <Context.Provider value={userMock}>
           <BrowserRouter>
             <MockedThemeProvider>
               <UserFilledForms
-                userFormsFilled={[]}
-                userId="3954jefsdfs"
+                userId="09077f53-4ee1-4416-b76a-9bd27f6104e1"
                 currentUser="9238492318921"
               />
             </MockedThemeProvider>

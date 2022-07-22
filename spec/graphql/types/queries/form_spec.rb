@@ -257,8 +257,8 @@ RSpec.describe Types::Queries::Form do
 
     let(:submitted_forms_query) do
       <<~GQL
-        query forms {
-          submittedForms {
+        query forms($userId: ID!) {
+          submittedForms(userId: $userId) {
             id
             status
             createdAt
@@ -378,8 +378,8 @@ RSpec.describe Types::Queries::Form do
     end
 
     it 'should retrieve forms submitted by this user' do
-      result = DoubleGdpSchema.execute(submitted_forms_query,
-                                       context: {
+      variables = { userId: resident.id }
+      result = DoubleGdpSchema.execute(submitted_forms_query, variables: variables, context: {
                                          current_user: resident,
                                          site_community: resident.community,
                                        }).as_json

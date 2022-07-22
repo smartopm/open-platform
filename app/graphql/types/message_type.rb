@@ -4,8 +4,8 @@ module Types
   # Message Type
   class MessageType < Types::BaseObject
     field :id, ID, null: false
-    field :user, Types::UserType, null: false
-    field :sender, Types::UserType, null: false
+    field :user, Types::UserType, null: false, resolve: Resolvers::BatchResolver.load(:user)
+    field :sender, Types::UserType, null: false, resolve: Resolvers::BatchResolver.load(:sender)
     field :user_id, ID, null: false
     field :sender_id, ID, null: false
     field :receiver, String, null: false
