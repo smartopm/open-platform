@@ -285,7 +285,7 @@ export default function UserItem({
               item
               md={1}
               sm={1}
-              style={{ textAlign: isMobile ? 'right' : 'left', paddingLeft: !isMobile && 40 }}
+              style={{ textAlign: isMobile ? 'right' : 'left', paddingLeft: !isMobile && 55 }}
             >
               <IconButton
                 style={{ textAlign: isMobile ? 'right' : 'left' }}
