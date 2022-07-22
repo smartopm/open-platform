@@ -26,7 +26,7 @@ import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Spinner } from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
 import { ModalDialog } from '../../../components/Dialog';
-import { formatError, objectAccessor, useParamsQuery } from '../../../utils/helpers';
+import { formatError, objectAccessor, scrollToTop, useParamsQuery } from '../../../utils/helpers';
 import useDebounce from '../../../utils/useDebounce';
 import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
 import { TaskBulkUpdateAction, TaskQuickAction } from './TaskActionMenu';
@@ -409,32 +409,37 @@ export default function TodoList({
     history.push('/tasks');
   }
 
+  function handleSearchClick() {
+    setSearchOpen(!searchOpen);
+    scrollToTop();
+  }
+
   const rightPanelObj = [
     {
       mainElement: matches ? (
-        <IconButton color="primary" data-testid="search" onClick={() => setSearchOpen(!searchOpen)}>
+        <IconButton color="primary" data-testid="search" onClick={handleSearchClick}>
           <SearchIcon />
         </IconButton>
       ) : (
-        <Button
-          startIcon={<SearchIcon />}
-          data-testid="search"
-          onClick={() => setSearchOpen(!searchOpen)}
-        >
+        <Button startIcon={<SearchIcon />} data-testid="search" onClick={handleSearchClick}>
           {t('common:menu.search')}
         </Button>
       ),
-      key: 1
+      key: 1,
     },
     {
       mainElement: (
         <TaskQuickAction checkedOptions={checkedOptions} handleCheckOptions={handleCheckOptions} />
       ),
-      key: 2
+      key: 2,
     },
     {
       mainElement: (
-        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']} show404ForUnauthorized={false}>
+        <AccessCheck
+          module="note"
+          allowedPermissions={['can_view_create_task_button']}
+          show404ForUnauthorized={false}
+        >
           {smMatches ? (
             <Button
               onClick={openModal}
@@ -461,12 +466,12 @@ export default function TodoList({
           )}
         </AccessCheck>
       ),
-      key: 3
+      key: 3,
     },
     {
       mainElement: <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} />,
-      key: 4
-    }
+      key: 4,
+    },
   ];
 
   if (tasksError) return <ErrorPage error={tasksError.message} />;
