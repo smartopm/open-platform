@@ -1,4 +1,3 @@
-/* eslint-disable max-statements */
 import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 
@@ -170,39 +169,7 @@ describe('Should render Visits View Component', () => {
       expect(getAllByTestId('request_status')[0].textContent).toContain('guest_book.pending');
       expect(getAllByTestId('request_status')[1].textContent).toContain('guest_book.approved');
       expect(getAllByTestId('log_exit')[0]).not.toBeDisabled();
-      expect(getAllByTestId('prev-btn')[0]).toBeInTheDocument();
-      expect(getAllByTestId('next-btn')[0]).toBeInTheDocument();
-
-      fireEvent.click(getByTestId('add_button'));
-      expect(getByText('logbook.new_invite')).toBeInTheDocument();
-      expect(getByText('logbook.add_observation')).toBeInTheDocument();
-
-      fireEvent.click(getByText('logbook.new_invite'));
-      expect(mockHistory.push).toBeCalled();
-
-      fireEvent.click(getByText('logbook.add_observation'));
-      expect(getByText('observations.add_your_observation')).toBeInTheDocument();
-      fireEvent.change(getByTestId('entry-dialog-field'), {
-        target: { value: 'This is an observation' }
-      });
-      expect(getByTestId('entry-dialog-field').value).toBe('This is an observation');
-      fireEvent.click(getByTestId('save'));
-
-      fireEvent.click(getAllByTestId('log_exit')[0]);
-      fireEvent.click(getAllByTestId('card')[3]);
-      expect(mockHistory.push).toBeCalled();
-      expect(getAllByTestId('card')[0]).toBeInTheDocument();
-
-      fireEvent.click(getAllByTestId('user_name')[0]);
-      expect(getAllByTestId('user_name')[0].textContent).toContain('Js user x');
-      expect(mockHistory.push).toBeCalled();
-      expect(mockHistory.push).toBeCalledWith('/user/162f7517'); // check if it routes to the user page
-
-      fireEvent.click(getAllByTestId('next-btn')[0]);
-      fireEvent.click(getByTestId('access_search'));
-      expect(getByTestId('search')).toBeInTheDocument();
-      fireEvent.click(getByTestId('reload'));
-    }, 100);
+    });
   });
 
   it('should render error if something went wrong', async () => {
@@ -221,5 +188,104 @@ describe('Should render Visits View Component', () => {
       expect(getByText('Something wrong happened')).toBeInTheDocument();
       expect(getByText('logbook.no_invited_guests')).toBeInTheDocument();
     }, 100);
+  });
+
+  it('should log exit as expected', async () => {
+    const { getAllByTestId } = render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[mocks]} addTypename>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <GuardPost />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+    await waitFor(() => {
+      const guest = getAllByTestId('log_exit')[0];
+      expect(guest).toBeInTheDocument();
+      fireEvent.click(guest);
+      fireEvent.click(getAllByTestId('card')[3]);
+      expect(mockHistory.push).toBeCalled();
+      expect(getAllByTestId('card')[0]).toBeInTheDocument();
+    });
+  });
+
+  it('should route to user page', async () => {
+    const { getAllByTestId } = render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[mocks]} addTypename>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <GuardPost />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      const guest = getAllByTestId('user_name')[0];
+      expect(guest).toBeInTheDocument();
+
+      fireEvent.click(guest);
+      expect(guest.textContent).toContain('Js user x');
+      expect(mockHistory.push).toBeCalled();
+      expect(mockHistory.push).toBeCalledWith('/user/162f7517');
+    },);
+  });
+
+  it('should render search box with filter menu list', async () => {
+    const { getByTestId } = render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[mocks]} addTypename>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <GuardPost />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      fireEvent.click(getByTestId('access_search'));
+      expect(getByTestId('search')).toBeInTheDocument();
+      expect(getByTestId('filter')).toBeInTheDocument();
+
+      const filterMenuIcon = getByTestId('FilterListOutlinedIcon');
+      expect(filterMenuIcon).toBeInTheDocument();
+
+      fireEvent.click(filterMenuIcon);
+      expect(document.getElementById('composition-menu')).toBeInTheDocument();
+    })
+  });
+
+  it('should render new invite and observation links', async () => {
+    const { getByTestId, getByText } = render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[mocks]} addTypename>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <GuardPost />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      fireEvent.click(getByTestId('add_button'));
+      expect(getByText('logbook.new_invite')).toBeInTheDocument();
+      expect(getByText('logbook.add_observation')).toBeInTheDocument();
+
+      fireEvent.click(getByText('logbook.new_invite'));
+      expect(mockHistory.push).toBeCalled();
+
+      const loadMore = getByText('search:search.load_more');
+      expect(loadMore).toBeInTheDocument();
+      fireEvent.click(getByTestId('reload'));
+    });
   });
 });
