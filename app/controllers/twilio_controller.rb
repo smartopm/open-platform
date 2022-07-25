@@ -13,6 +13,8 @@ class TwilioController < ApplicationController
       body: "Hi #{params['ProfileName']}, Thank you for your message!!",
     )
     user = current_community.users.find_by(phone_number: params['WaId'])
+    return if user.nil?
+
     # Check if there is a whatsapp task created by this user that's not resolved yet
     task = current_community.notes.where(category: 'whatsapp', completed: false)
                             .find_by(author_id: user.id)
@@ -35,7 +37,7 @@ class TwilioController < ApplicationController
   private
 
   def create_task(params, user)
-    current_community.notes.create(
+    current_community.notes.create!(
       author_id: user.id,
       user_id: user.id,
       body: params['Body'],
@@ -46,7 +48,7 @@ class TwilioController < ApplicationController
   end
 
   def create_comments(params, task)
-    task.note_comments.create(
+    task.note_comments.create!(
       note_id: task.id,
       body: params['Body'],
       user_id: task.user.id,
