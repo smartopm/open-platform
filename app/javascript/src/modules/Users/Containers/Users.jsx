@@ -522,6 +522,11 @@ export default function UsersList() {
     },
   ];
 
+  function handleClearFilters() {
+    setSearchOpen(false);
+    setUserIsSearching(false);
+  }
+
   return (
     <PageWrapper
       pageTitle={t(
@@ -540,7 +545,7 @@ export default function UsersList() {
                 filters={[searchValue]}
                 handleSearch={event => handleSearch(event)}
                 handleFilter={toggleFilterMenu}
-                handleClear={() => setSearchValue('')}
+                handleClear={handleClearFilters}
                 fullWidth={false}
               />
               <div
