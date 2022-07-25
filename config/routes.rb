@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   get "/csv_export/event_logs", to: "csv_export#event_logs"
   get "/csv_import_sample/download", to: "csv_export#download_sample_csv"
   get "/csv_import_sample/lead_download", to: "csv_export#download_lead_sample_csv"
-  # post "/sendgrid/webhook/:token", to: "sendgrid#webhook"
+  post "/sendgrid/webhook/:token", to: "sendgrid#webhook"
   post "/flutterwave/webhook", to: 'flutterwave#webhook'
   post "/twilio/webhook", to: 'twilio#webhook'
 
