@@ -61,6 +61,7 @@ export default function ProcessCommentsPage() {
 
   const [loadProcessComments,
     {
+      called,
       fetchMore,
       data: processComments,
       loading: processCommentsLoading,
@@ -100,6 +101,10 @@ export default function ProcessCommentsPage() {
     }
     setSearchOpen(!searchOpen);
     scrollToTop();
+  }
+
+  function handleCommentsDownload() {
+    loadProcessComments({ variables: { limit: 2000, query: value } });
   }
 
   const menuList = [
@@ -175,15 +180,28 @@ export default function ProcessCommentsPage() {
           className={classes.csvButton}
           data-testid="download-comments-btn"
         >
-          <CSVLink
-            data={[]}
-            headers={csvHeaders}
-            style={{ color: 'white', textDecoration: 'none' }}
-            filename={`comments-data-${dateToString(new Date())}.csv`}
-            data-testid="download-comments-link"
-          >
-            { matches ? (<FileDownloadIcon className={classes.downloadIcon} />) : t('process:comments.download_csv')}
-          </CSVLink>
+          {called ? (
+            <CSVLink
+              data={processComments?.processComments || []}
+              headers={csvHeaders}
+              style={{ color: 'white', textDecoration: 'none' }}
+              filename={`comments-data-${dateToString(new Date())}.csv`}
+              data-testid="download-comments-link"
+            >
+              { matches ? (<FileDownloadIcon className={classes.downloadIcon} />) : t('process:comments.download_csv')}
+            </CSVLink>
+          ) : (
+            <span
+              role="button"
+              tabIndex={0}
+              aria-label="download-csv"
+              style={{ color: 'white', paddingTop: '4px' }}
+              onClick={handleCommentsDownload}
+              onKeyPress={handleCommentsDownload}
+            >
+              {processCommentsLoading ? <Spinner /> : matches ? 'CSV' : t('process:comments.process_csv')}
+            </span>
+          )}
         </Button>
       ),
       key: 3

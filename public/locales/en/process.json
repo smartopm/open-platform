@@ -39,6 +39,7 @@
     "no_comment": "No comments available",
     "list_view": "View all comments",
     "tab_view": "View by Reply status",
-    "download_csv": "Process CSV data"
+    "process_csv": "Process CSV Data",
+    "download_csv": "Download CSV Data"
   }
 }
