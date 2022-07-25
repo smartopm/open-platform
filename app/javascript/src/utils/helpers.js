@@ -743,3 +743,10 @@ export function downloadCommentFile(comment, fileId) {
   const clickedDoc = comment?.taggedAttachments.find(doc => doc.id === fileId);
   secureFileDownload(clickedDoc.url);
 }
+
+/**
+ * A simple function that auto scroll to top of page
+ */
+export function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}

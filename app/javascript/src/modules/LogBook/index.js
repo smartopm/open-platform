@@ -4,7 +4,7 @@ import LogBook from './Components/LogBook';
 import GuestsValidateRoutes from './GuestVerification';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 import InvitationsRoutes from './Invitations';
-import GuardPost from './Components/VisitView'
+import GuardPost from './Components/GuardPost'
 
 const logBookPermissions = ['can_access_logbook'];
 
@@ -33,7 +33,7 @@ function RenderGuardPost() {
     <AccessCheck module={currentModule} allowedPermissions={logBookPermissions}>
       <GuardPost />
     </AccessCheck>
-  )
+  );
 }
 
 const LogBooks = {

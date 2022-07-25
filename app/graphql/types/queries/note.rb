@@ -165,7 +165,6 @@ module Types::Queries::Note
     end
 
     context[:site_community].notes.where(flagged: false)
-                            .includes(:user)
                             .limit(limit).offset(offset)
   end
 
@@ -197,10 +196,7 @@ module Types::Queries::Note
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
-    context[:site_community].notes.includes(:assignees, :author, :user)
-                            .eager_load(:assignee_notes, :assignees, :user)
-                            .where(flagged: true)
-                            .find(task_id)
+    context[:site_community].notes.where(flagged: true).find(task_id)
   end
 
   def task_comments(task_id:, offset: 0, limit: nil)
@@ -212,7 +208,6 @@ module Types::Queries::Note
     context[:site_community]
       .notes.find(task_id)
       .note_comments
-      .eager_load(:user)
       .limit(limit).offset(offset)
   end
 
@@ -257,7 +252,6 @@ module Types::Queries::Note
 
     context[:site_community].notes.find(task_id)
                             .note_histories
-                            .eager_load(:user)
                             .order(created_at: :desc)
   end
 
@@ -389,10 +383,7 @@ module Types::Queries::Note
 
     context[:site_community].notes.find(task_id)
                             .sub_tasks
-                            .includes(:sub_notes)
-                            .eager_load(:assignee_notes, :assignees, :author, :user)
                             .limit(limit).offset(offset)
-                            .with_attached_documents
   end
 
   def processes(offset: 0, limit: 50, query: nil)
@@ -527,29 +518,11 @@ module Types::Queries::Note
     authorize
     sub_task_ids = context[:site_community].notes.find(task_id).sub_tasks.pluck(:id)
     context[:site_community].notes
-                            .includes(
-                              :parent_note,
-                              :sub_notes,
-                              :assignee_notes,
-                              :assignees,
-                              :author,
-                              :user,
-                            )
                             .where(id: sub_task_ids, completed: false)
                             .for_site_manager(current_user)
-                            .with_attached_documents
                             .or(context[:site_community].notes
-                              .includes(
-                                :parent_note,
-                                :sub_notes,
-                                :assignee_notes,
-                                :assignees,
-                                :author,
-                                :user,
-                              )
                               .where(parent_note_id: sub_task_ids, completed: false)
-                              .for_site_manager(current_user)
-                              .with_attached_documents)
+                              .for_site_manager(current_user))
                             .order(created_at: :asc)
                             .limit(limit).offset(offset)
   end
@@ -560,9 +533,7 @@ module Types::Queries::Note
             I18n.t('errors.unauthorized')
     end
 
-    assigned_tasks = current_user
-                     .tasks
-                     .includes(:parent_note)
+    assigned_tasks = current_user.tasks
     # Get the top level parent for each assigned task
     projects_assigned = []
     assigned_tasks.each do |task|
@@ -577,7 +548,6 @@ module Types::Queries::Note
     drc_form_users = context[:site_community].drc_form_users.pluck(:id)
     context[:site_community]
       .notes
-      .includes(:sub_notes, :assignees, :assignee_notes, :documents_attachments)
       .where(id: projects_assigned.pluck(:id), form_user_id: drc_form_users)
       .offset(offset).limit(limit)
   end
@@ -591,13 +561,7 @@ module Types::Queries::Note
 
     context[:site_community]
       .notes
-      .includes(
-        :sub_notes,
-        :assignees,
-        :assignee_notes,
-        :documents_attachments,
-        note_list: :process,
-      )
+      .joins(:note_list)
       .where(category: 'task_list', note_list: { status: 'active' })
       .offset(offset).limit(limit)
   end
@@ -608,10 +572,7 @@ module Types::Queries::Note
             I18n.t('errors.unauthorized')
     end
 
-    context[:site_community]
-      .notes
-      .where(category: 'task_list')
-      .find(task_id)
+    context[:site_community].notes.where(category: 'task_list').find(task_id)
   end
 
   def tasks_by_quarter(process_id:)
@@ -666,19 +627,9 @@ module Types::Queries::Note
   def tasks_query
     context[:site_community]
       .notes
-      .includes(
-        :sub_notes,
-        :assignees,
-        :assignee_notes,
-        :note_comments,
-        :form_user,
-        :message,
-        { user: %i[avatar_attachment] },
-      )
       .where(flagged: true)
       .where.not(category: %w[template task_list])
       .order(completed: :desc, created_at: :desc)
-      .with_attached_documents
   end
   # rubocop:enable Metrics/MethodLength
 
@@ -696,23 +647,14 @@ module Types::Queries::Note
     context[:site_community].processes.find(process_id)
   end
 
-  # rubocop:disable Metrics/MethodLength
   def projects_query(process_id)
     process_form_users = context[:site_community].process_form_users(process_id)&.pluck(:id)
 
     context[:site_community]
       .notes
-      .includes(
-        :sub_notes,
-        { assignees: %i[avatar_attachment community] },
-        :assignee_notes,
-        :documents_attachments,
-        { form_user: %i[user] },
-      )
       .where(parent_note_id: nil, form_user_id: process_form_users)
       .for_site_manager(current_user)
   end
-  # rubocop:enable Metrics/MethodLength
 
   def projects_query_lite(process_id)
     process_form_users = context[:site_community].process_form_users(process_id)&.pluck(:id)
@@ -753,7 +695,6 @@ module Types::Queries::Note
     # Assigned tasks in the project that require current user's reply
     assigned_tasks = current_user
                      .tasks
-                     .includes(:parent_note)
                      .where(id: task_ids)
 
     Comments::NoteComment.includes(:note).where(

@@ -6,10 +6,15 @@ module Types
     field :id, ID, null: false
     field :amount, Float, null: false
     field :status, String, null: false
-    field :user_transaction, Types::TransactionType, null: false
-    field :user, Types::UserType, null: false
-    field :community, Types::CommunityType, null: false
-    field :payment_plan, Types::PaymentPlanType, null: true
+    field :user_transaction, Types::TransactionType,
+          null: false,
+          resolve: Resolvers::BatchResolver.load(:user_transaction)
+    field :user, Types::UserType, null: false, resolve: Resolvers::BatchResolver.load(:user)
+    field :community, Types::CommunityType, null: false,
+                                            resolve: Resolvers::BatchResolver.load(:community)
+    field :payment_plan, Types::PaymentPlanType,
+          null: true,
+          resolve: Resolvers::BatchResolver.load(:payment_plan)
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :receipt_number, String, null: true
@@ -21,11 +26,11 @@ module Types
     #
     # @return [Float]
     def current_plot_pending_balance
-      plan = object.payment_plan
-      total_balance = plan.installment_amount * plan.duration
-      plan_payments = plan.plan_payments.not_cancelled.created_at_lteq(object.created_at)
-
-      total_balance - plan_payments.sum(:amount)
+      batch_load(object, :payment_plan).then do |plan|
+        total_balance = plan.installment_amount * plan.duration
+        plan_payments = plan.plan_payments.not_cancelled.created_at_lteq(object.created_at)
+        total_balance - plan_payments.sum(:amount)
+      end
     end
   end
 end

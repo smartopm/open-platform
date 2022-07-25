@@ -3,13 +3,15 @@
 module Loaders
   # active storage loader
   class ActiveStorageLoader < GraphQL::Batch::Loader
-    attr_reader :record_type, :attachment_name, :association_type
+    attr_reader :record_type, :attachment_name, :association_type, :where, :order
 
-    def initialize(record_type, attachment_name, association_type: :has_one_attached)
+    def initialize(record_type, attachment_name, association_type: :has_one_attached, **args)
       super()
       @record_type = record_type
       @attachment_name = attachment_name
       @association_type = association_type
+      @where = args[:where]
+      @order = args[:order]
     end
 
     # Find attachments and load records
@@ -21,7 +23,7 @@ module Loaders
     def perform(record_ids)
       attachments = ActiveStorage::Attachment.includes(:blob).where(
         record_type: record_type, record_id: record_ids, name: attachment_name,
-      )
+      ).where(where).order(order)
       load_records(record_ids, attachments)
     end
 

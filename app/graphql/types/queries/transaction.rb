@@ -37,7 +37,7 @@ module Types::Queries::Transaction
     validate_user_permissions_for_transactions(:can_fetch_user_transactions)
 
     user = verified_user(user_id)
-    transactions =  user.transactions.not_cancelled.includes(:plan_payments, :depositor)
+    transactions =  user.transactions.not_cancelled.includes(:plan_payments)
     return if plan_id == 'all'
 
     if plan_id.present?
