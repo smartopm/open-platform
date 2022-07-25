@@ -523,6 +523,7 @@ export default function UsersList() {
   ];
 
   function handleClearFilters() {
+    setSearchValue('');
     setSearchOpen(false);
     setUserIsSearching(false);
   }
