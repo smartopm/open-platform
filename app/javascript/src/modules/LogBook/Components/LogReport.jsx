@@ -23,12 +23,22 @@ export default function LogReport() {
           md={5}
           sm={12}
           xs={12}
-          style={matches ? {margin: '8% 20px 0 20px'} : { margin: '5% 7% 0 2%' }}
+          style={matches ? { margin: '8% 20px 0 20px' } : { margin: '5% 7% 0 2%' }}
           className={classes.container}
+          data-testid="log_stats"
         >
           <LogbookStats />
         </Grid>
-        <Grid item lg={5} md={5} sm={12} xs={12} className={classes.container} style={matches ? {margin: '20px'} : {marginTop: '5%'}}>
+        <Grid
+          item
+          lg={5}
+          md={5}
+          sm={12}
+          xs={12}
+          className={classes.container}
+          style={matches ? { margin: '20px' } : { marginTop: '5%' }}
+          data-testid="gate_flow_report"
+        >
           <AccessCheck
             module="event_log"
             allowedPermissions={['can_download_logbook_events']}
