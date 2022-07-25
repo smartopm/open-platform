@@ -112,7 +112,7 @@ export default function LogbookStats() {
               style={{ color: '#FFFFFF' }}
               onClick={() => visitorData()}
               startIcon={guestsLoading && <Spinner />}
-              // disabled={!guestData}
+              data-testid='export_data'
             >
               {matches ? <Download color="primary" /> : t('common:misc.export_data')}
             </Button>
@@ -134,7 +134,7 @@ export default function LogbookStats() {
       <br />
       <Grid container spacing={4}>
         {statsData.map(stat => (
-          <Grid item xs={4} key={stat.id} style={{cursor: 'pointer'}}>
+          <Grid item xs={4} key={stat.id} style={{cursor: 'pointer'}} data-testid='card'>
             <Card className={classes.statCard} onClick={stat.action}>
               <CardContent>
                 <CenteredContent>
