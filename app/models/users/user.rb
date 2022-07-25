@@ -195,7 +195,8 @@ module Users
     validate :phone_number_valid?
     validate :public_user?
 
-    devise :omniauthable, :database_authenticatable, omniauth_providers: %i[google_oauth2 facebook]
+    devise :omniauthable, :database_authenticatable, :trackable,
+           omniauth_providers: %i[google_oauth2 facebook]
 
     PHONE_TOKEN_LEN = 6
     PHONE_TOKEN_EXPIRATION_MINUTES = 2880 # Valid for 48 hours
