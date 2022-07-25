@@ -25,7 +25,7 @@ import Paginate from '../../../components/Paginate';
 import UserListCard from '../Components/UserListCard';
 import { dateToString } from '../../../components/DateContainer';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import { objectAccessor, toTitleCase, formatDateFields } from '../../../utils/helpers';
+import { objectAccessor, toTitleCase, formatDateFields, scrollToTop } from '../../../utils/helpers';
 import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport';
 import UserSelectButton, {
   UserSearch,
@@ -485,17 +485,22 @@ export default function UsersList() {
     labelsRefetch,
   };
 
+  function handleSearchClick() {
+    setSearchOpen(!searchOpen);
+    scrollToTop();
+  }
+
   const rightPanelObj = [
     {
       mainElement: matches ? (
-        <IconButton color="primary" data-testid="search" onClick={() => setSearchOpen(!searchOpen)}>
+        <IconButton color="primary" data-testid="search" onClick={handleSearchClick}>
           <SearchIcon />
         </IconButton>
       ) : (
         <Button
           startIcon={<SearchIcon />}
           data-testid="search"
-          onClick={() => setSearchOpen(!searchOpen)}
+          onClick={handleSearchClick}
         >
           {t('common:menu.search')}
         </Button>

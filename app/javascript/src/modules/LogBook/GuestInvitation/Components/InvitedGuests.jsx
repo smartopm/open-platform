@@ -18,7 +18,7 @@ import { MyInvitedGuestsQuery } from '../graphql/queries';
 import { InvitationUpdateMutation } from '../graphql/mutations';
 import { useStyles } from '../styles';
 import GuestListCard from './GuestListCard';
-import { formatError , ifNotTest } from '../../../../utils/helpers';
+import { formatError , ifNotTest, scrollToTop } from '../../../../utils/helpers';
 import { validateGuest } from '../helpers';
 import GuestInviteForm from './GuestInviteForm';
 import PageWrapper from '../../../../shared/PageWrapper';
@@ -165,6 +165,11 @@ export default function InvitedGuests() {
       });
   }
 
+  function handleSearchClick() {
+    setSearchOpen(!searchOpen);
+    scrollToTop();
+  }
+
   const menuData = {
     menuList,
     handleMenu,
@@ -176,14 +181,14 @@ export default function InvitedGuests() {
   const rightPanelObj = [
     {
       mainElement: matches ? (
-        <IconButton color="primary" data-testid="guest_search" onClick={() => setSearchOpen(!searchOpen)}>
+        <IconButton color="primary" data-testid="guest_search" onClick={handleSearchClick}>
           <SearchIcon />
         </IconButton>
       ) : (
         <Button
           startIcon={<SearchIcon />}
           data-testid="guest_search_btn"
-          onClick={() => setSearchOpen(!searchOpen)}
+          onClick={handleSearchClick}
         >
           {t('common:menu.search')}
         </Button>

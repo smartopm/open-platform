@@ -19,7 +19,7 @@ import { dateToString } from '../../../components/DateContainer';
 import Text from '../../../shared/Text';
 import { checkRequests, filterOptions } from '../utils';
 import CenteredContent from '../../../shared/CenteredContent';
-import { formatError } from '../../../utils/helpers';
+import { formatError, scrollToTop } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
 import SearchInput from '../../../shared/search/SearchInput';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
@@ -259,18 +259,19 @@ export default function GuardPost() {
     handleClose,
   };
 
+  function handleSearchClick() {
+    setSearchOpen(!searchOpen);
+    scrollToTop();
+  }
+
   const rightPanelObj = [
     {
       mainElement: mobileMatches ? (
-        <IconButton color="primary" data-testid="access_search" onClick={() => setSearchOpen(!searchOpen)}>
+        <IconButton color="primary" data-testid="access_search" onClick={handleSearchClick}>
           <SearchIcon />
         </IconButton>
       ) : (
-        <Button
-          startIcon={<SearchIcon />}
-          data-testid="access_search"
-          onClick={() => setSearchOpen(!searchOpen)}
-        >
+        <Button startIcon={<SearchIcon />} data-testid="access_search" onClick={handleSearchClick}>
           {t('common:menu.search')}
         </Button>
       ),

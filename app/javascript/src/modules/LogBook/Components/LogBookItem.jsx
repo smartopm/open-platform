@@ -31,6 +31,7 @@ import PageWrapper from '../../../shared/PageWrapper';
 import MenuList from '../../../shared/MenuList';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
 import { Spinner } from '../../../shared/Loading';
+import { scrollToTop } from '../../../utils/helpers';
 
 const limit = 20;
 const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
@@ -219,22 +220,19 @@ export default function LogBookItem({ router, offset, tabValue }) {
     handleClose,
   };
 
+  function handleSearchClick() {
+    setSearchOpen(!searchOpen);
+    scrollToTop();
+  }
+
   const rightPanelObj = [
     {
       mainElement: mobileMatches ? (
-        <IconButton
-          color="primary"
-          data-testid="access_search"
-          onClick={() => setSearchOpen(!searchOpen)}
-        >
+        <IconButton color="primary" data-testid="access_search" onClick={handleSearchClick}>
           <SearchIcon />
         </IconButton>
       ) : (
-        <Button
-          startIcon={<SearchIcon />}
-          data-testid="access_search"
-          onClick={() => setSearchOpen(!searchOpen)}
-        >
+        <Button startIcon={<SearchIcon />} data-testid="access_search" onClick={handleSearchClick}>
           {t('common:menu.search')}
         </Button>
       ),
