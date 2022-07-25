@@ -210,7 +210,7 @@ module Types::Queries::EntryRequest
 
     start_time = duration_based_start_time(duration)
     entry_requests
-      .where('created_at >= ? AND created_at <= ?', start_time, end_time)
+      .where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
   end
   # rubocop:enable Metrics/MethodLength,  Metrics/AbcSize
 end
