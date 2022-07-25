@@ -57,7 +57,7 @@ describe('Logbook Stats', () => {
       expect(getAllByTestId('stats_count')[0].textContent).toContain('0');
       expect(getAllByLabelText('common:misc.timeframe')[0]).toBeInTheDocument();
       expect(getAllByText('logbook.visitor_statistics')[0]).toBeInTheDocument();
-      expect(getAllByText('common:misc.show common:misc.none')[0]).toBeInTheDocument();
+      expect(getAllByText('common:misc.show common:misc.all')[0]).toBeInTheDocument();
 
       fireEvent.click(getByTestId('export_data'));
       fireEvent.click(getAllByTestId('card')[0]);
