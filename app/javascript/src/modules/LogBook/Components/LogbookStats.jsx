@@ -3,10 +3,10 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
 import { CSVLink } from 'react-csv';
 import { Download } from '@mui/icons-material';
-import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -18,9 +18,10 @@ import useLogbookStyles from '../styles';
 import { filterOptions } from '../utils';
 import { dateToString } from '../../../components/DateContainer';
 
-export default function LogbookStats({ isSmall }) {
+export default function LogbookStats() {
   const { t } = useTranslation(['logbook', 'common']);
   const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down('sm'));
   const initialFilter = { type: 'allVisits', duration: null };
   const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
   const [loadStats, { data, loading }] = useLazyQuery(LogbookStatsQuery, {
@@ -113,7 +114,7 @@ export default function LogbookStats({ isSmall }) {
               startIcon={guestsLoading && <Spinner />}
               // disabled={!guestData}
             >
-              {isSmall ? <Download color="primary" /> : t('common:misc.export_data')}
+              {matches ? <Download color="primary" /> : t('common:misc.export_data')}
             </Button>
           )}
           {called && guestData?.currentGuests.length > 0 && (
@@ -154,7 +155,3 @@ export default function LogbookStats({ isSmall }) {
     </>
   );
 }
-
-LogbookStats.propTypes = {
-  isSmall: PropTypes.bool.isRequired,
-};
