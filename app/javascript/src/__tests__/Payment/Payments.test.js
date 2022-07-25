@@ -23,7 +23,7 @@ describe('Payments Component', () => {
     );
 
     await waitFor(() => {
-      expect(container.queryAllByText('search.search_for')[0]).toBeInTheDocument();
+      expect(container.queryAllByText('search:search.search_for')[0]).toBeInTheDocument();
       expect(container.queryAllByText('common:misc.add_filter')[0]).toBeInTheDocument();
       expect(container.queryAllByText('Add group')[0]).toBeInTheDocument();
       expect(container.queryAllByText('misc.previous')[0]).toBeInTheDocument();

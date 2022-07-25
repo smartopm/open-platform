@@ -43,10 +43,6 @@ module Types::Queries::LandParcel
       argument :limit, Integer, required: false
       argument :query, String, required: false
     end
-
-    field :house_geo_data, [Types::LandParcelGeoDataType], null: true do
-      description 'Get all House Geo Data'
-    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -56,8 +52,6 @@ module Types::Queries::LandParcel
     context[:site_community].land_parcels
                             .excluding_general
                             .search(query)
-                            .includes(accounts: :user, payment_plans: %i[user plan_payments])
-                            .with_attached_images
                             .where(object_type: 'land')
                             .limit(limit).offset(offset)
   end
@@ -66,37 +60,32 @@ module Types::Queries::LandParcel
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     user = verified_user(user_id)
-    user.land_parcels.excluding_general.includes(:accounts)
+    user.land_parcels.excluding_general
   end
 
   def user_land_parcel_with_plan(user_id:)
     raise_unauthorized_error_for_land_parcels(:can_fetch_land_parcels_with_plans)
 
     user = context[:site_community].users.find_by(id: user_id)
-    user.payment_plans.excluding_general_plans.includes(:land_parcel).where.not(pending_balance: 0)
+    user.payment_plans.excluding_general_plans.where.not(pending_balance: 0)
   end
 
   def land_parcel(id:)
     raise_unauthorized_error_for_land_parcels(:can_fetch_land_parcel)
 
-    parcel = context[:site_community].land_parcels
-                                     .excluding_general
-                                     .includes(accounts: :user, payment_plans:
-                                      %i[user plan_payments])
-                                     .with_attached_images
-                                     .find_by(id: id)
+    parcel = context[:site_community].land_parcels.excluding_general.find_by(id: id)
     raise GraphQL::ExecutionError, 'Record not found' if parcel.nil?
 
     parcel
   end
 
+  # eager load cannot be removed as valuations and accounts are used in geo data
   def land_parcel_geo_data
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     properties = context[:site_community].land_parcels
                                          .excluding_general
-                                         .eager_load(:valuations, :accounts)
-                                         .with_attached_images
+                                         .eager_load(:accounts, :valuations)
 
     properties.map { |p| geo_data(p, properties) }
   end
@@ -108,8 +97,6 @@ module Types::Queries::LandParcel
                             .excluding_general
                             .search(query)
                             .where(object_type: 'house')
-                            .includes(accounts: :user, payment_plans: %i[user plan_payments])
-                            .with_attached_images
                             .limit(limit).offset(offset)
   end
 

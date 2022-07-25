@@ -248,7 +248,6 @@ export default function UserInformation({
           <FeatureCheck features={authState.user.community.features} name="Forms">
             <TabPanel value={tabValue} index="Forms">
               <UserFilledForms
-                userFormsFilled={data.user.formUsers}
                 userId={data.user.id}
                 currentUser={authState.user.id}
               />

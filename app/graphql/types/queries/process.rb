@@ -24,10 +24,7 @@ module Types::Queries::Process
             I18n.t('errors.unauthorized')
     end
 
-    context[:site_community]
-      .processes
-      .includes(:note_list, :form)
-      .offset(offset).limit(limit)
+    context[:site_community].processes.offset(offset).limit(limit)
   end
 
   def process_task_lists(limit: 50, offset: 0)
@@ -36,9 +33,6 @@ module Types::Queries::Process
             I18n.t('errors.unauthorized')
     end
 
-    context[:site_community]
-      .note_lists
-      .includes(:notes)
-      .offset(offset).limit(limit)
+    context[:site_community].note_lists.offset(offset).limit(limit)
   end
 end

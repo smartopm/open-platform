@@ -29,6 +29,7 @@ function copyProps(src, target) {
 
 global.window = window;
 global.document = window.document;
+window.scrollTo = jest.fn();
 global.navigator = {
   userAgent: 'node.js',
   platform: 'Win32'

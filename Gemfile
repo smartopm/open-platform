@@ -44,7 +44,7 @@ gem "aws-sdk-s3", '~> 1.113.0', require: false
 gem 'repost'
 # Auth stuff
 gem "omniauth-google-oauth2", "~> 0.8.0"
-gem 'omniauth-rails_csrf_protection'
+gem 'omniauth-rails_csrf_protection', '~> 1.0'
 # https://github.com/heartcombo/devise/pull/5327
 gem "devise", github: "heartcombo/devise", branch: "main"
 gem 'jwt'

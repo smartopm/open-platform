@@ -64,6 +64,8 @@ describe('UserForm Component', () => {
       expect(container.queryByLabelText('common:misc.customer_journey_stage')).toBeInTheDocument();
       expect(container.queryByTestId('submit_btn')).not.toBeDisabled();
       expect(container.queryByTestId('submit_btn')).toHaveTextContent('common:form_actions.submit');
+      expect(container.queryByText('common:misc.referrals')).not.toBeInTheDocument();
+      expect(container.queryByText('menu.user_edit')).toBeInTheDocument();
     }, 10);
 
     ReactTestUtils.Simulate.change(container.queryByTestId('username'), {
@@ -76,7 +78,7 @@ describe('UserForm Component', () => {
       target: { value: '090909090909' }
     });
 
-    expect(container.queryByTestId('primary_phone').value).toContain('090909090909');
+    expect(container.queryByTestId('primary_phone').value).toContain('+090 909 090 909');
 
     ReactTestUtils.Simulate.change(container.queryByTestId('email'), {
       target: { value: 'abcdef.jkl' }
@@ -146,8 +148,6 @@ describe('UserForm Component', () => {
 
     await waitFor(() => {
       expect(container.queryByLabelText('common:misc.take_photo')).toBeNull();
-      expect(container.queryByTestId('clientName')).toBeInTheDocument();
-      expect(container.queryByTestId('clientName')).toBeDisabled();
       expect(container.queryByTestId('username')).toBeInTheDocument();
       expect(container.queryByTestId('primary_phone')).not.toBeNull();
       expect(container.queryByTestId('email')).not.toBeNull();
@@ -162,8 +162,10 @@ describe('UserForm Component', () => {
       target: { value: '090909090909' }
     });
 
-    expect(container.queryByTestId('primary_phone').value).toContain('090909090909');
+    expect(container.queryByTestId('primary_phone').value).toContain('+090 909 090 909');
     expect(container.queryByTestId('referralText')).toHaveTextContent('common:misc.referral_text');
+    expect(container.queryByText('common:misc.referrals')).toBeInTheDocument();
+    expect(container.queryByText('menu.user_edit')).not.toBeInTheDocument();
     expect(container.queryByTestId('referralBtn')).not.toBeDisabled();
     expect(container.queryByTestId('referralBtn')).toHaveTextContent('common:misc.refer');
     expect(formatContactType('0233082', 'phone')).toMatchObject({

@@ -16,7 +16,7 @@ import useDebouncedValue from '../../../../shared/hooks/useDebouncedValue';
 import useFetchMoreRecords from '../../../../shared/hooks/useFetchMoreRecords';
 import CenteredContent from '../../../../shared/CenteredContent';
 import MenuList from '../../../../shared/MenuList';
-import { formatError, handleQueryOnChange, objectAccessor, useParamsQuery } from '../../../../utils/helpers';
+import { formatError, handleQueryOnChange, objectAccessor, scrollToTop, useParamsQuery } from '../../../../utils/helpers';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 import PageWrapper from '../../../../shared/PageWrapper';
 import ProcessCommentItem from './ProcessCommentItem';
@@ -86,6 +86,7 @@ export default function ProcessCommentsPage() {
       setViewType('tab');
     }
     setSearchOpen(!searchOpen);
+    scrollToTop();
   }
 
   const menuList = [

@@ -10,7 +10,7 @@ import PageWrapper from '../../../../shared/PageWrapper';
 import { GuestEntriesQuery } from '../../graphql/guestbook_queries';
 import useDebouncedValue from '../../../../shared/hooks/useDebouncedValue';
 import CenteredContent from '../../../../shared/CenteredContent';
-import { formatError } from '../../../../utils/helpers';
+import { formatError, scrollToTop } from '../../../../utils/helpers';
 import SearchInput from '../../../../shared/search/SearchInput';
 import { Spinner } from '../../../../shared/Loading';
 import { EntryRequestGrant } from '../../../../graphql/mutations';
@@ -63,13 +63,18 @@ export default function Invitations() {
     query: dbcValue.trim(),
   });
 
+  function handleSearchClick() {
+    setSearchOpen(!searchOpen);
+    scrollToTop();
+  }
+
   const rightPanelObj = [
     {
       mainElement: (
         <Button
           startIcon={!matches && <SearchIcon />}
           data-testid="invitation_search_btn"
-          onClick={() => setSearchOpen(!searchOpen)}
+          onClick={handleSearchClick}
         >
           {matches ? <SearchIcon /> : t('common:menu.search')}
         </Button>
@@ -259,8 +264,7 @@ export default function Invitations() {
       <br />
       {guestsLoading && !data ? (
         <Spinner />
-      ) : (
-        data?.scheduledRequests.length &&
+      ) : data?.scheduledRequests.length ? (
         data?.scheduledRequests.map(visit => (
           <Invitation
             key={visit.id}
@@ -274,9 +278,11 @@ export default function Invitations() {
             matches={matches}
           />
         ))
+      ) : (
+        <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
       )}
       <CenteredContent>
-        {data?.scheduledRequests.length ? (
+        {data?.scheduledRequests.length > 0 && (
           <Button
             variant="outlined"
             onClick={loadMore}
@@ -285,8 +291,7 @@ export default function Invitations() {
           >
             {t('search:search.load_more')}
           </Button>
-        ) : (
-          t('logbook.no_invited_guests'))}
+        )}
       </CenteredContent>
     </PageWrapper>
   );

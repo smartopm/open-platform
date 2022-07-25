@@ -116,7 +116,7 @@ describe('Should render Guests View Component', () => {
 
     fireEvent.click(container.getByTestId('SearchIcon'));
     await waitFor(() => {
-      expect(container.getAllByText('search.search_for')[0]).toBeInTheDocument();
+      expect(container.getAllByText('search:search.search_for')[0]).toBeInTheDocument();
 
       const inputField = container.getByTestId('search');
       expect(inputField).toBeInTheDocument();
