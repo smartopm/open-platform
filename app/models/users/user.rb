@@ -195,7 +195,7 @@ module Users
     validate :phone_number_valid?
     validate :public_user?
 
-    devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
+    devise :omniauthable, :database_authenticatable, omniauth_providers: %i[google_oauth2 facebook]
 
     PHONE_TOKEN_LEN = 6
     PHONE_TOKEN_EXPIRATION_MINUTES = 2880 # Valid for 48 hours
@@ -270,6 +270,12 @@ module Users
 
     def self.lookup_by_id_card_token(token)
       find_by(id: token)
+    end
+
+    # the authenticate method from devise documentation
+    def self.authenticate(username, password)
+      user = User.find_for_authentication(username: username)
+      user&.valid_password?(password) ? user : nil
     end
 
     def site_manager?

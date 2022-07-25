@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_18_125556) do
+ActiveRecord::Schema.define(version: 2022_07_25_164228) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -967,6 +967,8 @@ ActiveRecord::Schema.define(version: 2022_07_18_125556) do
     t.string "decision_timeline"
     t.integer "status", default: 0
     t.string "division"
+    t.string "username", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
     t.index ["role_id"], name: "index_users_on_role_id"
