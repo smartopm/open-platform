@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'twilio-ruby'
-
 # Twilio controller
 class TwilioController < ApplicationController
   include ApplicationHelper
@@ -10,8 +8,8 @@ class TwilioController < ApplicationController
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def webhook
-    response = Twilio::TwiML::MessagingResponse.new
-    response.message(
+    twilio_response = Twilio::TwiML::MessagingResponse.new
+    twilio_response.message(
       body: "Hi #{params['ProfileName']}, Thank you for your message!!",
     )
     user = current_community.users.find_by(phone_number: params['WaId'])
@@ -26,7 +24,7 @@ class TwilioController < ApplicationController
       create_task(params, user)
     end
     # Respond to the user who sent the message
-    render xml: response
+    render xml: twilio_response
   rescue StandardError => e
     Rollbar.error(e)
     head :ok
