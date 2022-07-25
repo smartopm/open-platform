@@ -10,10 +10,14 @@ module Types
     field :bank_name, String, null: true
     field :cheque_number, String, null: true
     field :transaction_number, String, null: true
-    field :user, Types::UserType, null: false
-    field :depositor, Types::UserType, null: true
-    field :community, Types::CommunityType, null: false
-    field :plan_payments, [Types::PlanPaymentType], null: true
+    field :user, Types::UserType, null: false, resolve: Resolvers::BatchResolver.load(:user)
+    field :depositor, Types::UserType, null: true,
+                                       resolve: Resolvers::BatchResolver.load(:depositor)
+    field :community, Types::CommunityType, null: false,
+                                            resolve: Resolvers::BatchResolver.load(:community)
+    field :plan_payments, [Types::PlanPaymentType],
+          null: true,
+          resolve: Resolvers::BatchResolver.load(:plan_payments)
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :originally_created_at, GraphQL::Types::ISO8601DateTime, null: false
@@ -24,14 +28,26 @@ module Types
     #
     # @return [Float] unallocated_amount
     def unallocated_amount
-      object.amount - allocated_amount
+      batch_load(object, :plan_payments).then do |plan_payments|
+        sum = 0.0
+        plan_payments.select do |plan_payment|
+          sum += plan_payment&.amount if plan_payment.present? && plan_payment&.status.eql?('paid')
+        end
+        object.amount - sum
+      end
     end
 
     # Returns the unallocated amount after payment is made for payment plan
     #
     # @return [Float] allocated_amount
     def allocated_amount
-      object.plan_payments.not_cancelled.pluck(:amount).sum
+      batch_load(object, :plan_payments).then do |plan_payments|
+        sum = 0.0
+        plan_payments.select do |plan_payment|
+          sum += plan_payment&.amount if plan_payment.present? && plan_payment&.status.eql?('paid')
+        end
+        sum
+      end
     end
   end
 end
