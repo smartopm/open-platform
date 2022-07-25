@@ -48,16 +48,18 @@ export default function GuardPost() {
   const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
   const { value, dbcValue, setSearchValue } = useDebouncedValue();
   const { data, loading: guestsLoading, refetch, error, fetchMore } = useQuery(
-    CurrentGuestEntriesQuery, {
-    variables: {
-      offset: 0,
-      limit,
-      query: dbcValue.trim(),
-      type: statsTypeFilter.type,
-      duration: statsTypeFilter.duration,
-    },
-    fetchPolicy: 'cache-and-network',
-  });
+    CurrentGuestEntriesQuery,
+    {
+      variables: {
+        offset: 0,
+        limit: dbcValue.trim().length > 0 ? 50 : limit,
+        query: dbcValue.trim(),
+        type: statsTypeFilter.type,
+        duration: statsTypeFilter.duration,
+      },
+      fetchPolicy: 'cache-and-network',
+    }
+  );
   const { t } = useTranslation(['logbook', 'common', 'search']);
   const [currentId, setCurrentId] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
@@ -349,6 +351,7 @@ export default function GuardPost() {
             handleFilter={handleFilterData}
             filterMenu
             filterOptions={filterOptions(t)}
+            searchCount={data?.currentGuests?.length || 0}
           />
         </>
       )}

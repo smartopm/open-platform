@@ -13,14 +13,11 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import LogEvents from './LogEvents';
-import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload';
 import useFileUpload from '../../../graphql/useFileUpload';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import Paginate from '../../../components/Paginate';
 import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
-import { paginate } from '../utils';
 import GateFlowReport from './GateFlowReport';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import permissionsCheck from '../../Permissions/utils';
@@ -32,6 +29,8 @@ import MenuList from '../../../shared/MenuList';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
 import { Spinner } from '../../../shared/Loading';
 import { scrollToTop } from '../../../utils/helpers';
+import ObservationModal from '../Invitations/Components/ObservationModal';
+import useFetchMoreRecords from '../../../shared/hooks/useFetchMoreRecords';
 
 const limit = 20;
 const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
@@ -49,7 +48,7 @@ export default function LogBookItem({ router, offset, tabValue }) {
     ?.permissions;
   const permissions = new Set(modulePerms);
   const anchorElOpen = Boolean(anchorEl);
-  const { t } = useTranslation(['logbook', 'common', 'dashboard']);
+  const { t } = useTranslation(['logbook', 'common', 'dashboard', 'search']);
   const [isObservationOpen, setIsObservationOpen] = useState(false);
   const [observationNote, setObservationNote] = useState('');
   const [clickedEvent, setClickedEvent] = useState({ refId: '', refType: '' });
@@ -63,16 +62,9 @@ export default function LogBookItem({ router, offset, tabValue }) {
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
   const { value, dbcValue, setSearchValue } = useDebouncedValue();
-  const modalDetails = {
-    title: t('observations.observation_title'),
-    inputPlaceholder: t('logbook.add_observation'),
-    uploadBtnText: t('observations.upload_image'),
-    subTitle: t('observations.add_your_observation'),
-    uploadInstruction: t('observations.upload_label'),
-  };
   const { showSnackbar, messageType } = useContext(SnackbarContext)
 
-  const eventsData = useQuery(AllEventLogsQuery, {
+  const { data, loading, error, refetch, fetchMore } = useQuery(AllEventLogsQuery, {
     variables: {
       subject: subjects,
       refId: null,
@@ -86,6 +78,12 @@ export default function LogBookItem({ router, offset, tabValue }) {
 
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient(),
+  });
+
+  const { loadMore, hasMoreRecord } = useFetchMoreRecords(fetchMore, 'result', {
+    offset: data?.result?.length,
+    limit,
+    query: dbcValue.trim(),
   });
 
   function routeToAction(eventLog) {
@@ -152,7 +150,7 @@ export default function LogBookItem({ router, offset, tabValue }) {
         setDetails({ ...observationDetails, loading: false, refetch: true });
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
-        eventsData.refetch();
+        refetch();
         setIsObservationOpen(false);
         resetImageData();
       })
@@ -240,14 +238,14 @@ export default function LogBookItem({ router, offset, tabValue }) {
     },
     {
       mainElement: mobileMatches ? (
-        <IconButton color="primary" data-testid="reload" onClick={() => eventsData.refetch()()}>
+        <IconButton color="primary" data-testid="reload" onClick={() => refetch()}>
           <ReplayIcon />
         </IconButton>
       ) : (
         <Button
           startIcon={<ReplayIcon />}
           data-testid="reload"
-          onClick={() => eventsData.refetch()}
+          onClick={() => refetch()}
         >
           {t('common:misc.reload')}
         </Button>
@@ -286,48 +284,21 @@ export default function LogBookItem({ router, offset, tabValue }) {
         open={!!observationDetails.message}
         handleClose={handleCloseAlert}
       />
-      <DialogWithImageUpload
-        open={isObservationOpen}
-        handleDialogStatus={() => handleCancelClose()}
-        observationHandler={{
-          value: observationNote,
-          handleChange: val => setObservationNote(val),
-        }}
-        imageOnchange={img => onChange(img)}
+
+      <ObservationModal
+        isObservationOpen={isObservationOpen}
+        handleCancelClose={handleCancelClose}
+        observationNote={observationNote}
+        setObservationNote={setObservationNote}
         imageUrls={imageUrls}
         onChange={onChange}
         status={status}
-        closeButtonData={{
-          closeButton: true,
-          handleCloseButton,
-        }}
-        modalDetails={modalDetails}
-      >
-        {observationDetails.loading ? (
-          <Spinner />
-        ) : (
-          <>
-            <Button
-              onClick={() => handleCancelClose()}
-              color="secondary"
-              variant="outlined"
-              data-testid="cancel"
-            >
-              {t('common:form_actions.cancel')}
-            </Button>
-            <Button
-              onClick={() => handleSaveObservation()}
-              color="primary"
-              variant="contained"
-              data-testid="save"
-              style={{ color: 'white' }}
-              autoFocus
-            >
-              {t('common:form_actions.save')}
-            </Button>
-          </>
-        )}
-      </DialogWithImageUpload>
+        handleCloseButton={handleCloseButton}
+        observationDetails={observationDetails}
+        t={t}
+        handleSaveObservation={handleSaveObservation}
+      />
+
       {searchOpen && (
         <SearchInput
           title={t('logbook.all_visits')}
@@ -340,7 +311,7 @@ export default function LogBookItem({ router, offset, tabValue }) {
             !!permissionsCheck(eventLogPermissions, ['can_download_logbook_events'])
           }
           fullWidth={false}
-          searchCount={eventsData?.data?.result?.length || 0}
+          searchCount={data?.result?.length || 0}
         />
       )}
       <AccessCheck
@@ -353,23 +324,27 @@ export default function LogBookItem({ router, offset, tabValue }) {
       </AccessCheck>
       <br />
       <LogEvents
-        eventsData={eventsData}
+        eventsData={data}
         userType={authState.user.userType}
         handleExitEvent={handleExitEvent}
         handleAddObservation={handleAddObservation}
         routeToAction={routeToAction}
+        loading={loading}
+        error={error}
       />
-      {Boolean(tabValue === 0) && (
-        <CenteredContent>
-          <Paginate
-            offSet={offset}
-            limit={limit}
-            active={offset >= 1}
-            handlePageChange={action => paginate(action, router, tabValue, { offset, limit })}
-            count={eventsData.data?.length}
-          />
-        </CenteredContent>
-      )}
+
+      <CenteredContent>
+        {data?.result?.length > 0 && (
+          <Button
+            variant="outlined"
+            onClick={loadMore}
+            startIcon={loading && <Spinner />}
+            disabled={loading || !hasMoreRecord}
+          >
+            {t('search:search.load_more')}
+          </Button>
+        )}
+      </CenteredContent>
     </PageWrapper>
   );
 }
