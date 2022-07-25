@@ -36,6 +36,8 @@ module Types
       type = :has_many_attached
       attachment_load('Properties::LandParcel', :images, object.id, type: type).then do |images|
         images&.map do |image|
+          next if image.nil?
+
           Rails.application.routes.url_helpers.rails_blob_url(image)
         end
       end

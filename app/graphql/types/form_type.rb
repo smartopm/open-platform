@@ -10,7 +10,8 @@ module Types
     field :is_public, Boolean, null: true
     field :description, String, null: false
     field :version_number, Integer, null: false
-    field :community, Types::CommunityType, null: false
+    field :community, Types::CommunityType, null: false,
+                                            resolve: Resolvers::BatchResolver.load(:community)
     field :expires_at, GraphQL::Types::ISO8601DateTime, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false

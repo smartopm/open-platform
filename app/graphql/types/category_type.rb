@@ -11,7 +11,9 @@ module Types
     field :general, Boolean, null: false
     field :description, String, null: true
     field :rendered_text, String, null: true
-    field :form_properties, [Types::FormPropertiesType], null: true
+    field :form_properties, [Types::FormPropertiesType],
+          null: true,
+          resolve: Resolvers::BatchResolver.load(:form_properties)
     field :display_condition, GraphQL::Types::JSON, null: true
   end
 end

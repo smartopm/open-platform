@@ -139,7 +139,7 @@ module Types::Queries::Form
     query = updated_query(query)
     form_users = Forms::FormUser.where(form_id: Forms::Form.where(grouping_id: form.grouping_id)
                                 .select(:id))
-                                .includes(:user).search(query)
+                                .search(query)
                                 .limit(limit).offset(offset)
     { form_name: form.name, form_users: form_users }
   end
@@ -150,8 +150,7 @@ module Types::Queries::Form
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    Forms::FormUser.find_by(id: form_user_id)
-                   .user_form_properties.eager_load(form_property: :category).with_attached_image
+    Forms::FormUser.find_by(id: form_user_id).user_form_properties
   end
 
   def form_submissions(start_date:, end_date:)
@@ -195,7 +194,7 @@ module Types::Queries::Form
     form = Forms::Form.find_by(id: form_id)
     raise_form_not_found_error(form)
 
-    form.categories.eager_load(:form_properties).order(:order)
+    form.categories.order(:order)
   end
 
   # Returns all form submissions for current user
@@ -205,14 +204,13 @@ module Types::Queries::Form
     validate_authorization(:my_forms, :can_access_own_forms)
 
     user = context[:site_community].users.find(user_id)
-    user.form_users.eager_load(:form).order(created_at: :desc)
+    user.form_users.order(created_at: :desc)
   end
 
   def form_comments(form_user_id:)
     validate_authorization(:my_forms, :can_fetch_form_task_comments)
 
-    Forms::FormUser.find(form_user_id)
-                   .comments.eager_load(:user).order(created_at: :desc)
+    Forms::FormUser.find(form_user_id).comments.order(created_at: :desc)
   end
 
   private

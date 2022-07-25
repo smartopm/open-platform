@@ -60,12 +60,14 @@ module Types
       type = :has_many_attached
       attachment_load('Notes::Note', :documents, object.id, type: type, **args).then do |documents|
         documents&.map do |doc|
+          next if doc.nil?
+
           {
-            id: doc&.id,
-            filename: doc&.blob&.filename,
+            id: doc.id,
+            filename: doc.blob.filename,
             url: host_url(doc),
-            created_at: doc&.created_at,
-            task_id: doc&.record_id,
+            created_at: doc.created_at,
+            task_id: doc.record_id,
             task_name: object.body,
             uploaded_by: ActiveStorage::Attachment.find_by(
               blob_id: doc.blob_id, record_type: 'Users::User',
