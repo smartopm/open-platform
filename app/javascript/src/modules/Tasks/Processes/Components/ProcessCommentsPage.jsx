@@ -47,10 +47,9 @@ export default function ProcessCommentsPage() {
   const [filterOpen, setOpenFilter] = useState(false);
 
   const csvHeaders = [
-    { label: 'Body', key: 'body' },
-    { label: 'Sent By', key: 'userId' },
-    { label: 'Step', key: 'noteId' },
-    { label: 'Reply From', key: 'replyFromId' },
+    { label: 'Message', key: 'body' },
+    { label: 'Sent By', key: 'user.name' },
+    { label: 'Step', key: 'note.body' },
     { label: 'Date Sent', key: 'createdAt' },
   ];
 
@@ -177,7 +176,7 @@ export default function ProcessCommentsPage() {
           color="primary"
           variant="contained"
           size="small"
-          className={classes.csvButton}
+          className={matches ? classes.csvButtonMobile : classes.csvButton}
           data-testid="download-comments-btn"
         >
           {called ? (
@@ -195,7 +194,8 @@ export default function ProcessCommentsPage() {
               role="button"
               tabIndex={0}
               aria-label="download-csv"
-              style={{ color: 'white', paddingTop: '4px' }}
+              style={{ color: 'white' }}
+              className={matches ? classes.processButtonMobile : ''}
               onClick={handleCommentsDownload}
               onKeyPress={handleCommentsDownload}
             >
@@ -435,7 +435,14 @@ const useStyles = makeStyles(() => ({
   csvButton: {
     color: 'white',
   },
+  csvButtonMobile: {
+    color: 'white',
+    marginTop: '5px'
+  },
   downloadIcon: {
     paddingTop: '5px'
+  },
+  processButtonMobile: {
+    paddingTop: '2px'
   }
 }));
