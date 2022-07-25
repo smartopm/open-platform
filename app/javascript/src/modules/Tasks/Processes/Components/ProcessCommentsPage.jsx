@@ -198,6 +198,7 @@ export default function ProcessCommentsPage() {
               className={matches ? classes.processButtonMobile : ''}
               onClick={handleCommentsDownload}
               onKeyPress={handleCommentsDownload}
+              data-testid="process-csv-btn"
             >
               {processCommentsLoading ? <Spinner /> : matches ? 'CSV' : t('process:comments.process_csv')}
             </span>
