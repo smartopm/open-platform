@@ -3,9 +3,10 @@ import { Grid, Typography, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
-export default function SearchFilterList({ filters, handleClearFilters, isSmall }) {
+export default function SearchFilterList({ filters, handleClearFilters, isSmall, count }) {
   const { t } = useTranslation('search');
   const validFilters = filters.filter(Boolean);
+
   if (!validFilters?.length) return null;
   return (
     <Grid container spacing={isSmall ? 1: 2} alignItems="center">
@@ -16,7 +17,8 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall 
         )}:  `}
         </Typography>
         {'  '}
-        <Typography display="inline-block" variant="caption" data-testid="filters_list">
+        <Typography display={isSmall ? "block" : "inline-block"} variant="caption" data-testid="filters_list">
+          {count}
           {filters
             .filter(Boolean)
             .map(filter => `${filter}`)
@@ -32,8 +34,13 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall 
   );
 }
 
+SearchFilterList.defaultProps = {
+  count: 0,
+}
+
 SearchFilterList.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleClearFilters: PropTypes.func.isRequired,
   isSmall: PropTypes.bool.isRequired,
+  count: PropTypes.number,
 };

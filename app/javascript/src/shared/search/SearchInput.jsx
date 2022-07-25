@@ -37,7 +37,8 @@ export default function SearchInput({
   fullWidthOnMobile,
   fullWidth,
   filterMenu,
-  filterOptions
+  filterOptions,
+  searchCount
 }) {
   const { t } = useTranslation(['logbook', 'search', 'common']);
   const anchorRef = useRef(null);
@@ -111,9 +112,16 @@ export default function SearchInput({
           />
         </FormControl>
       </Grid>
+
       <Grid item xs={12} md={7}>
-        <SearchFilterList handleClearFilters={handleClear} filters={filters} isSmall={false} />
+        <SearchFilterList
+          handleClearFilters={handleClear}
+          filters={filters}
+          isSmall={false}
+          count={searchCount}
+        />
       </Grid>
+
       <Popper
         open={open}
         anchorEl={anchorRef.current}
@@ -161,6 +169,7 @@ SearchInput.defaultProps = {
   filters: [],
   filterMenu: false,
   filterOptions: [],
+  searchCount: 0
 };
 
 SearchInput.propTypes = {
@@ -175,5 +184,6 @@ SearchInput.propTypes = {
   fullWidthOnMobile: PropTypes.bool,
   fullWidth: PropTypes.bool,
   filterMenu: PropTypes.bool,
-  filterOptions: PropTypes.arrayOf(PropTypes.object)
+  filterOptions: PropTypes.arrayOf(PropTypes.object),
+  searchCount: PropTypes.number
 };

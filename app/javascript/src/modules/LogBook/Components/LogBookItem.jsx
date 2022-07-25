@@ -77,7 +77,7 @@ export default function LogBookItem({ router, offset, tabValue }) {
       refId: null,
       refType: null,
       offset,
-      limit: 20,
+      limit: dbcValue.trim().length > 0 ? 50 : 20,
       name: dbcValue.trim(),
     },
     fetchPolicy: 'cache-and-network',
@@ -342,6 +342,7 @@ export default function LogBookItem({ router, offset, tabValue }) {
             !!permissionsCheck(eventLogPermissions, ['can_download_logbook_events'])
           }
           fullWidth={false}
+          searchCount={eventsData?.data?.result?.length || 0}
         />
       )}
       <AccessCheck
