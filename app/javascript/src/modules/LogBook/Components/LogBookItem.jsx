@@ -16,7 +16,6 @@ import LogEvents from './LogEvents';
 import useFileUpload from '../../../graphql/useFileUpload';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
 import GateFlowReport from './GateFlowReport';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
@@ -177,11 +176,6 @@ export default function LogBookItem({ router, offset, tabValue }) {
     resetImageData();
   }
 
-  function handleCloseAlert() {
-    // clear and allow visit view to properly refetch
-    setDetails({ ...observationDetails, message: '', refetch: false });
-  }
-
   function handleClose() {
     setAnchorEl(null);
   }
@@ -278,12 +272,6 @@ export default function LogBookItem({ router, offset, tabValue }) {
 
   return (
     <PageWrapper pageTitle={t('common:misc.logs')} rightPanelObj={rightPanelObj}>
-      <MessageAlert
-        type={!observationDetails.isError ? 'success' : 'error'}
-        message={observationDetails.message}
-        open={!!observationDetails.message}
-        handleClose={handleCloseAlert}
-      />
 
       <ObservationModal
         isObservationOpen={isObservationOpen}
