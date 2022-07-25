@@ -129,7 +129,7 @@ describe('Should render Visits View Component', () => {
   };
 
   it('should render proper data', async () => {
-    const { getAllByTestId, getByText, getByTestId } = render(
+    const { getAllByTestId, getByText, getByTestId, getAllByText } = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[mocks]} addTypename>
           <MemoryRouter>
@@ -166,17 +166,15 @@ describe('Should render Visits View Component', () => {
       expect(getAllByTestId('request_status')[0].textContent).toContain('guest_book.pending');
       expect(getAllByTestId('request_status')[1].textContent).toContain('guest_book.approved');
       expect(getAllByTestId('log_exit')[0]).not.toBeDisabled();
-      expect(getAllByTestId('prev-btn')[0]).toBeInTheDocument();
-      expect(getAllByTestId('next-btn')[0]).toBeInTheDocument();
 
       fireEvent.click(getByTestId('add_button'));
       expect(getByText('logbook.new_invite')).toBeInTheDocument();
-      expect(getByText('logbook.add_observation')).toBeInTheDocument();
+      expect(getAllByText('logbook.add_observation')[0]).toBeInTheDocument();
 
       fireEvent.click(getByText('logbook.new_invite'));
       expect(mockHistory.push).toBeCalled();
 
-      fireEvent.click(getByText('logbook.add_observation'));
+      fireEvent.click(getAllByText('logbook.add_observation')[0]);
       expect(getByText('observations.add_your_observation')).toBeInTheDocument();
       fireEvent.change(getByTestId('entry-dialog-field'), {
         target: { value: 'This is an observation' }
@@ -194,7 +192,6 @@ describe('Should render Visits View Component', () => {
       expect(mockHistory.push).toBeCalled();
       expect(mockHistory.push).toBeCalledWith('/user/162f7517'); // check if it routes to the user page
 
-      fireEvent.click(getAllByTestId('next-btn')[0]);
       fireEvent.click(getByTestId('access_search'));
       expect(getByTestId('search')).toBeInTheDocument();
       fireEvent.click(getByTestId('reload'));

@@ -79,6 +79,13 @@ export default function LogbookStats() {
     },
   ];
 
+  const csvHeaders = [
+    { label: t('logbook:review_screen.name'), key: 'name' },
+    { label: t('common:form_fields.status'), key: 'status' },
+    { label: t('logbook:csv.grantor_name'), key: 'grantor.name' },
+    { label: t('logbook:csv.granted_at'), key: 'grantedAt' },
+  ];
+
   if (loading) return <Spinner />;
   return (
     <>
