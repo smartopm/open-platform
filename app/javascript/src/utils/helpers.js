@@ -750,3 +750,16 @@ export function downloadCommentFile(comment, fileId) {
 export function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+/**
+ * Gets the width of an image
+ * @param {Object} image image object
+ * @param {Function} cbHandler a callback handler
+ */
+export function getImageWidth(image, cbHandler) {
+  let img = new Image()
+  img.src = window.URL.createObjectURL(image)
+  img.onload = () => {
+    cbHandler(img.width)
+  }
+}

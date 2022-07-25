@@ -29,7 +29,7 @@ import useFileUpload from '../../../graphql/useFileUpload';
 import crudHandler from '../../../graphql/crud_handler';
 import { Spinner } from '../../../shared/Loading';
 import FormOptionInput, { FormOptionWithOwnActions } from '../../Forms/components/FormOptionInput';
-import { saniteError, validateEmail, extractCountry } from '../../../utils/helpers';
+import { saniteError, validateEmail, extractCountry, getImageWidth } from '../../../utils/helpers';
 import { ModalDialog } from '../../../components/Dialog';
 import CenteredContent from '../../../shared/CenteredContent';
 import { UpdateUserMutation } from '../../../graphql/mutations/user';
@@ -93,7 +93,9 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
 
   function uploadUserImage(image) {
     setUserImage(URL.createObjectURL(image));
-    onChange(image);
+    getImageWidth(image, (width) => {
+      onChange(image, { maxWidthOrHeight: (width / 4) });
+    });
   }
 
   function handleSubmit(event) {
