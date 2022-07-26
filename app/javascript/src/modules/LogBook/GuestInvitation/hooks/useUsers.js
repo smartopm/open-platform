@@ -3,6 +3,7 @@ import { useQuery } from 'react-apollo';
 import { UsersDetails } from '../../../../graphql/queries';
 import useDebounce from '../../../../utils/useDebounce';
 
+// Todo: Daniel merge with useGuests hook
 export default function useUsers(searchValue) {
   const debouncedValue = useDebounce(searchValue, 1000);
   const {
