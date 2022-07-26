@@ -750,6 +750,10 @@ module Users
                                             )
     end
 
+    def whatsapp_task
+      community.notes.find_by(category: 'whatsapp', completed: false, author_id: id)
+    end
+
     private
 
     def public_user?

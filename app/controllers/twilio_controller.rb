@@ -16,8 +16,7 @@ class TwilioController < ApplicationController
     return if user.nil?
 
     # Check if there is a whatsapp task created by this user that's not resolved yet
-    task = current_community.notes.where(category: 'whatsapp', completed: false)
-                            .find_by(author_id: user.id)
+    task = user.whatsapp_task
     # If there is a task then add comments to that task
     if task.present?
       create_comments(params, task)
