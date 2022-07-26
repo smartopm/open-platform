@@ -39,6 +39,7 @@ function getCurrentStage(project){
 function initialStagesData(stages) {
   const initiaData = {}
   if (!stages) return initiaData;
+
   stages.forEach(stage => {
     initiaData[sentenceToSnakeCase(stage.body)] = 0
   });
@@ -57,14 +58,18 @@ export function calculateOpenProjectsByStage(projects, stages) {
 
   if (!projects) return lookup;
 
-  if (!Array.isArray(projects) || projects.length < 0) return lookup;
+  if (!Array.isArray(projects) || projects.length < 1) return lookup;
 
   projects.forEach((project) => {
-    const currentStage = getCurrentStage(project)
+    const currentStage = getCurrentStage(project);
+    const key = sentenceToSnakeCase(currentStage);
 
-    if(currentStage) {
-      const key = sentenceToSnakeCase(currentStage)
-      lookup[String(key)] += 1;
+    if (key) {
+      if (Object.keys(lookup).includes(key)) {
+        lookup[String(key)] += 1;
+      } else {
+        lookup[String(key)] = 1; // Initialise newly found step
+      }
     }
   });
 
