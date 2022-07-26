@@ -8,7 +8,18 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall,
   const validFilters = filters.filter(Boolean);
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const filterLimit = 50
+  const filterLimit = 50;
+
+  function renderCount() {
+    if (count) {
+      return (
+        loading
+          ? <CircularProgress size={10} thickness={5} color='primary' data-testid="loader" />
+          : (count > filterLimit ? `${filterLimit}+` : count)
+      )
+    }
+    return null;
+  }
 
   if (!validFilters?.length) return null;
   return (
@@ -25,20 +36,16 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall,
       </Grid>
       <Grid item xs>
         <Typography
-          display={mobile ? 'inline-block' : 'block'}
+          display={mobile || !count ? 'inline-block' : 'block'}
           variant="subtitle2"
           data-testid="search_results"
         >
           {`${t('search.search_results')}: `}
-          {loading
-            ? <CircularProgress size={10} thickness={5} color='primary' data-testid="loader" />
-            : (count > filterLimit
-              ? `${filterLimit}+`
-              : count)}
+          {renderCount()}
         </Typography>
         {'  '}
         <Typography
-          display={mobile ? 'inline-block' : 'block'}
+          display={mobile || !count ? 'inline-block' : 'block'}
           variant="caption"
           data-testid="filters_list"
         >
@@ -53,7 +60,7 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall,
 }
 
 SearchFilterList.defaultProps = {
-  count: 0,
+  count: undefined,
   loading: false,
 }
 
