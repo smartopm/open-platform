@@ -59,7 +59,6 @@ export default function TaskInfoTop({
   const location = useLocation();
   const { processId } = useParams()
   const [taskUpdate] = useMutation(UpdateNote);
-  const [editingBody, setEditingBody] = useState(false);
   const [editingDueDate, setEditingDueDate] = useState(false);
   const [editingOrderNumber, setEditingOrderNumber] = useState(false);
   const [taskStatus, setTaskStatus] = useState(data.status);
@@ -286,32 +285,13 @@ export default function TaskInfoTop({
           </Grid>
         </Grid>
         <Grid item md={10} xs={12}>
-          {!editingBody && (
-            <Typography
-              variant="h6"
-              style={{
-                color: '#575757',
-                paddingTop: '15px'
-              }}
-              onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
-            >
-              <span
-                data-testid="task-title"
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{
-                  __html: sanitizeText(removeNewLines(data.body))
-                }}
-              />
-            </Typography>
-          )}
-          {editingBody && (
-            <AutoSaveField
-              value={data.body}
-              mutationAction={value => updateTask('body', value)}
-              stateAction={value => setEditingBody(value)}
-              label={t('common:form_fields.title')}
-            />
-          )}
+          <AutoSaveField
+            value={data.body}
+            mutationAction={value => updateTask('body', value)}
+            label={t('common:form_fields.title')}
+            fieldType='inline'
+            canEdit={canUpdateNote}
+          />
         </Grid>
       </Grid>
       <Grid item md={12} style={{ marginTop: '24px' }}>
@@ -437,6 +417,7 @@ export default function TaskInfoTop({
                   value={data.order}
                   mutationAction={value => updateTask('order', value)}
                   label={t('task.order_number')}
+                  canEdit={canUpdateNote}
                 />
               )}
             </Grid>
@@ -564,6 +545,8 @@ export default function TaskInfoTop({
             value={data.description}
             mutationAction={value => updateTask('description', value)}
             label={t('misc.add_description')}
+            canEdit={canUpdateNote}
+            fieldType='inline'
           />
         </Grid>
       </Grid>

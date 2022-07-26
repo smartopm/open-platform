@@ -4,12 +4,16 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
+import { CSVLink } from 'react-csv';
 import { Button, ButtonGroup, Grid, IconButton, Typography, useMediaQuery } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { useTheme } from '@mui/material/styles';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import SearchIcon from '@mui/icons-material/Search';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useQuery, useLazyQuery } from 'react-apollo';
 import { ProcessCommentsQuery, ProcessReplyComments } from '../graphql/process_queries';
+import { dateToString } from '../../../../components/DateContainer';
 import SearchInput from '../../../../shared/search/SearchInput';
 import { Spinner } from '../../../../shared/Loading';
 import useDebouncedValue from '../../../../shared/hooks/useDebouncedValue';
@@ -27,6 +31,7 @@ export default function ProcessCommentsPage() {
   const { id: processId } = useParams();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
+  const classes = useStyles();
   const history = useHistory();
   const path = useParamsQuery();
   const { t } = useTranslation(['common', 'process', 'task', 'search']);
@@ -41,6 +46,13 @@ export default function ProcessCommentsPage() {
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [filterOpen, setOpenFilter] = useState(false);
 
+  const csvHeaders = [
+    { label: 'Message', key: 'body' },
+    { label: 'Sent By', key: 'user.name' },
+    { label: 'Step', key: 'note.body' },
+    { label: 'Date Sent', key: 'createdAt' },
+  ];
+
   const { data, loading, error } = useQuery(ProcessReplyComments, {
     variables: { processId },
     fetchPolicy: 'cache-and-network'
@@ -48,6 +60,7 @@ export default function ProcessCommentsPage() {
 
   const [loadProcessComments,
     {
+      called,
       fetchMore,
       data: processComments,
       loading: processCommentsLoading,
@@ -89,6 +102,10 @@ export default function ProcessCommentsPage() {
     scrollToTop();
   }
 
+  function handleCommentsDownload() {
+    loadProcessComments({ variables: { limit: 2000, query: value } });
+  }
+
   const menuList = [
     {
       content: t('process:comments.list_view'),
@@ -114,12 +131,14 @@ export default function ProcessCommentsPage() {
       ) : (
         <ButtonGroup disableElevation color="primary" variant="outlined" aria-label="status button">
           <Button
+            size="small"
             onClick={(e) => handleCommentsViewType(e, 'list')}
             data-testid="comments-list-view"
           >
             {t('process:comments.list_view')}
           </Button>
           <Button
+            size="small"
             onClick={(e)=> handleCommentsViewType(e, 'tab')}
             data-testid="comments-tab-view"
           >
@@ -149,6 +168,44 @@ export default function ProcessCommentsPage() {
         </Button>
       ),
       key: 2
+    },
+    {
+      mainElement: (
+        <Button
+          disableElevation
+          color="primary"
+          variant="contained"
+          size="small"
+          className={matches ? classes.csvButtonMobile : classes.csvButton}
+          data-testid="download-comments-btn"
+        >
+          {called ? (
+            <CSVLink
+              data={processComments?.processComments || []}
+              headers={csvHeaders}
+              style={{ color: 'white', textDecoration: 'none' }}
+              filename={`comments-data-${dateToString(new Date())}.csv`}
+              data-testid="download-comments-link"
+            >
+              { matches ? (<FileDownloadIcon className={classes.downloadIcon} />) : t('process:comments.download_csv')}
+            </CSVLink>
+          ) : (
+            <span
+              role="button"
+              tabIndex={0}
+              aria-label="download-csv"
+              style={{ color: 'white' }}
+              className={matches ? classes.processButtonMobile : ''}
+              onClick={handleCommentsDownload}
+              onKeyPress={handleCommentsDownload}
+              data-testid="process-csv-btn"
+            >
+              {processCommentsLoading ? <Spinner /> : matches ? 'CSV' : t('process:comments.process_csv')}
+            </span>
+          )}
+        </Button>
+      ),
+      key: 3
     }
   ];
 
@@ -374,3 +431,19 @@ export default function ProcessCommentsPage() {
     </PageWrapper>
   );
 }
+
+const useStyles = makeStyles(() => ({
+  csvButton: {
+    color: 'white',
+  },
+  csvButtonMobile: {
+    color: 'white',
+    marginTop: '5px'
+  },
+  downloadIcon: {
+    paddingTop: '5px'
+  },
+  processButtonMobile: {
+    paddingTop: '2px'
+  }
+}));

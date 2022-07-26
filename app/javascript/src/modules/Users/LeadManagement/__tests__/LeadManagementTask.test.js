@@ -90,7 +90,8 @@ describe('LeadManagementForm', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryAllByTestId('task-title')).toHaveLength(2);
+      expect(screen.queryAllByTestId('inline-editable-field')[0]).toBeInTheDocument();
+      expect(screen.queryAllByTestId('task-title')).toHaveLength(1);
       expect(screen.queryByText('task.parent_task')).toBeInTheDocument();
       expect(screen.queryByText('task.due_date_text')).toBeInTheDocument();
       expect(screen.queryByText('task.date_created')).toBeInTheDocument();

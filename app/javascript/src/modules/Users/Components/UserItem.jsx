@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import React, { useState } from 'react';
 import {
   ListItem,
@@ -8,7 +9,7 @@ import {
   DialogTitle,
   DialogContent,
   Checkbox,
-  Chip
+  Chip,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
@@ -16,6 +17,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
+import Tooltip from '@mui/material/Tooltip';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useMutation } from 'react-apollo';
 import Avatar from '../../../components/Avatar';
@@ -34,15 +36,16 @@ export default function UserItem({
   selectedUsers,
   offset,
   selectCheckBox,
-  refetch
+  refetch,
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const history = useHistory();
   const { t } = useTranslation('common', 'user');
-  const mdDownHidden = useMediaQuery(theme => theme.breakpoints.down('md'));
-  const mdUpHidden = useMediaQuery(theme => theme.breakpoints.up('md'));
+  const isMobile = useMediaQuery('(max-width:800px)');
+  const mdDownHidden = useMediaQuery(theme => theme.breakpoints.down('md')); // !mdDownHidden = medium screen and above
+  const mdUpHidden = useMediaQuery(theme => theme.breakpoints.up('md')); // !mdUpHidden = smaller screens
   /**
    * @deprecated prefer getting this contact from the community
    */
@@ -65,7 +68,7 @@ export default function UserItem({
     if (event.target.tagName === 'DIV') {
       history.push({
         pathname: `/user/${user.id}`,
-        state: { from: 'users', offset }
+        state: { from: 'users', offset },
       });
     }
   }
@@ -83,7 +86,7 @@ export default function UserItem({
   function handleActivation() {
     setLoading(true);
     updateUser({
-      variables: { id: user.id, name: user.name, status: activationStatus() }
+      variables: { id: user.id, name: user.name, status: activationStatus() },
     })
       .then(() => {
         setLoading(false);
@@ -124,9 +127,17 @@ export default function UserItem({
         open={activationDialogOpen}
         handleClose={handleActivationDialog}
         handleOnSave={handleActivation}
-        message={user.status === 'active' ? t('users:messages.deactivation_confirmation', { userName: user.name }) : t('users:messages.activation_confirmation', { userName: user.name })}
+        message={
+          user.status === 'active'
+            ? t('users:messages.deactivation_confirmation', { userName: user.name })
+            : t('users:messages.activation_confirmation', { userName: user.name })
+        }
         type="confirm"
-        proceedText={user.status === 'active' ? t('users:buttons:deactivate_user') : t('users:buttons:activate_user')}
+        proceedText={
+          user.status === 'active'
+            ? t('users:buttons:deactivate_user')
+            : t('users:buttons:activate_user')
+        }
         disableActionBtn={loading}
       />
       <ListItem
@@ -150,23 +161,19 @@ export default function UserItem({
               <Avatar user={user} />
             </ListItemAvatar>
           </Grid>
-          <Grid item md={2} sm={9} xs={7} className={classes.userNameItem}>
+          <Grid item md={2} sm={9} xs={7}>
             <Link
               style={{ color: 'black' }}
               to={{ pathname: `/user/${user.id}`, state: { from: 'users', offset } }}
               key={user.id}
             >
               <Typography
-                component="span"
                 variant="subtitle1"
                 data-testid="user_name"
-                className={classes.userName}
+                className={isMobile ? classes.userNameWithElipsis : classes.userName}
+                style={{ maxWidth: isMobile ? '15ch' : '20ch' }}
               >
-                <strong> 
-                  {' '}
-                  {user.name}
-                  {' '}
-                </strong>
+                <strong>{user.name}</strong>
               </Typography>
             </Link>
           </Grid>
@@ -185,15 +192,53 @@ export default function UserItem({
               </IconButton>
             </Grid>
           )}
-          <Grid item md={3} sm={6} xs={12}>
-            <Typography
-              variant="body2"
-              data-testid="user_email"
-              gutterBottom
-              className={classes.alignDetailsToAvatarFromSm}
-            >
-              {user.email}
-            </Typography>
+
+          <Grid item md={isMobile ? 3 : 4} sm={6} xs={12}>
+            {user?.email?.length > 40 && !isMobile ? (
+              <Tooltip
+                title={user?.email}
+                arrow
+                placement="bottom"
+                componentsProps={{
+                  tooltip: {
+                    sx: {
+                      bgcolor: 'primary',
+                      '& .MuiTooltip-arrow': {
+                        color: 'primary',
+                      },
+                    },
+                  },
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  data-testid="user_email"
+                  gutterBottom
+                  className={classes.emailWithElipsis}
+                >
+                  {user.email}
+                </Typography>
+              </Tooltip>
+            ) : isMobile ? (
+              <Typography
+                variant="body2"
+                data-testid="user_email"
+                gutterBottom
+                className={classes.emailWithElipsisMobile}
+              >
+                {user.email}
+              </Typography>
+            ) : (
+              <Typography
+                variant="body2"
+                data-testid="user_email"
+                gutterBottom
+                className={classes.emailWithElipsis}
+              >
+                {user.email}
+              </Typography>
+            )}
+
             <Typography
               component="span"
               variant="body2"
@@ -225,20 +270,25 @@ export default function UserItem({
             )}
           </Grid>
           <Grid item md={1} sm={6} xs={12}>
-            { user.status === 'deactivated' && (
-            <Chip
-              data-testid="user_status_chip"
-              label={capitalize(user.status)}
-              className={classes.alignDetailsToAvatarFromSm}
-              style={{ color: 'black' }}
-              size="small"
-            />
+            {user.status === 'deactivated' && (
+              <Chip
+                data-testid="user_status_chip"
+                label={capitalize(user.status)}
+                className={classes.alignDetailsToAvatarFromSm}
+                style={{ color: 'black' }}
+                size="small"
+              />
             )}
           </Grid>
           {!mdDownHidden && (
-            <Grid item md={1} sm={1} className={classes.iconButton}>
+            <Grid
+              item
+              md={1}
+              sm={1}
+              style={{ textAlign: isMobile ? 'right' : 'left', paddingLeft: !isMobile && 55 }}
+            >
               <IconButton
-                className={classes.menuButton}
+                style={{ textAlign: isMobile ? 'right' : 'left' }}
                 aria-label={`more-${user.name}`}
                 aria-controls="long-menu"
                 aria-haspopup="true"
@@ -279,7 +329,7 @@ UserItem.propTypes = {
     status: PropTypes.string,
     subStatus: PropTypes.string,
     notes: PropTypes.arrayOf(PropTypes.object),
-    labels: PropTypes.arrayOf(PropTypes.object)
+    labels: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   currentUserType: PropTypes.string.isRequired,
   selectCheckBox: PropTypes.bool.isRequired,
@@ -294,77 +344,98 @@ const useStyles = makeStyles(() => ({
     border: '1px solid #ECECEC',
     marginBottom: 10,
     backgroundColor: '#FFFFFF',
-    cursor: 'pointer'
-  },
-  iconButton: {
-    textAlign: 'right'
+    cursor: 'pointer',
   },
   menuButton: {
-    float: 'right'
+    float: 'right',
   },
   linkItem: {
     color: '#000000',
-    textDecoration: 'none'
+    textDecoration: 'none',
   },
   '@media (min-width: 600px) and (max-width: 766px)': {
     userNameItem: {
-      paddingLeft: 8
-    }
+      paddingLeft: 8,
+    },
+  },
+
+  userNameWithElipsis: {
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    marginLeft: '0%',
   },
   '@media (min-width: 499px) and (max-width: 599px)': {
     userName: {
-      marginLeft: '-22%'
+      marginLeft: '-22%',
     },
     userAvatar: {
-      marginLeft: '-42%'
-    }
+      marginLeft: '-42%',
+    },
   },
   '@media (min-width: 450px) and (max-width: 499px)': {
     userName: {
-      marginLeft: '-19%'
+      marginLeft: '-19%',
     },
     userAvatar: {
-      marginLeft: '-40%'
-    }
+      marginLeft: '-40%',
+    },
   },
   '@media (min-width: 390px) and (max-width: 450px)': {
     userName: {
-      marginLeft: '-6%'
+      marginLeft: '-6%',
     },
     userAvatar: {
-      marginLeft: '-18%'
-    }
+      marginLeft: '-18%',
+    },
   },
   '@media (min-width: 991px)': {
     userName: {
-      marginLeft: '-37%'
+      marginLeft: '-37%',
     },
     userAvatar: {
-      marginLeft: '-40%'
+      marginLeft: '-40%',
     },
     menuButton: {
-      marginRight: '-3.5em'
-    }
+      marginRight: '-3.5em',
+    },
   },
+
+  emailWithElipsis: {
+    maxWidth: '40ch',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    marginLeft: '0%',
+  },
+
+  emailWithElipsisMobile: {
+    maxWidth: '25ch',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    marginLeft: '18%',
+  },
+
   '@media (max-width: 960px)': {
     alignDetailsToAvatarFromSm: {
-      marginLeft: '18%'
-    }
+      marginLeft: '18%',
+    },
   },
   '@media (max-width: 600px)': {
     alignDetailsToAvatarForXs: {
-      marginLeft: '11%'
+      marginLeft: '11%',
     },
     alignDetailsToAvatarFromSm: {
-      marginLeft: '11%'
-    }
+      marginLeft: '11%',
+    },
   },
   '@media (max-width: 430px)': {
     alignDetailsToAvatarForXs: {
-      marginLeft: '18%'
+      marginLeft: '18%',
     },
     alignDetailsToAvatarFromSm: {
-      marginLeft: '18%'
-    }
-  }
+      marginLeft: '18%',
+    },
+  },
 }));
