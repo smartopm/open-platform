@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_25_164228) do
+ActiveRecord::Schema.define(version: 2022_07_26_063601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -327,7 +327,7 @@ ActiveRecord::Schema.define(version: 2022_07_25_164228) do
     t.uuid "revoker_id"
     t.datetime "revoked_at"
     t.integer "status", default: 0
-    t.uuid "guest_id"
+    t.uuid "guest_id" 
     t.datetime "exited_at"
   end
 
@@ -969,6 +969,8 @@ ActiveRecord::Schema.define(version: 2022_07_25_164228) do
     t.string "division"
     t.string "username", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token", default: "", null: false
+    t.integer "sign_in_count", default: 0, null: false
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
     t.index ["role_id"], name: "index_users_on_role_id"
