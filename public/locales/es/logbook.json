@@ -16,6 +16,8 @@
     "acting_user": "Usuario Interino",
     "date": "Fecha",
     "extra_note": "Nota Adicional",
+    "granted_at": "Concedido en",
+    "grantor_name": "Nombre del Otorgante",
     "guest": "Invitado",
     "observation_log": "Observación",
     "reason": "Razón",
@@ -233,7 +235,8 @@
     "visit_end_error": "Días de visita son requeridos",
     "visit_scheduled": "Visita programada para: {{date}} a las {{time}}",
     "visit_view": "Vista de Visitas",
-    "visiting_reason": "Motivo de la visita"
+    "visiting_reason": "Motivo de la visita",
+    "visitor_statistics": "Estadísticas de Visitantes"
   },
   "observations": {
     "add_your_observation": "¿Tiene alguna observación que le gustaría agregar?",
