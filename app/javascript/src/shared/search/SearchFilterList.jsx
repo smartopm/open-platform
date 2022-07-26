@@ -8,6 +8,7 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall,
   const validFilters = filters.filter(Boolean);
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const filterLimit = 50
 
   if (!validFilters?.length) return null;
   return (
@@ -28,7 +29,7 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall,
           variant="subtitle2"
           data-testid="search_results"
         >
-          {`${t('search.search_results')}:  ${count > 50 ? `${count}+` : count}`}
+          {`${t('search.search_results')}:  ${count > filterLimit ? `${filterLimit}+` : count}`}
         </Typography>
         {'  '}
         <Typography
