@@ -9,9 +9,7 @@ class TwilioController < ApplicationController
   # rubocop:disable Metrics/MethodLength
   def webhook
     twilio_response = Twilio::TwiML::MessagingResponse.new
-    twilio_response.message(
-      body: "Hi #{params['ProfileName']}, Thank you for your message!!",
-    )
+    twilio_response.message(body: "Hi #{params['ProfileName']}, Thank you for your message!!")
     user = current_community.users.find_by(phone_number: params['WaId'])
     return if user.nil?
 
