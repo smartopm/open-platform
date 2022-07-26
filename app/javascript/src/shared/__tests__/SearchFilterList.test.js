@@ -8,11 +8,17 @@ describe('SearchFilterList', () => {
     const filters = ['all', 'somethingelse'];
     const clearFilters = jest.fn();
     const container = render(
-      <SearchFilterList filters={filters} handleClearFilters={clearFilters} isSmall={false} />
+      <SearchFilterList
+        filters={filters}
+        handleClearFilters={clearFilters}
+        isSmall={false}
+        count={10}
+      />
     );
-    expect(container.queryByTestId('clear_filters_btn').textContent).toContain('search.clear_filters');
+    expect(container.queryByTestId('clear_filters_btn').textContent).toContain('search.clear');
     expect(container.queryByTestId('search_results').textContent).toContain('search.search_results');
     expect(container.queryByTestId('filters_list').textContent).toContain('somethingelse');
+    expect(container.getByText(/10/)).toBeInTheDocument();
 
     fireEvent.click(container.queryByTestId('clear_filters_btn'));
 
