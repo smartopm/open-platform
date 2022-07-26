@@ -40,7 +40,7 @@ class Sms
       client.sms.send(from: config[:from], to: to, text: message)
       twilio_client.messages.create(
         to: "whatsapp:+#{to}",
-        from: 'whatsapp:+15103287793',
+        from: "whatsapp:+#{Rails.application.credentials.whatsapp_number}",
         body: message,
       )
     rescue StandardError
