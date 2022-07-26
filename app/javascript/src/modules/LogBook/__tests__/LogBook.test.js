@@ -26,6 +26,6 @@ describe('LogBook Component', () => {
         </MockedThemeProvider>
       </MockedProvider>
     );
-    await waitFor(() => expect(container.queryByTestId('page_title')).toBeInTheDocument());
+    await waitFor(() => expect(container.queryByTestId('loader')).toBeInTheDocument());
   });
 });

@@ -54,30 +54,6 @@ describe('Log Events Component', () => {
   const actions = jest.fn();
   const logExit = jest.fn();
 
-  it('renders error message', () => {
-    const container = render(
-      <MockedProvider>
-        <MockedThemeProvider>
-          <BrowserRouter>
-            <Context.Provider value={authState}>
-              <LogEvents
-                eventsData={undefined}
-                userType="admin"
-                handleExitEvent={logExit}
-                handleAddObservation={jest.fn()}
-                routeToAction={actions}
-                error={{message: 'error'}}
-                loading
-              />
-            </Context.Provider>
-          </BrowserRouter>
-        </MockedThemeProvider>
-      </MockedProvider>
-    );
-
-    expect(container.queryByText('error')).toBeInTheDocument();
-  });
-
   it('renders log event component', () => {
     const container = render(
       <MockedProvider>

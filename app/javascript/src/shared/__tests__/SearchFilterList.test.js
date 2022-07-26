@@ -31,5 +31,23 @@ describe('SearchFilterList', () => {
       <SearchFilterList filters={[]} handleClearFilters={clearFilters} isSmall={false} />
     );
     expect(container.queryByTestId('clear_filters_btn')).not.toBeInTheDocument()
-  })
+  });
+
+  it('should render loading component', () => {
+    const filters = ['all', 'none'];
+    const clearFilters = jest.fn();
+    const container = render(
+      <SearchFilterList
+        filters={filters}
+        handleClearFilters={clearFilters}
+        isSmall={false}
+        count={10}
+        loading
+      />
+    );
+    expect(container.queryByTestId('filters_list').textContent).toContain('none');
+    expect(container.queryByText(/10/)).not.toBeInTheDocument();
+    expect(container.queryByTestId('loader')).toBeInTheDocument();
+
+  });
 });

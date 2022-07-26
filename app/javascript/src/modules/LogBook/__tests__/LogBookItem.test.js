@@ -88,6 +88,8 @@ describe('LogBook Component', () => {
         </MockedProvider>
       </Context.Provider>
     );
+
+    expect(container.getByTestId('loader')).toBeInTheDocument();
     await waitFor(() => {
       expect(container.queryAllByTestId('card')[0]).toBeInTheDocument();
       expect(container.queryByTestId('name')).toBeInTheDocument();

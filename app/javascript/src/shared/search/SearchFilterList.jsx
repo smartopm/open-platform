@@ -31,7 +31,7 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall,
         >
           {`${t('search.search_results')}: `}
           {loading
-            ? <CircularProgress size={10} thickness={5} color='primary' />
+            ? <CircularProgress size={10} thickness={5} color='primary' data-testid="loader" />
             : (count > filterLimit
               ? `${filterLimit}+`
               : count)}
