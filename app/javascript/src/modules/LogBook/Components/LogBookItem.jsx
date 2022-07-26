@@ -80,7 +80,7 @@ export default function LogBookItem({ router, offset, tabValue }) {
   const { loadMore, hasMoreRecord } = useFetchMoreRecords(fetchMore, 'result', {
     offset: data?.result?.length,
     limit,
-    query: dbcValue.trim(),
+    query: dbcValue,
   });
 
   function routeToAction(eventLog) {
