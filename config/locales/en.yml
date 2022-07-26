@@ -456,7 +456,7 @@ en:
   offline: "Oops."
   internet_off: "Looks like your internet is off."
   reload_page: "Reload Page"
-  invalid_phone_number: "The Phone number is not valid",
+  invalid_phone_number: "The Phone number is not valid"
   whatsapp_response: "Hi %{name}, Thank you for your message!!"
   community_name:
     ciudadmorazán: ciudadmorazan
