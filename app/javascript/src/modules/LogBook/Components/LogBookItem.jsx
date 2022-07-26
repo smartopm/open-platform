@@ -67,8 +67,8 @@ export default function LogBookItem({ router, offset, tabValue }) {
       refId: null,
       refType: null,
       offset,
-      limit: dbcValue.trim().length > 0 ? 50 : 20,
-      name: dbcValue.trim(),
+      limit: dbcValue.length > 0 ? 50 : 20,
+      name: dbcValue,
     },
     fetchPolicy: 'cache-and-network',
   });
