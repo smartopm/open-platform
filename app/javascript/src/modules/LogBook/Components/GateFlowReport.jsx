@@ -19,7 +19,7 @@ export default function GateFlowReport() {
   const { t } = useTranslation(['common', 'logbook']);
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const { showSnackbar, messageType } = useContext(SnackbarContext)
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const [loadData, { loading, data, called }] = useLazyQuery(logbookEventLogsQuery, {
     variables: { ...reportingDates },
@@ -27,14 +27,13 @@ export default function GateFlowReport() {
     errorPolicy: 'all',
     onCompleted: () =>
       showSnackbar({
-        type: !data?.logbookEventLogs.length
-          ? messageType.error
-          : messageType.success,
+        type: !data?.logbookEventLogs.length ? messageType.error : messageType.success,
         message: data?.logbookEventLogs.length
           ? t('logbook:guest_book.export_data_successfully')
           : t('logbook:guest_book.export_no_data'),
       }),
-    onError: error => showSnackbar({ type: messageType.error, message: formatError(error.message) })
+    onError: error =>
+      showSnackbar({ type: messageType.error, message: formatError(error.message) }),
   });
 
   function handleChangeReportingDates(event) {
@@ -49,49 +48,46 @@ export default function GateFlowReport() {
     { label: t('logbook:log_title.host'), key: 'host' },
     { label: t('logbook:csv.guest'), key: 'guest' },
     { label: t('logbook:csv.extra_note'), key: 'extraNote' },
-    { label: t('logbook:csv.reason'), key: 'reason' }
+    { label: t('logbook:csv.reason'), key: 'reason' },
   ];
 
   const subjects = {
     user_entry: t('logbook:csv.user_entry'),
     visitor_entry: t('logbook:csv.visitor_entry'),
-    observation_log: t('logbook:csv.user_entry')
+    observation_log: t('logbook:csv.user_entry'),
   };
 
   return (
-    <>
-      <LogsReportView
-        startDate={reportingDates.startDate}
-        endDate={reportingDates.endDate}
-        handleChange={handleChangeReportingDates}
-      >
-        {!data?.logbookEventLogs.length > 0 && (
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={loadData}
-            data-testid="export_data"
-            disabled={!reportingDates.startDate || !reportingDates.endDate}
-            startIcon={loading && <Spinner />}
-          >
-            {isSmall ? <Download color="primary" /> : t('misc.export_data')}
+    <LogsReportView
+      startDate={reportingDates.startDate}
+      endDate={reportingDates.endDate}
+      handleChange={handleChangeReportingDates}
+    >
+      {!data?.logbookEventLogs.length > 0 && (
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={loadData}
+          data-testid="export_data"
+          disabled={!reportingDates.startDate || !reportingDates.endDate}
+          startIcon={loading && <Spinner />}
+        >
+          {isSmall ? <Download color="primary" /> : t('misc.export_data')}
+        </Button>
+      )}
+
+      {called && data?.logbookEventLogs.length > 0 && (
+        <CSVLink
+          data={formatCsvData(data?.logbookEventLogs || [], subjects)}
+          style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
+          headers={csvHeaders}
+          filename={`logbook_events-data-${dateToString(new Date(), 'MM-DD-YYYY-HH:mm')}.csv`}
+        >
+          <Button variant="outlined" color="primary">
+            {t('misc.download')}
           </Button>
+        </CSVLink>
       )}
-
-        {called && data?.logbookEventLogs.length > 0 && (
-          <CSVLink
-            data={formatCsvData(data?.logbookEventLogs || [], subjects)}
-            style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
-            headers={csvHeaders}
-            filename={`logbook_events-data-${dateToString(new Date(), 'MM-DD-YYYY-HH:mm')}.csv`}
-          >
-            <Button variant="outlined" color="primary">
-              {t('misc.download')}
-            </Button>
-          </CSVLink>
-      )}
-      </LogsReportView>
-    </>
-
+    </LogsReportView>
   );
 }

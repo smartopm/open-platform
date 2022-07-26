@@ -21,8 +21,6 @@ import Paginate from '../../../components/Paginate';
 import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
 import { paginate } from '../utils';
-import GateFlowReport from './GateFlowReport';
-import AccessCheck from '../../Permissions/Components/AccessCheck';
 import permissionsCheck from '../../Permissions/utils';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import { AllEventLogsQuery } from '../../../graphql/queries';
@@ -342,14 +340,6 @@ export default function LogBookItem({ router, offset, tabValue }) {
           fullWidth={false}
         />
       )}
-      <AccessCheck
-        module="event_log"
-        allowedPermissions={['can_download_logbook_events']}
-        show404ForUnauthorized={false}
-      >
-        <GateFlowReport />
-        <br />
-      </AccessCheck>
       <br />
       <LogEvents
         eventsData={eventsData}

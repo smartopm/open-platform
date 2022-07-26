@@ -1,6 +1,11 @@
 import { makeStyles } from '@mui/styles';
 
 const useLogbookStyles = makeStyles(theme => ({
+  container: {
+    padding: '20px',
+    border: `1px solid ${theme.palette.primary.main}`,
+    borderRadius: '8px'
+  },
   avatar: {
     color: theme.palette.getContrastText(theme.palette.secondary.main),
     backgroundColor: theme.palette.secondary.main,
