@@ -195,7 +195,7 @@ module Users
     validate :phone_number_valid?
     validate :public_user?
 
-    devise :omniauthable, :database_authenticatable, :trackable,
+    devise :omniauthable, :database_authenticatable, :trackable, :recoverable,
            omniauth_providers: %i[google_oauth2 facebook]
 
     PHONE_TOKEN_LEN = 6

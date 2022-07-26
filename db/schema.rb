@@ -327,7 +327,7 @@ ActiveRecord::Schema.define(version: 2022_07_26_063601) do
     t.uuid "revoker_id"
     t.datetime "revoked_at"
     t.integer "status", default: 0
-    t.uuid "guest_id" 
+    t.uuid "guest_id"
     t.datetime "exited_at"
   end
 
@@ -969,8 +969,13 @@ ActiveRecord::Schema.define(version: 2022_07_26_063601) do
     t.string "division"
     t.string "username", default: "", null: false
     t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
     t.index ["role_id"], name: "index_users_on_role_id"
