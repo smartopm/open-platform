@@ -314,7 +314,7 @@ export default function LogBookItem({ router, offset, tabValue }) {
         handleExitEvent={handleExitEvent}
         handleAddObservation={handleAddObservation}
         routeToAction={routeToAction}
-        error={error}
+        loading={loading}
       />
 
       <CenteredContent>

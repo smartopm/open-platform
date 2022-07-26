@@ -28,7 +28,8 @@ export default function LogEvents({
   eventsData,
   handleExitEvent,
   handleAddObservation,
-  routeToAction
+  routeToAction,
+  loading
 }) {
   const [imageOpen, setImageOpen] = useState(false);
   const [id, setId] = useState('');
@@ -316,7 +317,7 @@ export default function LogEvents({
           </Card>
         ))
       ) : (
-        <CenteredContent data-testid="no-logs">{t('logbook.no_logs')}</CenteredContent>
+        !loading && <CenteredContent data-testid="no-logs">{t('logbook.no_logs')}</CenteredContent>
       )}
     </div>
   );
@@ -324,6 +325,7 @@ export default function LogEvents({
 
 LogEvents.defaultProps = {
   eventsData: {},
+  loading: false,
 };
 
 LogEvents.propTypes = {
@@ -332,4 +334,5 @@ LogEvents.propTypes = {
   handleAddObservation: PropTypes.func.isRequired,
   handleExitEvent: PropTypes.func.isRequired,
   routeToAction: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
 };
