@@ -38,6 +38,8 @@
     "reply_submitted": "Reply Submitted",
     "no_comment": "No comments available",
     "list_view": "View all comments",
-    "tab_view": "View by Reply status"
+    "tab_view": "View by Reply status",
+    "process_csv": "Process CSV Data",
+    "download_csv": "Download CSV Data"
   }
 }
