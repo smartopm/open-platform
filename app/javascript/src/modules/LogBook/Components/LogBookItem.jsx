@@ -307,18 +307,15 @@ export default function LogBookItem({ router, offset, tabValue }) {
         <CenteredContent>{formatError(error.message)}</CenteredContent>
       )}
 
-      {loading && !data ? (
-        <Spinner />
-      ) : (
-        <LogEvents
-          eventsData={data}
-          userType={authState.user.userType}
-          handleExitEvent={handleExitEvent}
-          handleAddObservation={handleAddObservation}
-          routeToAction={routeToAction}
-          error={error}
-        />
-      )}
+      {loading && <Spinner />}
+      <LogEvents
+        eventsData={data}
+        userType={authState.user.userType}
+        handleExitEvent={handleExitEvent}
+        handleAddObservation={handleAddObservation}
+        routeToAction={routeToAction}
+        error={error}
+      />
 
       <CenteredContent>
         {data?.result?.length > 0 && (
