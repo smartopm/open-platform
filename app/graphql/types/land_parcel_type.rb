@@ -35,16 +35,18 @@ module Types
     def image_urls
       type = :has_many_attached
       attachment_load('Properties::LandParcel', :images, object.id, type: type).then do |images|
-        images&.map do |image|
-          next if image.nil?
-
-          Rails.application.routes.url_helpers.rails_blob_url(image)
-        end
+        images_attached = []
+        images.compact.select { |image| images_attached << host_url(image) }
+        images_attached.empty? ? nil : images_attached
       end
     end
 
     def plot_sold
       batch_load(object, :accounts).then(&:present?)
+    end
+
+    def host_url(type)
+      Rails.application.routes.url_helpers.rails_blob_url(type)
     end
   end
 end

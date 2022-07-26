@@ -59,10 +59,9 @@ module Types
       args = { where: 'status <> 1', order: 'created_at DESC' }
       type = :has_many_attached
       attachment_load('Notes::Note', :documents, object.id, type: type, **args).then do |documents|
-        documents&.map do |doc|
-          next if doc.nil?
-
-          {
+        documents_attached = []
+        documents.compact.select do |doc|
+          file = {
             id: doc.id,
             filename: doc.blob.filename,
             url: host_url(doc),
@@ -74,7 +73,9 @@ module Types
             )&.record&.name,
             comment_count: object.note_comments.tagged_document_comments(doc.id).size,
           }
+          documents_attached << file
         end
+        documents_attached.empty? ? nil : documents_attached
       end
     end
     # rubocop:enable Metrics/AbcSize

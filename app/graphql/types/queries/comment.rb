@@ -45,7 +45,7 @@ module Types::Queries::Comment
     discs = community_discussions(id, 'discuss')
     return [] if discs.nil?
 
-    discs.comments.by_not_deleted.limit(limit).offset(offset).with_attached_image
+    discs.comments.by_not_deleted.limit(limit).offset(offset)
   end
 
   def fetch_comments(offset: 0, limit: 20)
@@ -53,7 +53,6 @@ module Types::Queries::Comment
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    context[:site_community].comments.by_not_deleted.eager_load(:user, :discussion)
-                            .limit(limit).offset(offset)
+    context[:site_community].comments.by_not_deleted.limit(limit).offset(offset)
   end
 end

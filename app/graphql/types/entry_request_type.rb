@@ -7,9 +7,9 @@ module Types
   class EntryRequestType < Types::BaseObject
     field :id, ID, null: false
     field :guest_id, ID, null: true
-    field :user, Types::UserType, null: false
-    field :grantor, Types::UserType, null: true
-    field :guest, Types::UserType, null: true
+    field :user, Types::UserType, null: false, resolve: Resolvers::BatchResolver.load(:user)
+    field :grantor, Types::UserType, null: true, resolve: Resolvers::BatchResolver.load(:grantor)
+    field :guest, Types::UserType, null: true, resolve: Resolvers::BatchResolver.load(:guest)
     field :name, String, null: true
     field :email, String, null: true
     field :nrc, String, null: true
@@ -55,35 +55,34 @@ module Types
     end
 
     def video_url
-      return nil unless object.video.attached?
-
-      host_url(object.video)
+      attachment_load('Logs::EntryRequest', :video, object.id).then do |video|
+        host_url(video) if video.present?
+      end
     end
 
     def thumbnail_url
-      return nil unless object.video.attached?
-
-      host_url(object.video.preview(resize_to_limit: [300, 300]).processed.image)
+      attachment_load('Logs::EntryRequest', :video, object.id).then do |video|
+        host_url(video.preview(resize_to_limit: [300, 300]).processed.image) if video.present?
+      end
     end
 
     def image_urls
-      return nil unless object.images.attached?
-
-      images = []
-      object.images.each do |img|
-        images << host_url(img)
+      type = :has_many_attached
+      attachment_load('Logs::EntryRequest', :images, object.id, type: type).then do |images|
+        images_attached = []
+        images.compact.select { |image| images_attached << host_url(image) }
+        images_attached.empty? ? nil : images_attached
       end
-      images
     end
 
     def host_url(type)
-      base_url = HostEnv.base_url(object.user.community)
+      base_url = HostEnv.base_url(context[:site_community])
       path = Rails.application.routes.url_helpers.rails_blob_path(type)
       "https://#{base_url}#{path}"
     end
 
     def multiple_invites
-      object.invites.size > 1
+      batch_load(object, :invites).then { |invites| invites.size > 1 }
     end
   end
 end

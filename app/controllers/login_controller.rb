@@ -46,14 +46,14 @@ class LoginController < ApplicationController
   private
 
   def find_user_by_phone
-    @user = @site_community.users.find_by!(phone_number: params[:phone_number])
+    @user = @current_community.users.find_by!(phone_number: params[:phone_number])
   rescue ActiveRecord::RecordNotFound
     flash[:error] = 'User not found'
     redirect_to login_path
   end
 
   def find_user_by_id
-    @user = @site_community.users.find(params[:user_id])
+    @user = @current_community.users.find(params[:user_id])
   rescue ActiveRecord::RecordNotFound
     flash[:error] = 'User not found'
     redirect_to login_sms_path

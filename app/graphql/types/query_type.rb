@@ -61,7 +61,7 @@ module Types
     def users_feedback(offset: 0, limit: 50)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
-      context[:site_community].feedbacks.all.order(created_at: :desc)
+      context[:site_community].feedbacks.order(created_at: :desc)
                               .limit(limit).offset(offset)
     end
 

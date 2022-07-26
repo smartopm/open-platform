@@ -29,11 +29,7 @@ module Types
     # @return [Float] unallocated_amount
     def unallocated_amount
       batch_load(object, :plan_payments).then do |plan_payments|
-        sum = 0.0
-        plan_payments.select do |plan_payment|
-          sum += plan_payment&.amount if plan_payment.present? && plan_payment&.status.eql?('paid')
-        end
-        object.amount - sum
+        object.amount - total_amount(plan_payments)
       end
     end
 
@@ -42,12 +38,16 @@ module Types
     # @return [Float] allocated_amount
     def allocated_amount
       batch_load(object, :plan_payments).then do |plan_payments|
-        sum = 0.0
-        plan_payments.select do |plan_payment|
-          sum += plan_payment&.amount if plan_payment.present? && plan_payment&.status.eql?('paid')
-        end
-        sum
+        total_amount(plan_payments)
       end
+    end
+
+    def total_amount(plan_payments)
+      sum = 0.0
+      plan_payments.compact.select do |plan_payment|
+        sum += plan_payment.amount if plan_payment.status.eql?('paid')
+      end
+      sum
     end
   end
 end

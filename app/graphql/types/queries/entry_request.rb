@@ -75,8 +75,6 @@ module Types::Queries::EntryRequest
 
     context[:site_community].entry_requests
                             .where(community_id: context[:current_user].community_id)
-                            .with_attached_images
-                            .with_attached_video
   end
 
   # check if we need to allow residents to see all scheduled requests
@@ -85,14 +83,11 @@ module Types::Queries::EntryRequest
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_requests?
 
     entry_requests = context[:site_community].entry_requests
-                                             .includes(:user, :guest)
                                              .where('entry_requests.guest_id IS NOT NULL
                                                   AND entry_requests.visitation_date IS NOT NULL')
                                              .limit(limit)
                                              .offset(offset)
                                              .order_by_recent_invites
-                                             .with_attached_images
-                                             .with_attached_video
     entry_requests = handle_search(entry_requests, query) if query
     entry_requests
   end
@@ -111,8 +106,6 @@ module Types::Queries::EntryRequest
                    { name: { matches: query&.strip } }])
       .limit(limit).offset(offset)
       .unscope(:order).order(created_at: :desc)
-      .with_attached_images
-      .with_attached_video
   end
 
   def current_guests(offset: 0, limit: 50, query: nil, type: 'allVisits', duration: nil)
@@ -121,7 +114,6 @@ module Types::Queries::EntryRequest
     entry_requests = context[:site_community]
                      .entry_requests
                      .where.not(granted_at: nil)
-                     .includes(:user, :guest)
                      .limit(limit).offset(offset)
                      .order(granted_at: :desc)
 

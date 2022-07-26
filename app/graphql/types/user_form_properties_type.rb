@@ -37,29 +37,31 @@ module Types
       end
     end
 
-    def host_url(type)
-      base_url = HostEnv.base_url(context[:site_community])
-      path = Rails.application.routes.url_helpers.rails_blob_path(type)
-      "https://#{base_url}#{path}"
-    end
-
     # rubocop:disable Metrics/MethodLength
     def attachments
       record_type = 'Forms::UserFormProperty'
       type = :has_many_attached
       attachment_load(record_type, :attachments, object.id, type: type).then do |attachments|
-        attachments&.map do |attachment|
-          next if attachment.nil?
-
-          {
+        attachments_attached = []
+        attachments.compact.select do |attachment|
+          file = {
             id: attachment.id,
             file_name: attachment.blob.filename,
             file_type: attachment.blob.content_type,
             image_url: host_url(attachment),
           }
+
+          attachments_attached << file
         end
+        attachments_attached.empty? ? nil : attachments_attached
       end
     end
     # rubocop:enable Metrics/MethodLength
+
+    def host_url(type)
+      base_url = HostEnv.base_url(context[:site_community])
+      path = Rails.application.routes.url_helpers.rails_blob_path(type)
+      "https://#{base_url}#{path}"
+    end
   end
 end

@@ -13,9 +13,9 @@ class SendgridController < ApplicationController
       name, email = user_email.split(/\s*<|>/)
       message_body = "#{params['subject']} \n \n #{params['text']}"
       # Find a user
-      sender = @site_community.users.find_by(email: email)
+      sender = @current_community.users.find_by(email: email)
       if sender.nil?
-        user = @site_community.users.create!(name: name, email: email, user_type: 'visitor')
+        user = @current_community.users.create!(name: name, email: email, user_type: 'visitor')
         generate_msg_and_assign(user, message_body)
       end
 

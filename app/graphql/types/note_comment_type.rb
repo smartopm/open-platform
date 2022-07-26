@@ -12,7 +12,8 @@ module Types
     field :note_id, ID, null: false
     field :body, String, null: true
     field :replied_at, GraphQL::Types::ISO8601DateTime, null: true
-    field :reply_from, Types::UserType, null: true
+    field :reply_from, Types::UserType, null: true,
+                                        resolve: Resolvers::BatchResolver.load(:reply_from)
     field :reply_required, Boolean, null: false
     field :grouping_id, ID, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
@@ -35,7 +36,7 @@ module Types
     end
 
     def host_url(doc)
-      base_url = HostEnv.base_url(object.note.community)
+      base_url = HostEnv.base_url(context[:site_community])
       path = Rails.application.routes.url_helpers.rails_blob_path(doc)
       "https://#{base_url}#{path}"
     end

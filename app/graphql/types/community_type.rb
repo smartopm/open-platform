@@ -24,7 +24,9 @@ module Types
     field :wp_link, String, null: true
     field :features, GraphQL::Types::JSON, null: true
     field :security_manager, String, null: true
-    field :sub_administrator, Types::UserType, null: true
+    field :sub_administrator, Types::UserType,
+          null: true,
+          resolve: Resolvers::BatchResolver.load(:sub_administrator)
     field :banking_details, GraphQL::Types::JSON, null: true
     field :community_required_fields, GraphQL::Types::JSON, null: true
     # TODO: remove this field or encrypt it before sending to f.e
@@ -39,10 +41,14 @@ module Types
     field :supported_languages, GraphQL::Types::JSON, null: true
 
     def image_url
-      return nil unless object.image.attached?
+      attachment_load('Community', :image, object.id).then do |image|
+        host_url(image) if image.present?
+      end
+    end
 
+    def host_url(type)
       base_url = HostEnv.base_url(object)
-      path = Rails.application.routes.url_helpers.rails_blob_path(object.image)
+      path = Rails.application.routes.url_helpers.rails_blob_path(type)
       "https://#{base_url}#{path}"
     end
 
