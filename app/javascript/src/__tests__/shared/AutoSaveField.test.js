@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 
 import AutoSaveField from '../../shared/AutoSaveField';
 
@@ -19,10 +19,32 @@ describe('AutoSaveField component', () => {
     expect(editableFieldTextInput).toBeInTheDocument();
 
     fireEvent.mouseLeave(editableField)
-    expect(props.stateAction).toHaveBeenCalled();
     
     fireEvent.mouseEnter(editableField)
     fireEvent.change(editableFieldTextInput, { target: { value: 'another description' } })
     expect(editableFieldTextInput.value).toBe('another description')
+  });
+
+  it('should render inline editable', async () => {
+    const props = {
+      value: 'inline description',
+      mutationAction: jest.fn(),
+      stateAction: jest.fn(),
+      fieldType: 'inline',
+      canEdit: true
+    };
+
+    render(<AutoSaveField {...props} />);
+
+    const inlineField = screen.queryByTestId('inline-editable-field');
+    
+    
+    expect(inlineField).toBeInTheDocument();
+    
+    fireEvent.mouseLeave(inlineField)
+    
+    fireEvent.mouseEnter(inlineField)
+    fireEvent.change(inlineField, { target: { innerHTML: 'another description' } })
+    expect(inlineField.textContent).toBe('another description')
   });
 });
