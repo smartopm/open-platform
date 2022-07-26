@@ -17,6 +17,8 @@ export const CreateUserMutation = gql`
     $subStatus: String
     $secondaryInfo: JSON
     $extRefId: String
+    $username: String
+    $password: String
   ) {
     result: userCreate(
       name: $name
@@ -32,6 +34,8 @@ export const CreateUserMutation = gql`
       address: $address
       secondaryInfo: $secondaryInfo
       extRefId: $extRefId
+      username: $username
+      password: $password
     ) {
       user {
         id
@@ -749,8 +753,18 @@ export const CommentMutation = gql`
 `;
 
 export const PostCreateMutation = gql`
-  mutation postCreate($discussionId: ID!, $content: String, $imageBlobIds: [String!], $accessibility: String) {
-    postCreate(discussionId: $discussionId, content: $content, imageBlobIds: $imageBlobIds, accessibility: $accessibility) {
+  mutation postCreate(
+    $discussionId: ID!
+    $content: String
+    $imageBlobIds: [String!]
+    $accessibility: String
+  ) {
+    postCreate(
+      discussionId: $discussionId
+      content: $content
+      imageBlobIds: $imageBlobIds
+      accessibility: $accessibility
+    ) {
       post {
         content
       }

@@ -60,6 +60,8 @@ module Mutations
       argument :decision_timeline, String, required: false
       argument :status, String, required: false
       argument :lead_status, String, required: false
+      argument :username, String, required: false
+      argument :password, String, required: false
 
       field :user, Types::UserType, null: true
 
