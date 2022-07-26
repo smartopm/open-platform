@@ -219,4 +219,22 @@ describe('Process Comment Page Component', () => {
       expect(screen.queryByText('process:comments.resolved')).toBeInTheDocument();
     });
   });
+
+  it('downloads csv data', async () => {
+    render(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <ProcessCommentPage />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    expect(screen.getByTestId('download-comments-btn')).toBeInTheDocument();
+    const processCsvBtn = screen.getByTestId('process-csv-btn');
+    expect(processCsvBtn).toBeInTheDocument();
+    fireEvent.click(processCsvBtn);
+    await waitFor(() => { expect(screen.getByTestId('download-comments-link')).toBeInTheDocument() });
+  });
 });

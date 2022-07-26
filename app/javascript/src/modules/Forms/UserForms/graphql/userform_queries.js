@@ -2,8 +2,8 @@
 import gql from 'graphql-tag';
 
 export const SubmittedFormsQuery = gql`
-  query forms {
-    submittedForms {
+  query forms($userId: ID!) {
+    submittedForms(userId: $userId) {
       id
       status
       createdAt

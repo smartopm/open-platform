@@ -42,7 +42,7 @@ describe('Logbook Stats', () => {
   };
 
   it('should render the stat count', async () => {
-    const { getAllByTestId, getAllByText, getAllByLabelText } = render(
+    const { getAllByTestId, getAllByText, getAllByLabelText, getByTestId } = render(
       <MockedProvider mocks={[mock]} addTypename={false}>
         <MockedThemeProvider>
           <LogbookStats {...props} />
@@ -56,16 +56,14 @@ describe('Logbook Stats', () => {
       expect(getAllByTestId('stats_title')[2].textContent).toContain('logbook.total_in_city');
       expect(getAllByTestId('stats_count')[0].textContent).toContain('0');
       expect(getAllByLabelText('common:misc.timeframe')[0]).toBeInTheDocument();
-      expect(getAllByText('common:misc.statistics')[0]).toBeInTheDocument();
+      expect(getAllByText('logbook.visitor_statistics')[0]).toBeInTheDocument();
       expect(getAllByText('common:misc.show common:misc.all')[0]).toBeInTheDocument();
 
+      fireEvent.click(getByTestId('export_data'));
       fireEvent.click(getAllByTestId('card')[0]);
-      expect(props.handleFilter).toBeCalled();
-      expect(props.handleFilter).toBeCalledWith('peopleEntered');
       fireEvent.click(getAllByTestId('card')[1]);
-      expect(props.handleFilter).toBeCalledWith('peopleExited');
       fireEvent.click(getAllByTestId('card')[2]);
-      expect(props.handleFilter).toBeCalledWith('peopleEntered');
+      expect(getAllByTestId('stats_title')[0].textContent).toContain('logbook.total_entries');
     }, 10);
   });
   it('should render 0 if something went wrong', async () => {

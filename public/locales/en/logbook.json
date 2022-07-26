@@ -72,7 +72,8 @@
     "total_exits": "Total Exits",
     "last_7_days": "Last 7 days",
     "last_30_days": "Last 30 days",
-    "guest_invite": "Guest Invite"
+    "guest_invite": "Guest Invite",
+    "visitor_statistics": "Visitor Statistics"
   },
   "log_title": {
     "visitor": "Visitor",
@@ -254,7 +255,9 @@
     "reason": "Reason",
     "visitor_entry": "Granted Access",
     "observation_log": "Observation",
-    "user_entry": "Scanned Entry"
+    "user_entry": "Scanned Entry",
+    "grantor_name": "Grantor Name",
+    "granted_at": "Granted At"
   },
   "kiosk": {
     "access_granted": "Access Granted",

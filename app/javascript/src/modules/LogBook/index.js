@@ -5,6 +5,7 @@ import GuestsValidateRoutes from './GuestVerification';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 import InvitationsRoutes from './Invitations';
 import GuardPost from './Components/GuardPost'
+import LogReport from './Components/LogReport';
 
 const logBookPermissions = ['can_access_logbook'];
 
@@ -34,6 +35,14 @@ function RenderGuardPost() {
       <GuardPost />
     </AccessCheck>
   );
+}
+
+function RenderLogReport() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={logBookPermissions}>
+      <LogReport />
+    </AccessCheck>
+  )
 }
 
 const LogBooks = {
@@ -67,6 +76,21 @@ const GuardPosts = {
   moduleName: currentModule,
 };
 
+const LogsReport = {
+  routeProps: {
+    path: '/log_reports',
+    component: RenderLogReport,
+    exact: true,
+  },
+  styleProps: {
+    icon: <MenuBookIcon />,
+  },
+  name: (t) => t('menu.report'),
+  featureName: 'LogBook',
+  accessibleBy: [],
+  moduleName: currentModule,
+}
+
 export default {
   routeProps: {
     path: '/logbook',
@@ -81,5 +105,5 @@ export default {
   featureName: 'LogBook',
   moduleName: 'gate_access',
   accessibleBy: [],
-  subMenu: [LogBooks, GuardPosts, InvitationsRoutes],
+  subMenu: [LogBooks, GuardPosts, InvitationsRoutes, LogsReport],
 };

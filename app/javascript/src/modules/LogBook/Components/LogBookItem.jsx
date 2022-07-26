@@ -17,8 +17,6 @@ import useFileUpload from '../../../graphql/useFileUpload';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import CenteredContent from '../../../shared/CenteredContent';
-import GateFlowReport from './GateFlowReport';
-import AccessCheck from '../../Permissions/Components/AccessCheck';
 import permissionsCheck from '../../Permissions/utils';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import { AllEventLogsQuery } from '../../../graphql/queries';
@@ -302,14 +300,6 @@ export default function LogBookItem({ router, offset, tabValue }) {
           searchCount={data?.result?.length || 0}
         />
       )}
-      <AccessCheck
-        module="event_log"
-        allowedPermissions={['can_download_logbook_events']}
-        show404ForUnauthorized={false}
-      >
-        <GateFlowReport />
-        <br />
-      </AccessCheck>
       <br />
       <LogEvents
         eventsData={data}

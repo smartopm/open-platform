@@ -66,7 +66,8 @@ module Types::Queries::Form
     end
 
     field :submitted_forms, [Types::FormUsersType], null: true do
-      description 'Get all form submissions for current user'
+      description 'Get all form submissions for user'
+      argument :user_id, GraphQL::Types::ID, required: true
     end
 
     field :form_comments, [Types::NoteCommentType], null: true do
@@ -200,10 +201,11 @@ module Types::Queries::Form
   # Returns all form submissions for current user
   #
   # @return [Array<Forms::FormUsers>]
-  def submitted_forms
+  def submitted_forms(user_id:)
     validate_authorization(:my_forms, :can_access_own_forms)
 
-    context[:current_user].form_users.eager_load(:form).order(created_at: :desc)
+    user = context[:site_community].users.find(user_id)
+    user.form_users.eager_load(:form).order(created_at: :desc)
   end
 
   def form_comments(form_user_id:)

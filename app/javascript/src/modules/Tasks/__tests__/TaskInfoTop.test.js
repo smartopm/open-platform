@@ -276,7 +276,7 @@ describe('Top part of the task form component', () => {
       }
     }
 
-    const container = render(
+    render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[updateMock]} addTypename={false}>
           <BrowserRouter>
@@ -290,22 +290,22 @@ describe('Top part of the task form component', () => {
       </Context.Provider>
     );
 
-    const description = container.queryByText('some description');
-    expect(description).toBeInTheDocument();
+    await waitFor(() => {
+      const description = screen.queryByText('some description');
+      expect(description).toBeInTheDocument();
 
-    // // Trigger mouseOver
-    fireEvent.mouseOver(description)
+      // // // Trigger mouseOver
+      fireEvent.mouseOver(description)
+  
+      const editableField = screen.queryAllByTestId('inline-editable-field')[0];
+      expect(editableField).toBeInTheDocument();
+  
+      // Update Description
+      fireEvent.mouseEnter(description)
+      fireEvent.change(editableField, { target: { innerHTML: 'another description' } })
+      expect(editableField.textContent).toBe('another description')
+    }, 10)
 
-    const editableField = container.queryAllByTestId('live_editable_field')[0];
-    const editableFieldTextInput = container.queryAllByTestId('live-text-field')[0];
-
-    expect(editableField).toBeInTheDocument();
-    expect(editableFieldTextInput).toBeInTheDocument();
-
-    // // Update Description
-    fireEvent.mouseEnter(description)
-    fireEvent.change(editableFieldTextInput, { target: { value: 'another description' } })
-    expect(editableFieldTextInput.value).toBe('another description')
   });
 
 
@@ -404,7 +404,7 @@ describe('Top part of the task form component', () => {
       }
     };
 
-    const container = render(
+    render(
       <MockedProvider mocks={[updateMock]} addTypename={false}>
         <Context.Provider value={authState}>
           <BrowserRouter>
@@ -419,23 +419,21 @@ describe('Top part of the task form component', () => {
     );
 
     await waitFor(() => {
-      const body = container.queryByText('some body');
+      const body = screen.queryByText('some body');
       expect(body).toBeInTheDocument();
 
-      // // Trigger mouseOver
+      // Trigger mouseOver
       fireEvent.mouseOver(body)
 
-      const editableField = container.queryAllByTestId('live_editable_field')[0];
-      const editableFieldTextInput = container.queryAllByTestId('live-text-field')[0];
+      const editableField = screen.queryAllByTestId('inline-editable-field')[0];
 
       expect(editableField).toBeInTheDocument();
-      expect(editableFieldTextInput).toBeInTheDocument();
 
-      // Trigger mouseLave
-      fireEvent.mouseLeave(editableField)
-      expect(editableField).not.toBeInTheDocument();
-      expect(editableFieldTextInput).not.toBeInTheDocument();
-    });
+      // Update Task Body
+      fireEvent.mouseEnter(body)
+      fireEvent.change(editableField, { target: { innerHTML: 'another body' } })
+      expect(editableField.textContent).toBe('another body')
+    }, 10);
   });
 
   it('does not render remind me later icon if not assigned', () => {
