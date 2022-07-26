@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography';
 import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
 import PhotoIcon from '@mui/icons-material/Photo';
 import { Tooltip } from '@mui/material';
-import { Spinner } from '../../../shared/Loading';
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
 import { toTitleCase, objectAccessor, truncateString } from '../../../utils/helpers';
 import { LogLabelColors } from '../../../utils/constants';
@@ -29,9 +28,7 @@ export default function LogEvents({
   eventsData,
   handleExitEvent,
   handleAddObservation,
-  routeToAction,
-  loading,
-  error
+  routeToAction
 }) {
   const [imageOpen, setImageOpen] = useState(false);
   const [id, setId] = useState('');
@@ -111,14 +108,7 @@ export default function LogEvents({
 
   return (
     <div style={{ marginTop: '20px' }} data-testid="card">
-      {
-        error && !eventsData?.result?.length && (
-          <CenteredContent>{error?.message}</CenteredContent>
-        )
-      }
-      {loading && !eventsData ? (
-        <Spinner />
-      ) : eventsData?.result?.length > 0 ? (
+      {eventsData?.result?.length > 0 ? (
         // eslint-disable-next-line complexity
         eventsData?.result.map(entry => (
           <Card key={entry.id}>
@@ -334,8 +324,6 @@ export default function LogEvents({
 
 LogEvents.defaultProps = {
   eventsData: {},
-  error: { message: ''},
-  loading: false,
 };
 
 LogEvents.propTypes = {
@@ -344,6 +332,4 @@ LogEvents.propTypes = {
   handleAddObservation: PropTypes.func.isRequired,
   handleExitEvent: PropTypes.func.isRequired,
   routeToAction: PropTypes.func.isRequired,
-  loading: PropTypes.bool,
-  error: PropTypes.shape(PropTypes.Object),
 };

@@ -25,7 +25,7 @@ import PageWrapper from '../../../shared/PageWrapper';
 import MenuList from '../../../shared/MenuList';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
 import { Spinner } from '../../../shared/Loading';
-import { scrollToTop } from '../../../utils/helpers';
+import { formatError, scrollToTop } from '../../../utils/helpers';
 import ObservationModal from '../Invitations/Components/ObservationModal';
 import useFetchMoreRecords from '../../../shared/hooks/useFetchMoreRecords';
 
@@ -298,18 +298,27 @@ export default function LogBookItem({ router, offset, tabValue }) {
           }
           fullWidth={false}
           searchCount={data?.result?.length || 0}
+          loading={loading}
         />
       )}
       <br />
-      <LogEvents
-        eventsData={data}
-        userType={authState.user.userType}
-        handleExitEvent={handleExitEvent}
-        handleAddObservation={handleAddObservation}
-        routeToAction={routeToAction}
-        loading={loading}
-        error={error}
-      />
+
+      {error && !data?.result?.length && (
+        <CenteredContent>{formatError(error.message)}</CenteredContent>
+      )}
+
+      {loading && !data ? (
+        <Spinner />
+      ) : (
+        <LogEvents
+          eventsData={data}
+          userType={authState.user.userType}
+          handleExitEvent={handleExitEvent}
+          handleAddObservation={handleAddObservation}
+          routeToAction={routeToAction}
+          error={error}
+        />
+      )}
 
       <CenteredContent>
         {data?.result?.length > 0 && (

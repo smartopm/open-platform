@@ -1,9 +1,9 @@
 import React from 'react';
-import { Grid, Typography, Button, useMediaQuery, useTheme } from '@mui/material';
+import { Grid, Typography, Button, useMediaQuery, useTheme, CircularProgress } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
-export default function SearchFilterList({ filters, handleClearFilters, isSmall, count }) {
+export default function SearchFilterList({ filters, handleClearFilters, isSmall, count, loading }) {
   const { t } = useTranslation('search');
   const validFilters = filters.filter(Boolean);
   const theme = useTheme();
@@ -29,7 +29,12 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall,
           variant="subtitle2"
           data-testid="search_results"
         >
-          {`${t('search.search_results')}:  ${count > filterLimit ? `${filterLimit}+` : count}`}
+          {`${t('search.search_results')}: `}
+          {loading
+            ? <CircularProgress size={10} thickness={5} color='primary' />
+            : (count > filterLimit
+              ? `${filterLimit}+`
+              : count)}
         </Typography>
         {'  '}
         <Typography
@@ -49,6 +54,7 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall,
 
 SearchFilterList.defaultProps = {
   count: 0,
+  loading: false,
 }
 
 SearchFilterList.propTypes = {
@@ -56,4 +62,5 @@ SearchFilterList.propTypes = {
   handleClearFilters: PropTypes.func.isRequired,
   isSmall: PropTypes.bool.isRequired,
   count: PropTypes.number,
+  loading: PropTypes.bool,
 };

@@ -38,7 +38,8 @@ export default function SearchInput({
   fullWidth,
   filterMenu,
   filterOptions,
-  searchCount
+  searchCount,
+  loading,
 }) {
   const { t } = useTranslation(['logbook', 'search', 'common']);
   const anchorRef = useRef(null);
@@ -119,6 +120,7 @@ export default function SearchInput({
           filters={filters}
           isSmall={false}
           count={searchCount}
+          loading={loading}
         />
       </Grid>
 
@@ -169,7 +171,8 @@ SearchInput.defaultProps = {
   filters: [],
   filterMenu: false,
   filterOptions: [],
-  searchCount: 0
+  searchCount: 0,
+  loading: false,
 };
 
 SearchInput.propTypes = {
@@ -185,5 +188,6 @@ SearchInput.propTypes = {
   fullWidth: PropTypes.bool,
   filterMenu: PropTypes.bool,
   filterOptions: PropTypes.arrayOf(PropTypes.object),
-  searchCount: PropTypes.number
+  searchCount: PropTypes.number,
+  loading: PropTypes.bool,
 };
