@@ -28,19 +28,22 @@ import { Context as AuthStateContext } from '../../../containers/Provider/AuthSt
 import { objectAccessor, toTitleCase, formatDateFields, scrollToTop } from '../../../utils/helpers';
 import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport';
 import UserSelectButton, {
-  UserSearch,
   UserProcessCSV,
   UserMenuitems,
   UserActionSelectMenu,
 } from '../Components/UserHeader';
 import QueryBuilder from '../../../components/QueryBuilder';
 import PageWrapper from '../../../shared/PageWrapper';
+import SearchInput from '../../../shared/search/SearchInput';
+import useUsers from '../../LogBook/GuestInvitation/hooks/useUsers';
 
 const limit = 25;
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000;
 
 export default function UsersList() {
   const [redirect, setRedirect] = useState(false);
+
+  const [userIsSearching, setUserIsSearching] = useState(false);
   const [offset, setOffset] = useState(0);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -57,11 +60,14 @@ export default function UsersList() {
   const [menuAnchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
   const location = useLocation();
+  const [searchValue, setSearchValue] = useState('');
   const { t } = useTranslation(['users', 'common']);
   function handleReportDialog() {
     setSubstatusReportOpen(!substatusReportOpen);
     setAnchorEl(null);
   }
+
+  const { userSearchData, userSearchLoading, userSearchError } = useUsers(searchValue);
   const currentQueryPath = decodeURIComponent(location.search).replace('?', '');
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
@@ -137,6 +143,11 @@ export default function UsersList() {
     loadAllUsers();
   }
 
+  function handleSearch(event) {
+    setSearchValue(event.target.value);
+    setUserIsSearching(true);
+  }
+
   // TODO: @dennis, add pop up for notes
   const [userLabelCreate] = useMutation(UserLabelCreate);
   const {
@@ -200,10 +211,6 @@ export default function UsersList() {
       setSearchQuery(`sub_status = "${index - 1}"`);
     }
     handleReportDialog();
-  }
-
-  function inputToSearch() {
-    setRedirect('/search');
   }
 
   function checkUserList() {
@@ -310,9 +317,8 @@ export default function UsersList() {
     }
     createCampaign();
   }
-
-  if (labelsLoading) return <Spinner />;
-  const err = error || labelsError;
+  if (labelsLoading || userSearchLoading) return <Spinner />;
+  const err = error || labelsError || userSearchError;
   if (err) {
     return <ErrorPage error={err?.message} />;
   }
@@ -521,6 +527,12 @@ export default function UsersList() {
     },
   ];
 
+  function handleClearFilters() {
+    setSearchValue('');
+    setSearchOpen(false);
+    setUserIsSearching(false);
+  }
+
   return (
     <PageWrapper
       pageTitle={t(
@@ -532,9 +544,16 @@ export default function UsersList() {
         <Container>
           {searchOpen && (
             <>
-              <div style={{ width: '50%' }}>
-                <UserSearch handleSearchClick={inputToSearch} filterObject={filterObject} />
-              </div>
+              <SearchInput
+                title="users"
+                filterRequired
+                searchValue={searchValue}
+                filters={[searchValue]}
+                handleSearch={event => handleSearch(event)}
+                handleFilter={toggleFilterMenu}
+                handleClear={handleClearFilters}
+                fullWidth={false}
+              />
               <div
                 style={{
                   display: 'flex',
@@ -584,15 +603,29 @@ export default function UsersList() {
                 handleClose={handleReportDialog}
                 handleFilter={handleFilterUserBySubstatus}
               />
-              <UserListCard
-                userData={data}
-                currentUserType={authState.user.userType}
-                handleUserSelect={handleUserSelect}
-                selectedUsers={selectedUsers}
-                offset={offset}
-                selectCheckBox={selectCheckBox}
-                refetch={refetch}
-              />
+              {!userIsSearching && (
+                <UserListCard
+                  userData={data}
+                  currentUserType={authState.user.userType}
+                  handleUserSelect={handleUserSelect}
+                  selectedUsers={selectedUsers}
+                  offset={offset}
+                  selectCheckBox={selectCheckBox}
+                  refetch={refetch}
+                />
+              )}
+
+              {!userSearchLoading && !userSearchError && searchValue && userSearchData && (
+                <UserListCard
+                  userData={userSearchData}
+                  currentUserType={authState.user.userType}
+                  handleUserSelect={handleUserSelect}
+                  selectedUsers={selectedUsers}
+                  offset={offset}
+                  selectCheckBox={selectCheckBox}
+                  refetch={refetch}
+                />
+              )}
               <Grid
                 container
                 direction="row"

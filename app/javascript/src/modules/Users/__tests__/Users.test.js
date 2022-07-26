@@ -13,13 +13,13 @@ jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('UserPage Component', () => {
   const mockHistory = {
-    push: jest.fn()
+    push: jest.fn(),
   };
 
   Object.defineProperty(navigator, 'clipboard', {
     value: {
-      writeText: () => {}
-    }
+      writeText: () => {},
+    },
   });
 
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe('UserPage Component', () => {
   const usersQueryMock = {
     request: {
       query: UsersDetails,
-      variables: { query: '', limit: 25, offset: 0 }
+      variables: { query: '', limit: 25, offset: 0 },
     },
     result: {
       data: {
@@ -51,18 +51,53 @@ describe('UserPage Component', () => {
               {
                 id: '059956af-b346-4e0d-9d1e-56cf22379ad7',
                 shortDesc: 'weekly_point_reminder_email',
-                groupingName: 'Status'
-              }
-            ]
-          }
-        ]
-      }
-    }
+                groupingName: 'Status',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  };
+
+  const userQueryMock = {
+    request: {
+      query: UsersDetails,
+      variables: { limit: 10, offset: 0, query: '' },
+    },
+    result: {
+      data: {
+        users: [
+          {
+            name: 'Anonymous',
+            phoneNumber: '3221038192389',
+            roleName: 'Visitor',
+            userType: 'visitor',
+            id: '630d8061-8c23-4146-b1c0-a0da223e6402',
+            email: null,
+            avatarUrl: null,
+            imageUrl: null,
+            subStatus: null,
+            extRefId: null,
+            expiresAt: null,
+            status: 'active',
+            state: 'pending',
+            labels: [
+              {
+                id: '059956af-b346-4e0d-9d1e-56cf22379ad7',
+                shortDesc: 'weekly_point_reminder_email',
+                groupingName: 'Status',
+              },
+            ],
+          },
+        ],
+      },
+    },
   };
 
   const labelsQueryMock = {
     request: {
-      query: LabelsQuery
+      query: LabelsQuery,
     },
     result: {
       data: {
@@ -73,16 +108,20 @@ describe('UserPage Component', () => {
             userCount: 39,
             description: null,
             color: '#f07030',
-            groupingName: 'Status'
-          }
-        ]
-      }
-    }
+            groupingName: 'Status',
+          },
+        ],
+      },
+    },
   };
+
   it('should render the users page without errors', async () => {
     const container = render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={[usersQueryMock, labelsQueryMock]} addTypename={false}>
+        <MockedProvider
+          mocks={[usersQueryMock, labelsQueryMock, userQueryMock]}
+          addTypename={false}
+        >
           <MemoryRouter>
             <MockedThemeProvider>
               <Users />
