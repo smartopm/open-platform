@@ -51,8 +51,6 @@ const initialValues = {
   extRefId: '',
   avatarUrl: '',
   status: '',
-  username: '',
-  password: '',
 };
 
 export function formatContactType(value, type) {
@@ -265,7 +263,6 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
     data.userType = 'prospective_client';
   }
 
-  console.log('Mutuba wondering about data', data);
   return (
     <PageWrapper
       oneCol={isFromRef}
