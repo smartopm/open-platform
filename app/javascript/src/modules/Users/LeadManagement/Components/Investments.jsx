@@ -477,19 +477,19 @@ export default function Investments({ userId, handleEditClick }) {
                             {leadInvestment?.name}
                           </Typography>
                         </Grid>
-                        <Grid item md={2} xs={12} style={{ textAlign: !mobile && 'right' }}>
+                        <Grid item md={2} xs={10} style={{ textAlign: !mobile && 'right' }}>
                           <Typography variant="body2" data-testid="event-date">
                             {dateToString(leadInvestment?.createdAt)}
                           </Typography>
                         </Grid>
-                        <Grid item md={4} xs={12} style={{ textAlign: !mobile && 'right' }}>
+                        <Grid item md={4} xs={10} style={{ textAlign: !mobile && 'right' }}>
                           <Typography variant="body2" data-testid="event-created-by">
                             {`${t('lead_management.entered_by')}  ${
                               leadInvestment?.actingUser?.name
                             }`}
                           </Typography>
                         </Grid>
-                        <Grid item md={1} xs={12} style={{ textAlign: !mobile && 'right' }}>
+                        <Grid item md={1} xs={2} style={{ textAlign: 'right' }}>
                           <IconButton color="primary" onClick={() => handleEditClick(leadInvestment)}>
                             <EditIcon />
                           </IconButton>

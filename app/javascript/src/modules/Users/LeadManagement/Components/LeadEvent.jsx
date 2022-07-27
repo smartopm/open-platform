@@ -26,17 +26,17 @@ export default function LeadEvent({ leadEvent, handleEditClick }) {
                     {leadEvent?.name}
                   </Typography>
                 </Grid>
-                <Grid item md={3} xs={12} style={{ textAlign: !mobile && 'right' }}>
+                <Grid item md={3} xs={10} style={{ textAlign: !mobile && 'right' }}>
                   <Typography variant="body2" data-testid="event-date">
                     {dateToString(leadEvent?.createdAt)}
                   </Typography>
                 </Grid>
-                <Grid item md={4} xs={12} style={{ textAlign: !mobile && 'right' }}>
+                <Grid item md={4} xs={10} style={{ textAlign: !mobile && 'right' }}>
                   <Typography variant="body2" data-testid="event-created-by">
                     {`${t('lead_management.entered_by')}  ${leadEvent?.actingUser?.name}`}
                   </Typography>
                 </Grid>
-                <Grid item md={1} xs={12} style={{ textAlign: !mobile && 'right' }}>
+                <Grid item md={1} xs={2} style={{ textAlign: 'right' }}>
                   <IconButton color='primary' onClick={() => handleEditClick(leadEvent)}>
                     <EditIcon />
                   </IconButton>

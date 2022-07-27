@@ -181,7 +181,12 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         disableActionBtn={isLogLoading}
       >
         <Grid container>
-          <Grid item md={editAmount ? 6 : 12} style={{ padding: '10px 10px 20px 0' }}>
+          <Grid
+            item
+            md={editAmount ? 6 : 12}
+            xs={12}
+            style={mobile ? { padding: '10px 0' } : { padding: '10px 10px 20px 0' }}
+          >
             <TextField
               id="outlined-adornment-description"
               name="description"
@@ -197,7 +202,12 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
             />
           </Grid>
           {editAmount && (
-            <Grid item md={6} style={{ padding: '10px 20px 20px 10px' }}>
+            <Grid
+              item
+              md={6}
+              xs={12}
+              style={mobile ? { padding: '10px 0' } : { padding: '10px 20px 20px 10px' }}
+            >
               <FormControl fullWidth>
                 <InputLabel htmlFor="outlined-adornment-amount">
                   {t('common:table_headers.amount')}
