@@ -93,7 +93,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
 
   function uploadUserImage(image) {
     setUserImage(URL.createObjectURL(image));
-    onChange(image);
+    onChange(image, { maxWidthOrHeight: 224 })
   }
 
   function handleSubmit(event) {

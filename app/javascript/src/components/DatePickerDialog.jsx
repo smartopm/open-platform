@@ -76,6 +76,12 @@ export default function DatePickerDialog({
         {...others}
         disabled={disabled}
         disableMaskedInput
+        onViewChange={() => {
+          setTimeout(() => {
+             const el = document.activeElement;
+             if (el) el.blur();
+          });
+        }}
       />
     </LocalizationProvider>
   );
@@ -130,6 +136,12 @@ export function DateAndTimePickers({
         clearable
         minDate={pastDate && new Date()}
         minutesStep={1}
+        onViewChange={() => {
+          setTimeout(() => {
+             const el = document.activeElement;
+             if (el) el.blur();
+          });
+        }}
       />
     </LocalizationProvider>
   );
@@ -182,6 +194,12 @@ export function ThemedTimePicker({
           label={label}
           value={time}
           onChange={handleTimeChange}
+          onViewChange={() => {
+            setTimeout(() => {
+               const el = document.activeElement;
+               if (el) el.blur();
+            });
+          }}
           {...otherProps}
         />
       </LocalizationProvider>

@@ -113,7 +113,7 @@ const reducer = (state, action) => {
 const useFileUpload = ({ client: apolloClient }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const onChange = async (file, compressImage = true) => {
+  const onChange = async (file, { compressImage = true, maxWidthOrHeight = undefined } = {}) => {
     const checkFileType = file.type.split('/')[0] === 'image';
     if (!checkFileType || !compressImage) {
       return startUpload(file);
@@ -122,6 +122,7 @@ const useFileUpload = ({ client: apolloClient }) => {
     try {
       const options = {
         maxSizeMB: 0.1,
+        maxWidthOrHeight,
         useWebWorker: true
       };
       const compressedFile = await imageCompression(file, options);
