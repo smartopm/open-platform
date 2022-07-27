@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable complexity */
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -6,8 +8,8 @@ import { useMutation, useQuery } from 'react-apollo';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
-import { Grid, Typography, useMediaQuery, Container } from '@mui/material';
-
+import { Grid, Typography, useMediaQuery, Container, IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
 import { useTranslation } from 'react-i18next';
 import { DealDetailsQuery, LeadInvestmentsQuery, InvestmentStatsQuery } from '../graphql/queries';
@@ -19,7 +21,7 @@ import ButtonComponent from '../../../../shared/buttons/Button';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
-export default function Investments({ userId }) {
+export default function Investments({ userId, handleEditClick }) {
   const { t } = useTranslation('common');
   const mobile = useMediaQuery('(max-width:800px)');
   const [dealSize, setDealSize] = useState('');
@@ -88,7 +90,9 @@ export default function Investments({ userId }) {
         .then(() => {
           showSnackbar({
             type: messageType.success,
-            message: t('common:misc.misc_successfully_created', { type: t('common:menu.investment') })
+            message: t('common:misc.misc_successfully_created', {
+              type: t('common:menu.investment'),
+            }),
           });
           setInvestmentTarget('');
           setDealSize('');
@@ -112,7 +116,9 @@ export default function Investments({ userId }) {
         .then(() => {
           showSnackbar({
             type: messageType.success,
-            message:  t('common:misc.misc_successfully_created', { type: t('common:menu.investment_expense') })
+            message: t('common:misc.misc_successfully_created', {
+              type: t('common:menu.investment_expense'),
+            }),
           });
           setDescription('');
           setAmount('');
@@ -466,7 +472,7 @@ export default function Investments({ userId }) {
                             $ {leadInvestment?.amount}
                           </Typography>
                         </Grid>
-                        <Grid item md={4} xs={12}>
+                        <Grid item md={3} xs={12}>
                           <Typography variant="body2" data-testid="event-name">
                             {leadInvestment?.name}
                           </Typography>
@@ -482,6 +488,11 @@ export default function Investments({ userId }) {
                               leadInvestment?.actingUser?.name
                             }`}
                           </Typography>
+                        </Grid>
+                        <Grid item md={1} xs={12} style={{ textAlign: !mobile && 'right' }}>
+                          <IconButton color="primary" onClick={() => handleEditClick(leadInvestment)}>
+                            <EditIcon />
+                          </IconButton>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -500,4 +511,5 @@ export default function Investments({ userId }) {
 
 Investments.propTypes = {
   userId: PropTypes.string.isRequired,
+  handleEditClick: PropTypes.func.isRequired
 };

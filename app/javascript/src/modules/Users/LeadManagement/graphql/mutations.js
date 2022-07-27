@@ -22,4 +22,23 @@ const CreateEvent = gql`
   }
 `;
 
+export const LeadLogUpdate = gql`
+  mutation leadLogUpdate(
+    $id: ID!
+    $name: String
+    $amount: Float
+  ) {
+    leadLogUpdate(
+      id: $id
+      name: $name
+      amount: $amount
+    ) {
+      leadLog {
+        id
+      }
+    }
+  }
+`;
+
+
 export default CreateEvent;

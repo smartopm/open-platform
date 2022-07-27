@@ -1,15 +1,19 @@
+/* eslint-disable max-statements */
+/* eslint-disable max-lines */
+/* eslint-disable complexity */
 import React, { useState, useContext } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 import { Grid, Typography, Divider, useMediaQuery } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import CreateEvent from '../graphql/mutations';
+import CreateEvent, { LeadLogUpdate } from '../graphql/mutations';
 import { UserMeetingsQuery, UserEventsQuery } from '../graphql/queries';
 import { UpdateUserMutation } from '../../../../graphql/mutations/user';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -21,9 +25,12 @@ import { MenuProps, secondaryInfoUserObject } from '../../utils';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import Investments from './Investments';
 import { SnackbarContext } from '../../../../shared/snackbar/Context';
+import { CustomizedDialogs } from '../../../../components/Dialog';
 
 export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsData }) {
   const [meetingName, setMeetingName] = useState('');
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editData, setEditData] = useState({});
   const [leadData, setLeadData] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [eventName, setEventName] = useState('');
@@ -31,6 +38,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
   const communityDivisionTargets = authState?.user?.community?.leadMonthlyTargets;
   const [leadFormData, setLeadFormData] = useState(data);
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
+  const [logUpdate, { loading: isLogLoading }] = useMutation(LeadLogUpdate);
   const [leadDataUpdate, { loading: divisionLoading }] = useMutation(UpdateUserMutation);
   const { t } = useTranslation('common');
   const mobile = useMediaQuery('(max-width:800px)');
@@ -41,20 +49,20 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     data: meetingsData,
     loading: meetingsLoading,
     refetch: refetchMeetings,
-    error: meetingsError
+    error: meetingsError,
   } = useQuery(UserMeetingsQuery, {
     variables: { userId, logType: 'meeting' },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
 
   const {
     data: eventsData,
     loading: eventsLoading,
     refetch: refetchEvents,
-    error: eventsError
+    error: eventsError,
   } = useQuery(UserEventsQuery, {
     variables: { userId, logType: 'event' },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
 
   function handleDivisionChange(event) {
@@ -62,7 +70,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     setDisabled(false);
     const { name, value } = event.target;
     setLeadFormData({
-      user: { ...leadFormData?.user, [name]: value }
+      user: { ...leadFormData?.user, [name]: value },
     });
   }
 
@@ -91,13 +99,13 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         variables: {
           name: leadFormData?.user.name,
           division: leadFormData?.user?.division,
-          id: userId
-        }
+          id: userId,
+        },
       })
         .then(() => {
           showSnackbar({
             type: messageType.success,
-            message: t('common:misc.misc_successfully_added', { type: t('common:menu.division') })
+            message: t('common:misc.misc_successfully_added', { type: t('common:menu.division') }),
           });
           refetch();
           refetchLeadLabelsData();
@@ -110,7 +118,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         .then(() => {
           showSnackbar({
             type: messageType.success,
-            message: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
+            message: t('common:misc.misc_successfully_created', { type: t('common:menu.event') }),
           });
           setMeetingName('');
           setEventName('');
@@ -123,7 +131,40 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     }
   }
 
+  function handleClose() {
+    setEditData({});
+    setOpenEdit(false);
+  }
+
+  function handleEditClick(lead) {
+    setEditData(lead);
+    setOpenEdit(true);
+  }
+
+  function handleLogUpdate() {
+    logUpdate({
+      variables: {
+        id: editData.id,
+        name: editData.name,
+        amount: parseFloat(editData.amount) || undefined,
+      },
+    })
+      .then(() => {
+        showSnackbar({
+          type: messageType.success,
+          message: t('common:misc.lead_log_successful'),
+        });
+        handleClose();
+        refetchEvents();
+        refetchMeetings();
+      })
+      .catch(() => {
+        showSnackbar({ type: messageType.error, message: formatError(err.message || err) });
+      });
+  }
+
   const err = meetingsError || eventsError || null;
+  const editAmount = editData.amount;
 
   if (err) return err.message;
 
@@ -131,6 +172,54 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
 
   return (
     <form style={{ margin: '0 -25px 0 -25px' }}>
+      <CustomizedDialogs
+        open={openEdit}
+        handleModal={handleClose}
+        dialogHeader={t('misc.edit_entry')}
+        saveAction={t('common:form_actions.update')}
+        handleBatchFilter={() => handleLogUpdate()}
+        disableActionBtn={isLogLoading}
+      >
+        <Grid container>
+          <Grid item md={editAmount ? 6 : 12} style={{ padding: '10px 10px 20px 0' }}>
+            <TextField
+              id="outlined-adornment-description"
+              name="description"
+              onChange={event => setEditData({ ...editData, name: event.target.value })}
+              value={editData.name || ''}
+              label={t('common:table_headers.description')}
+              inputProps={{
+                'aria-label': t('common:table_headers.description'),
+              }}
+              fullWidth
+              size="medium"
+              multiline
+            />
+          </Grid>
+          {editAmount && (
+            <Grid item md={6} style={{ padding: '10px 20px 20px 10px' }}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="outlined-adornment-amount">
+                  {t('common:table_headers.amount')}
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-amount"
+                  name="amount"
+                  onChange={event => setEditData({ ...editData, amount: event.target.value })}
+                  value={editData.amount || ''}
+                  startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                  type="number"
+                  label={t('common:table_headers.amount')}
+                  inputProps={{
+                    'aria-label': t('common:table_headers.amount'),
+                  }}
+                  size="medium"
+                />
+              </FormControl>
+            </Grid>
+          )}
+        </Grid>
+      </CustomizedDialogs>
       {communityDivisionTargets && communityDivisionTargets?.length >= 2 ? (
         <Grid container>
           <Grid item md={12} xs={12}>
@@ -145,7 +234,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                 spacing={2}
                 style={{
                   display: 'flex',
-                  alignItems: 'center'
+                  alignItems: 'center',
                 }}
               >
                 <Grid item md={6} xs={12}>
@@ -186,7 +275,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                       style={{
                         justifyContent: 'flex-end',
                         paddingLeft: 2,
-                        marginLeft: mobile ? '-18px' : '-5px'
+                        marginLeft: mobile ? '-18px' : '-5px',
                       }}
                     >
                       <ButtonComponent
@@ -245,7 +334,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               container
               spacing={2}
               style={{
-                alignItems: 'center'
+                alignItems: 'center',
               }}
             >
               <Grid item md={11} xs={10}>
@@ -262,7 +351,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                   required
                   inputProps={{
                     'aria-label': t('lead_management.event_name'),
-                    style: { fontSize: '15px' }
+                    style: { fontSize: '15px' },
                   }}
                   InputLabelProps={{ style: { fontSize: '12px' } }}
                 />
@@ -275,7 +364,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                 style={{
                   paddingTop: '25px',
                   paddingLeft: 0,
-                  marginLeft: mobile && '-18px'
+                  marginLeft: mobile && '-18px',
                 }}
               >
                 <ButtonComponent
@@ -302,10 +391,14 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
             <div
               key={leadEvent.id}
               style={{
-                marginBottom: '20px'
+                marginBottom: '20px',
               }}
             >
-              <LeadEvent key={leadEvent?.id} leadEvent={leadEvent} />
+              <LeadEvent
+                key={leadEvent?.id}
+                leadEvent={leadEvent}
+                handleEditClick={handleEditClick}
+              />
             </div>
           ))}
         </div>
@@ -335,7 +428,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
             spacing={2}
             style={{
               display: 'flex',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
             <Grid item md={11} xs={10}>
@@ -352,7 +445,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                 required
                 inputProps={{
                   'aria-label': t('lead_management.meeting_name'),
-                  style: { fontSize: '15px' }
+                  style: { fontSize: '15px' },
                 }}
                 InputLabelProps={{ style: { fontSize: '12px' } }}
               />
@@ -365,7 +458,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               style={{
                 paddingTop: '25px',
                 paddingLeft: 0,
-                marginLeft: mobile && -18
+                marginLeft: mobile && -18,
               }}
             >
               <ButtonComponent
@@ -390,10 +483,14 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
             <div
               key={leadMeeting.id}
               style={{
-                marginBottom: '20px'
+                marginBottom: '20px',
               }}
             >
-              <LeadEvent key={leadMeeting?.id} leadEvent={leadMeeting} />
+              <LeadEvent
+                key={leadMeeting?.id}
+                leadEvent={leadMeeting}
+                handleEditClick={handleEditClick}
+              />
             </div>
           ))}
         </div>
@@ -405,7 +502,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         <Divider />
       </Grid>
 
-      <Investments userId={userId} />
+      <Investments userId={userId} handleEditClick={handleEditClick} />
     </form>
   );
 }
@@ -414,5 +511,5 @@ LeadEvents.propTypes = {
   userId: PropTypes.string.isRequired,
   data: PropTypes.shape({ user: secondaryInfoUserObject }).isRequired,
   refetch: PropTypes.func.isRequired,
-  refetchLeadLabelsData: PropTypes.func.isRequired
+  refetchLeadLabelsData: PropTypes.func.isRequired,
 };
