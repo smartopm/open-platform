@@ -349,6 +349,7 @@ en:
       not_found: Lead log not found
       empty_deal_details: Deal details cannot be empty
       invalid_log_type: Invalid log type
+      cannot_edit: Cannot update the details
     not_found: Not found
     note:
       task_not_found: No Task Found, Try a different query
@@ -465,7 +466,6 @@ en:
     nkwashi: nkwashi
     tilisi: tilisi
     metropolis: metropolis
-    konza: konza
   discussion_title:
     safety: Safety
     events: Events

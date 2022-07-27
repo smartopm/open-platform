@@ -4,7 +4,7 @@
 # accessed by ::PermissionsHelper
 module PermissionsHelper
   def validate_authorization(module_name, permission)
-    return if permitted?(module: module_name, permission: permission)
+    return true if permitted?(module: module_name, permission: permission)
 
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
