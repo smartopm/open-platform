@@ -12,7 +12,7 @@ describe('SearchFilterList', () => {
         filters={filters}
         handleClearFilters={clearFilters}
         isSmall={false}
-        count={10}
+        count={{ status: true, value: 10 }}
       />
     );
     expect(container.queryByTestId('clear_filters_btn').textContent).toContain('search.clear');
@@ -41,7 +41,7 @@ describe('SearchFilterList', () => {
         filters={filters}
         handleClearFilters={clearFilters}
         isSmall={false}
-        count={10}
+        count={{status: true, value: 10}}
         loading
       />
     );
