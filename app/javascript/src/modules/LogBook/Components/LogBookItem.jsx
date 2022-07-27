@@ -67,7 +67,7 @@ export default function LogBookItem({ router, offset, tabValue }) {
       refId: null,
       refType: null,
       offset,
-      limit: dbcValue.length > 0 ? 50 : 20,
+      limit: dbcValue.length > 0 ? 50 : limit,
       name: dbcValue,
     },
     fetchPolicy: 'cache-and-network',
@@ -79,7 +79,7 @@ export default function LogBookItem({ router, offset, tabValue }) {
 
   const { loadMore, hasMoreRecord } = useFetchMoreRecords(fetchMore, 'result', {
     offset: data?.result?.length,
-    limit,
+    limit: dbcValue.length > 0 ? 50 : limit,
     query: dbcValue,
   });
 
