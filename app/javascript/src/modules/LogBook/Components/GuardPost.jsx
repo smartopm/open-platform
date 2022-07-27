@@ -11,7 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Grid from '@mui/material/Grid';
 import ReplayIcon from '@mui/icons-material/Replay';
 import Typography from '@mui/material/Typography';
-import { Avatar, Button, Chip, Divider, useTheme } from '@mui/material';
+import { Avatar, Button, Chip, useTheme } from '@mui/material';
 import { CurrentGuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
@@ -31,7 +31,6 @@ import useFileUpload from '../../../graphql/useFileUpload';
 import ObservationModal from '../Invitations/Components/ObservationModal';
 import useFetchMoreRecords from '../../../shared/hooks/useFetchMoreRecords';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
-import LogbookStats from './LogbookStats';
 
 export default function GuardPost() {
   const initialFilter = { type: 'allVisits', duration: null };
@@ -351,18 +350,10 @@ export default function GuardPost() {
             handleFilter={handleFilterData}
             filterMenu
             filterOptions={filterOptions(t)}
-            searchCount={data?.currentGuests?.length || 0}
+            searchCount={{ status: true, value: data?.currentGuests?.length }}
           />
         </>
       )}
-      <LogbookStats
-        tabValue={2}
-        shouldRefetch={observationDetails.refetch}
-        handleFilter={handleFilterData}
-        duration={statsTypeFilter.duration}
-        isSmall={matches}
-      />
-      <Divider />
 
       <br />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}

@@ -171,7 +171,7 @@ SearchInput.defaultProps = {
   filters: [],
   filterMenu: false,
   filterOptions: [],
-  searchCount: 0,
+  searchCount: { status: false, count: null },
   loading: false,
 };
 
@@ -188,6 +188,6 @@ SearchInput.propTypes = {
   fullWidth: PropTypes.bool,
   filterMenu: PropTypes.bool,
   filterOptions: PropTypes.arrayOf(PropTypes.object),
-  searchCount: PropTypes.number,
+  searchCount: PropTypes.shape(PropTypes.Object),
   loading: PropTypes.bool,
 };

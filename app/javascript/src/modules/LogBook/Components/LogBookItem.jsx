@@ -297,7 +297,7 @@ export default function LogBookItem({ router, offset, tabValue }) {
             !!permissionsCheck(eventLogPermissions, ['can_download_logbook_events'])
           }
           fullWidth={false}
-          searchCount={data?.result?.length || 0}
+          searchCount={{ status: true, value: data?.result?.length }}
           loading={loading}
         />
       )}

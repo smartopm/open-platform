@@ -11,14 +11,16 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall,
   const filterLimit = 50;
 
   function renderCount() {
-    if (count) {
-      return (
-        loading
-          ? <CircularProgress size={10} thickness={5} color='primary' data-testid="loader" />
-          : (count > filterLimit ? `${filterLimit}+` : count)
-      )
+    if (count.status) {
+      return loading ? (
+        <CircularProgress size={10} thickness={5} color="primary" data-testid="loader" />
+      ) : count.value > filterLimit ? (
+        `${filterLimit}+`
+      ) : (
+        count.value
+      );
     }
-    return null;
+    return '';
   }
 
   if (!validFilters?.length) return null;
@@ -36,7 +38,7 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall,
       </Grid>
       <Grid item xs>
         <Typography
-          display={mobile || !count ? 'inline-block' : 'block'}
+          display={mobile || !count.status ? 'inline-block' : 'block'}
           variant="subtitle2"
           data-testid="search_results"
         >
@@ -45,7 +47,7 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall,
         </Typography>
         {'  '}
         <Typography
-          display={mobile || !count ? 'inline-block' : 'block'}
+          display={mobile || !count.status ? 'inline-block' : 'block'}
           variant="caption"
           data-testid="filters_list"
         >
@@ -60,7 +62,7 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall,
 }
 
 SearchFilterList.defaultProps = {
-  count: undefined,
+  count: { status: false, value: 0 },
   loading: false,
 }
 
@@ -68,6 +70,6 @@ SearchFilterList.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleClearFilters: PropTypes.func.isRequired,
   isSmall: PropTypes.bool.isRequired,
-  count: PropTypes.number,
+  count: PropTypes.shape(PropTypes.Object),
   loading: PropTypes.bool,
 };
