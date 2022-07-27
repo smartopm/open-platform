@@ -9,6 +9,10 @@
     "request_account": "Don't have an account?",
     "request_login": "To request your login information, email: {{communityEmail}}",
     "resend_code": "Re-send the code",
-    "email_otp_text": "Check your email to continue with Login'"
+    "email_otp_text": "Check your email to continue with Login'",
+    "otp_verification": "OTP Verification",
+    "enter_code": "Enter Verification Code",
+    "verification_code_helper": "The verification code has been sent to your phone.",
+    "continue_button_text": "Continue"
   }
 }

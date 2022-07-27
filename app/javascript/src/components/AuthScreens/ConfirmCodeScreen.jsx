@@ -1,24 +1,22 @@
-/* eslint-disable react/prop-types */
 import React, {
   useState,
   useContext,
-  useRef,
-  useEffect,
-  createRef
 } from 'react'
-import { Button, CircularProgress } from '@mui/material'
+import { Box, Button, CircularProgress, Grid, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { StyleSheet, css } from 'aphrodite'
 import { Link, useLocation, Redirect } from 'react-router-dom'
 import { useMutation, useQuery } from 'react-apollo'
 import { useTranslation } from 'react-i18next'
+import PropTypes from 'prop-types';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { loginPhoneConfirmCode, loginPhoneMutation } from '../../graphql/mutations'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import useTimer from '../../utils/customHooks'
 import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
 import { Spinner } from '../../shared/Loading'
-import { ifNotTest, objectAccessor } from '../../utils/helpers';
-
-const randomCodeData = [1, 2, 3, 4, 5, 6, 7]
+import { ifNotTest } from '../../utils/helpers';
+import ImageAuth from '../../shared/ImageAuth'
+import CenteredContent from '../../shared/CenteredContent'
 
 /* istanbul ignore next */
 export default function ConfirmCodeScreen({ match }) {
@@ -32,20 +30,10 @@ export default function ConfirmCodeScreen({ match }) {
   const [isLoading, setIsLoading] = useState(false)
   const { state } = useLocation()
   const timer = useTimer(10, 1000)
-  const { t } = useTranslation(['login'])
-
-  // generate refs to use later
-  // eslint-disable-next-line prefer-const
-  let elementsRef = useRef(randomCodeData.map(() => createRef()))
-  const submitRef = useRef(null)
-
-  useEffect(() => {
-    // force focus to just be on the first element
-    // check if the refs are not null to avoid breaking the app
-    if (elementsRef.current[1].current) {
-      elementsRef.current[1].current.focus()
-    }
-  }, [])
+  const { t } = useTranslation(['login', 'common'])
+  const theme = useTheme();
+  const mobileMatches = useMediaQuery(theme.breakpoints.down('md'));
+  const [otpCode, setOtpCode] = useState('')
 
   function resendCode() {
     setIsLoading(true)
@@ -65,32 +53,21 @@ export default function ConfirmCodeScreen({ match }) {
   function handleConfirmCode() {
     setIsLoading(true)
 
-    // Todo: Find more efficient way of getting values from the input
-    const code1 = elementsRef.current[1].current.value
-    const code2 = elementsRef.current[2].current.value
-    const code3 = elementsRef.current[3].current.value
-    const code4 = elementsRef.current[4].current.value
-    const code5 = elementsRef.current[5].current.value
-    const code6 = elementsRef.current[6].current.value
-
-    // Todo: refactor this
-    const code = `${code1}${code2}${code3}${code4}${code5}${code6}`
-
     loginPhoneComplete({
-      variables: { id, token: code },
-      errorPolicy: 'none'
+      variables: { id, token: otpCode },
+      errorPolicy: 'none',
     })
       .then(({ data }) => {
         authState.setToken({
           type: 'update',
-          token: data.loginPhoneComplete.authToken
-        })
-        setIsLoading(false)
+          token: data.loginPhoneComplete.authToken,
+        });
+        setIsLoading(false);
       })
       .catch(err => {
-        setError(err.message.replace(/GraphQL error:/, ''))
-        setIsLoading(false)
-      })
+        setError(err.message.replace(/GraphQL error:/, ''));
+        setIsLoading(false);
+      });
   }
 
   // Redirect once our authState.setToken does it's job
@@ -98,77 +75,85 @@ export default function ConfirmCodeScreen({ match }) {
     return <Redirect to={state ? state.from : '/'} /> // state.from
   }
 
+  const displayLogo = (
+    communityData?.currentCommunity?.imageUrl)
+    ? (
+      <Grid data-testid="community_logo">
+        <ImageAuth
+          imageLink={communityData?.currentCommunity?.imageUrl}
+          className={css(styles.logo)}
+          alt="community logo"
+        />
+      </Grid>
+      )
+    : (
+      <Grid data-testid="community_name">
+        <Typography variant={mobileMatches ? 'h6' : 'h5'} mt={2} mb={5} color="primary">
+          {communityData?.currentCommunity?.name}
+        </Typography>
+      </Grid>
+    );
+
   return (
     <div style={{ height: '100vh' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
         <Link to="/login">
-          <i className="material-icons" data-testid="arrow_back">arrow_back</i>
+          <i className="material-icons" data-testid="arrow_back">
+            arrow_back
+          </i>
         </Link>
       </nav>
-      <div className="container ">
-        <div
-          className={`row justify-content-center align-items-center ${css(
-            styles.welcomeContainer
-          )}`}
-        >
+      <div className="container">
+        <CenteredContent>{loading ? <Spinner /> : displayLogo}</CenteredContent>
 
-          { loading
-            ? <Spinner />
-            : (
-              <p data-testid="welcome" className={css(styles.welcomeText)}>
-                {t('login.welcome', { appName: communityData?.currentCommunity?.name  })}
-              </p>
-)
-            }
-        </div>
-        <br />
-        <br />
+        <CenteredContent>
+          <Typography
+            variant="subtitle2"
+            data-testid="otp_verification"
+            fontSize={mobileMatches ? '16px' : '18px'}
+            mb={6}
+          >
+            {t('login.otp_verification')}
+          </Typography>
+        </CenteredContent>
+
         <div className="row justify-content-center align-items-center">
-          {randomCodeData.map((item, index) => (
-            <input
-              key={item}
-              name={`code${item}`}
-              maxLength="1"
-              type="tel"
-              // eslint-disable-next-line jsx-a11y/no-autofocus
+          <Box sx={{ width: '400px', mx: 2, mt: '30px' }}>
+            <TextField
+              variant="outlined"
               autoFocus={ifNotTest()}
-              // eslint-disable-next-line security/detect-object-injection
-              ref={objectAccessor(elementsRef.current, item)}
-              className={`${css(styles.newInput)} code-input-${index}`}
-              onChange={() =>
-                item < 6
-                  ? objectAccessor(elementsRef.current, item + 1).current.focus()
-                  : submitRef.current.click()}
-              // hide the seventh input for the next ref to work [6]
-              hidden={item === 7 && true}
-              data-testid="code-input"
+              value={otpCode}
+              onChange={e => setOtpCode(e.target.value.trim())}
+              data-testid="otp_code_input"
+              label={t('login.enter_code')}
+              helperText={t('login.verification_code_helper')}
+              type="number"
+              fullWidth
             />
-          ))}
+          </Box>
         </div>
 
-        <br />
-        <br />
+        <div style={{ marginTop: '30px' }}>
+          {error && <p className="text-center text-danger">{error}</p>}
+          {msg && <p className="text-center text-primary">{msg}</p>}
+        </div>
 
-        {error && <p className="text-center text-danger">{error}</p>}
-        {msg && <p className="text-center text-primary">{msg}</p>}
         <div
-          className={`row justify-content-center align-items-center ${css(
-            styles.linksSection
-          )}`}
+          className={`row justify-content-center align-items-center ${css(styles.linksSection)}`}
         >
           <Button
             variant="contained"
             className={`${css(styles.getStartedButton)}`}
             onClick={handleConfirmCode}
-            ref={submitRef}
-            disabled={isLoading}
+            disabled={isLoading || otpCode.trim().length < 6}
             color="primary"
             data-testid="submit_btn"
+            endIcon={isLoading ? '' : <ArrowForwardIcon />}
           >
             {isLoading ? (
               <CircularProgress size={25} color="primary" />
             ) : (
-              <span>{t('login.login_button_text')}</span>
+              <span>{t('login.continue_button_text')}</span>
             )}
           </Button>
         </div>
@@ -176,72 +161,57 @@ export default function ConfirmCodeScreen({ match }) {
         {/* show a button to re-send code */}
         {timer === 0 && (
           <div
-            className={`row justify-content-center align-items-center ${css(
-              styles.linksSection
-            )}`}
+            className={`row justify-content-center align-items-center ${css(styles.linksSection)}`}
           >
             <Button onClick={resendCode} disabled={isLoading}>
-              {isLoading ? `${t('common:misc.loading')} ...` : t('login.resend_code')  }
+              {isLoading ? `${t('common:misc.loading')} ...` : t('login.resend_code')}
             </Button>
           </div>
         )}
       </div>
     </div>
-  )
+  );
+}
+
+ConfirmCodeScreen.propTypes = {
+  match: PropTypes.shape(PropTypes.Object).isRequired,
 }
 
 const styles = StyleSheet.create({
   getStartedButton: {
-    width: '55%',
-    height: 51,
+    height: 50,
+    width: '400px',
+    margin: '0px 16px',
     boxShadow: 'none',
-    marginTop: 80
-  },
-  getStartedLink: {
-    textDecoration: 'none',
-    color: '#FFFFFF'
+    marginTop: 50,
   },
   linksSection: {
-    marginTop: 20
+    marginTop: 20,
   },
   navBar: {
     boxShadow: 'none',
-    backgroundColor: '#fafafa'
+    backgroundColor: '#fafafa',
   },
-  welcomeText: {
-    marginTop: 33,
-    color: '#1f2026',
-    fontSize: 18
-  },
-  flag: {
-    display: 'inline-block',
-    marginTop: 7
-  },
-  countryCode: {
-    display: 'inline-block',
-    marginTop: -2,
-    marginLeft: 6
-  },
-  welcomeContainer: {
-    position: 'relative',
-    textAlign: 'center',
-    color: 'white'
-  },
-  phoneCodeInput: {
-    marginTop: 50
-  },
-  newInput: {
-    width: 40,
-    height: 60,
-    fontSize: 27,
-    textAlign: 'center',
-    border: '2px solid',
-    borderRadius: 2,
-    borderTop: 'none',
-    borderRight: 'none',
-    borderLeft: 'none',
-    // padding: 20,
-    margin: 9
-    // paddingRight: 13,
+  logo: {
+    '@media (max-width: 600px)': {
+      height: 35,
+    },
+    '@media (max-width: 350px)': {
+      marginLeft: 6,
+      height: 30,
+    },
+    '@media (min-width: 350px) and (max-width: 405px)': {
+      marginLeft: '1.8em',
+      height: 25,
+    },
+    '@media (min-width: 406px) and (max-width: 470px)': {
+      marginLeft: '3em',
+    },
+    '@media (min-width: 470px) and (max-width: 500px)': {
+      marginLeft: '5em',
+    },
+    '@media (min-width: 501px) and (max-width: 550px)': {
+      marginLeft: '-3em',
+    },
   }
-})
+});

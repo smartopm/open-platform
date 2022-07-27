@@ -18,15 +18,16 @@ describe('Code Confirmation Screen', () => {
         <CodeScreen match={params} />
       </MockedProvider>
     </MemoryRouter>
-  )
-
-  it('renders and has a paragraph element', async () => {
+  );
+  it('renders the OTP verification page', async () => {
     await waitFor(() => {
-      expect(wrapper.queryByTestId('welcome').textContent).toContain('login.welcome')
-      expect(wrapper.queryAllByTestId('code-input')).toHaveLength(7)
-      expect(wrapper.queryByTestId('arrow_back')).toBeInTheDocument()
+      expect(wrapper.queryByTestId('arrow_back')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('community_logo')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('otp_verification')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('otp_code_input')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('otp_verification').textContent).toContain('login.otp_verification');
       expect(wrapper.queryByTestId('submit_btn')).toBeInTheDocument()
-      expect(wrapper.queryByTestId('submit_btn').textContent).toContain('login.login_button_text')
-    }, 10)
-  })
+      expect(wrapper.queryByTestId('submit_btn')).toBeDisabled();
+    });
+  });
 })
