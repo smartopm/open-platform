@@ -9,6 +9,7 @@ import { useMutation, useQuery } from 'react-apollo'
 import { useTranslation } from 'react-i18next'
 import PropTypes from 'prop-types';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import makeStyles from '@mui/styles/makeStyles';
 import { loginPhoneConfirmCode, loginPhoneMutation } from '../../graphql/mutations'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import useTimer from '../../utils/customHooks'
@@ -34,6 +35,7 @@ export default function ConfirmCodeScreen({ match }) {
   const theme = useTheme();
   const mobileMatches = useMediaQuery(theme.breakpoints.down('md'));
   const [otpCode, setOtpCode] = useState('')
+  const classes = useStyles();
 
   function resendCode() {
     setIsLoading(true)
@@ -129,6 +131,9 @@ export default function ConfirmCodeScreen({ match }) {
               helperText={t('login.verification_code_helper')}
               type="number"
               fullWidth
+              FormHelperTextProps={{
+                className: classes.helperText,
+              }}
             />
           </Box>
         </div>
@@ -215,3 +220,9 @@ const styles = StyleSheet.create({
     },
   }
 });
+
+const useStyles = makeStyles(() => ({
+  helperText: {
+    textAlign: 'center',
+  },
+}));
