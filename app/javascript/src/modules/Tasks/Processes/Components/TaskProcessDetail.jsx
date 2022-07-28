@@ -18,7 +18,7 @@ import {
   useParamsQuery,
   removeNewLines,
   sanitizeText,
-  formatError
+  formatError,
 } from '../../../../utils/helpers';
 import ProjectProcesses from './ProjectProcesses';
 import ProjectProcessesSplitView from './ProjectProcessesSplitView';
@@ -56,7 +56,7 @@ export default function TaskProcessDetail() {
     {
       variables: { taskId },
       fetchPolicy: 'cache-and-network',
-      errorPolicy: 'all'
+      errorPolicy: 'all',
     }
   );
 
@@ -64,22 +64,22 @@ export default function TaskProcessDetail() {
   const { data: projectItem, loading: projectItemLoading } = useQuery(ProjectQuery, {
     skip: !formUserId,
     variables: { formUserId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
 
   const { data: stepsData, loading: subStepsLoading, refetch } = useQuery(SubTasksQuery, {
     skip: !projectItem,
     variables: {
       taskId: projectItem && projectItem?.project?.id,
-      limit: projectItem?.subTasksCount || limit
+      limit: projectItem?.subTasksCount || limit,
     },
     fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
+    errorPolicy: 'all',
   });
 
   const { data: docData, loading, error, refetch: docRefetch } = useQuery(TaskDocumentsQuery, {
     variables: { taskId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
 
   const {
@@ -87,22 +87,22 @@ export default function TaskProcessDetail() {
     loading: commentsLoading,
     error: commentsError,
     refetch: commentsRefetch,
-    fetchMore: commentsFetchMore
+    fetchMore: commentsFetchMore,
   } = useQuery(ProjectCommentsQuery, {
     variables: { taskId, limit: 3 },
     fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
+    errorPolicy: 'all',
   });
 
   const TAB_VALUES = {
     overview: 0,
     processes: 1,
-    documents: 2
+    documents: 2,
   };
 
   const DETAIL_TAB_VALUES = {
     subtasks: 'subtasks',
-    comments: 'comments'
+    comments: 'comments',
   };
 
   function handleTabValueChange(_event, newValue) {
@@ -118,7 +118,7 @@ export default function TaskProcessDetail() {
 
   async function shareOnclick() {
     await navigator.clipboard.writeText(getFormUrl(projectData?.task?.formUser?.formId));
-    showSnackbar({type: messageType.success, message: 'Link copied to clipboard'});
+    showSnackbar({ type: messageType.success, message: 'Link copied to clipboard' });
   }
 
   useEffect(() => {
@@ -140,22 +140,10 @@ export default function TaskProcessDetail() {
     history.push({
       pathname: `/processes/${processId}/projects/${task?.id}`,
       search: `?tab=${currentTab}&detailTab=${detailTab}`,
-      state: { from: history.location.pathname, search: history.location.search }
+      state: { from: history.location.pathname, search: history.location.search },
     });
     window.document.getElementById('anchor-section')?.scrollIntoView();
   }
-
-  const pageTitle = projectItemLoading
-    ? <Spinner />
-    : (
-      <span
-        data-testid="task-title"
-      // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{
-        __html: sanitizeText(removeNewLines(projectItem?.project?.body))
-      }}
-      />
-    );
 
   if (projectDataLoading) return <Spinner />;
   if (projectDataError) {
@@ -163,7 +151,7 @@ export default function TaskProcessDetail() {
   }
 
   return (
-    <PageWrapper pageTitle={pageTitle}>
+    <PageWrapper pageTitle={t('common:misc.process_detail_page')}>
       <TaskContextProvider>
         <Grid
           container
@@ -172,6 +160,21 @@ export default function TaskProcessDetail() {
         >
           <Grid item md={5} xs={12}>
             <Grid container>
+              <Grid item md={12} xs={12} style={{ marginBottom: '10px' }}>
+                {projectItemLoading ? (
+                  <Spinner />
+                ) : (
+                  <Typography variant="h5" component="div">
+                    <span
+                      data-testid="task-title"
+                      // eslint-disable-next-line react/no-danger
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizeText(removeNewLines(projectItem?.project?.body)),
+                      }}
+                    />
+                  </Typography>
+                )}
+              </Grid>
               <Grid item md={11} xs={10} data-testid="project-title">
                 <StyledTabs
                   value={tabValue}
