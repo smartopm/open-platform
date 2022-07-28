@@ -217,7 +217,7 @@ describe('Should render Visits View Component', () => {
   });
 
   it('should log exit as expected', async () => {
-    const { getAllByTestId } = render(
+    const screen = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[mocks]} addTypename>
           <MemoryRouter>
@@ -229,12 +229,14 @@ describe('Should render Visits View Component', () => {
       </Context.Provider>
     );
     await waitFor(() => {
-      const guest = getAllByTestId('log_exit')[0];
+      const guest = screen.getAllByTestId('log_exit')[0];
       expect(guest).toBeInTheDocument();
       fireEvent.click(guest);
-      fireEvent.click(getAllByTestId('card')[3]);
+      const lastCard = screen.getAllByTestId('card')[2];
+      expect(lastCard).toBeInTheDocument();
+      fireEvent.click(lastCard);
       expect(mockHistory.push).toBeCalled();
-      expect(getAllByTestId('card')[0]).toBeInTheDocument();
+      expect(screen.getAllByTestId('card')[0]).toBeInTheDocument();
     });
   });
 

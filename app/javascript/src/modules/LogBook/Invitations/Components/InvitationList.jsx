@@ -258,6 +258,8 @@ export default function Invitations() {
             filters={[dbcValue]}
             fullWidthOnMobile
             fullWidth={false}
+            searchCount={{ status: true, value: data?.scheduledRequests.length }}
+            loading={guestsLoading}
           />
         </>
       )}
