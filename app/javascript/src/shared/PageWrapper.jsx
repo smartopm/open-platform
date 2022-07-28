@@ -151,6 +151,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+// TODO: defaultProps should match their respective type
 PageWrapper.defaultProps = {
   oneCol: false,
   showAvatar: false,

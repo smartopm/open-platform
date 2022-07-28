@@ -6,7 +6,7 @@ const AmenityStatus = {
 
 export const allowedPermissions = [
   'can_create_amenity',
-  'can_edit_amenity',
-  'can_delete_amenity'
+  'can_edit_amenities',
+  'can_delete_amenities'
 ]
 export default AmenityStatus;

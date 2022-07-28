@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography } from '@mui/material';
 import CardWrapper from '../../../shared/CardWrapper';
-import { modulePermissionCheck } from '../../Permissions/utils';
-import { allowedPermissions } from '../constants';
 
-export default function AmenityItem({ amenity, translate, handleEditAmenity, userPermissions }) {
+export default function AmenityItem({ amenity, translate, handleEditAmenity, hasAccessToMenu }) {
   function handleReserve(reserveLink) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     return window.open(reserveLink, '_blank');
@@ -31,7 +29,7 @@ export default function AmenityItem({ amenity, translate, handleEditAmenity, use
       buttonName={translate('amenity:misc.reserve')}
       cardStyles={{ height: 315 }}
       menuItems={amenityMenu}
-      hasAccessToMenu={modulePermissionCheck(userPermissions, 'amenity', allowedPermissions)}
+      hasAccessToMenu={hasAccessToMenu}
     >
       <div style={{ height: 80 }}>
         <Typography data-testid="amenity_description" component="p">
@@ -62,5 +60,5 @@ AmenityItem.propTypes = {
   }).isRequired,
   translate: PropTypes.func.isRequired,
   handleEditAmenity: PropTypes.func.isRequired,
-  userPermissions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  hasAccessToMenu: PropTypes.bool.isRequired,
 };

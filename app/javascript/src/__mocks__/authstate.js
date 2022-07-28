@@ -112,7 +112,7 @@ const authState = {
       },
       {
         module: 'amenity',
-        permissions: ['can_access_amenities'],
+        permissions: ['can_access_amenities', 'can_edit_amenities', 'can_delete_amenities', 'can_create_amenity'],
       },
       {
         module: 'my_forms',

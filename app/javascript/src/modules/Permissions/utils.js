@@ -20,9 +20,9 @@ export default function permissionsCheck(permissions, allowedPermissions) {
   * @param {string[]} allowedPermissions
 */
 export function modulePermissionCheck(userPermissions, moduleName, allowedPermissions) {
-  if (!userPermissions || !allowedPermissions || !moduleName) return false;
-  const permissions = userPermissions.find(permissionObj => permissionObj.module === moduleName);
+  if (!userPermissions?.length || !allowedPermissions?.length || !moduleName) return false;
+  const modulePerms = userPermissions.find(permissionObj => permissionObj.module === moduleName);
 
-  const permitted = permissionsCheck(permissions, allowedPermissions);
+  const permitted = permissionsCheck(modulePerms.permissions, allowedPermissions);
   return permitted;
 }
