@@ -31,7 +31,6 @@ Required community assets: @vanessa43
 - [ ] Added list of required features to the community
 - [ ] Added url to the AWS S3 permission list
 - [ ] Made the necessary code changes to reflect new community
-    - [ ] https://gitlab.com/doublegdp/app/-/blob/master/app/controllers/concerns/authorizable.rb#L23
     - [ ] https://gitlab.com/doublegdp/app/-/blob/master/app/javascript/src/utils/constants.js#L8 and added currency
     - [ ] https://gitlab.com/doublegdp/app/-/blob/master/lib/host_env.rb#L8
     - [ ] https://gitlab.com/doublegdp/app/-/blob/master/app/controllers/service_worker_controller.rb
