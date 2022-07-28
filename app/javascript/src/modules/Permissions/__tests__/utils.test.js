@@ -1,4 +1,4 @@
-import permissionsCheck from '../utils';
+import permissionsCheck, { modulePermissionCheck } from '../utils';
 
 describe('Permissions check', () => {
   const permissions = [
@@ -15,6 +15,16 @@ describe('Permissions check', () => {
     'can_fetch_task_by_id'
   ];
 
+  const userPermissions = [
+    {
+      module: 'amenity',
+      permissions: ['can_access_amenities', 'can_edit_amenities', 'can_delete_amenities', 'can_create_amenity'],
+    },
+    {
+      module: 'my_forms',
+      permissions: ['can_access_own_forms'],
+    },
+  ]
   it('returns true if user has all allowed permissions', () => {
     const hasPermissions = permissionsCheck(permissions, allowedPermissions);
 
@@ -39,6 +49,15 @@ describe('Permissions check', () => {
     expect(hasPermissions).toEqual(false);
   });
 
+  it('checks for permissions using for a specific module', () => {
+    const hasAccess = modulePermissionCheck(userPermissions, 'amenity', allowedPermissions)
+    expect(hasAccess).toEqual(false);
+
+    const amenityPermissions = ['can_access_amenities', 'can_edit_amenities']
+    const hasAmenityAccess = modulePermissionCheck(userPermissions, 'amenity', amenityPermissions)
+    expect(hasAmenityAccess).toEqual(true);
+  })
+
   describe('when missing params', () => {
     it('handles missing permissions prop', () => {
       const hasPermissions = permissionsCheck(allowedPermissions);
@@ -49,6 +68,11 @@ describe('Permissions check', () => {
     it('handles missing allowedPermissions prop', () => {
       const hasPermissions = permissionsCheck(permissions);
 
+      expect(hasPermissions).toEqual(false);
+    });
+
+    it('handles missing either params', () => {
+      const hasPermissions = modulePermissionCheck(permissions);
       expect(hasPermissions).toEqual(false);
     });
   });
