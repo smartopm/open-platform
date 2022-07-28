@@ -28,9 +28,8 @@ Cypress.Commands.add("login", (phoneNumber) => {
   cy.wait(2000)
 
   cy.fetchUser(phoneNumber).then((response) => {
-    response.body.phone_token.split('').forEach((digit, index) => {
-      cy.get(`.code-input-${index}`).type(digit)
-    })
+    cy.get('input[name=otp_code_input]').type(response.body.phone_token);
+    cy.get('[data-testid=submit_btn]').click();
     cy.wait(2000)
   })
 })

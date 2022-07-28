@@ -124,6 +124,7 @@ export default function ConfirmCodeScreen({ match }) {
             <TextField
               variant="outlined"
               autoFocus={ifNotTest()}
+              name="otp_code_input"
               value={otpCode}
               onChange={e => setOtpCode(e.target.value.trim())}
               data-testid="otp_code_input"
