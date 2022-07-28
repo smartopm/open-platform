@@ -77,24 +77,21 @@ export default function ConfirmCodeScreen({ match }) {
     return <Redirect to={state ? state.from : '/'} /> // state.from
   }
 
-  const displayLogo = (
-    communityData?.currentCommunity?.imageUrl)
-    ? (
-      <Grid data-testid="community_logo">
-        <ImageAuth
-          imageLink={communityData?.currentCommunity?.imageUrl}
-          className={css(styles.logo)}
-          alt="community logo"
-        />
-      </Grid>
-      )
-    : (
-      <Grid data-testid="community_name">
-        <Typography variant={mobileMatches ? 'h6' : 'h5'} mt={2} mb={5} color="primary">
-          {communityData?.currentCommunity?.name}
-        </Typography>
-      </Grid>
-    );
+  const displayLogo = communityData?.currentCommunity?.imageUrl ? (
+    <Grid data-testid="community_logo">
+      <ImageAuth
+        imageLink={communityData?.currentCommunity?.imageUrl}
+        className={css(styles.logo)}
+        alt="community logo"
+      />
+    </Grid>
+  ) : (
+    <Grid data-testid="community_name">
+      <Typography variant={mobileMatches ? 'h6' : 'h5'} color="primary">
+        {communityData?.currentCommunity?.name}
+      </Typography>
+    </Grid>
+  );
 
   return (
     <div style={{ height: '100vh' }}>
@@ -106,7 +103,9 @@ export default function ConfirmCodeScreen({ match }) {
         </Link>
       </nav>
       <div className="container">
-        <CenteredContent>{loading ? <Spinner /> : displayLogo}</CenteredContent>
+        <Box mt={2} mb={5}>
+          <CenteredContent>{loading ? <Spinner /> : displayLogo}</CenteredContent>
+        </Box>
 
         <CenteredContent>
           <Typography
@@ -199,26 +198,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
   },
   logo: {
-    '@media (max-width: 600px)': {
-      height: 35,
-    },
-    '@media (max-width: 350px)': {
-      marginLeft: 6,
-      height: 30,
-    },
-    '@media (min-width: 350px) and (max-width: 405px)': {
-      marginLeft: '1.8em',
-      height: 25,
-    },
-    '@media (min-width: 406px) and (max-width: 470px)': {
-      marginLeft: '3em',
-    },
-    '@media (min-width: 470px) and (max-width: 500px)': {
-      marginLeft: '5em',
-    },
-    '@media (min-width: 501px) and (max-width: 550px)': {
-      marginLeft: '-3em',
-    },
+    height: 50,
   }
 });
 
