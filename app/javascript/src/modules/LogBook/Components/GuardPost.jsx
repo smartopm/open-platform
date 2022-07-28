@@ -351,6 +351,7 @@ export default function GuardPost() {
             filterMenu
             filterOptions={filterOptions(t)}
             searchCount={{ status: true, value: data?.currentGuests?.length }}
+            loading={guestsLoading}
           />
         </>
       )}
