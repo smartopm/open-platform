@@ -1,5 +1,6 @@
 {
   "search": {
+    "clear": "Limpiar",
     "clear_filters": "Limpiar Filtros",
     "create_request": "Crea una nueva solicitud",
     "create_user_request": "Crear un nuevo usuario",
