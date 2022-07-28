@@ -20,7 +20,6 @@ export const UserFragment = {
       extRefId
       status
       username
-      password
       accounts {
         id
         updatedAt

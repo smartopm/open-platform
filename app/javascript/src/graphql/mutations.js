@@ -17,8 +17,6 @@ export const CreateUserMutation = gql`
     $subStatus: String
     $secondaryInfo: JSON
     $extRefId: String
-    $username: String
-    $password: String
   ) {
     result: userCreate(
       name: $name
@@ -34,8 +32,6 @@ export const CreateUserMutation = gql`
       address: $address
       secondaryInfo: $secondaryInfo
       extRefId: $extRefId
-      username: $username
-      password: $password
     ) {
       user {
         id

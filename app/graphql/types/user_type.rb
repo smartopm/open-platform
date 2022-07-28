@@ -135,7 +135,6 @@ module Types
     field :decision_timeline, String, null: true
     field :status, String, null: true
     field :username, String, null: true
-    field :password, String, null: true # will always be nil
 
     def avatar_url
       attachment_load('Users::User', :avatar, object.id).then do |avatar|

@@ -159,6 +159,7 @@ module Users
     before_validation :add_default_state_type_and_role
     after_create :log_user_create_event
     after_create :add_notification_preference
+    # after_create :auto_generate_username_password
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
     after_update :update_associated_request_details, if: -> { user_details_updated? }
     after_save :associate_lead_labels, if: -> { user_type.eql?('lead') }
@@ -278,6 +279,19 @@ module Users
       user = User.find_for_authentication(username: username)
       user&.valid_password?(password) ? user : nil
     end
+
+    # def auto_generate_username_password
+    #   password = SecureRandom.alphanumeric
+    #   username = name.split.join << SecureRandom.alphanumeric
+    #   # will trigger the action flow job manually to avoid leaking user password to
+    #   # the password reset event log
+    #   Logs::EventLog.skip_callback(:commit, :after, :execute_action_flows)
+    #   update!(password: password, username: username)
+    #   # trigger password reset event
+    #   eventlog = context[:current_user].generate_events('password_reset', user)
+    #   # trigger sending email with username and password
+    #   ActionFlowJob.perform_later(eventlog, { password: password, user_name: username })
+    # end
 
     def site_manager?
       SITE_MANAGERS.include?(user_type)

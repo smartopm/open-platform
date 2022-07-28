@@ -32,6 +32,7 @@
     "unallocated_funds": "Unallocated Funds",
     "merging": "Merging ...",
     "merge_user": "Merge Users",
+    "confirm_reset_password": "Reset User Password?",
     "make_payment": "Record New Payment",
     "add_invoice": "Add an Invoice",
     "process_csv": "Process CSV Data",

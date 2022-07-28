@@ -6,7 +6,7 @@ class ActionFlowJob < ApplicationJob
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def perform(event_log)
+  def perform(event_log, extra_data = {})
     # include (status: 'active') once the active/inactive functionality is implemented
     action_flows = event_log.community.action_flows.where(event_type: event_log.subject).map do |f|
       ActionFlows::WebFlow.new(f.description, f.event_type,
@@ -18,8 +18,7 @@ class ActionFlowJob < ApplicationJob
     action_flows.compact.each do |af|
       next if skip_action?(event_log, af)
 
-      event = af.event_object.new
-      event.preload_data(event_log)
+      check_for_extra_data(extra_data)
       cond = event.event_condition
       next unless cond.run_condition(af.condition)
 
@@ -36,6 +35,15 @@ class ActionFlowJob < ApplicationJob
   # * If action is recursive, returns false.
   # * Otherwise, true.
   #
+
+  def check_for_extra_data(extra_data)
+    if extra_data.present? && event_log.subject == 'password_reset'
+      event.preload_data(event_log, extra_data[:password], extra_data[:username])
+    else
+      event.preload_data(event_log)
+    end
+  end
+
   def skip_action?(event_log, action_flow)
     return false if event_log.ref_type.nil?
 
