@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import { useQuery } from 'react-apollo';
@@ -17,10 +17,12 @@ import useMutationWrapper from '../../../shared/hooks/useMutationWrapper';
 import { AmenityDeleteMutation } from '../graphql/amenity_mutations';
 import { ActionDialog } from '../../../components/Dialog';
 import AmenityStatus from '../constants';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 export default function AmenityList() {
   const [dialog, setOpenDialog] = useState({ isOpen: false, type: null });
   const [amenityData, setAmenityData] = useState(null);
+  const authState = useContext(Context)
   const { refetch, data, loading, fetchMore } = useQuery(AmenitiesQuery, {
     variables: { offset: 0 },
     fetchPolicy: 'network-only',
@@ -104,6 +106,7 @@ export default function AmenityList() {
                     amenity={amenity}
                     translate={t}
                     handleEditAmenity={handleEditAmenity}
+                    userPermissions={authState.user?.permissions}
                   />
                 </Grid>
               ))
