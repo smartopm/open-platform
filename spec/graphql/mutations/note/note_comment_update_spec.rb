@@ -66,6 +66,7 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: another_user,
+                                                site_community: user.community,
                                               }).as_json
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'id')).not_to be_nil
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'body')).to eql 'Updated body'
@@ -89,6 +90,7 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: site_worker,
+                                                site_community: user.community,
                                               }).as_json
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'id')).not_to be_nil
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'body'))
@@ -104,6 +106,7 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
+                                                site_community: user.community,
                                               }).as_json
       expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
       expect(result['errors']).not_to be_nil

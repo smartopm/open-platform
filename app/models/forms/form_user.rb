@@ -9,6 +9,7 @@ module Forms
 
     belongs_to :form
     belongs_to :user, class_name: 'Users::User'
+    belongs_to :submitted_by, class_name: 'Users::User', optional: true
     belongs_to :status_updated_by, class_name: 'Users::User'
     has_many :user_form_properties, dependent: :destroy
     has_many :notes, class_name: 'Notes::Note', dependent: :destroy

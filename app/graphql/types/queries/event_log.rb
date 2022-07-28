@@ -31,7 +31,7 @@ module Types::Queries::EventLog
   end
   # rubocop:disable Metrics/ParameterLists
 
-  def all_event_logs(subject:, ref_id:, ref_type:, offset: 0, limit: 100, name: nil)
+  def all_event_logs(subject: nil, ref_id: nil, ref_type: nil, offset: 0, limit: 100, name: nil)
     authorized = context[:current_user]&.role?(%i[security_guard admin security_supervisor])
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless authorized
 
@@ -45,7 +45,6 @@ module Types::Queries::EventLog
     context[:site_community].event_logs.includes(:acting_user, :ref)
                             .where(query)
                             .limit(limit).offset(offset)
-                            .with_attached_images
   end
   # rubocop:enable Metrics/ParameterLists
 
@@ -96,7 +95,7 @@ module Types::Queries::EventLog
 
   def query_logs_with_name(query, name, limit, offset)
     # TODO: Move this search to serchcop
-    context[:site_community].event_logs.eager_load(:acting_user).where(query)
+    context[:site_community].event_logs.includes(:acting_user).where(query)
                             .where("data->>'ref_name' ILIKE ? OR data->>'note' ILIKE ?",
                                    "%#{name}%", "%#{name}%")
                             .limit(limit).offset(offset)

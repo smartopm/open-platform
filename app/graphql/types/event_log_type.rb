@@ -3,16 +3,18 @@
 require 'host_env'
 
 module Types
-  # ActivityLogType
+  # EventLogType
   class EventLogType < Types::BaseObject
     field :id, ID, null: false
     field :acting_user_id, ID, null: true
-    field :acting_user, Types::UserType, null: true
+    field :acting_user, Types::UserType, null: true,
+                                         resolve: Resolvers::BatchResolver.load(:acting_user)
     field :ref_id, ID, null: true
     field :ref_type, String, null: true
     field :entry_request, Types::EntryRequestType, null: true
     field :user, Types::UserType, null: true
-    field :community, Types::CommunityType, null: false
+    field :community, Types::CommunityType, null: false,
+                                            resolve: Resolvers::BatchResolver.load(:community)
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :subject, String, null: true
     field :data, GraphQL::Types::JSON, null: true
@@ -25,29 +27,30 @@ module Types
     end
 
     def entry_request
-      return nil if object.ref_type != 'Logs::EntryRequest'
-
-      object.ref
+      batch_load(object, :ref).then do |ref|
+        ref if ref.instance_of?(Logs::EntryRequest)
+      end
     end
 
     def user
-      return nil if object.ref_type != 'Users::User'
-
-      object.ref
+      batch_load(object, :ref).then do |ref|
+        ref if ref.instance_of?(Users::User)
+      end
     end
 
     def image_urls
-      return nil unless object.images.attached?
-
-      image_attached = []
-      base_url = HostEnv.base_url(object.community)
-
-      object.images.each do |img|
-        path = Rails.application.routes.url_helpers.rails_blob_path(img)
-        image_attached << "https://#{base_url}#{path}"
+      type = :has_many_attached
+      attachment_load('Logs::EventLog', :images, object.id, type: type).then do |images|
+        images_attached = []
+        images.compact.select { |image| images_attached << host_url(image) }
+        images_attached.empty? ? nil : images_attached
       end
+    end
 
-      image_attached
+    def host_url(type)
+      base_url = HostEnv.base_url(context[:site_community])
+      path = Rails.application.routes.url_helpers.rails_blob_path(type)
+      "https://#{base_url}#{path}"
     end
   end
 end
