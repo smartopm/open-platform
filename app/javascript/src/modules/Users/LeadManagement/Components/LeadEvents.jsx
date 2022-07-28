@@ -26,6 +26,7 @@ import { Context as AuthStateContext } from '../../../../containers/Provider/Aut
 import Investments from './Investments';
 import { SnackbarContext } from '../../../../shared/snackbar/Context';
 import { CustomizedDialogs } from '../../../../components/Dialog';
+import useMutationWrapper from '../../../../shared/hooks/useMutationWrapper';
 
 export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsData }) {
   const [meetingName, setMeetingName] = useState('');
@@ -38,7 +39,6 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
   const communityDivisionTargets = authState?.user?.community?.leadMonthlyTargets;
   const [leadFormData, setLeadFormData] = useState(data);
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
-  const [logUpdate, { loading: isLogLoading }] = useMutation(LeadLogUpdate);
   const [leadDataUpdate, { loading: divisionLoading }] = useMutation(UpdateUserMutation);
   const { t } = useTranslation('common');
   const mobile = useMediaQuery('(max-width:800px)');
@@ -64,6 +64,18 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     variables: { userId, logType: 'event' },
     fetchPolicy: 'cache-and-network',
   });
+
+  function resetFunction() {
+    handleClose();
+    refetchEvents();
+    refetchMeetings();
+  }
+
+  const [updateLeadLog, isUpdating] = useMutationWrapper(
+    LeadLogUpdate,
+    resetFunction,
+    t('common:misc.lead_log_successful')
+  );
 
   function handleDivisionChange(event) {
     setLeadData(true);
@@ -142,25 +154,11 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
   }
 
   function handleLogUpdate() {
-    logUpdate({
-      variables: {
-        id: editData.id,
-        name: editData.name,
-        amount: parseFloat(editData.amount) || undefined,
-      },
-    })
-      .then(() => {
-        showSnackbar({
-          type: messageType.success,
-          message: t('common:misc.lead_log_successful'),
-        });
-        handleClose();
-        refetchEvents();
-        refetchMeetings();
-      })
-      .catch(() => {
-        showSnackbar({ type: messageType.error, message: formatError(err.message || err) });
-      });
+    updateLeadLog({
+      id: editData.id,
+      name: editData.name,
+      amount: parseFloat(editData.amount) || undefined,
+    });
   }
 
   const err = meetingsError || eventsError || null;
@@ -178,7 +176,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         dialogHeader={t('misc.edit_entry')}
         saveAction={t('common:form_actions.update')}
         handleBatchFilter={() => handleLogUpdate()}
-        disableActionBtn={isLogLoading}
+        disableActionBtn={isUpdating}
       >
         <Grid container>
           <Grid
