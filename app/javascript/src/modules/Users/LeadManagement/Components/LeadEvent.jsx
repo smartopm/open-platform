@@ -37,7 +37,7 @@ export default function LeadEvent({ leadEvent, handleEditClick }) {
                   </Typography>
                 </Grid>
                 <Grid item md={1} xs={2} style={{ textAlign: 'right' }}>
-                  <IconButton color='primary' onClick={() => handleEditClick(leadEvent)}>
+                  <IconButton color='primary' onClick={() => handleEditClick(leadEvent)} data-testid='edit_click'>
                     <EditIcon />
                   </IconButton>
                 </Grid>
