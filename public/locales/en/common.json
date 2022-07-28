@@ -161,7 +161,7 @@
     "see_more_discussion": "SEE MORE OF THIS DISCUSSION",
     "see_more": "SEE MORE",
     "post": "Post",
-    "reset_password": "Reset Password",
+    "reset": "Reset",
     "post_plural": "Comments",
     "type_post": "Type a post here",
     "collapse_post": "Collapse Posts",
@@ -325,12 +325,13 @@
     "download_csv": "Download CSV",
     "edit_entry": "Edit Entry",
     "lead_log_successful": "Lead log succesfully updated",
-    "process_detail_page": "Project Detail"
+    "process_detail_page": "Project Detail",
+    "copy_credentials": "The credentials below will the current account credentials, you may want to copy them as you will not be able to see them again one you exit the modal.",
+    "reset_disclaimer": "You are about to reset the password for the current account. This is an irreversable action."
   },
   "menu": {
     "invoice": "Invoice",
     "invoice_plural": "Invoices",
-    "transaction": "Transaction",
     "transaction_plural": "Transactions",
     "plan": "Plan",
     "plan_plural": "Plans",

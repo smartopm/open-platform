@@ -32,13 +32,15 @@
     "unallocated_funds": "Unallocated Funds",
     "merging": "Merging ...",
     "merge_user": "Merge Users",
-    "confirm_reset_password": "Reset User Password?",
+    "confirm_reset_password": "Reset Password?",
     "make_payment": "Record New Payment",
     "add_invoice": "Add an Invoice",
     "process_csv": "Process CSV Data",
     "download_csv": "Download CSV",
     "copy_id_message": "Id Lists Successfully Copied to Clipboard",
-    "user_journey": " User Journey"
+    "user_journey": " User Journey",
+    "username": "Username: {{username}}",
+    "password": "Password: {{password}}"
   },
   "messages": {
     "activation_confirmation": "Are you sure you want to activate {{userName}}. By clicking the Activate User button, this user will have access to the app",

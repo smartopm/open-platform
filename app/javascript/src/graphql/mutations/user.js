@@ -125,8 +125,8 @@ export const UpdateUserMutation = gql`
 `;
 
 export const ResetUserPasswordUserMutation = gql`
-  mutation ResetPasswordMutation($userId: ID!) {
-    ResetPasswordMutation(userId: $userId) {
+  mutation resetPassword($userId: ID!, $username: String!, $password: String!) {
+    resetPassword(userId: $userId, username: $username, password: $password) {
       success
     }
   }

@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
 import { useHistory } from 'react-router-dom';
 import PhoneIcon from '@mui/icons-material/Phone';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useMutation } from 'react-apollo';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Dialog, DialogTitle, DialogContent, Container, Box, IconButton } from '@mui/material';
+import { Utils as QbUtils } from 'react-awesome-query-builder';
 import DialogContentText from '@mui/material/DialogContentText';
 import CloseIcon from '@mui/icons-material/Close';
 import { css, StyleSheet } from 'aphrodite';
@@ -41,8 +41,9 @@ import { userTabList, selectOptions, createMenuContext } from '../utils';
 import SelectButton from '../../../shared/buttons/SelectButton';
 import UserLabelTitle from './UserLabelTitle';
 import UserLabels from './UserLabels';
-// import { SnackbarContext } from '../../../shared/snackbar/Context';
-// import { ResetUserPasswordUserMutation } from '../../../graphql/mutations/user';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
+import { ResetUserPasswordUserMutation } from '../../../graphql/mutations/user';
+import { Spinner } from '../../../shared/Loading';
 
 export default function UserInformation({
   data,
@@ -67,8 +68,9 @@ export default function UserInformation({
   const [selectedKey, setSelectKey] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const userType = authState.user.userType.toLowerCase();
-  // const [resetPassword, loading] = useMutation(ResetUserPasswordUserMutation);
-  // const { showSnackbar, messageType } = useContext(SnackbarContext);
+  const [resetPassword] = useMutation(ResetUserPasswordUserMutation);
+  const [loading, setLoading] = useState(false);
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
   const [openModal, setOpenModal] = useState(false);
   const options = selectOptions(
     setSelectKey,
@@ -81,7 +83,6 @@ export default function UserInformation({
     handleMergeUserItemClick,
     checkRole,
     handleResetPasswordItemClick,
-    // setOpenModal,
     t,
     userId
   );
@@ -136,27 +137,42 @@ export default function UserInformation({
     history.push(`/user/${data.user.id}?type=MergeUser`);
     setOpen(false);
   }
-  // const username = data?.user?.username;
-  console.log('Mutuba data', data?.user);
+  const username =
+    data?.user?.username !== null
+      ? data.user.username
+      : data.user.name.replace(' ', '').concat(
+          Math.random()
+            .toString(36)
+            .slice(2, 7)
+        );
+  const password = QbUtils.uuid();
+
+  function handlePasswordReset() {
+    setOpenModal(false);
+    setLoading(true);
+    resetPassword({
+      variables: {
+        userId: data.user.id,
+        username,
+        password,
+      },
+    })
+      .then(() => {
+        setLoading(false);
+        showSnackbar({
+          type: messageType.success,
+          message: t('common:misc.reset_password_successful'),
+        });
+      })
+      .catch(err => {
+        setLoading(false);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
+      });
+  }
 
   function handleResetPasswordItemClick() {
     setOpen(false);
     setOpenModal(true);
-
-    // resetPassword({
-    //   variables: {
-    //     userId: data.user.id,
-    //   },
-    // })
-    //   .then(() => {
-    //     showSnackbar({
-    //       type: messageType.success,
-    //       message: t('common:misc.reset_password_successful'),
-    //     });
-    //   })
-    //   .catch(err => {
-    //     showSnackbar({ type: messageType.error, message: formatError(err.message) });
-    //   });
   }
   function checkRole(roles, featureName) {
     if (['Properties', 'Users', 'Payments', 'LogBook'].includes(featureName)) {
@@ -208,6 +224,9 @@ export default function UserInformation({
     router.push(`/user/${userId}?tab=${tabValue}`);
   }
 
+  if (loading) {
+    return <Spinner />;
+  }
   return (
     <PageWrapper
       breadCrumbObj={breadCrumbObj}
@@ -260,32 +279,31 @@ export default function UserInformation({
               </Box>
             </DialogTitle>
 
-            <DialogContent style={{ paddingTop: '10px' }}>
+            <DialogContent style={{ paddingTop: '6px', paddingBottom: '10px' }}>
               <DialogContentText>
-                <Typography gutterBottom>
-                  You are about to reset the password for the current account. This is a
-                  irreversable action.
+                <Typography gutterBottom>{t('common:misc.reset_disclaimer')}</Typography>
+                <Typography gutterBottom>{t('common:misc.copy_credentials')}</Typography>
+                <br />
+                <Typography variant="subtitle2" gutterBottom>
+                  {t('users.username', { username })}
                 </Typography>
-                <Typography gutterBottom>
-                  This is are the current account credentials if you want to copy somewhere as you
-                  will not be able to see them again one you exit the modal.
+                <Typography variant="subtitle2" gutterBottom>
+                  {t('users.password', { password })}
                 </Typography>
-                <Typography gutterBottom>Username: Password:</Typography>
-                <Typography gutterBottom>Username: Password:</Typography>
               </DialogContentText>
             </DialogContent>
 
             <Box textAlign="center">
               <Button
                 disableElevation
-                // onClick={handlePostCreate}
+                onClick={handlePasswordReset}
                 color="primary"
                 variant="contained"
                 data-testid="post-btn"
                 style={{ color: 'white', width: '30%', marginBottom: '12px' }}
                 autoFocus
               >
-                {t('common:misc.reset_password')}
+                {t('common:misc.reset')}
               </Button>
             </Box>
           </Dialog>
