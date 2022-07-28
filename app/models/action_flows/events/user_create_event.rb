@@ -23,7 +23,11 @@ module ActionFlows
 
       def preload_data(event_log)
         user = event_log.ref_type.constantize.find_by(id: event_log.ref_id)
-        load_data('User' => user) if user.present? && !user.user_type.eql?('lead')
+        # removing the lead condition as going forward they will be  
+        # created as qualified leads and they should be able to login
+        load_data('User' => user,
+        'password' => extra_data[:password]
+        'username' => user.username) if user.present?
       end
     end
   end

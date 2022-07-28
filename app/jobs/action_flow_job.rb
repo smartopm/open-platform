@@ -37,8 +37,8 @@ class ActionFlowJob < ApplicationJob
   #
 
   def check_for_extra_data(extra_data)
-    if extra_data.present? && event_log.subject == 'password_reset'
-      event.preload_data(event_log, extra_data[:password], extra_data[:username])
+    if extra_data[:password].present?
+      event.preload_data(event_log, extra_data[:password])
     else
       event.preload_data(event_log)
     end

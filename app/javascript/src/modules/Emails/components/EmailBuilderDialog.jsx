@@ -97,7 +97,7 @@ export default function EmailBuilderDialog() {
     unlayer.init({
       id: 'email-editor-container',
       displayMode: 'web',
-      locale: defaultLanguage || authState.user?.community.locale
+      locale: authState.user?.community.locale
     })
   }
 
