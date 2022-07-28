@@ -321,6 +321,7 @@ es:
     metropolis: metropolis
     nkwashi: nkwashi
     tilisi: tilisi
+  deprecated: obsoleto
   discussion_title:
     events: Eventos
     family: Familia
@@ -535,3 +536,4 @@ es:
     updated: Actualizado
   welcome_sms: Bienvenido a la comunidad en línea de %{community}. Por favor acceda
     a la aplicación usando %{url}
+  whatsapp_response: Hola %{name}, ¡Gracias por tu mensaje!
