@@ -23,7 +23,7 @@ gem 'jbuilder', '~> 2.7'
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use Active Storage variant
-# gem 'image_processing', '~> 1.2'
+gem 'image_processing', '~> 1.2'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
@@ -36,6 +36,7 @@ gem 'tzinfo-data', '~> 1.2021', '>= 1.2021.2'
 
 gem 'vonage', "~> 7.7.0"
 gem 'sendgrid-ruby', "~> 6.6.1"
+gem 'twilio-ruby', '~> 5.69.0'
 
 # For S3 file uploads in ActiveStorage
 gem "aws-sdk-s3", '~> 1.113.0', require: false

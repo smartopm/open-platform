@@ -783,4 +783,36 @@ RSpec.describe Users::User, type: :model do
       expect(user.lead_logs.count).to eql 1
     end
   end
+
+  describe '#whatsapp task' do
+    let(:community) { create(:community, name: 'DoubleGDP') }
+    let(:site_worker_role) { create(:role, name: 'site_worker') }
+    let(:admin_role) { create(:role, name: 'admin') }
+    let!(:user) do
+      create(:site_worker,
+             user_type: 'site_worker',
+             community_id: community.id,
+             role: site_worker_role)
+    end
+    let!(:another_user) do
+      create(:admin_user,
+             user_type: 'admin',
+             community_id: community.id,
+             role: admin_role)
+    end
+    let!(:note) do
+      create(:note,
+             body: 'This is another note',
+             category: 'whatsapp',
+             completed: false,
+             user_id: user.id,
+             author_id: user.id,
+             community_id: community.id)
+    end
+
+    it 'returns a whatsapp task' do
+      expect(user.whatsapp_task.body).to eql 'This is another note'
+      expect(another_user.whatsapp_task).to be_nil
+    end
+  end
 end

@@ -16,8 +16,8 @@ export default function LogsReportView({ startDate, endDate, handleChange, child
         </Typography>
       </div>
 
-      <Grid container spacing={1} alignItems="center">
-        <Grid item xs={12} sm={6} md={3}>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={12} sm={12} md={12} lg={12}>
           <DatePickerDialog
             selectedDate={startDate}
             handleDateChange={date => handleChange({ target: { name: 'startDate', value: date } })}
@@ -29,7 +29,7 @@ export default function LogsReportView({ startDate, endDate, handleChange, child
             t={t}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={12} md={12} lg={12}>
           <DatePickerDialog
             selectedDate={endDate}
             handleDateChange={date => handleChange({ target: { name: 'endDate', value: date } })}
@@ -41,7 +41,7 @@ export default function LogsReportView({ startDate, endDate, handleChange, child
             t={t}
           />
         </Grid>
-        <Grid item xs={4} sm={4} md={2}>
+        <Grid item xs={12} sm={12} md={12} lg={12}>
           {children}
         </Grid>
       </Grid>

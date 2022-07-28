@@ -1,0 +1,16 @@
+{
+    "SmsMessageSid": "SMeb40b33e138caa9f5ffb614948abf1ea",
+    "NumMedia": "0",
+    "ProfileName": "Test User",
+    "SmsSid": "SMeb40b33e138caa9f5ffb614948abf1ea",
+    "WaId": "260970000000",
+    "SmsStatus": "received",
+    "Body": "Your message is properly formatted",
+    "To": "whatsapp:+14155238886",
+    "NumSegments": "1",
+    "ReferralNumMedia": "0",
+    "MessageSid": "SMeb40ereb614948abf1ea",
+    "AccountSid": "ACcberefb43cd1fae8bd7",
+    "From": "whatsapp:+260970000000",
+    "ApiVersion": "2010-04-01"
+  }

@@ -458,6 +458,7 @@ en:
   reload_page: "Reload Page"
   invalid_phone_number: "The Phone number is not valid"
   deprecated: "deprecated"
+  whatsapp_response: "Hi %{name}, Thank you for your message!!"
   community_name:
     ciudadmorazán: ciudadmorazan
     greenpark: greenpark

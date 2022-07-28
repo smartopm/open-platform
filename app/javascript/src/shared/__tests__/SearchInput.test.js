@@ -25,7 +25,7 @@ describe('Search Input component', () => {
 
     expect(container.queryAllByText('search:search.search_for')[0]).toBeInTheDocument();
     expect(container.queryAllByText('search:search.search_for')).toHaveLength(2);
-    expect(container.queryByTestId('clear_filters_btn').textContent).toContain('search.clear_filters');
+    expect(container.queryByTestId('clear_filters_btn').textContent).toContain('search.clear');
     expect(container.queryByTestId('search_results').textContent).toContain('search.search_results');
     expect(container.queryByTestId('filters_list').textContent).toContain('some');
     expect(container.queryByTestId('filter')).not.toBeInTheDocument();

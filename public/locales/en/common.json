@@ -319,7 +319,8 @@
     "add_payment": "Add Payment",
     "access": "Access",
     "reload": "Reload",
-    "logs": "Logs"
+    "logs": "Logs",
+    "download_csv": "Download CSV"
   },
   "menu": {
     "invoice": "Invoice",

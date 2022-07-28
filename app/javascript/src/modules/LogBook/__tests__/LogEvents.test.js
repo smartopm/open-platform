@@ -61,7 +61,7 @@ describe('Log Events Component', () => {
           <BrowserRouter>
             <Context.Provider value={authState}>
               <LogEvents
-                eventsData={{ data: log, error: null, loading: false, refetch: jest.fn() }}
+                eventsData={log}
                 userType="admin"
                 handleExitEvent={logExit}
                 handleAddObservation={jest.fn()}
@@ -100,12 +100,7 @@ describe('Log Events Component', () => {
           <BrowserRouter>
             <Context.Provider value={authState}>
               <LogEvents
-                eventsData={{
-                  data: { result: [] },
-                  error: null,
-                  loading: false,
-                  refetch: jest.fn()
-                }}
+                eventsData={{ data: { result: [] } }}
                 userType="admin"
                 handleExitEvent={jest.fn()}
                 handleAddObservation={jest.fn()}

@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography';
 import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
 import PhotoIcon from '@mui/icons-material/Photo';
 import { Tooltip } from '@mui/material';
-import { Spinner } from '../../../shared/Loading';
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
 import { toTitleCase, objectAccessor, truncateString } from '../../../utils/helpers';
 import { LogLabelColors } from '../../../utils/constants';
@@ -30,6 +29,7 @@ export default function LogEvents({
   handleExitEvent,
   handleAddObservation,
   routeToAction,
+  loading
 }) {
   const [imageOpen, setImageOpen] = useState(false);
   const [id, setId] = useState('');
@@ -109,16 +109,9 @@ export default function LogEvents({
 
   return (
     <div style={{ marginTop: '20px' }} data-testid="card">
-      {
-        eventsData.error && !eventsData.data?.length && (
-          <CenteredContent>{eventsData.error?.message}</CenteredContent>
-        )
-      }
-      {eventsData.loading ? (
-        <Spinner />
-      ) : eventsData.data?.result.length > 0 ? (
+      {eventsData?.result?.length > 0 ? (
         // eslint-disable-next-line complexity
-        eventsData.data?.result.map(entry => (
+        eventsData?.result.map(entry => (
           <Card key={entry.id}>
             <Grid container spacing={1}>
               <Grid item md={4} xs={8}>
@@ -324,15 +317,22 @@ export default function LogEvents({
           </Card>
         ))
       ) : (
-        <CenteredContent data-testid="no-logs">{t('logbook.no_logs')}</CenteredContent>
+        !loading && <CenteredContent data-testid="no-logs">{t('logbook.no_logs')}</CenteredContent>
       )}
     </div>
   );
 }
+
+LogEvents.defaultProps = {
+  eventsData: {},
+  loading: false,
+};
+
 LogEvents.propTypes = {
-  eventsData: PropTypes.object.isRequired,
+  eventsData: PropTypes.shape(PropTypes.Object),
   userType: PropTypes.string.isRequired,
   handleAddObservation: PropTypes.func.isRequired,
   handleExitEvent: PropTypes.func.isRequired,
   routeToAction: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
 };
