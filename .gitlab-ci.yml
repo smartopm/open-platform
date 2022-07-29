@@ -210,5 +210,4 @@ dast:
 code_quality:
   artifacts:
     paths: [gl-code-quality-report.json]
-  only:
-    - branches
+    expire_in: 24 hours
