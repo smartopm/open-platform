@@ -119,15 +119,12 @@ cypress:
 eslint:
   extends: .base_db
   stage: test
-  coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
   allow_failure: false
   script:
     - yarn lint
   artifacts:
-    paths:
-      - 'coverage/'
-    name: 'ESLint $CI_PIPELINE_ID Coverage Report'
-    expire_in: 24 hours
+    reports:
+      codequality: gl-codequality.json
   except:
     - tags
     - schedules
