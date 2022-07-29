@@ -23,12 +23,11 @@ module ActionFlows
 
       def preload_data(event_log, extra_data = {})
         user = event_log.ref_type.constantize.find_by(id: event_log.ref_id)
-        # puts "Mutuba is tired of action flows user create #{user}"
         # removing the lead condition as going forward they will be
         # created as qualified leads and they should be able to login
         return if user.blank?
 
-        load_data('User' => user,
+        load_data({ 'User' => user },
                   'password' => extra_data[:password],
                   'username' => user.username)
       end

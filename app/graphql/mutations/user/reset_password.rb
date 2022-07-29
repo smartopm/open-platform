@@ -12,8 +12,6 @@ module Mutations
 
       def resolve(vals)
         user = Users::User.find(vals[:user_id])
-
-        Logs::EventLog.skip_callback(:commit, :after, :execute_action_flows)
         user.update!(username: vals[:username], password: vals[:password])
         eventlog = context[:current_user].generate_events('password_reset', user)
         ActionFlowJob.perform_later(eventlog, { password: vals[:password] })

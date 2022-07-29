@@ -12,7 +12,6 @@ class ActionFlowJob < ApplicationJob
       ActionFlows::WebFlow.new(f.description, f.event_type,
                                f.event_condition, f.event_action)
     end
-
     return if action_flows.blank?
 
     action_flows.compact.each do |af|
@@ -39,7 +38,7 @@ class ActionFlowJob < ApplicationJob
 
   def check_for_extra_data(event, event_log, extra_data)
     if extra_data[:password].present?
-      event.preload_data(event_log, extra_data[:password])
+      event.preload_data(event_log, extra_data)
     else
       event.preload_data(event_log)
     end

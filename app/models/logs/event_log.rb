@@ -233,6 +233,8 @@ module Logs
     #
     # @return [void]
     def execute_action_flows
+      return if subject == 'user_create' || subject == 'password_reset'
+
       ActionFlowJob.perform_later(self)
     end
 

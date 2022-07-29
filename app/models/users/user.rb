@@ -159,10 +159,10 @@ module Users
     before_validation :add_default_state_type_and_role
     # after_create :log_user_create_event
     after_create :add_notification_preference
-    after_create :auto_generate_username_password
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
     after_update :update_associated_request_details, if: -> { user_details_updated? }
     after_save :associate_lead_labels, if: -> { user_type.eql?('lead') }
+    after_commit :auto_generate_username_password, on: :create
 
     # Track changes to the User
     has_paper_trail
@@ -285,11 +285,14 @@ module Users
       username = name.split.join << SecureRandom.alphanumeric
       # will trigger the action flow job manually to avoid leaking user password to
       # the user create event log
-      Logs::EventLog.skip_callback(:commit, :after, :execute_action_flows)
+      # Logs::EventLog.skip_callback(:commit, :after, :execute_action_flows)
       update!(password: password, username: username)
       eventlog = generate_events('user_create', self)
       # trigger sending email with username and password
+      # if eventlog.persisted?
       ActionFlowJob.perform_later(eventlog, { password: password })
+      # end
+      # Logs::EventLog.set_callback(:commit, :after, :execute_action_flows)
     end
 
     def site_manager?
@@ -370,9 +373,9 @@ module Users
       entry_request_object
     end
 
-    def log_user_create_event
-      generate_events('user_create', self)
-    end
+    # def log_user_create_event
+    #   generate_events('user_create', self)
+    # end
 
     def generate_events(event_tag, target_obj, data = {})
       Logs::EventLog.create!(acting_user_id: id,

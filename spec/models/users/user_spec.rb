@@ -74,6 +74,8 @@ RSpec.describe Users::User, type: :model do
     it { is_expected.to have_db_column(:investment_size).of_type(:string) }
     it { is_expected.to have_db_column(:investment_timeline).of_type(:string) }
     it { is_expected.to have_db_column(:decision_timeline).of_type(:string) }
+    it { is_expected.to have_db_column(:username).of_type(:string) }
+    it { is_expected.to have_db_column(:sign_in_count).of_type(:integer) }
   end
 
   describe 'associations' do
