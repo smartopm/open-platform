@@ -18,7 +18,8 @@ class ActionFlowJob < ApplicationJob
     action_flows.compact.each do |af|
       next if skip_action?(event_log, af)
 
-      check_for_extra_data(extra_data)
+      event = af.event_object.new
+      check_for_extra_data(event, event_log, extra_data)
       cond = event.event_condition
       next unless cond.run_condition(af.condition)
 
@@ -36,7 +37,7 @@ class ActionFlowJob < ApplicationJob
   # * Otherwise, true.
   #
 
-  def check_for_extra_data(extra_data)
+  def check_for_extra_data(event, event_log, extra_data)
     if extra_data[:password].present?
       event.preload_data(event_log, extra_data[:password])
     else

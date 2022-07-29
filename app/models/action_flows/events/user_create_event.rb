@@ -21,13 +21,16 @@ module ActionFlows
         EVENT_TYPE
       end
 
-      def preload_data(event_log)
+      def preload_data(event_log, extra_data = {})
         user = event_log.ref_type.constantize.find_by(id: event_log.ref_id)
-        # removing the lead condition as going forward they will be  
+        # puts "Mutuba is tired of action flows user create #{user}"
+        # removing the lead condition as going forward they will be
         # created as qualified leads and they should be able to login
+        return if user.blank?
+
         load_data('User' => user,
-        'password' => extra_data[:password]
-        'username' => user.username) if user.present?
+                  'password' => extra_data[:password],
+                  'username' => user.username)
       end
     end
   end

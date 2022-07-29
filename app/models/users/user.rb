@@ -284,12 +284,10 @@ module Users
       password = SecureRandom.alphanumeric
       username = name.split.join << SecureRandom.alphanumeric
       # will trigger the action flow job manually to avoid leaking user password to
-      # the password reset event log
+      # the user create event log
       Logs::EventLog.skip_callback(:commit, :after, :execute_action_flows)
       update!(password: password, username: username)
-      # trigger password reset event
-      # eventlog = current_user.generate_events('password_reset', self)
-      eventLog = generate_events('user_create', self)
+      eventlog = generate_events('user_create', self)
       # trigger sending email with username and password
       ActionFlowJob.perform_later(eventlog, { password: password })
     end

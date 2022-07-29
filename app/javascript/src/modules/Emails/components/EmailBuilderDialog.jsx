@@ -15,7 +15,7 @@ import { formatError } from '../../../utils/helpers';
 import CreateEmailTemplateMutation, { EmailUpdateMutation } from '../graphql/email_mutations';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { EmailTemplateQuery } from '../graphql/email_queries';
-import { useScript } from '../../../utils/customHooks'
+import { useScript } from '../../../utils/customHooks';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 // eslint-disable-next-line
@@ -28,43 +28,45 @@ export default function EmailBuilderDialog() {
   const [updateEmailTemplate] = useMutation(EmailUpdateMutation);
   const [detailsOpen, setOpenDetails] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '', loading: false });
-  const { t } = useTranslation(['email' ,'common'])
-  const defaultLanguage = localStorage.getItem('default-language');
-  const authState = useContext(Context)
-  const { emailId } = useParams()
-  const history = useHistory()
+  const { t } = useTranslation(['email', 'common']);
+  // const defaultLanguage = localStorage.getItem('default-language');
+  const authState = useContext(Context);
+  const { emailId } = useParams();
+  const history = useHistory();
   const status = useScript('https://editor.unlayer.com/embed.js');
   const { unlayer } = window;
-  const { data: templateData } = useQuery(
-    EmailTemplateQuery,
-    {
-      variables: { id: emailId },
-      errorPolicy: 'all',
-      fetchPolicy: 'cache-and-network'
-    }
-  );
+  const { data: templateData } = useQuery(EmailTemplateQuery, {
+    variables: { id: emailId },
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network',
+  });
   const [emailSubject, setEmailSubject] = useState(templateData?.emailTemplate?.subject || '');
 
   const { showSnackbar, messageType } = useContext(SnackbarContext);
 
-  function handleClose(){
-    history.push('/mail_templates')
+  function handleClose() {
+    history.push('/mail_templates');
   }
 
-  function updateTemplate(){
+  function updateTemplate() {
     setMessage({ ...message, loading: true });
     unlayer.exportHtml(data => {
       updateEmailTemplate({
-        variables: { id: emailId, body: data.html, data, subject: (emailSubject || templateData?.emailTemplate?.subject) }
+        variables: {
+          id: emailId,
+          body: data.html,
+          data,
+          subject: emailSubject || templateData?.emailTemplate?.subject,
+        },
       })
         .then(() => {
           showSnackbar({ type: messageType.success, message: t('email.email_updated') });
-          setMessage({ ...message, loading: false});
+          setMessage({ ...message, loading: false });
           handleClose();
         })
         .catch(err => {
           showSnackbar({ type: messageType.error, message: formatError(err.message) });
-          setMessage({  ...message, loading: false });
+          setMessage({ ...message, loading: false });
         });
     });
   }
@@ -74,17 +76,17 @@ export default function EmailBuilderDialog() {
     unlayer.exportHtml(data => {
       const { html } = data;
       createEmailTemplate({
-        variables: { ...details, body: html, data }
+        variables: { ...details, body: html, data },
       })
         .then(() => {
           showSnackbar({ type: messageType.success, message: t('email.email_saved') });
-          setMessage({ ...message, loading: false});
+          setMessage({ ...message, loading: false });
           handleClose();
           handleDetailsDialog();
         })
         .catch(err => {
           showSnackbar({ type: messageType.error, message: formatError(err.message) });
-          setMessage({ loading: false});
+          setMessage({ loading: false });
         });
     });
   }
@@ -93,12 +95,12 @@ export default function EmailBuilderDialog() {
     setOpenDetails(!detailsOpen);
   }
 
-  function initializeUnLayer () {
+  function initializeUnLayer() {
     unlayer.init({
       id: 'email-editor-container',
       displayMode: 'web',
-      locale: authState.user?.community.locale
-    })
+      locale: authState.user?.community.locale,
+    });
   }
 
   function updateEmailSubject(details) {
@@ -107,16 +109,16 @@ export default function EmailBuilderDialog() {
   }
 
   useEffect(() => {
-    if(status === 'ready'){
+    if (status === 'ready') {
       initializeUnLayer();
     }
-  }, [status])
+  }, [status]);
 
   useEffect(() => {
-    if(status === 'ready' && emailId && templateData?.emailTemplate?.data) {
-      unlayer.loadDesign(templateData?.emailTemplate.data?.design)
+    if (status === 'ready' && emailId && templateData?.emailTemplate?.data) {
+      unlayer.loadDesign(templateData?.emailTemplate.data?.design);
     }
-  }, [emailId, templateData, status])
+  }, [emailId, templateData, status]);
 
   return (
     <>
@@ -125,14 +127,22 @@ export default function EmailBuilderDialog() {
         handleClose={handleDetailsDialog}
         handleSave={emailId ? updateEmailSubject : saveTemplate}
         loading={message.loading}
-        dialogHeader={emailId ? t('email.subject_update_header') : t('email.template_create_header')}
+        dialogHeader={
+          emailId ? t('email.subject_update_header') : t('email.template_create_header')
+        }
         initialData={{
-        name: templateData?.emailTemplate?.name || '',
-        subject: emailSubject || templateData?.emailTemplate?.subject || ''
-      }}
+          name: templateData?.emailTemplate?.name || '',
+          subject: emailSubject || templateData?.emailTemplate?.subject || '',
+        }}
         action={emailId ? 'update' : 'create'}
       />
-      <Dialog fullScreen open onClose={handleClose} TransitionComponent={Transition} data-testid="fullscreen_dialog">
+      <Dialog
+        fullScreen
+        open
+        onClose={handleClose}
+        TransitionComponent={Transition}
+        data-testid="fullscreen_dialog"
+      >
         <AppBar position="relative">
           <Toolbar>
             <IconButton
@@ -146,29 +156,35 @@ export default function EmailBuilderDialog() {
             </IconButton>
             <div style={{ marginLeft: '75vw' }}>
               {emailId && (
-              <Button
-                onClick={handleDetailsDialog}
-                disabled={message.loading}
-                data-testid="edit_subject_btn"
-                style={{background: 'white'}}
-              >
-                {t('email.edit_subject')}
-              </Button>
-          )}
+                <Button
+                  onClick={handleDetailsDialog}
+                  disabled={message.loading}
+                  data-testid="edit_subject_btn"
+                  style={{ background: 'white' }}
+                >
+                  {t('email.edit_subject')}
+                </Button>
+              )}
               <Button
                 autoFocus
-                onClick={emailId ?  updateTemplate : handleDetailsDialog}
+                onClick={emailId ? updateTemplate : handleDetailsDialog}
                 disabled={message.loading}
                 data-testid="submit_btn"
-                style={{background: 'white', marginLeft: '5px'}}
+                style={{ background: 'white', marginLeft: '5px' }}
               >
-                {`${message.loading ? t('common:form_actions.saving') : emailId ? t('common:form_actions.update') :  t('common:form_actions.save')}`}
+                {`${
+                  message.loading
+                    ? t('common:form_actions.saving')
+                    : emailId
+                    ? t('common:form_actions.update')
+                    : t('common:form_actions.save')
+                }`}
               </Button>
             </div>
           </Toolbar>
         </AppBar>
-        <div id="email-editor-container" style={{ minHeight: '700px', minWidth: '1024px'}} />
+        <div id="email-editor-container" style={{ minHeight: '700px', minWidth: '1024px' }} />
       </Dialog>
     </>
-);
+  );
 }

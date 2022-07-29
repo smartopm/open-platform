@@ -23,7 +23,10 @@ module ActionFlows
 
       def preload_data(event_log, extra_data = {})
         user = event_log.ref_type.constantize.find_by(id: event_log.ref_id)
-        load_data('User' => user,  'password' => extra_data[:password]
+        # puts "Mutuba is tired of action flows PSW reset #{user}"
+        return if user.blank?
+
+        load_data('User' => user, 'password' => extra_data[:password],
                   'username' => user.username)
       end
     end
