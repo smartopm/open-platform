@@ -117,6 +117,7 @@ cypress:
     - schedules
 
 eslint:
+  extends: .base_db
   image: node:12-alpine
   script:
     - yarn lint
