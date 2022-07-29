@@ -16,7 +16,8 @@ export default function CardWrapper({
   displayButton,
   handleButton,
   menuItems,
-  cardStyles
+  cardStyles,
+  hasAccessToMenu
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -42,7 +43,7 @@ export default function CardWrapper({
         <Typography variant="h6" color="text.secondary" data-testid="card-title">
           {title}
         </Typography>
-        {menuItems?.length > 0 && (
+        {menuItems?.length > 0 && hasAccessToMenu &&(
           <>
             <IconButton
               aria-controls="long-menu"
@@ -97,7 +98,8 @@ CardWrapper.defaultProps = {
   title: '',
   buttonName: '',
   menuItems: [],
-  cardStyles: {}
+  cardStyles: {},
+  hasAccessToMenu: true
 };
 
 CardWrapper.propTypes = {
@@ -108,5 +110,6 @@ CardWrapper.propTypes = {
   handleButton: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   cardStyles: PropTypes.object,
-  menuItems: PropTypes.arrayOf(PropTypes.object)
+  menuItems: PropTypes.arrayOf(PropTypes.object),
+  hasAccessToMenu: PropTypes.bool
 };

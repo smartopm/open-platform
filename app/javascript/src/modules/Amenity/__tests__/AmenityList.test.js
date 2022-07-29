@@ -1,9 +1,11 @@
 import { MockedProvider } from '@apollo/react-testing';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import AmenityList from '../Components/AmenityList';
 import AmenitiesQuery from '../graphql/amenity_queries';
+import authState from '../../../__mocks__/authstate';
 
 describe('Amenity List', () => {
   it('should render the Amenity List', async () => {
@@ -36,11 +38,13 @@ describe('Amenity List', () => {
       }
     };
     const wrapper = render(
-      <MockedProvider mocks={[mock]} addTypename={false}>
-        <MockedThemeProvider>
-          <AmenityList />
-        </MockedThemeProvider>
-      </MockedProvider>
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[mock]} addTypename={false}>
+          <MockedThemeProvider>
+            <AmenityList />
+          </MockedThemeProvider>
+        </MockedProvider>
+      </Context.Provider>
     );
     expect(wrapper.queryByTestId('loader')).toBeInTheDocument();
     await waitFor(() => {

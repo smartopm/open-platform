@@ -16,7 +16,12 @@ describe('Amenity Item', () => {
     const handleEdit = jest.fn()
     const wrapper = render(
       <MockedThemeProvider>
-        <AmenityItem amenity={amenity} translate={jest.fn()} handleEditAmenity={handleEdit} />
+        <AmenityItem
+          amenity={amenity}
+          translate={jest.fn()}
+          handleEditAmenity={handleEdit}
+          hasAccessToMenu
+        />
       </MockedThemeProvider>
     );
     expect(wrapper.queryByTestId('amenity_description')).toBeInTheDocument();
