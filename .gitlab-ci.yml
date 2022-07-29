@@ -121,7 +121,7 @@ eslint:
   stage: test
   allow_failure: false
   script:
-    - yarn lint
+    - yarn lint --format ./ .
   artifacts:
     reports:
       codequality: gl-codequality.json
