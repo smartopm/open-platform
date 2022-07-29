@@ -125,7 +125,7 @@ To autofix
 
 #### ESLint for React linting
 
-`docker-compose run --rm rails eslint app/javascript/src
+`docker-compose run --rm rails eslint app/javascript/src`
 
 #### You can also add aliases
 if you are on a UNIX based OS, edit ~/.bashrc file and add these lines
