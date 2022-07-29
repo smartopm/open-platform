@@ -121,8 +121,6 @@ eslint:
   script:
     - yarn eslint --format ./app/javascript/src/**/*.{js,jsx} .
   artifacts:
-    reports:
-      codequality: gl-codequality.json
     paths:
       - 'coverage/'
     name: 'ESLint $CI_PIPELINE_ID Coverage Report'
