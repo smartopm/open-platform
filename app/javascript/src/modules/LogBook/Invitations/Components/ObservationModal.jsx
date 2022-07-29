@@ -13,7 +13,6 @@ export default function ObservationModal({
   onChange,
   status,
   handleCloseButton,
-  observationDetails,
   t,
   handleSaveObservation,
 }) {
