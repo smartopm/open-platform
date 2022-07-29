@@ -23,9 +23,9 @@ describe('Code Confirmation Screen', () => {
     await waitFor(() => {
       expect(wrapper.queryByTestId('arrow_back')).toBeInTheDocument();
       expect(wrapper.queryByTestId('community_logo')).toBeInTheDocument();
-      expect(wrapper.queryByTestId('otp_verification')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('screen_title')).toBeInTheDocument();
       expect(wrapper.queryByTestId('otp_code_input')).toBeInTheDocument();
-      expect(wrapper.queryByTestId('otp_verification').textContent).toContain('login.otp_verification');
+      expect(wrapper.queryByTestId('screen_title').textContent).toContain('login.otp_verification');
       expect(wrapper.queryByTestId('submit_btn')).toBeInTheDocument()
       expect(wrapper.queryByTestId('submit_btn')).toBeDisabled();
     });
