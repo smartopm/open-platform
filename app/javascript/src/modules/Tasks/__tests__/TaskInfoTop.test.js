@@ -31,6 +31,7 @@ const menuList = [
 const menuData = {
   menuList,
   handleTaskInfoMenu: jest.fn(),
+  handleUnsetReminder: jest.fn(),
   anchorEl: document.createElement("button"),
   open: false,
   handleClose: jest.fn()
@@ -436,8 +437,8 @@ describe('Top part of the task form component', () => {
     }, 10);
   });
 
-  it('does not render remind me later icon if not assigned', () => {
-    const unassignedUserProps = { ...props, isAssignee: jest.fn().mockResolvedValue(false) }
+  it('does not render remind me later icon if not assigned', async () => {
+    const unassignedUserProps = { ...props, isAssignee: () => false }
     render(
       <MockedProvider addTypename={false}>
         <Context.Provider value={authState}>
@@ -452,7 +453,7 @@ describe('Top part of the task form component', () => {
       </MockedProvider>
     );
 
-    expect(screen.queryByTestId('alarm')).toBeNull();
+    expect(screen.queryByTestId('set-reminder-button')).toBeNull();
   });
 
   it('renders sub task order field', () => {

@@ -2,39 +2,33 @@
 
 module Mutations
   module Note
-    # Set note reminder
-    class SetNoteReminder < BaseMutation
+    # Unset note reminder
+    class UnsetNoteReminder < BaseMutation
       argument :note_id, ID, required: true
-      argument :hour, Int, required: true
 
       field :note, Types::NoteType, null: false
 
-      # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
-      def resolve(note_id:, hour:)
+      def resolve(note_id:)
         user = context[:current_user]
         assigned_note = user.assignee_notes.find_by(note: note_id)
 
         # Reason: Admin is not an assignee
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless assigned_note
 
-        time = hour.send(:hour)
-
         ActiveRecord::Base.transaction do
-          assigned_note.reminder_time = time.from_now
+          assigned_note.reminder_time = nil
           unless assigned_note.save
             raise GraphQL::ExecutionError, assigned_note
               .errors.full_messages
           end
 
-          job = TaskReminderJob.set(wait: time).perform_later('manual', assigned_note)
-          TaskReminderUpdateJob.perform_later(assigned_note, job.provider_job_id)
+          TaskReminderRemoveJob.perform_later(assigned_note)
         end
 
         note = assigned_note.note
         { note: note }
       end
-      # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
       # Verifies if current user is admin or not.
