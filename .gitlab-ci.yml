@@ -119,7 +119,7 @@ cypress:
 eslint:
   image: node:14-alpine
   script:
-    - yarn eslint --format ./app/javascript/src/**/*.{js,jsx} .
+    - yarn lint
   artifacts:
     paths:
       - 'coverage/'
