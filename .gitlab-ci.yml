@@ -206,6 +206,13 @@ variables:
 dast:
   before_script:
     - echo "Execute a DAST scan against DEV environment - $DAST_WEBSITE"
-# code_quality:
-#   artifacts:
-#     paths: [gl-code-quality-report.json]
+
+code_quality:
+  artifacts:
+    paths: [gl-code-quality-report.json]
+  rules:
+    - if: $CODE_QUALITY_DISABLED
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # Run code quality job in merge request pipelines
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH # Run CQ job in pipelines on the default branch (not in other branch pipelines)
+    - if: $CI_COMMIT_TAG
