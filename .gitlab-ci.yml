@@ -118,7 +118,9 @@ cypress:
 
 eslint:
   extends: .base_db
-  image: node:12-alpine
+  stage: test
+  coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
+  allow_failure: false
   script:
     - yarn lint
   artifacts:
