@@ -116,6 +116,21 @@ cypress:
   except:
     - schedules
 
+eslint:
+  image: node:14-alpine
+  script:
+    - yarn eslint --format ./app/javascript/src/**/*.{js,jsx} .
+  artifacts:
+    reports:
+      codequality: gl-codequality.json
+    paths:
+      - 'coverage/'
+    name: 'ESLint $CI_PIPELINE_ID Coverage Report'
+    expire_in: 24 hours
+  except:
+    - tags
+    - schedules
+
 start_prod_push:
   extends: .base_db
   only:
