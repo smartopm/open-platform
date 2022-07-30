@@ -325,8 +325,8 @@ ActiveRecord::Schema.define(version: 2022_07_26_063601) do
     t.boolean "is_guest", default: false
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
-    t.datetime "revoked_at"
     t.uuid "guest_id"
+    t.datetime "revoked_at"
     t.integer "status", default: 0
     t.datetime "exited_at"
   end
@@ -519,9 +519,9 @@ ActiveRecord::Schema.define(version: 2022_07_26_063601) do
     t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.float "amount", default: 0.0
-    t.float "deal_size", default: 0.0
-    t.float "investment_target", default: 0.0
+    t.decimal "amount", precision: 11, scale: 2, default: "0.0"
+    t.decimal "deal_size", precision: 11, scale: 2, default: "0.0"
+    t.decimal "investment_target", precision: 11, scale: 2, default: "0.0"
     t.index ["community_id"], name: "index_lead_logs_on_community_id"
     t.index ["user_id"], name: "index_lead_logs_on_user_id"
   end
@@ -741,7 +741,7 @@ ActiveRecord::Schema.define(version: 2022_07_26_063601) do
   end
 
   create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "content"
+    t.text "content"
     t.integer "status", default: 0
     t.uuid "discussion_id", null: false
     t.uuid "user_id", null: false
@@ -928,7 +928,6 @@ ActiveRecord::Schema.define(version: 2022_07_26_063601) do
     t.uuid "latest_substatus_id"
     t.string "ext_ref_id"
     t.uuid "role_id", null: false
-    t.string "region"
     t.string "title"
     t.string "linkedin_url"
     t.string "company_name"
@@ -957,6 +956,7 @@ ActiveRecord::Schema.define(version: 2022_07_26_063601) do
     t.string "relevant_link"
     t.jsonb "contact_details"
     t.string "african_presence"
+    t.string "region"
     t.string "task_id"
     t.string "capex_amount"
     t.string "jobs_created"
@@ -971,7 +971,7 @@ ActiveRecord::Schema.define(version: 2022_07_26_063601) do
     t.string "encrypted_password"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.integer "sign_in_count"
+    t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
