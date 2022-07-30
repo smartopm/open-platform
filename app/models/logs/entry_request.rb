@@ -147,8 +147,7 @@ module Logs
       link = "https://#{HostEnv.base_url(user.community)}/feedback"
       Rails.logger.info "Phone number to send #{number}"
       # disabled rubocop to keep the structure of the message
-      Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: link),
-               user.community)
+      Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: link))
     end
 
     private

@@ -54,7 +54,7 @@ module Notifications
       new_message = "#{sender[:name]} from #{user.community.name} said: \n" if add_prefix
       new_message += message if message.present?
       new_message += "\n\n#{text} \n#{link}" if include_reply_link?
-      Sms.send(receiver_phone_number, new_message, user.community)
+      Sms.send(receiver_phone_number, new_message)
     end
     # rubocop:enable Metrics/AbcSize:
 

@@ -64,8 +64,7 @@ class TaskReminderJob < ApplicationJob
     due_date = note_assignee.note.due_date&.to_date.to_s
     task_link = "#{HostEnv.base_url(user.community)}/tasks/#{note_id}"
     Sms.send(number, I18n.t('general.task_reminder', due_date: due_date, task_link: task_link,
-                                                     community_name: user.community.name),
-             user.community)
+                                                     community_name: user.community.name))
   end
 
   def task_reminder_enabled(community)

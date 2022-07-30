@@ -51,7 +51,7 @@ module ActionFlows
       end
 
       def self.send_sms(phone_number, message, community)
-        ::Sms.send(phone_number, message, community)
+        ::Sms.send(phone_number, message)
       end
 
       def self.generate_url(user, task_id)

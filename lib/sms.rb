@@ -43,7 +43,8 @@ class Sms
         from: "whatsapp:+#{Rails.application.credentials.whatsapp_number}",
         body: message,
       )
-    rescue StandardError
+    rescue StandardError => e
+      Rollbar.error(e)
     end
   end
   # rubocop:enable Metrics/MethodLength

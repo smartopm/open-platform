@@ -162,7 +162,7 @@ class Community < ApplicationRecord
   def send_sms(message)
     sms_phone_numbers.each  do |sms_phone_number|
       Rails.logger.info "Sending #{sms_phone_number}"
-      Sms.send(sms_phone_number, message, self)
+      Sms.send(sms_phone_number, message)
     end
   end
 

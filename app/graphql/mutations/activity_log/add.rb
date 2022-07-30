@@ -46,8 +46,7 @@ module Mutations
         return if number.nil?
 
         # disabled rubocop to keep the structure of the message
-        Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: link),
-                 user.community)
+        Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: link))
       end
 
       # create an entry if it doesnt exit
