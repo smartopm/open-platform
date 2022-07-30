@@ -7,7 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { UpdateNote } from '../../../graphql/mutations';
-import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
+import { TaskReminderMutation, UnsetTaskReminderMutation } from '../graphql/task_reminder_mutation';
 import TaskUpdateList from './TaskUpdateList';
 import TaskComment from './TaskComment';
 import { dateToString, dateTimeToString } from '../../../components/DateContainer';
@@ -56,6 +56,7 @@ export default function TaskDetail({
   const [taskUpdate] = useMutation(UpdateNote);
   const [autoCompleteOpen, setOpen] = useState(false);
   const [setReminder] = useMutation(TaskReminderMutation);
+  const [unsetReminder] = useMutation(UnsetTaskReminderMutation);
   const [reminderTime, setReminderTime] = useState(null);
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
@@ -111,7 +112,8 @@ export default function TaskDetail({
     anchorEl,
     handleTaskInfoMenu,
     open: anchorElOpen,
-    handleClose
+    handleClose,
+    handleUnsetReminder: (e) => handleUnsetReminder(e),
   };
 
   function getMenuList() {
@@ -152,7 +154,7 @@ export default function TaskDetail({
       variables: {
         id: data.id,
         body: title,
-        dueDate: newDueDate || selectedDate,
+        dueDate: newDueDate,
         description,
         category: taskType,
         flagged: true,
@@ -200,6 +202,20 @@ export default function TaskDetail({
         setReminderTime(timeFormat(timeScheduled));
         showSnackbar({ type: messageType.success, message: t('task.update_successful') });
         refetch();
+      })
+      .catch(err => showSnackbar({ type: messageType.error, message: formatError(err.message) }));
+  }
+
+  function handleUnsetReminder(e){
+    e.stopPropagation()
+
+    unsetReminder({
+      variables: { noteId: data.id }
+    })
+      .then(() => {
+        setReminderTime(null);
+        refetch();
+        showSnackbar({ type: messageType.success, message: t('task.update_successful') });
       })
       .catch(err => showSnackbar({ type: messageType.error, message: formatError(err.message) }));
   }

@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import { Button, Grid, Chip, Typography, IconButton, useMediaQuery, MenuItem } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { makeStyles, useTheme } from '@mui/styles';
 import { useHistory } from 'react-router';
@@ -188,15 +189,27 @@ export default function TaskInfoTop({
                   </IconButton>
                 )}
                 {isAssignee() && (
-                  <IconButton
-                    edge="end"
-                    onClick={event => menuData.handleTaskInfoMenu(event)}
-                    data-testid="alarm"
-                    color="primary"
-                    size="large"
-                  >
-                    <AccessAlarmIcon />
-                  </IconButton>
+                  activeReminder ? (
+                    <IconButton
+                      edge="end"
+                      onClick={event => menuData.handleUnsetReminder(event)}
+                      data-testid="unset-reminder-button-mobile"
+                      color="primary"
+                      size="large"
+                    >
+                      <AlarmOffIcon />
+                    </IconButton>
+                  ) : (
+                    <IconButton
+                      edge="end"
+                      onClick={event => menuData.handleTaskInfoMenu(event)}
+                      data-testid="set-reminder-button-mobile"
+                      color="primary"
+                      size="large"
+                    >
+                      <AccessAlarmIcon />
+                    </IconButton>
+                  )
                 )}
               </Grid>
             </Grid>
@@ -255,15 +268,28 @@ export default function TaskInfoTop({
 
                   {isAssignee() && (
                     <Grid item md={4} xs={2} style={{ textAlign: 'right' }}>
-                      <IconButton
-                        edge="end"
-                        onClick={event => menuData.handleTaskInfoMenu(event)}
-                        data-testid="set-reminder-button"
-                        color="primary"
-                        size="large"
-                      >
-                        <AccessAlarmIcon />
-                      </IconButton>
+                      {activeReminder ? (
+                        <IconButton
+                          edge="end"
+                          onClick={event => menuData.handleUnsetReminder(event)}
+                          data-testid="unset-reminder-button"
+                          color="primary"
+                          size="large"
+                          aria-label="Unset Reminder"
+                        >
+                          <AlarmOffIcon />
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          edge="end"
+                          onClick={event => menuData.handleTaskInfoMenu(event)}
+                          data-testid="set-reminder-button"
+                          color="primary"
+                          size="large"
+                        >
+                          <AccessAlarmIcon />
+                        </IconButton>
+                      )}
                     </Grid>
                   )}
                   {!fromLeadPage && !location.pathname.match(/\bprocesses\b/) && (
@@ -602,12 +628,13 @@ const useStyles = makeStyles(theme => ({
     marginTop: '8px'
   },
   dueDateEnabled: {
-    border: 'solid 1px',
-    padding: '0 5px 0 5px',
+    outline: 'solid 1px #575757',
+    paddingLeft: '1px',
     borderRadius: '4px'
   },
   dueDateDisabled: {
-    padding: '0 5px 0 0'
+    outline: 'none',
+    paddingLeft: '1px',
   },
   orderNumberEnabled: {
     padding: '0 5px 0 5px',
@@ -662,6 +689,7 @@ TaskInfoTop.propTypes = {
   isAssignee: PropTypes.func.isRequired,
   menuData: PropTypes.shape({
     handleTaskInfoMenu: PropTypes.func.isRequired,
+    handleUnsetReminder: PropTypes.func.isRequired,
     open: PropTypes.bool,
     anchorEl: PropTypes.shape({
       getAttribute: PropTypes.func

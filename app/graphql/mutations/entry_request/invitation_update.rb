@@ -15,12 +15,13 @@ module Mutations
       field :success, GraphQL::Types::Boolean, null: true
 
       # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         invite = context[:current_user].invitees.find_by(id: vals[:invite_id])
         return if invite.nil?
 
         ActiveRecord::Base.transaction do
-          invite.update!(status: vals[:status])
+          invite.update!(status: vals[:status]) if vals[:status].present?
           entry_time = invite.entry_time
 
           if entry_time.present?
@@ -45,8 +46,9 @@ module Mutations
           visitable_type: 'Logs::Invite',
         )
       end
-
+      # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
+
       def authorized?(_vals)
         return true if permitted?(module: :entry_request, permission: :can_update_invitation)
 

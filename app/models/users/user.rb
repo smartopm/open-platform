@@ -645,10 +645,6 @@ module Users
       user_logins_today.length == 1
     end
 
-    def note_assigned?(note_id)
-      tasks.where(id: note_id).present?
-    end
-
     def wallet
       wallets.first.presence || wallets.create(balance: 0, pending_balance: 0)
     end
