@@ -31,6 +31,7 @@ module Mutations
           end
 
           send_email_notification(comment) if vals[:reply_required]
+          send_reply_to_whatsapp(vals[:note_id], vals[:body])
 
           comment.record_note_history(context[:current_user])
           { note_comment: comment }
@@ -49,6 +50,14 @@ module Mutations
           replied_at: Time.zone.now,
         )
       end
+
+      def send_reply_to_whatsapp(note_id, body)
+        task = context[:site_community].notes.find_by(id: note_id)
+        return unless task.present? || task.category == 'whatsapp'
+
+        Sms.send(task.author.phone_number, body, 'whatsapp')
+      end
+
 
       # rubocop:disable Layout/LineLength
       # rubocop:disable Metrics/MethodLength
