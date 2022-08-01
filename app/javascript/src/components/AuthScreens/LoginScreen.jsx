@@ -201,7 +201,7 @@ export default function LoginScreen() {
                 value={userLogin.phone}
                 containerStyle={{ width: "100%" }}
                 inputClass="phone-login-input"
-                inputStyle={{ width: "100%", height: "4em" }}
+                inputStyle={{ width: "100%", height: "3.5em" }}
                 country={extractCountry(communityData?.currentCommunity?.locale)}
                 enableSearch
                 placeholder={t('common:form_placeholders.phone_number')}
