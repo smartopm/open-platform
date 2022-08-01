@@ -18,7 +18,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import PhoneInput from 'react-phone-input-2';
-import { getAuthToken } from '../../utils/apollo';
+import { getAuthToken, AUTH_FORWARD_URL_KEY } from '../../utils/apollo';
 import GoogleIcon from '../../../../assets/images/google_icon.svg';
 import {
   loginPhoneMutation,
@@ -124,6 +124,14 @@ export default function LoginScreen() {
     return false;
   }
 
+  function handleOAuthLogin(url) {
+    if (history.location.search) {
+      sessionStorage.setItem(AUTH_FORWARD_URL_KEY, state.from.pathname);
+    }
+
+    window.location.assign(url);
+  }
+
   const isLoggingIn = phoneLoginLoading || emailLoginLoading || passwordLoginLoading;
   const isLoginBtnDisabled =
     (!userLogin.email && !userLogin.phone && !values.password && !values.username) ||
@@ -152,7 +160,13 @@ export default function LoginScreen() {
       )}
 
       <Container maxWidth="sm">
-        <Typography align="center">
+        <Typography
+          textAlign="center"
+          component="div"
+          marginBottom="-30px"
+          marginTop="20px"
+          variant="h6"
+        >
           {loading ? (
             <Spinner />
           ) : (
@@ -160,11 +174,12 @@ export default function LoginScreen() {
           )}
         </Typography>
         <Typography
+          component="div"
           color="textSecondary"
           variant="body2"
           data-testid="tagline"
           id="tagline"
-          align="center"
+          textAlign="center"
         >
           {communityData?.currentCommunity?.tagline}
         </Typography>
@@ -195,16 +210,19 @@ export default function LoginScreen() {
           </Grid>
           <Grid item xs={12}>
             <TextField
+              data-testid="username-field"
+              id="username-field"
               name="username"
               label={t('common:form_fields.username')}
-              value={values.username}
-              onChange={event => setValues({ username: event.target.value })}
+              value={values?.username || ''}
+              onChange={event => setValues({ ...values, username: event.target.value })}
               style={{ marginBottom: 14 }}
               variant="outlined"
               margin="dense"
               fullWidth
             />
             <PasswordInput
+              data-testid="password-field"
               label={t('common:form_fields.password')}
               type="password"
               passwordValue={values}
@@ -217,8 +235,9 @@ export default function LoginScreen() {
           </Grid>
           <Grid item xs={12}>
             <Button
-              href="/fb_oauth"
+              onClick={() => handleOAuthLogin('/fb_oauth')}
               variant="outlined"
+              data-testid="login-with-facebook-btn"
               startIcon={<FacebookIcon className={`${css(styles.socialLoginButtonIcons)}`} />}
               size="large"
               fullWidth
@@ -227,15 +246,16 @@ export default function LoginScreen() {
               {t('login.login_facebook')}
             </Button>
             <Button
-              href="/login_oauth"
+              onClick={() => handleOAuthLogin('/login_oauth')}
+              data-testid="login-with-google-btn"
               variant="outlined"
-              startIcon={(
+              startIcon={
                 <img
                   src={GoogleIcon}
                   alt="google-icon"
                   className={`${css(styles.socialLoginButtonIcons)}`}
                 />
-              )}
+              }
               className={`${css(styles.googleOAuthButton)} google-sign-in-btn`}
               size="large"
               fullWidth
