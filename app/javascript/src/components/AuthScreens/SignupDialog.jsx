@@ -23,8 +23,8 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
     email: '',
     interest: '',
     impact: '',
-  };
-  const [value, setValue] = useState(initialValues);
+  }
+  const [value, setValue] = useState(initialValues)
 
   const communityName = currentCommunity?.name || 'DoubleGDP';
   const communitySupportEmail =
@@ -55,7 +55,7 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
 
   /* eslint-disable security/detect-non-literal-fs-filename */
   function handleClick() {
-    const { username, email, phone, impact, interest } = value;
+    const { username, email, phone, impact, interest } = value
     // Google Analytics tracking
     ReactGA.event({
       category: 'LoginPage',
@@ -74,8 +74,8 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
   }
 
   useEffect(() => {
-    setValue(initialValues);
-  }, [open]);
+    setValue(initialValues)
+  }, [open])
 
   return (
     <ModalDialog
@@ -104,9 +104,11 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
           </Button>
         </div>
       </div>
-      <Divider>{t('common:misc:or')}</Divider>
+      <Divider>
+        {t('common:misc:or')}
+      </Divider>
       <br />
-      <Typography variant="h6" align="center">
+      <Typography variant="h6" align='center'>
         {t('login.request_login', { communityEmail: communitySupportEmail })}
       </Typography>
       <br />
@@ -117,7 +119,7 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
         name="username"
         value={value.username}
         label={t('common:form_fields.full_name')}
-        onChange={event => setValue({ ...value, username: event.target.value })}
+        onChange={event => setValue({...value, username: event.target.value})}
       />
 
       <TextField
@@ -129,7 +131,7 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
         name="email"
         value={value.email}
         label={t('common:form_fields.email')}
-        onChange={event => setValue({ ...value, email: event.target.value })}
+        onChange={event => setValue({...value, email: event.target.value})}
       />
       <TextField
         variant="outlined"
@@ -140,7 +142,7 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
         name="phone"
         value={value.phone}
         label={t('common:form_fields.phone_number')}
-        onChange={event => setValue({ ...value, phone: event.target.value })}
+        onChange={event => setValue({...value, phone: event.target.value})}
       />
       <FormControl className={css(styles.formControl)}>
         <InputLabel id="demo-simple-select-outlined-label">
@@ -151,7 +153,7 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
           id="demo-simple-select-outlined"
           data-testid="interest"
           value={value.interest}
-          onChange={event => setValue({ ...value, interest: event.target.value })}
+          onChange={event => setValue({...value, interest: event.target.value})}
           label="interest"
           required
         >
@@ -172,7 +174,7 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
           id="demo-simple-select-outlined"
           data-testid="impact"
           value={value.impact}
-          onChange={event => setValue({ ...value, impact: event.target.value })}
+          onChange={event => setValue({...value, impact: event.target.value})}
           label="impact"
           required
         >
@@ -190,9 +192,9 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
 SignupDialog.defaultProps = {
   currentCommunity: {
     name: '',
-    supportEmail: [],
-  },
-};
+    supportEmail: []
+  }
+}
 SignupDialog.propTypes = {
   t: PropTypes.func.isRequired,
   handleModal: PropTypes.func.isRequired,
