@@ -7,6 +7,7 @@ import {
   FormControl,
   MenuItem,
   InputLabel,
+  Typography,
 } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import ReactGA from 'react-ga';
@@ -107,7 +108,9 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
         {t('common:misc:or')}
       </Divider>
       <br />
-      <h6>{t('login.request_login', { communityEmail: communitySupportEmail })}</h6>
+      <Typography variant="h6" align='center'>
+        {t('login.request_login', { communityEmail: communitySupportEmail })}
+      </Typography>
       <br />
       <TextField
         variant="outlined"
