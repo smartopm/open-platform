@@ -14,7 +14,6 @@ import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
 import { ModalDialog } from '../Dialog';
 import GoogleIcon from '../../../../assets/images/google_icon.svg';
-import CenteredContent from '../../shared/CenteredContent';
 
 export default function SignupDialog({ t, handleModal, open, currentCommunity, setOpen }) {
   const [username, setUsername] = useState('');
@@ -95,13 +94,9 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
           </Button>
         </div>
       </div>
-
-      <CenteredContent>
-        <Divider>
-          {t('common:misc:or')}
-        </Divider>
-      </CenteredContent>
-
+      <Divider>
+        {t('common:misc:or')}
+      </Divider>
       <br />
       <h6>{t('login.request_login', { communityEmail: communitySupportEmail })}</h6>
       <br />
