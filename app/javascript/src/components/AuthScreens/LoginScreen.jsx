@@ -22,7 +22,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import PhoneInput from 'react-phone-input-2'
-import { getAuthToken } from '../../utils/apollo'
+import { AUTH_FORWARD_URL_KEY, getAuthToken } from '../../utils/apollo'
 import { ModalDialog } from '../Dialog'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
 import { loginPhoneMutation, loginEmailMutation } from '../../graphql/mutations'
@@ -108,6 +108,7 @@ export default function LoginScreen() {
         .then(() => {
           setIsLoading(false)
           setEmailLoginSet(true)
+          sessionStorage.setItem(AUTH_FORWARD_URL_KEY, state.from.pathname)
         })
         .catch(err => {
           setError(err.message.replace(/GraphQL error:/, ""))
@@ -159,6 +160,14 @@ export default function LoginScreen() {
         loginWithPhone()
       }
     }
+  }
+
+  function handleOAuthLogin(url){
+    if(history.location.search) {
+      sessionStorage.setItem(AUTH_FORWARD_URL_KEY, state.from.pathname)
+    }
+
+    window.location.href = url
   }
 
   return (
@@ -250,7 +259,7 @@ export default function LoginScreen() {
                       }}
               />
               <Button
-                href="/fb_oauth"
+                onClick={() => handleOAuthLogin('/fb_oauth')}
                 variant="outlined"
                 startIcon={<FacebookIcon className={`${css(styles.socialLoginButtonIcons )}`} />}
                 size="large"
@@ -260,7 +269,7 @@ export default function LoginScreen() {
                 {t('login.login_facebook')}
               </Button>
               <Button
-                href="/login_oauth"
+                onClick={() => handleOAuthLogin('/login_oauth')}
                 variant="outlined"
                 startIcon={<img src={GoogleIcon} alt="google-icon" className={`${css(styles.socialLoginButtonIcons )}`} />}
                 className={`${css(styles.googleOAuthButton )} google-sign-in-btn`}
@@ -321,7 +330,7 @@ export default function LoginScreen() {
         <div className="container">
           <div className="d-flex row justify-content-center ">
             <Button
-              href="/login_oauth"
+              onClick={() => handleOAuthLogin('/login_oauth')}
               style={{ backgroundColor: 'white', textTransform: 'none' }}
               variant="contained"
               startIcon={<img src={GoogleIcon} alt="google-icon" />}
@@ -329,7 +338,7 @@ export default function LoginScreen() {
               {t('login.login_google')}
             </Button>
             <Button
-              href="/fb_oauth"
+              onClick={() => handleOAuthLogin('/fb_oauth')}
               variant="contained"
               startIcon={<FacebookIcon />}
               className={css(styles.signUpBtns)}
