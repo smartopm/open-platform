@@ -207,5 +207,6 @@ dast:
 
 code_quality:
   artifacts:
-    paths: [gl-code-quality-report.json]
+    reports:
+      codequality: gl-code-quality-report.json
     expire_in: 24 hours
