@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   TextField,
@@ -16,12 +16,16 @@ import { ModalDialog } from '../Dialog';
 import GoogleIcon from '../../../../assets/images/google_icon.svg';
 
 export default function SignupDialog({ t, handleModal, open, currentCommunity, setOpen }) {
-  const [username, setUsername] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [interest, setInterest] = useState('');
-  const [impact, setImpact] = useState('');
-  const communityName = currentCommunity?.name || 'Double GDP';
+  const initialValues = {
+    username: '',
+    phone: '',
+    email: '',
+    interest: '',
+    impact: '',
+  }
+  const [value, setValue] = useState(initialValues)
+
+  const communityName = currentCommunity?.name || 'DoubleGDP';
   const communitySupportEmail =
     currentCommunity?.supportEmail?.find(({ category }) => category === 'customer_care')?.email ||
     'support@doublegdp.com';
@@ -50,6 +54,7 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
 
   /* eslint-disable security/detect-non-literal-fs-filename */
   function handleClick() {
+    const { username, email, phone, impact, interest } = value
     // Google Analytics tracking
     ReactGA.event({
       category: 'LoginPage',
@@ -66,6 +71,10 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
     );
     setOpen(!open);
   }
+
+  useEffect(() => {
+    setValue(initialValues)
+  }, [open])
 
   return (
     <ModalDialog
@@ -105,8 +114,9 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
         required
         fullWidth
         name="name"
+        value={value.username}
         label={t('common:form_fields.full_name')}
-        onChange={event => setUsername(event.target.value)}
+        onChange={event => setValue({...value, username: event.target.value})}
       />
 
       <TextField
@@ -116,8 +126,9 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
         required
         fullWidth
         name="email"
+        value={value.email}
         label={t('common:form_fields.email')}
-        onChange={event => setEmail(event.target.value)}
+        onChange={event => setValue({...value, email: event.target.value})}
       />
       <TextField
         variant="outlined"
@@ -126,8 +137,9 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
         required
         fullWidth
         name="number"
+        value={value.phone}
         label={t('common:form_fields.phone_number')}
-        onChange={event => setPhone(event.target.value)}
+        onChange={event => setValue({...value, phone: event.target.value})}
       />
       <FormControl className={css(styles.formControl)}>
         <InputLabel id="demo-simple-select-outlined-label">
@@ -137,14 +149,14 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
           labelId="demo-simple-select-outlined-label"
           id="demo-simple-select-outlined"
           data-testid="interest"
-          value={interest}
-          onChange={event => setInterest(event.target.value)}
+          value={value.interest}
+          onChange={event => setValue({...value, interest: event.target.value})}
           label="interest"
           required
         >
-          {AppLoginRequestSurvey.interest.responses.map(value => (
-            <MenuItem value={value} key={value}>
-              {value}
+          {AppLoginRequestSurvey.interest.responses.map(val => (
+            <MenuItem value={val} key={val}>
+              {val}
             </MenuItem>
           ))}
         </Select>
@@ -158,14 +170,14 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
           labelId="demo-simple-select-outlined-label"
           id="demo-simple-select-outlined"
           data-testid="impact"
-          value={impact}
-          onChange={event => setImpact(event.target.value)}
+          value={value.impact}
+          onChange={event => setValue({...value, impact: event.target.value})}
           label="impact"
           required
         >
-          {AppLoginRequestSurvey.impact.responses.map(value => (
-            <MenuItem value={value} key={value}>
-              {value}
+          {AppLoginRequestSurvey.impact.responses.map(val => (
+            <MenuItem value={val} key={val}>
+              {val}
             </MenuItem>
           ))}
         </Select>
