@@ -76,9 +76,7 @@ test:jest:
   coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
   allow_failure: false
   script:
-    - yarn lint
-    - >
-      yarn test -u --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
+    - yarn test -u --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
       --collectCoverageFrom='!app/javascript/src/components/Map/PointsOfInterestMarker.jsx'
       --collectCoverageFrom='!app/javascript/src/components/LandParcels/LandParcelEditCoordinate.jsx'
       --collectCoverageFrom='!app/javascript/src/components/Map/MapEditor.jsx'
