@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-import useTimer from '../../utils/customHooks'
 import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
 import { Spinner } from '../../shared/Loading'
 import ImageAuth from '../../shared/ImageAuth'
@@ -24,12 +23,11 @@ import CenteredContent from '../../shared/CenteredContent'
  * @returns HOC component for code / password confirmation screen
  */
 export default function CodeScreenWrapper({
-  isDisabled, loading, handleResend, handleConfirm, title, children
+  isDisabled, loading, handleConfirm, title, children
 }) {
   const authState = useContext(AuthStateContext)
   const { data: communityData, loading: communityLoading } = useQuery(CurrentCommunityQuery)
   const { state } = useLocation()
-  const timer = useTimer(10, 1000)
   const theme = useTheme();
   const { t } = useTranslation(['login', 'common']);
   const mobileMatches = useMediaQuery(theme.breakpoints.down('md'));
@@ -101,16 +99,6 @@ export default function CodeScreenWrapper({
             )}
           </Button>
         </div>
-
-        {/* {timer === 0 && isOtpScreen && (
-          <div
-            className={`row justify-content-center align-items-center ${css(styles.linksSection)}`}
-          >
-            <Button onClick={handleResend} disabled={loading}>
-              {loading ? `${t('common:misc.loading')} ...` : t('login.resend_code')}
-            </Button>
-          </div>
-        )} */}
       </div>
     </div>
   );
@@ -119,17 +107,13 @@ export default function CodeScreenWrapper({
 CodeScreenWrapper.defaultProps = {
   isDisabled: false,
   loading: false,
-  handleResend: () => {},
-  // code: '',
 };
 
 CodeScreenWrapper.propTypes = {
   children: PropTypes.node.isRequired,
   isDisabled: PropTypes.bool,
   loading: PropTypes.bool,
-  handleResend: PropTypes.func,
   handleConfirm: PropTypes.func.isRequired,
-  // code: PropTypes.string,
   title: PropTypes.string.isRequired,
 };
 

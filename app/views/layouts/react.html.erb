@@ -72,16 +72,16 @@
 
   <script>
     // to bypass the webpacker not finding the service worker, had to install it here
-    // if (navigator.serviceWorker) {
-    //   navigator.serviceWorker
-    //     .register("/service-worker.js", { scope: "./" })
-    //     .then(function (_reg) {
-    //       console.log("[Companion]", "Service worker registered!!!");
-    //     })
-    //     .catch(function(err) {
-    //       console.log(err)
-    //     })
-    // }
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker
+        .register("/service-worker.js", { scope: "./" })
+        .then(function (_reg) {
+          console.log("[Companion]", "Service worker registered!!!");
+        })
+        .catch(function(err) {
+          console.log(err)
+        })
+    }
 
     const installButton = document.getElementById("btn");
     const closeButton = document.getElementById('closeBtn')
