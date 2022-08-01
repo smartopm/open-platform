@@ -2,7 +2,7 @@ import React, {
   useState,
   useContext,
 } from 'react'
-import { Box, TextField } from '@mui/material'
+import { Box, Button, TextField } from '@mui/material'
 import { useLocation } from 'react-router-dom'
 import { useMutation } from 'react-apollo'
 import { useTranslation } from 'react-i18next'
@@ -13,6 +13,7 @@ import { Context as AuthStateContext } from '../../containers/Provider/AuthState
 import { ifNotTest } from '../../utils/helpers';
 import CodeScreenWrapper from './CodeScreenWrapper'
 import CenteredContent from '../../shared/CenteredContent'
+import useTimer from '../../utils/customHooks'
 
 export default function ConfirmCodeScreen({ match }) {
   const authState = useContext(AuthStateContext)
@@ -25,6 +26,7 @@ export default function ConfirmCodeScreen({ match }) {
   const { state } = useLocation()
   const { t } = useTranslation(['login', 'common'])
   const [otpCode, setOtpCode] = useState('')
+  const timer = useTimer(10, 1000)
   const classes = useStyles();
 
   function resendCode() {
@@ -65,7 +67,7 @@ export default function ConfirmCodeScreen({ match }) {
   return (
     <CodeScreenWrapper
       title={t('login.otp_verification')}
-      isOtpScreen
+      isDisabled={isLoading || (otpCode?.length < 6)}
       loading={isLoading}
       handleResend={resendCode}
       handleConfirm={handleConfirmCode}
@@ -95,6 +97,19 @@ export default function ConfirmCodeScreen({ match }) {
           {msg && <p className="text-center text-primary">{msg}</p>}
         </div>
       </CenteredContent>
+      {/* show a button to re-send code, if otp screen */}
+      {timer === 0 && (
+      <div
+        className="row justify-content-center align-items-center"
+      >
+        <Button onClick={resendCode} disabled={isLoading}>
+          {isLoading ? `${t('common:misc.loading')} ...` : t('login.resend_code')}
+        </Button>
+      </div>
+        )}
+
+      <CenteredContent />
+
     </CodeScreenWrapper>
   );
 }
@@ -106,5 +121,8 @@ ConfirmCodeScreen.propTypes = {
 const useStyles = makeStyles(() => ({
   helperText: {
     textAlign: 'center',
+  },
+  linksSection: {
+    marginTop: 20,
   },
 }));

@@ -24,7 +24,7 @@ import CenteredContent from '../../shared/CenteredContent'
  * @returns HOC component for code / password confirmation screen
  */
 export default function CodeScreenWrapper({
-  isOtpScreen, loading, handleResend, handleConfirm, code, title, children
+  isDisabled, loading, handleResend, handleConfirm, title, children
 }) {
   const authState = useContext(AuthStateContext)
   const { data: communityData, loading: communityLoading } = useQuery(CurrentCommunityQuery)
@@ -89,10 +89,10 @@ export default function CodeScreenWrapper({
             variant="contained"
             className={`${css(styles.getStartedButton)}`}
             onClick={handleConfirm}
-            disabled={loading || (isOtpScreen && code?.length < 6)}
+            disabled={isDisabled}
             color="primary"
             data-testid="submit_btn"
-            endIcon={loading ? '' : <ArrowForwardIcon />}
+            endIcon={!loading && <ArrowForwardIcon />}
           >
             {loading ? (
               <CircularProgress size={25} color="primary" />
@@ -102,8 +102,7 @@ export default function CodeScreenWrapper({
           </Button>
         </div>
 
-        {/* show a button to re-send code, if otp screen */}
-        {timer === 0 && isOtpScreen && (
+        {/* {timer === 0 && isOtpScreen && (
           <div
             className={`row justify-content-center align-items-center ${css(styles.linksSection)}`}
           >
@@ -111,26 +110,26 @@ export default function CodeScreenWrapper({
               {loading ? `${t('common:misc.loading')} ...` : t('login.resend_code')}
             </Button>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
 }
 
 CodeScreenWrapper.defaultProps = {
-  isOtpScreen: false,
+  isDisabled: false,
   loading: false,
   handleResend: () => {},
-  code: '',
+  // code: '',
 };
 
 CodeScreenWrapper.propTypes = {
   children: PropTypes.node.isRequired,
-  isOtpScreen: PropTypes.bool,
+  isDisabled: PropTypes.bool,
   loading: PropTypes.bool,
   handleResend: PropTypes.func,
   handleConfirm: PropTypes.func.isRequired,
-  code: PropTypes.string,
+  // code: PropTypes.string,
   title: PropTypes.string.isRequired,
 };
 
