@@ -48,17 +48,18 @@ export default function LoginScreen() {
   });
 
   const communityName = communityData?.currentCommunity?.name || 'DoubleGDP';
-  const [
-    loginWithUsernamePassword,
-    passwordLoginLoading,
-  ] = useMutationWrapper(loginUsernamePasswordMutation, data => console.log(data));
-  const [loginWithEmail, emailLoginLoading] = useMutationWrapper(loginEmailMutation, () =>
-    setEmailLoginSet(true)
-  );
+  const [loginWithUsernamePassword, passwordLoginLoading] = useMutationWrapper(
+    loginUsernamePasswordMutation,
+    (data) => console.log(data),
+  )
+  const [loginWithEmail, emailLoginLoading] = useMutationWrapper(
+    loginEmailMutation,
+    () => setEmailLoginSet(true),
+  )
   const [loginWithPhone, phoneLoginLoading] = useMutationWrapper(
     loginPhoneMutation,
     routeToConfirmCode
-  );
+  )
 
   function routeToConfirmCode(data) {
     history.push({
@@ -67,7 +68,7 @@ export default function LoginScreen() {
         phoneNumber: userLogin.phone,
         from: `${!state ? '/' : state.from.pathname}`,
       },
-    });
+    })
   }
 
   useEffect(() => {
@@ -102,7 +103,7 @@ export default function LoginScreen() {
         });
       }
     }
-    return false;
+    return false
   }
 
   const isLoggingIn = phoneLoginLoading || emailLoginLoading || passwordLoginLoading;
@@ -210,13 +211,13 @@ export default function LoginScreen() {
             <Button
               href="/login_oauth"
               variant="outlined"
-              startIcon={
+              startIcon={(
                 <img
                   src={GoogleIcon}
                   alt="google-icon"
                   className={`${css(styles.socialLoginButtonIcons)}`}
                 />
-              }
+              )}
               className={`${css(styles.googleOAuthButton)} google-sign-in-btn`}
               size="large"
               fullWidth
