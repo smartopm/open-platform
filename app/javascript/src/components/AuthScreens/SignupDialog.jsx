@@ -189,12 +189,20 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
   );
 }
 
+SignupDialog.defaultProps = {
+  currentCommunity: {
+    name: '',
+    supportEmail: []
+  }
+}
 SignupDialog.propTypes = {
   t: PropTypes.func.isRequired,
   handleModal: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  currentCommunity: PropTypes.object.isRequired,
+  currentCommunity: PropTypes.shape({
+    name: PropTypes.string,
+    supportEmail: PropTypes.arrayOf(PropTypes.object),
+  }),
   setOpen: PropTypes.func.isRequired,
 };
 
