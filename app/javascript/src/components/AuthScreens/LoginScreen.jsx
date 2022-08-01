@@ -166,8 +166,8 @@ export default function LoginScreen() {
     if(history.location.search) {
       sessionStorage.setItem(AUTH_FORWARD_URL_KEY, state.from.pathname)
     }
-
-    window.location.href = url
+    
+    window.location.assign(url)
   }
 
   return (
@@ -265,6 +265,7 @@ export default function LoginScreen() {
                 size="large"
                 fullWidth
                 className={`${css(styles.facebookOAuthButton )}`}
+                data-testid="login-with-facebook-btn"
               >
                 {t('login.login_facebook')}
               </Button>
@@ -275,6 +276,7 @@ export default function LoginScreen() {
                 className={`${css(styles.googleOAuthButton )} google-sign-in-btn`}
                 size="large"
                 fullWidth
+                data-testid="login-with-google-btn"
               >
                 {t('login.login_google')}
               </Button>
