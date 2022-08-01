@@ -40,13 +40,21 @@ namespace :db do
           role_modules.each do |role_module|
             next unless valid_modules.include?(role_module)
 
+            # get current permissions from yml, could be nil, this is an issue,
+            # if you remove a module or remove all module permissions
             role_permissions = community_permissions.dig(role.name, role_module, 'permissions')
-            next unless role_permissions
-
+            # incase role_permissions is nil and the db has data, it never updates
             permission = Permission.find_by(role: role, module: role_module)
-            if permission
+            if permission && !permission.permissions.nil?
+              puts 'updating existing permissions'
               permission.update!(permissions: role_permissions)
+            elsif permission&.permissions.nil? && role_permissions.nil?
+              puts 'removing dangling permissions'
+              permission&.destroy
             else
+              next if role_permissions.nil?
+
+              puts 'adding a new permissions'
               Permission.create!(role: role, module: role_module, permissions: role_permissions)
             end
           end
