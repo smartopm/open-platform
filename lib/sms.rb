@@ -19,7 +19,7 @@ class Sms
   # rubocop:disable Lint/SuppressedException
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
-  def self.send(to, message, _community)
+  def self.send(to, message, community)
     raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
 
     return if Rails.env.test?
@@ -40,7 +40,7 @@ class Sms
       client.sms.send(from: config[:from], to: to, text: message)
       twilio_client.messages.create(
         to: "whatsapp:+#{to}",
-        from: "whatsapp:+#{Rails.application.credentials.whatsapp_number}",
+        from: "whatsapp:+#{from(community)}",
         body: message,
       )
     rescue StandardError
@@ -65,5 +65,11 @@ class Sms
   # Ex '+260 971501212' => '260971501212'
   def self.clean_number(phone_number)
     phone_number.gsub(/[^0-9]/, '')
+  end
+
+  def self.from(community)
+    community.support_whatsapp&.map do |data|
+      data['whatsapp'] if data['category'].eql?('communication')
+    end&.first
   end
 end
