@@ -75,7 +75,6 @@ RSpec.describe Users::User, type: :model do
     it { is_expected.to have_db_column(:investment_timeline).of_type(:string) }
     it { is_expected.to have_db_column(:decision_timeline).of_type(:string) }
     it { is_expected.to have_db_column(:username).of_type(:string) }
-    it { is_expected.to have_db_column(:sign_in_count).of_type(:integer) }
   end
 
   describe 'associations' do
@@ -798,6 +797,37 @@ RSpec.describe Users::User, type: :model do
     it 'returns a whatsapp task' do
       expect(user.whatsapp_task.body).to eql 'This is another note'
       expect(another_user.whatsapp_task).to be_nil
+    end
+  end
+
+  describe '#password reset on first time login' do
+    context 'when new password does not match old one' do
+      let(:lead_role) { create(:role, name: 'lead') }
+      let!(:user) do
+        create(:user_with_community,
+               user_type: 'lead',
+               lead_status: 'Signed MOU',
+               role: lead_role)
+      end
+
+      it 'reset is successful' do
+        expect(user.reset_password_on_first_time_login('Blah1234-password')).to_not be nil
+      end
+    end
+
+    context 'when new password matches old one' do
+      before { allow(SecureRandom).to receive(:alphanumeric).and_return('12abcd1234') }
+      let(:lead_role) { create(:role, name: 'lead') }
+      let!(:user) do
+        create(:user_with_community,
+               user_type: 'lead',
+               lead_status: 'Signed MOU',
+               role: lead_role)
+      end
+
+      it 'reset is not successful' do
+        expect(user.reset_password_on_first_time_login('12abcd1234')).to be nil
+      end
     end
   end
 end

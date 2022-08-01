@@ -290,8 +290,12 @@ module Users
       ActionFlowJob.perform_later(eventlog, { password: password })
     end
 
-    # def reset_password_on_first_time_login
-    # end
+    def reset_password_on_first_time_login(new_password)
+      return nil if self.class.authenticate(username, new_password)
+
+      update!(password: new_password)
+      self
+    end
 
     def site_manager?
       SITE_MANAGERS.include?(user_type)
