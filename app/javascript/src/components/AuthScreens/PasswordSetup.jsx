@@ -1,7 +1,7 @@
 import { Container, Grid } from '@mui/material';
 import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Redirect, useLocation, useParams } from 'react-router-dom';
 import CodeScreenWrapper from './CodeScreenWrapper';
 import PasswordInput from '../../shared/PasswordInput';
 import PasswordCheck from '../../shared/PasswordCheck';
@@ -12,6 +12,7 @@ import { Context as AuthStateContext } from '../../containers/Provider/AuthState
 
 export default function PasswordSetup() {
   const { t } = useTranslation(['login', 'common']);
+  const { state } = useLocation();
   const [passwordValue, setPasswordValue] = useState({
     password: '',
     confirmedPassword: '',
@@ -44,7 +45,9 @@ export default function PasswordSetup() {
       token: data?.resetPasswordAfterLogin?.authToken,
     });
   }
-
+  if (!state.firstTimeLogin) {
+    return <Redirect to="/login" />;
+  }
   return (
     <CodeScreenWrapper
       title={t('login.setup_password')}
