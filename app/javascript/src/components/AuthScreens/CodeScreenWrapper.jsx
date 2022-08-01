@@ -1,18 +1,24 @@
-import React, {
-  useContext,
-} from 'react'
-import { Box, Button, CircularProgress, Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
-import { StyleSheet, css } from 'aphrodite'
-import { Link, useLocation, Redirect } from 'react-router-dom'
-import {  useQuery } from 'react-apollo'
+import React, { useContext } from 'react';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import { StyleSheet, css } from 'aphrodite';
+import { Link, useLocation, Redirect } from 'react-router-dom';
+import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useTranslation } from 'react-i18next';
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
-import { Spinner } from '../../shared/Loading'
-import ImageAuth from '../../shared/ImageAuth'
-import CenteredContent from '../../shared/CenteredContent'
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
+import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query';
+import { Spinner } from '../../shared/Loading';
+import ImageAuth from '../../shared/ImageAuth';
+import CenteredContent from '../../shared/CenteredContent';
 
 /**
  * @param {Boolean} loading - (optional) for rendering loader spinner
@@ -21,19 +27,17 @@ import CenteredContent from '../../shared/CenteredContent'
  * @param {String} title - (optional) a string representing the current OTP code / password
  * @returns HOC component for code / password confirmation screen
  */
-export default function CodeScreenWrapper({
-  isDisabled, loading, handleConfirm, title, children
-}) {
-  const authState = useContext(AuthStateContext)
-  const { data: communityData, loading: communityLoading } = useQuery(CurrentCommunityQuery)
-  const { state } = useLocation()
+export default function CodeScreenWrapper({ isDisabled, loading, handleConfirm, title, children }) {
+  const authState = useContext(AuthStateContext);
+  const { data: communityData, loading: communityLoading } = useQuery(CurrentCommunityQuery);
+  const { state } = useLocation();
   const theme = useTheme();
   const { t } = useTranslation(['login', 'common']);
   const mobileMatches = useMediaQuery(theme.breakpoints.down('md'));
 
   // Redirect once our authState.setToken does it's job
   if (authState.loggedIn) {
-    return <Redirect to={state ? state.from : '/'} /> // state.from
+    return <Redirect to={state ? state.from : '/'} />; // state.from
   }
 
   const displayLogo = communityData?.currentCommunity?.imageUrl ? (
@@ -133,5 +137,5 @@ const styles = StyleSheet.create({
   },
   logo: {
     height: 50,
-  }
+  },
 });
