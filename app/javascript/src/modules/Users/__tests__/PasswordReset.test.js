@@ -31,7 +31,7 @@ describe('user merge component', () => {
         variables: {
           userId: '1',
           username: 'Yoram',
-          password: 'a889a98b-0123-4456-b89a-b1825459775b',
+          password: 'a889a98b-0123-445',
         },
       },
       result: {

@@ -25,9 +25,9 @@ export default function PasswordRest({ openModal, setOpenModal, data }) {
       : data?.user?.name.replace(' ', '').concat(
           Math.random()
             .toString(36)
-            .slice(2, 7)
+            .slice(2, 5)
         );
-  const password = QbUtils.uuid();
+  const password = QbUtils.uuid().slice(0, 17);
   function handlePasswordReset() {
     setOpenModal(false);
     setLoading(true);
@@ -85,10 +85,10 @@ export default function PasswordRest({ openModal, setOpenModal, data }) {
           <Typography gutterBottom>{t('common:misc.reset_disclaimer')}</Typography>
           <Typography gutterBottom>{t('common:misc.copy_credentials')}</Typography>
           <br />
-          <Typography variant="subtitle2" gutterBottom>
+          <Typography variant="subtitle2" gutterBottom align="center">
             {t('users.username', { username })}
           </Typography>
-          <Typography variant="subtitle2" gutterBottom>
+          <Typography variant="subtitle2" gutterBottom align="center">
             {t('users.password', { password })}
           </Typography>
         </DialogContent>
