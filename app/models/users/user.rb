@@ -157,7 +157,6 @@ module Users
     has_many :posts, class_name: 'Discussions::Post', dependent: :destroy
 
     before_validation :add_default_state_type_and_role
-    # after_create :log_user_create_event
     after_create :add_notification_preference
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
     after_update :update_associated_request_details, if: -> { user_details_updated? }
@@ -285,15 +284,14 @@ module Users
       username = name.split.join << SecureRandom.alphanumeric
       # will trigger the action flow job manually to avoid leaking user password to
       # the user create event log
-      # Logs::EventLog.skip_callback(:commit, :after, :execute_action_flows)
       update!(password: password, username: username)
       eventlog = generate_events('user_create', self)
       # trigger sending email with username and password
-      # if eventlog.persisted?
       ActionFlowJob.perform_later(eventlog, { password: password })
-      # end
-      # Logs::EventLog.set_callback(:commit, :after, :execute_action_flows)
     end
+
+    # def reset_password_on_first_time_login
+    # end
 
     def site_manager?
       SITE_MANAGERS.include?(user_type)
@@ -372,10 +370,6 @@ module Users
       entry_request_object.revoke!(self)
       entry_request_object
     end
-
-    # def log_user_create_event
-    #   generate_events('user_create', self)
-    # end
 
     def generate_events(event_tag, target_obj, data = {})
       Logs::EventLog.create!(acting_user_id: id,

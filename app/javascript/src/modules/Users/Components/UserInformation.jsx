@@ -60,9 +60,6 @@ export default function UserInformation({
   const [selectedKey, setSelectKey] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const userType = authState.user.userType.toLowerCase();
-  // const [resetPassword] = useMutation(ResetUserPasswordUserMutation);
-  // const [loading, setLoading] = useState(false);
-  // const { showSnackbar, messageType } = useContext(SnackbarContext);
   const [openModal, setOpenModal] = useState(false);
   const options = selectOptions(
     setSelectKey,
@@ -212,7 +209,7 @@ export default function UserInformation({
           </Dialog>
 
           <PasswordRest openModal={openModal} setOpenModal={setOpenModal} data={data} />
-          
+
           {isLabelOpen && (
             <Container maxWidth="md">
               <UserLabels
