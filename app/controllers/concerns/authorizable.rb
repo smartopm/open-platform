@@ -21,12 +21,12 @@ module Authorizable
 
   def current_community
     domains = ['dgdp.site', 'rails']
-    @current_community = Community.find_by(name: 'DoubleGDP')
-    # @current_community ||= if domains.include?(request.domain) && request.subdomain != 'dev'
-    #                        else
-    #                          dom = "#{request.subdomain}.#{request.domain}"
-    #                          Community.where('? = ANY(domains)', dom).first
-    #                        end
+    @current_community ||= if domains.include?(request.domain) && request.subdomain != 'dev'
+                             Community.find_by(name: 'DoubleGDP')
+                           else
+                             dom = "#{request.subdomain}.#{request.domain}"
+                             Community.where('? = ANY(domains)', dom).first
+                           end
   end
 
   # For now we can assume that each user is just a member of one community
