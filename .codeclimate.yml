@@ -12,6 +12,7 @@ plugins:
         - jsx
   eslint:
     enabled: true
+    channel: __ESLINT_CHANNEL__
     config:
       config: '.eslintrc.json'
       extensions:
