@@ -94,12 +94,12 @@ export default function PasswordRest({ openModal, setOpenModal, data }) {
               width: '100%',
             }}
           >
-            <div style={{ width: mobile ? '80%' : '50%' }}>
+            <div style={{ width: mobile ? '80%' : '50%', textAlign: 'center' }}>
               <Typography variant="subtitle2" gutterBottom>
                 {t('users.username', { username })}
               </Typography>
             </div>
-            <div style={{ width: mobile ? '80%' : '50%' }}>
+            <div style={{ width: mobile ? '80%' : '50%', textAlign: 'center' }}>
               <Typography variant="subtitle2" gutterBottom>
                 {t('users.password', { password })}
               </Typography>
