@@ -455,7 +455,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 <PhoneInput
                   key={index}
                   value={metaData.phone_number || ''}
-                  inputStyle={{ width: '100%' }}
+                  inputStyle={{ width: '100%', height: '3.5em' }}
                   enableSearch
                   inputProps={{
                     name: 'phoneNumber',

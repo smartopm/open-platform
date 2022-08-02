@@ -474,7 +474,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           <div className="form-group">
             <PhoneInput
               value={formData.phoneNumber || ''}
-              inputStyle={{ height: '3.96em', width: '100%' }}
+              inputStyle={{ height: '3.5em', width: '100%' }}
               country={extractCountry(authState.user.community?.locale)}
               placeholder={t('form_placeholders.phone_number')}
               onChange={number => setFormData({ ...formData, phoneNumber: number })}

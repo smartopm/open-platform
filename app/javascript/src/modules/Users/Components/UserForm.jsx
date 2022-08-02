@@ -351,7 +351,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
           </label>
           <PhoneInput
             value={data.phoneNumber || ''}
-            inputStyle={{ width: '100%', height: '4em' }}
+            inputStyle={{ width: '100%', height: '3.5em' }}
             enableSearch
             inputProps={{
               name: 'phoneNumber',

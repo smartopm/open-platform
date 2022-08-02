@@ -40,7 +40,7 @@ class Sms
       client.sms.send(from: config[:from], to: to, text: message) unless type.eql?('whatasapp')
       twilio_client.messages.create(
         to: "whatsapp:+#{to}",
-        from: "whatsapp:+#{Rails.application.credentials.whatsapp_number}",
+        from: "whatsapp:+#{from(community)}",
         body: message,
       )
     rescue StandardError => e
@@ -66,5 +66,11 @@ class Sms
   # Ex '+260 971501212' => '260971501212'
   def self.clean_number(phone_number)
     phone_number.gsub(/[^0-9]/, '')
+  end
+
+  def self.from(community)
+    community.support_whatsapp&.map do |data|
+      data['whatsapp'] if data['category'].eql?('communication')
+    end&.first
   end
 end

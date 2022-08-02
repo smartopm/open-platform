@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor,  fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
@@ -20,12 +20,14 @@ describe('LeadEvents Page', () => {
     }
   };
 
+  const handleEditClick = jest.fn()
+
   it('LeadEvents component', async () => {
     render(
       <Context.Provider value={authState}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <LeadEvent leadEvent={leadEvent} />
+            <LeadEvent leadEvent={leadEvent} handleEditClick={handleEditClick} />
           </MockedThemeProvider>
         </BrowserRouter>
       </Context.Provider>
@@ -37,6 +39,9 @@ describe('LeadEvents Page', () => {
       expect(screen.queryByTestId('event-created-by')).toBeInTheDocument();
       expect(screen.queryByText('Tilisi run')).toBeInTheDocument();
       expect(screen.queryByText('2022-02-26')).toBeInTheDocument();
+
+      fireEvent.click(screen.queryByTestId('edit_click'));
+      expect(handleEditClick).toBeCalled();
     });
   });
 });

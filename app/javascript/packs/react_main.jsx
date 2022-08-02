@@ -29,7 +29,7 @@ import MobileMoney from '../src/components/MobileMoney';
 import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
 import ErrorPage from '../src/components/Error';
 import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback';
-import { AUTH_TOKEN_KEY } from '../src/utils/apollo';
+import { AUTH_TOKEN_KEY, AUTH_FORWARD_URL_KEY } from '../src/utils/apollo';
 import Feedback from '../src/containers/Activity/Feedback';
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
@@ -87,7 +87,8 @@ const LoggedInOnly = props => {
     <Redirect
       to={{
         pathname: '/login',
-        state: { from: props.location }
+        state: { from: props.location },
+        search: `?next=${props.location.pathname}`
       }}
     />
   );
@@ -107,6 +108,7 @@ const AdminRoutes = props => {
 
 const Logout = () => {
   localStorage.removeItem(AUTH_TOKEN_KEY);
+  sessionStorage.removeItem(AUTH_FORWARD_URL_KEY)
   const authState = useContext(AuthStateContext);
   authState.setToken({ action: 'delete' });
   return <Redirect to="/login" />;
@@ -174,7 +176,7 @@ const App = () => {
                       {/* onboarding */}
                       <Switch>
                         <Route path="/welcome" component={WelcomePage} />
-                        <Route path="/login" component={LoginScreen} />
+                        <Route path="/login/:next?" component={LoginScreen} />
                         <Route path="/code/:id" component={ConfirmCodeScreen} />
                         <Route
                           path="/l/:id/:code/:type?/:requestId?"

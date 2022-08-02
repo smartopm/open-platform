@@ -412,6 +412,7 @@ es:
       not_found: Parcela de tierra no encontrada
       poi_record_not_found: Registro de Poi no encontrado
     lead_log:
+      cannot_edit: No se pueden actualizar los detalles
       empty_deal_details: Los detalles de la oferta no pueden estar vacíos
       invalid_log_type: Tipo de registro no válido
       not_found: Registro de Clientes Potenciales no encontrado

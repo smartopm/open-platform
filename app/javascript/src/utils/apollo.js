@@ -19,6 +19,7 @@ export const createCache = () => {
 }
 
 export const AUTH_TOKEN_KEY = 'dgdp_auth_token'
+export const AUTH_FORWARD_URL_KEY = 'dgdp_auth_forward_url'
 
 // getToken from meta tags
 export const getAuthToken = () => window.localStorage.getItem(AUTH_TOKEN_KEY)

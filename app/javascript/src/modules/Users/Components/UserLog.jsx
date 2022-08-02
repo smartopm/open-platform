@@ -2,6 +2,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 import React from "react"
+import { useTranslation } from 'react-i18next';
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 import PageWrapper from "../../../shared/PageWrapper";
 
@@ -14,6 +15,7 @@ export default function UserLog({
     offset,
     limit
   }) {
+    const { t } = useTranslation('common')
     function routeToAction(eventLog) {
       if (eventLog.refType === "Logs::EntryRequest") {
         return router.push(`/request/${eventLog.refId}`);
@@ -45,7 +47,7 @@ export default function UserLog({
     }
 
     return (
-      <PageWrapper>
+      <PageWrapper pageTitle={t('menu.user_logs')}>
         <div className="col-10 col-sm-10 col-md-12 table-responsive">
           <table className="table">
             <thead>
