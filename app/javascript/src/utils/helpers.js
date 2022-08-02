@@ -750,3 +750,51 @@ export function downloadCommentFile(comment, fileId) {
 export function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+
+/**
+ * check the validity of the password and return appropriate message
+ * @param {string} value
+ * @param {string} value2
+ * @returns
+ */
+export function passwordChecks(value, value2, translate) {
+  const minLength = 10;
+  const definitions = {
+    minLength: {
+      valid: value.length >= minLength,
+      message: translate('password_checks.ten_characters')
+    },
+    specialChar: {
+      valid: /[-+_!@#$%^&*.,?]/g.test(value),
+      message: translate('password_checks.no_special_character')
+    },
+    number: {
+      valid: /\d/g.test(value),
+      message: translate('password_checks.contains_number')
+    },
+    uppercase: {
+      valid: /(?=.*[a-z])/g.test(value),
+      message: translate('password_checks.contains_uppercase')
+    },
+    lowercase: {
+      valid: /(?=.*[A-Z])/g.test(value),
+      message: translate('password_checks.contains_lowercase')
+    },
+    match: {
+      valid: value.length > 1 && value === value2,
+      message: translate('password_checks.password_match')
+    },
+    noSpaces: {
+      valid: /^[^ ]+$/.test(value),
+      message: translate('password_checks.contains_no_spaces')
+    }
+  };
+  const rules = Object.keys(definitions)
+  const allRulesChecked = rules.every(rule => objectAccessor(definitions, rule).valid)
+  return {
+    rules,
+    definitions,
+    verified: allRulesChecked
+  };
+}

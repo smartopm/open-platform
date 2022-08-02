@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CodeScreenWrapper from './CodeScreenWrapper';
 import PasswordInput from '../../shared/PasswordInput';
+import PasswordCheck from '../../shared/PasswordCheck';
+import { passwordChecks } from '../../utils/helpers';
 
 export default function PasswordSetup() {
   const { t } = useTranslation(['login', 'common']);
@@ -11,12 +13,17 @@ export default function PasswordSetup() {
     confirmedPassword: '',
     showPassword: false,
   });
+  const { verified, rules, definitions } = passwordChecks(
+    passwordValue.password,
+    passwordValue.confirmedPassword,
+    t
+  );
 
   function handleConfirmCode() {}
   return (
     <CodeScreenWrapper
       title={t('login.setup_password')}
-      isDisabled={false}
+      isDisabled={!verified}
       loading={false}
       handleConfirm={handleConfirmCode}
     >
@@ -37,6 +44,9 @@ export default function PasswordSetup() {
             setPasswordValue={setPasswordValue}
           />
         </Grid>
+        <br />
+        <br />
+        <PasswordCheck checks={{ rules, definitions }} />
       </Container>
     </CodeScreenWrapper>
   );

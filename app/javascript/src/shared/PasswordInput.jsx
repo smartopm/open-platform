@@ -43,6 +43,6 @@ PasswordInput.propTypes = {
   setPasswordValue: PropTypes.func.isRequired,
   passwordValue: PropTypes.shape({
     showPassword: PropTypes.bool,
-    password: PropTypes.bool,
+    password: PropTypes.string,
   }).isRequired,
 };
