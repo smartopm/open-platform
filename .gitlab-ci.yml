@@ -117,13 +117,13 @@ cypress:
 
 eslint:
   extends: .base_db
-  stage: quality
+  stage: test
   allow_failure: false
   script:
     - yarn lint
   artifacts:
     reports:
-      codequality: gl-codequality-report.json
+      codequality: gl-code-quality-report.json
   except:
     - tags
     - schedules
