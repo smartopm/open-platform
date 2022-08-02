@@ -206,6 +206,8 @@ dast:
     - echo "Execute a DAST scan against DEV environment - $DAST_WEBSITE"
 
 code_quality:
+  variables:
+    SOURCE_CODE: app/javascript/src/**/*.{js,jsx}
   artifacts:
     reports:
       codequality: gl-code-quality-report.json
