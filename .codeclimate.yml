@@ -49,3 +49,4 @@ exclude_patterns:
   - tmp/
   - vendor/
   - coverage/
+  - "babel.config.js"
