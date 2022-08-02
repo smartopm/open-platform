@@ -18,9 +18,7 @@ export default function PasswordCheck({ checks }) {
       <Stack direction="row" alignItems="center" gap={1} key={rule}>
         {valid ? <CheckIcon data-testid="valid_icon" /> : <CloseIcon data-testid="invalid_icon" />}
         <Box sx={{ color: valid ? 'primary.main' : 'error.main' }}>
-          <Typography>
-            {message}
-          </Typography>
+          <Typography>{message}</Typography>
         </Box>
       </Stack>
     );
