@@ -1,0 +1,51 @@
+version: '2'
+plugins:
+  csslint:
+    enabled: false
+  coffeelint:
+    enabled: false
+  duplication:
+    enabled: true
+    config:
+      languages:
+        - javascript
+        - jsx
+  eslint:
+    enabled: true
+    channel: __ESLINT_CHANNEL__
+  fixme:
+    enabled: false
+  rubocop:
+    enabled: false
+exclude_patterns:
+  - 'app/assets/'
+  - 'app/channels/'
+  - 'app/controllers/'
+  - 'app/graphql/'
+  - 'app/helpers/'
+  - 'app/jobs/'
+  - 'app/mailers/'
+  - 'app/models/'
+  - 'app/policies/'
+  - 'app/views/'
+  - 'app/javascript/channels'
+  - 'app/javascript/builds'
+  - 'app/javascript/packs'
+  - 'app/javascript/themes'
+  - 'app/javascript/application.js'
+  - config/
+  - certs/
+  - bin/
+  - cypress/
+  - db/
+  - docker/
+  - lib/
+  - log/
+  - public/
+  - spec/
+  - node_modules/
+  - script/
+  - storage/
+  - tmp/
+  - vendor/
+  - coverage/
