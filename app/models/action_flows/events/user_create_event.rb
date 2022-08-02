@@ -25,7 +25,7 @@ module ActionFlows
         user = event_log.ref_type.constantize.find_by(id: event_log.ref_id)
         # removing the lead condition as going forward they will be
         # created as qualified leads and they should be able to login
-        return if user.blank?
+        return if user.blank? || user&.user_type.eql?('lead')
 
         load_data({ 'User' => user },
                   'password' => extra_data[:password],

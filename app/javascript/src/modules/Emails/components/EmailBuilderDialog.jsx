@@ -29,7 +29,7 @@ export default function EmailBuilderDialog() {
   const [detailsOpen, setOpenDetails] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '', loading: false });
   const { t } = useTranslation(['email', 'common']);
-  // const defaultLanguage = localStorage.getItem('default-language');
+  const defaultLanguage = localStorage.getItem('default-language');
   const authState = useContext(Context);
   const { emailId } = useParams();
   const history = useHistory();
@@ -99,7 +99,7 @@ export default function EmailBuilderDialog() {
     unlayer.init({
       id: 'email-editor-container',
       displayMode: 'web',
-      locale: authState.user?.community.locale,
+      locale: defaultLanguage || authState.user?.community.locale,
     });
   }
 

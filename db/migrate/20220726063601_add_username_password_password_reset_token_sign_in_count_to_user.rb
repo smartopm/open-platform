@@ -6,5 +6,6 @@ class AddUsernamePasswordPasswordResetTokenSignInCountToUser < ActiveRecord::Mig
     ## Recoverable
     add_column :users, :reset_password_token, :string, null: true
     add_column :users, :reset_password_sent_at, :datetime, null: true
+    add_index :users, [:username, :community_id], unique: true
   end
 end

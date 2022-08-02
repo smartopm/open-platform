@@ -976,6 +976,7 @@ ActiveRecord::Schema.define(version: 2022_07_26_063601) do
     t.index ["role_id"], name: "index_users_on_role_id"
     t.index ["sub_status"], name: "index_users_on_sub_status"
     t.index ["uid", "provider", "community_id"], name: "index_users_on_uid_and_provider_and_community_id", unique: true
+    t.index ["username", "community_id"], name: "index_users_on_username_and_community_id", unique: true
   end
 
   create_table "valuations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
