@@ -13,6 +13,7 @@
     "otp_verification": "OTP Verification",
     "enter_code": "Enter Verification Code",
     "verification_code_helper": "The verification code has been sent to your phone.",
-    "continue_button_text": "Continue"
+    "continue_button_text": "Continue",
+    "setup_password": "Set Password"
   }
 }

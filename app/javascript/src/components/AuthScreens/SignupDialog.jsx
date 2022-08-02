@@ -116,7 +116,7 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
         variant="outlined"
         required
         fullWidth
-        name="name"
+        name="username"
         value={value.username}
         label={t('common:form_fields.full_name')}
         onChange={event => setValue({...value, username: event.target.value})}
@@ -139,7 +139,7 @@ export default function SignupDialog({ t, handleModal, open, currentCommunity, s
         type="number"
         required
         fullWidth
-        name="number"
+        name="phone"
         value={value.phone}
         label={t('common:form_fields.phone_number')}
         onChange={event => setValue({...value, phone: event.target.value})}

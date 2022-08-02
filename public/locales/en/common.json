@@ -8,6 +8,7 @@
     "full_name": "Full Name",
     "username": "Username",
     "password": "Password",
+    "confirm_password": "Confirm Password",
     "friends_full_name": "Enter Friend's Full Name",
     "full_first_name": "First Name",
     "account_name": "Account Name",
