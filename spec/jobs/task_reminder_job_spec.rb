@@ -85,8 +85,7 @@ RSpec.describe TaskReminderJob, type: :job do
       expect(Sms).to receive(:send).with(
         admin.phone_number, I18n.t('general.task_reminder', due_date: due_date,
                                                             task_link: task_link,
-                                                            community_name: user.community.name),
-        user.community
+                                                            community_name: user.community.name)
       )
       perform_enqueued_jobs { described_class.perform_later('automated') }
     end

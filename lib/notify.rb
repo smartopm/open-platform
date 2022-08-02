@@ -5,7 +5,7 @@ class Notify
   class << self
     def call(user, args = {})
       send_email(user.email, args[:template], args[:template_data])
-      send_sms(user.phone_number, args[:sms_body], args[:community])
+      send_sms(user.phone_number, args[:sms_body])
     end
 
     private
@@ -20,7 +20,7 @@ class Notify
       )
     end
 
-    def send_sms(phone_number, sms_body, _community)
+    def send_sms(phone_number, sms_body)
       return if phone_number.blank? || sms_body.blank?
 
       Sms.send(phone_number, sms_body)

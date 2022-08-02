@@ -116,7 +116,6 @@ RSpec.describe Logs::EntryRequest, type: :model do
       expect(Sms).to receive(:send).with(
         '+2347084123467',
         "Thank you for using our app, kindly use this link to give us feedback #{feedback_link}",
-        user.community,
       )
       entry_request.send_feedback_link('+2347084123467')
     end

@@ -34,7 +34,7 @@ module ActionFlows
         url = "https://#{HostEnv.base_url(community)}"
         send_sms(phone_number, I18n.t('welcome_sms',
                                       community: community.name,
-                                      url: url), community)
+                                      url: url))
       end
 
       def self.send_sms_on_task_assign(data, hash)
@@ -44,13 +44,11 @@ module ActionFlows
         author_msg = generate_message(data, assign_user)
         assignee_msg = generate_assignee_msg(data, assign_user)
 
-        unless assign_user.phone_number.nil?
-          send_sms(assign_user.phone_number, author_msg, assign_user.community)
-        end
-        send_sms(hash[:phone_number], assignee_msg, assign_user.community)
+        send_sms(assign_user.phone_number, author_msg) unless assign_user.phone_number.nil?
+        send_sms(hash[:phone_number], assignee_msg)
       end
 
-      def self.send_sms(phone_number, message, _community)
+      def self.send_sms(phone_number, message)
         ::Sms.send(phone_number, message)
       end
 
