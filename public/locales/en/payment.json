@@ -51,7 +51,7 @@
     "make_payment_details": "You are about to make a payment with following details",
     "renewable": "Renewable",
     "total_amount_paid": "Total Amount Paid By Date",
-    "payment_cancelled": "Payment Plan successfully canceled",
+    "payment_plan_cancelled": "Payment Plan successfully canceled",
     "payment_day": "Payment Day",
     "payment_plan_updated": "Payment Plan successfully updated",
     "payment_successful": "Your Payment was successful",
@@ -88,7 +88,8 @@
     "payment_due_date": "Next Payment Due: {{date}}",
     "installment_amount": "Installment Amount: {{amount}}",
     "payment_transferred_successfully": "Payment transferred successfully",
-    "pay_for_item": "Pay For this item"
+    "pay_for_item": "Pay For this item",
+    "payment_cancelled": "Payment has been cancelled!"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",

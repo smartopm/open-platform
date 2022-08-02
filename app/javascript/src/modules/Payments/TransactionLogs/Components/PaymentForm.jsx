@@ -1,5 +1,6 @@
 import { Button, InputAdornment, TextField } from '@mui/material';
 import React, { useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { useMutation } from 'react-apollo';
@@ -7,15 +8,16 @@ import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import CenteredContent from '../../../../shared/CenteredContent';
 import PageWrapper from '../../../../shared/PageWrapper';
 import { currencies } from '../../../../utils/constants';
-import { extractCurrency, formatError, objectAccessor } from '../../../../utils/helpers';
-import { TransactionLogCreateMutation } from '../graphql/transaction_logs_mutation';
-import flutterwaveConfig, { closeFlutterwaveModal } from '../utils';
+import { extractCurrency, formatError, objectAccessor, useParamsQuery } from '../../../../utils/helpers';
+import { TransactionInitiateMutation, TransactionVerifyMutation } from '../graphql/transaction_logs_mutation';
 import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function PaymentForm() {
+  const urlParams = useParamsQuery('')
   const { t } = useTranslation(['common', 'task', 'payment']);
   const authState = useContext(Context);
-  const [createTransactionLog] = useMutation(TransactionLogCreateMutation);
+  const [initiateTransaction] = useMutation(TransactionInitiateMutation);
+  const [verifyTransaction] = useMutation(TransactionVerifyMutation);
   const initialInputValue = {
     invoiceNumber: '',
     amount: '',
@@ -30,41 +32,57 @@ export default function PaymentForm() {
   const communityCurrency = objectAccessor(currencies, authState.user.community.currency);
   const currencyData = { locale: authState.user.community.locale, currency: communityCurrency };
   const currency = extractCurrency(currencyData);
-  const { config } = flutterwaveConfig(authState, inputValue, t);
+  const history = useHistory();
+  const status = urlParams.get('status')
+  const transactionRef = urlParams.get('tx_ref')
+  const transactionId = urlParams.get('transaction_id')  
+  const [verification, setVerification] = useState(true)
+  const parameters = status || transactionRef || transactionId
+
+  if(verification && parameters) {
+    setVerification(false);
+    verifyTransaction({
+      variables: {
+        transactionRef,
+        transactionId
+      }
+    })
+    .then(() => {
+      showMessage();
+      history.push('pay')
+    })
+    .catch((err) => {
+      showSnackbar({ type: messageType.error, message: formatError(err.message) });
+    })
+  }
+
+  function showMessage() {
+    if(status === 'successful'){
+      showSnackbar({ type: messageType.success, message: t('payment:misc.payment_successful') });
+    }
+    else{
+      showSnackbar({ type: messageType.error, message: t('payment:misc.payment_cancelled') });
+    }
+  }
 
   function handlePayment(event) {
     event.preventDefault();
     setHasSubmitted(true);
-    window.FlutterwaveCheckout({
-      ...config,
-      callback: response => {
-        verifyTransaction(response);
-      },
-      onClose: () => setHasSubmitted(false),
-    });
-  }
 
-  function verifyTransaction(response) {
-    createTransactionLog({
+    initiateTransaction({
       variables: {
-        paidAmount: response.amount,
         amount: parseFloat(inputValue.amount),
-        currency: response.currency,
         invoiceNumber: inputValue.invoiceNumber,
-        transactionId: `${response.transaction_id}`,
-        transactionRef: `${response.tx_ref}`,
-        description: inputValue.description,
-        accountName: inputValue.accountName,
-      },
+        description: inputValue.description
+      }
     })
-      .then(() => {
-        showSnackbar({ type: messageType.success, message: t('payment:misc.payment_successful') });
-        setInputValue(initialInputValue);
+      .then(({data}) => {
+        setHasSubmitted(false)
+        const paymentLink = data?.transactionInitiate?.paymentLink
+        window.location.replace(paymentLink);
       })
-      .catch(error => showSnackbar({ type: messageType.error, message: formatError(error.message) }))
-      .finally(() => {
-        setHasSubmitted(false);
-        closeFlutterwaveModal();
+      .catch(err => {
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
@@ -102,6 +120,9 @@ export default function PaymentForm() {
           value={inputValue.amount}
           onChange={event => setInputValue({ ...inputValue, amount: event.target.value })}
           InputProps={{
+            inputProps: {
+              min: 1
+            },
             startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
             'data-testid': 'amount',
           }}
