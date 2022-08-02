@@ -773,13 +773,13 @@ export function passwordChecks(value, value2, translate) {
       valid: /\d/g.test(value),
       message: translate('password_checks.contains_number')
     },
-    uppercase: {
-      valid: /(?=.*[a-z])/g.test(value),
-      message: translate('password_checks.contains_uppercase')
-    },
     lowercase: {
-      valid: /(?=.*[A-Z])/g.test(value),
+      valid: /(?=.*[a-z])/g.test(value),
       message: translate('password_checks.contains_lowercase')
+    },
+    uppercase: {
+      valid: /(?=.*[A-Z])/g.test(value),
+      message: translate('password_checks.contains_uppercase')
     },
     match: {
       valid: value.length > 1 && value === value2,
