@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Button from '@mui/material/Button';
-import { Dialog, DialogTitle, DialogContent, Box, IconButton } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, Box, IconButton, useMediaQuery } from '@mui/material';
 import { Utils as QbUtils } from 'react-awesome-query-builder';
 import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
@@ -15,6 +15,7 @@ import { SnackbarContext } from '../../../shared/snackbar/Context';
 export default function PasswordRest({ openModal, setOpenModal, data }) {
   const { showSnackbar, messageType } = useContext(SnackbarContext);
   const [resetPassword] = useMutation(ResetUserPasswordUserMutation);
+  const mobile = useMediaQuery('(max-width:800px)');
 
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation(['users', 'common']);
@@ -85,12 +86,25 @@ export default function PasswordRest({ openModal, setOpenModal, data }) {
           <Typography gutterBottom>{t('common:misc.reset_disclaimer')}</Typography>
           <Typography gutterBottom>{t('common:misc.copy_credentials')}</Typography>
           <br />
-          <Typography variant="subtitle2" gutterBottom align="center">
-            {t('users.username', { username })}
-          </Typography>
-          <Typography variant="subtitle2" gutterBottom align="center">
-            {t('users.password', { password })}
-          </Typography>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
+            <div style={{ width: mobile ? '80%' : '50%' }}>
+              <Typography variant="subtitle2" gutterBottom>
+                {t('users.username', { username })}
+              </Typography>
+            </div>
+            <div style={{ width: mobile ? '80%' : '50%' }}>
+              <Typography variant="subtitle2" gutterBottom>
+                {t('users.password', { password })}
+              </Typography>
+            </div>
+          </div>
         </DialogContent>
 
         <Box textAlign="center">
