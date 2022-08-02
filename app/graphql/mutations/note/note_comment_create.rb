@@ -58,7 +58,6 @@ module Mutations
         Sms.send(task.author.phone_number, body, 'whatsapp')
       end
 
-
       # rubocop:disable Layout/LineLength
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize

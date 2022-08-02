@@ -16,10 +16,9 @@ class Sms
     yield config
   end
 
-  # rubocop:disable Lint/SuppressedException
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
-  def self.send(to, message, type="sms")
+  def self.send(to, message, type = 'sms')
     raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
 
     return if Rails.env.test?
@@ -47,10 +46,9 @@ class Sms
       Rollbar.error(e)
     end
   end
+
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Lint/SuppressedException
-
   def self.send_from(to, from, message)
     raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
 

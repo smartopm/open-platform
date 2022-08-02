@@ -20,7 +20,7 @@ class Notify
       )
     end
 
-    def send_sms(phone_number, sms_body, community)
+    def send_sms(phone_number, sms_body, _community)
       return if phone_number.blank? || sms_body.blank?
 
       Sms.send(phone_number, sms_body)

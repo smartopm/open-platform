@@ -50,7 +50,7 @@ module ActionFlows
         send_sms(hash[:phone_number], assignee_msg, assign_user.community)
       end
 
-      def self.send_sms(phone_number, message, community)
+      def self.send_sms(phone_number, message, _community)
         ::Sms.send(phone_number, message)
       end
 
