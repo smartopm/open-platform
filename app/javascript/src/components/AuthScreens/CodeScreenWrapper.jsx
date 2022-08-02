@@ -15,11 +15,10 @@ import ImageAuth from '../../shared/ImageAuth'
 import CenteredContent from '../../shared/CenteredContent'
 
 /**
- * @param {Boolean} isOtpScreen - (optional) if set, show the OTP code resend button
  * @param {Boolean} loading - (optional) for rendering loader spinner
  * @param {Function} handleResend - (optional) function to handle resend of OTP code
  * @param {Function} handleConfirm - (required) function to handle resend of OTP code
- * @param {String} code - (optional) a string representing the current OTP code / password
+ * @param {String} title - (optional) a string representing the current OTP code / password
  * @returns HOC component for code / password confirmation screen
  */
 export default function CodeScreenWrapper({
