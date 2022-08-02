@@ -115,7 +115,6 @@ cypress:
     - schedules
 
 eslint:
-  extends: .base_db
   stage: test
   allow_failure: false
   script:
@@ -126,6 +125,10 @@ eslint:
   except:
     - tags
     - schedules
+  before_script:
+    - curl -o- -L https://yarnpkg.com/install.sh | bash
+    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+    - yarn install
 
 start_prod_push:
   extends: .base_db
