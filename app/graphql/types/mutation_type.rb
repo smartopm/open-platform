@@ -32,6 +32,7 @@ module Types
     field :login_switch_user, mutation: Mutations::Login::LoginSwitchUser
     field :login_email, mutation: Mutations::Login::LoginEmail
     field :login_public_user, mutation: Mutations::Login::LoginPublicUser
+    field :login_username_password, mutation: Mutations::Login::LoginUsernamePassword
 
     # Notes
     field :note_create, mutation: Mutations::Note::NoteCreate

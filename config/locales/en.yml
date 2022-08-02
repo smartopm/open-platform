@@ -371,6 +371,8 @@ en:
       found_blank: Phone number cannot be blank
     email:
       found_blank: Email cannot be blank
+    authentication:
+      wrong_credentials: Wrong username or password
     plan_payment:
       not_found: Payment not found
       cannot_transfer_cancelled_payment: Transfer of cancelled payment cannot be done
