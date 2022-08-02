@@ -194,7 +194,7 @@ module Users
     }
     validate :phone_number_valid?
     validate :public_user?
-    validates :username, uniqueness: { scope: :community_id, allow_nil: true,}
+    validates :username, uniqueness: { scope: :community_id, allow_nil: true }
 
     devise :omniauthable, :database_authenticatable, :recoverable,
            omniauth_providers: %i[google_oauth2 facebook]
