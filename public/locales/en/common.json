@@ -322,8 +322,8 @@
     "logs": "Logs",
     "download_csv": "Download CSV",
     "edit_entry": "Edit Entry",
-    "lead_log_successful": "Lead log succesfully updated"
-
+    "lead_log_successful": "Lead log succesfully updated",
+    "process_detail_page": "Project Detail"
   },
   "menu": {
     "invoice": "Invoice",
