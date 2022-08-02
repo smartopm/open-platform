@@ -298,6 +298,16 @@ export const loginEmailMutation = gql`
   }
 `;
 
+export const loginUsernamePasswordMutation = gql`
+  mutation loginUsernamePassword($username: String!, $password: String!) {
+    loginUsernamePassword(username: $username, password: $password) {
+      user {
+        id
+      }
+    }
+  }
+`;
+
 export const loginPhoneConfirmCode = gql`
   mutation loginPhoneComplete($id: ID!, $token: String!) {
     loginPhoneComplete(id: $id, token: $token) {
