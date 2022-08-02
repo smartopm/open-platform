@@ -17,13 +17,6 @@
     "setup_password": "Set Password"
   },
   "password_checks": {
-    "ten_characters": "Must be 10 characters long.",
-    "contains_number": "Must contain a number.",
-    "contains_lowercase": "Must contain one lowercase.",
-    "contains_uppercase": "Must contain one uppercase.",
-    "no_special_character": "Must contain special characters.",
-    "password_match": "Passwords must match.",
-    "contains_no_spaces": "Must not contain spaces."
     "ten_characters": "Must be 10 characters long",
     "contains_number": "Must contain a number",
     "contains_lowercase": "Must contain one lowercase",
