@@ -60,6 +60,36 @@ describe('Login Screen', () => {
             supportEmail: [{email: 'support@test.com', category: 'customer_care'}],
             supportWhatsapp: [{email: 'support@test.com', category: 'customer_care'}],
             supportNumber: [{email: 'support@test.com', category: 'customer_care'}],
+            socialLinks: [{ social_link: 'www.facebook.com', category: 'facebook' }],
+            leadMonthlyTargets: [{ division: 'China', target: '20' }],
+            menuItems: [
+              {
+                menu_link: 'http://some-link.com',
+                menu_name: 'Custom Menu',
+                display_on: ['Menu'],
+                roles: ['admin']
+              }
+            ],
+            templates: {},
+            subAdministrator: {
+              id: '1234',
+              name: 'Test sub admin name'
+            },
+            bankingDetails: {
+              bankName: 'Test bank name',
+              accountName: 'Thebe',
+              accountNo: '1234',
+              branch: 'Test branch',
+              swiftCode: '032',
+              sortCode: '456',
+              address: '11, Nalikwanda Rd,',
+              city: 'Lusaka',
+              country: '',
+              taxIdNo: ''
+            },
+            smsPhoneNumbers: ['+254724821901', '+254723456789'],
+            emergencyCallNumber: '+94848584844',
+            gaId: '',
             currency: 'kwacha',
             locale: 'en-ZM',
             tagline: 'This is a tagline for this community',
