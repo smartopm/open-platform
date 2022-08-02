@@ -12,7 +12,6 @@ include:
   - template: Dependency-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
   - template: DAST.gitlab-ci.yml
-  # - template: Code-Quality.gitlab-ci.yml
 
 semgrep-sast:
   variables:
@@ -204,9 +203,3 @@ variables:
 dast:
   before_script:
     - echo "Execute a DAST scan against DEV environment - $DAST_WEBSITE"
-
-# code_quality:
-#   artifacts:
-#     reports:
-#       codequality: gl-code-quality-report.json
-#     expire_in: 24 hours
