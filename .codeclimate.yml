@@ -13,6 +13,11 @@ plugins:
   eslint:
     enabled: true
     channel: __ESLINT_CHANNEL__
+    config:
+      config: '.eslintrc.json'
+      extensions:
+        - .js
+        - .jsx
   fixme:
     enabled: false
   rubocop:
@@ -49,4 +54,5 @@ exclude_patterns:
   - tmp/
   - vendor/
   - coverage/
-  - "babel.config.js"
+  - 'babel.config.js'
+  - '**/*.test.js'
