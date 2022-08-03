@@ -46,7 +46,7 @@ export function HomeGuard({ translate }) {
   const { data, loading, error } = useQuery(SecurityGuards);
   const [loginSwitchUser] = useMutation(switchGuards);
   const [switchError, setSwitchError] = useState(null);
-  const largerScreens = useMediaQuery('(min-width:1200px)');
+  const largerScreens = useMediaQuery('(min-width:960px)');
   const isMobile = useMediaQuery('(max-width:800px)');
 
   function inputToSearch() {
@@ -93,7 +93,7 @@ export function HomeGuard({ translate }) {
             <br />
             {hideGuardSwitching ? null : (
               <div>
-                <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
+                <div className="d-flex flex-row flex-wrap justify-content-center mb-5">
                   <Avatar user={authState.user} />
                   <br />
                   <br />
@@ -106,44 +106,43 @@ export function HomeGuard({ translate }) {
                     justifyContent: 'center',
                   }}
                 >
-                  <Grid item sm={6} md={3} xs={12}>
-                    <Grid container style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                      <Grid item md={6} xs={6}>
-                        <input
-                          className={`form-control ${css(styles.input)}`}
-                          onFocus={inputToSearch}
-                          type="text"
-                          placeholder="Search"
-                        />
-                      </Grid>
-                      <Grid item md={6} xs={6}>
-                        <SearchIcon
-                          style={{
-                            marginLeft: isMobile ? '-85' : largerScreens ? '-215' : '-55',
-                            marginTop: 60,
-                            zIndex: 9,
-                          }}
-                          color="#999"
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item sm={6} md={3} xs={6}>
-                    <FormControl
-                      variant="filled"
+                  <Grid
+                    item
+                    md={3}
+                    xs={6}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-start',
+                      mt: 5,
+                    }}
+                  >
+                    <input
+                      className={`${css(styles.input)}`}
+                      onFocus={inputToSearch}
+                      type="text"
+                      placeholder="Search"
+                    />
+                    <SearchIcon
                       style={{
-                        color: '#FFFFFF',
+                        marginLeft: '10px',
+                        zIndex: 9,
                       }}
-                    >
-                      <span className={`${css(styles.switchAccount)}`}>Switch account</span>
-                      <br />
-
+                      color="#999"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={3}
+                    xs={6}
+                    sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '30px' }}
+                  >
+                    <FormControl variant="filled">
                       <Select
                         id="demo-simple-select-outlined"
                         value={id}
                         onChange={handleChange}
                         style={{
-                          width: 180,
+                          width: isMobile ? 140 : 170,
                           backgroundColor: '#FFFFFF',
                           color: '#000000',
                         }}
@@ -167,19 +166,28 @@ export function HomeGuard({ translate }) {
                     </FormControl>
                   </Grid>
 
-                  <Grid item sm={6} md={3} xs={6}>
+                  <Grid
+                    item
+                    md={3}
+                    xs={6}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: largerScreens ? 'center' : 'flex-start',
+                      mt: 5,
+                    }}
+                  >
                     <Link to="/scan">
                       <img
                         src={ScanIcon}
                         alt="scan icon"
                         className={` ${css(styles.scanIcon)}`}
                         style={{
-                          marginLeft: isMobile ? 50 : 150,
+                          margin: '15px auto',
                         }}
                       />
                     </Link>
                   </Grid>
-                  <Grid item sm={6} md={3} xs={12}>
+                  <Grid item md={3} xs={6} sx={{ marginTop: '5px' }}>
                     <LanguageToggle />
                   </Grid>
                 </Grid>
@@ -273,11 +281,9 @@ const styles = StyleSheet.create({
     position: 'relative'
   },
   input: {
-    padding: '0.5em 1em 0.5em 2em',
-    height: 50,
+    width: '50%',
+    maxWidth: '75%',
     color: '#222',
-    marginLeft: -20,
-    marginTop: 45,
     border: 'none',
     borderRadius: '5px',
     backgroundImage: 'none',
@@ -287,12 +293,7 @@ const styles = StyleSheet.create({
     }
   },
   scanIcon: {
-    marginTop: 45,
     width: 20
-  },
-  switchAccount: {
-    textDecoration: 'none',
-    marginLeft: 5
   },
   cardSize: {
     width: 200,
