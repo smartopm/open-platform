@@ -21,16 +21,17 @@ import {  validateGuest } from '../helpers';
 import useGuests from '../hooks/useGuests';
 import PageWrapper from '../../../../shared/PageWrapper';
 import { SnackbarContext } from '../../../../shared/snackbar/Context';
+import { formatTimeZone } from '../../../../utils/dateutil'
 
-export default function GuestInviteForm({inviteDetails, onUpdate, close, update}) {
+export default function GuestInviteForm({inviteDetails, onUpdate, close, update, timeZone}) {
   const initialData = { firstName: '', lastName: '', companyName: '', phoneNumber: null, isAdded: false };
   const history = useHistory();
   const [guestData, setGuestData] = useState({
-    visitationDate: inviteDetails?.visitationDate,
-    startsAt: inviteDetails?.startsAt,
-    endsAt: inviteDetails?.endsAt,
-    occursOn: inviteDetails?.occursOn,
-    visitEndDate: inviteDetails?.visitEndDate,
+    visitationDate: formatTimeZone(inviteDetails?.visitationDate, timeZone),
+    startsAt: formatTimeZone(inviteDetails?.startsAt, timeZone),
+    endsAt: formatTimeZone(inviteDetails?.endsAt, timeZone),
+    occursOn: formatTimeZone(inviteDetails?.occursOn, timeZone),
+    visitEndDate: formatTimeZone(inviteDetails?.visitEndDate, timeZone),
     isLoading: inviteDetails?.loading,
     name: inviteDetails?.name
   });
@@ -294,7 +295,8 @@ GuestInviteForm.defaultProps = {
     visitEndDate: null,
     isLoading: false,
     name: null
-  }
+  },
+  timeZone: undefined
 };
 
 GuestInviteForm.propTypes = {
@@ -311,5 +313,6 @@ GuestInviteForm.propTypes = {
     name: PropTypes.string
   }),
   close: PropTypes.func,
-  update: PropTypes.bool
+  update: PropTypes.bool,
+  timeZone: PropTypes.string
 };
