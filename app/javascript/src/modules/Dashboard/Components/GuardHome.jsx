@@ -10,10 +10,9 @@ import SelectAllIcon from '@mui/icons-material/SelectAll';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import CallIcon from '@mui/icons-material/Call';
 import PropTypes from 'prop-types';
-import { FormControl, Grid, Select, InputBase, MenuItem, Typography } from '@mui/material';
+import { FormControl, Grid, Select, MenuItem, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { useQuery, useMutation } from 'react-apollo';
-import withStyles from '@mui/styles/withStyles';
 import ScanIcon from '../../../../../assets/images/shape.svg';
 import Avatar from '../../../components/Avatar';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
@@ -27,18 +26,8 @@ import { Footer } from '../../../components/Footer';
 import FeatureCheck from '../../Features';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import PageWrapper from '../../../shared/PageWrapper';
-
-// TODO: move to shared directory
-export const BootstrapInput = withStyles(() => ({
-  input: {
-    borderRadius: 6,
-    position: 'relative',
-    border: '1px solid #fff',
-    fontSize: 18,
-    padding: '14px 26px 4px 16px',
-    height: 30
-  }
-}))(InputBase);
+import LanguageToggle from '../../i18n/Components/LanguageToggle';
+import { BootstrapInput } from '../../../utils/constants';
 
 export default function GuardHome() {
   const { t } = useTranslation(['dashboard', 'common']);
@@ -57,7 +46,7 @@ export function HomeGuard({ translate }) {
   const { data, loading, error } = useQuery(SecurityGuards);
   const [loginSwitchUser] = useMutation(switchGuards);
   const [switchError, setSwitchError] = useState(null);
-  const largerScreens = useMediaQuery('(min-width:1200px)');
+  const largerScreens = useMediaQuery('(min-width:960px)');
   const isMobile = useMediaQuery('(max-width:800px)');
 
   function inputToSearch() {
@@ -104,68 +93,65 @@ export function HomeGuard({ translate }) {
             <br />
             {hideGuardSwitching ? null : (
               <div>
-                <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
+                <div className="d-flex flex-row flex-wrap justify-content-center mb-5">
                   <Avatar user={authState.user} />
                   <br />
                   <br />
                 </div>
                 <Grid
                   container
-                  spacing={2}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    paddingLeft: largerScreens ? '300px' : '30px'
                   }}
                 >
-                  <Grid item md={4} xs={12}>
-                    <Grid container style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                      <Grid item md={6} xs={6}>
-                        <input
-                          className={`form-control ${css(styles.input)}`}
-                          onFocus={inputToSearch}
-                          type="text"
-                          placeholder="Search"
-                        />
-                      </Grid>
-                      <Grid item md={6} xs={6}>
-                        <SearchIcon
-                          style={{
-                            marginLeft: isMobile ? '-85' : largerScreens ? '-215' : '-55',
-                            marginTop: 60,
-                            zIndex: 9
-                          }}
-                          color="#999"
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item md={4} xs={6}>
-                    <FormControl
-                      variant="filled"
+                  <Grid
+                    item
+                    md={3}
+                    xs={6}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-start',
+                      mt: 5,
+                    }}
+                  >
+                    <input
+                      className={`${css(styles.input)}`}
+                      onFocus={inputToSearch}
+                      type="text"
+                      placeholder="Search"
+                    />
+                    <SearchIcon
                       style={{
-                        color: '#FFFFFF'
+                        marginLeft: '10px',
+                        zIndex: 9,
                       }}
-                    >
-                      <span className={`${css(styles.switchAccount)}`}>Switch account</span>
-                      <br />
-
+                      color="#999"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={3}
+                    xs={6}
+                    sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '30px' }}
+                  >
+                    <FormControl variant="filled">
                       <Select
                         id="demo-simple-select-outlined"
                         value={id}
                         onChange={handleChange}
                         style={{
-                          width: 180,
+                          width: isMobile ? 140 : 170,
                           backgroundColor: '#FFFFFF',
-                          color: '#000000'
+                          color: '#000000',
                         }}
                         variant="filled"
                         input={<BootstrapInput />}
                         IconComponent={() => (
                           <ArrowDropDownIcon
                             style={{
-                              marginLeft: -34
+                              marginLeft: -34,
                             }}
                           />
                         )}
@@ -180,17 +166,29 @@ export function HomeGuard({ translate }) {
                     </FormControl>
                   </Grid>
 
-                  <Grid item md={4} xs={6}>
+                  <Grid
+                    item
+                    md={3}
+                    xs={6}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: largerScreens ? 'center' : 'flex-start',
+                      mt: 5,
+                    }}
+                  >
                     <Link to="/scan">
                       <img
                         src={ScanIcon}
                         alt="scan icon"
                         className={` ${css(styles.scanIcon)}`}
                         style={{
-                          marginLeft: isMobile ? 50 : 150
+                          margin: '15px auto',
                         }}
                       />
                     </Link>
+                  </Grid>
+                  <Grid item md={3} xs={6} sx={{ marginTop: '5px' }}>
+                    <LanguageToggle />
                   </Grid>
                 </Grid>
               </div>
@@ -283,11 +281,9 @@ const styles = StyleSheet.create({
     position: 'relative'
   },
   input: {
-    padding: '0.5em 1em 0.5em 2em',
-    height: 50,
+    width: '50%',
+    maxWidth: '75%',
     color: '#222',
-    marginLeft: -20,
-    marginTop: 45,
     border: 'none',
     borderRadius: '5px',
     backgroundImage: 'none',
@@ -297,12 +293,7 @@ const styles = StyleSheet.create({
     }
   },
   scanIcon: {
-    marginTop: 45,
     width: 20
-  },
-  switchAccount: {
-    textDecoration: 'none',
-    marginLeft: 5
   },
   cardSize: {
     width: 200,

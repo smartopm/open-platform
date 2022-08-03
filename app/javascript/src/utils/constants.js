@@ -1,6 +1,8 @@
 /* eslint-disable max-lines */
 // values that can be reused across the codebase
 import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
+import withStyles from '@mui/styles/withStyles';
+import { InputBase } from '@mui/material';
 import { toTitleCase } from './helpers';
 
 // Prevent Google Analytics reporting from staging and dev domains
@@ -1388,3 +1390,14 @@ export const accessibilityOptions = {
   admins: 'Admins Only',
   everyone: 'Everyone'
 }
+
+export const BootstrapInput = withStyles(() => ({
+  input: {
+    borderRadius: 6,
+    position: 'relative',
+    border: '1px solid #fff',
+    fontSize: 18,
+    padding: '14px 26px 4px 16px',
+    height: 30
+  }
+}))(InputBase);
