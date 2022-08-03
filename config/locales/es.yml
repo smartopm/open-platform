@@ -492,7 +492,7 @@ es:
       cannot_send_otp_link: El usuario no tiene acceso a la aplicación.
       does_not_exist: El usuario no existe
       invalid_expired_token: Token de teléfono inválido o vencido
-      merge_failed: Union Fallida
+      merge_failed: Falla al fusionar la cuenta del usuario
       not_found: Esta cuenta no existe. Envíe una solicitud para crear una cuenta
         o utilice la información de cuenta correcta para iniciar sesión
       not_found_with_id: No se puede encontrar al Usuario %{user_id}
