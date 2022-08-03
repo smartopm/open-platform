@@ -53,7 +53,7 @@ module Mutations
 
       def send_reply_to_whatsapp(note_id, body)
         task = context[:site_community].notes.find_by(id: note_id)
-        return unless task.present? || task&.category == 'whatsapp'
+        return unless task.present? && task&.category == 'whatsapp'
 
         Sms.send(task.author.phone_number, body, context[:site_community], 'whatsapp')
       end
