@@ -5,7 +5,6 @@ class TwilioController < ApplicationController
   include ApplicationHelper
   protect_from_forgery except: :webhook
 
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def webhook
     user = current_community.users.find_by(phone_number: params['WaId'])
@@ -24,7 +23,6 @@ class TwilioController < ApplicationController
     Rollbar.error(e)
     head :ok
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
   private
