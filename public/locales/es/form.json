@@ -15,8 +15,8 @@
     "i_agree": "Acepto",
     "publish_form": "Publicar Formulario",
     "update_category": "Actualizar Categoria",
-    "update_form_property": "Actualizar formulario de propiedad ",
-    "update_property": "Update (Propiedad)"
+    "update_form_property": "Actualizar Segmento del Formulario",
+    "update_property": "Actualizar Segmento"
   },
   "conditions": {
     "<": "es menor a",
@@ -36,17 +36,17 @@
   },
   "field_types": {
     "appointment": "Cita",
-    "checkbox": "Caja",
+    "checkbox": "Casilla de Selección",
     "date": "Fecha",
-    "datetime": "Fecha con hora",
-    "dropdown": "Desplegar",
-    "file_upload": "Subir archivo",
+    "datetime": "Fecha con Hora",
+    "dropdown": "Lista Desplegable",
+    "file_upload": "Subir Archivo",
     "image": "Imagen",
     "payment": "Pago",
     "radio": "Radio",
     "signature": "Firma",
     "terms_and_condition": "Términos y Condiciones",
-    "text": "Prueba",
+    "text": "Texto",
     "time": "Hora"
   },
   "form_fields": {
@@ -96,7 +96,7 @@
     "building_permit": "Permiso de construcción",
     "category": "Categoría",
     "choose_category": "Elegir la Categoría",
-    "click_upload_btn": "Haga clic en el botón Cargar junto al archivo que desea adjuntar a este formulario.",
+    "click_upload_btn": "Haga clic en el botón Subir junto al archivo que desea adjuntar a este formulario.",
     "client_request_form": "Formulario de Solicitud de Cliente",
     "configure_form": "Configurar Formulario",
     "confirm_uploads": "Confirme sus cargas",
@@ -112,7 +112,7 @@
     "flutterwave_notice": "Cuando se hace clic en el botón \"Realizar un Pago\" (enviar) en este formulario, se le dirigirá automáticamente a la pasarela de pago de Flutterwave. Cuando haya terminado, Flutterwave debería volver a dirigirle automáticamente y enviar este formulario. Si esto no sucede dentro de 5 segundos, haga clic en el botón Cerrar (X).",
     "form": "Formulario",
     "form_action_success": "El Formulario {{status}} con éxito",
-    "form_builder": "Constructor",
+    "form_builder": "Creador",
     "form_confirm_message": "¿Estás seguro de {{actionType}} este formulario?",
     "form_created": "Formulario creado con éxito",
     "form_entries": "Entradas del Formulario",
@@ -141,15 +141,15 @@
     "update_category": "Actualizar una Categoría",
     "update_history": "Historial",
     "updated_form_category": "Actualizó con éxito una categoría",
-    "updated_form_property": "Formulario de propiedad actualizada con éxito",
+    "updated_form_property": "Segmento de Formulario actualizada con éxito",
     "updates": "Novedades",
-    "upload_details": "Utilice el botón Seleccionar para elegir el archivo que desea cargar. Luego confírmelos haciendo clic en el botón Cargar. Use el ícono 'X' para eliminar cualquier archivo no deseado.",
+    "upload_details": "Utilice el botón Seleccionar para elegir el archivo que desea incluir. Luego confírmelos haciendo clic en el botón Subir. Use el ícono 'X' para eliminar cualquier archivo no deseado.",
     "upload_error": "Archivos no subidos.",
     "upload_error_content_four": "elimínelos. ",
     "upload_error_content_one": "Ups, parece que algunos archivos",
-    "upload_error_content_three": "haga clic en el botón Cargar o",
+    "upload_error_content_three": "haga clic en el botón Subir o",
     "upload_error_content_two": "no se cargan. Por favor",
-    "upload_file": "Subir archivo",
+    "upload_file": "Subir Archivo",
     "version_number": "Número de versión"
   }
 }
