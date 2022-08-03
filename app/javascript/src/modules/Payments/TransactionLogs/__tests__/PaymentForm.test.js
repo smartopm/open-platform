@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import ReactTestUtils from 'react-dom/test-utils';
@@ -18,7 +18,7 @@ describe('PaymentForm', () => {
     {
       request: {
         query: TransactionInitiateMutation,
-        variables: { amount: 10.0, invoiceNumber: 'az12Q', description: 'initiate transaction' } 
+        variables: { amount: 10.0, invoiceNumber: 'az12Q', description: 'initiate transaction' }
       },
       result: {
         data: {
@@ -43,7 +43,7 @@ describe('PaymentForm', () => {
         </Context.Provider>
       </MockedProvider>
     );
-    
+
     expect(container.queryByTestId('payment_form')).toBeInTheDocument();
     expect(container.queryByTestId('invoice_number')).toBeInTheDocument();
     expect(container.queryByTestId('amount')).toBeInTheDocument();
@@ -80,8 +80,10 @@ describe('PaymentForm', () => {
     expect(container.queryByLabelText('form_fields.account_name *').value).toContain('JU');
 
     userEvent.submit(container.queryByTestId('payment_form'));
-    // after submitting, it should be disabled again and flutterwave modal to be called
-    expect(container.queryByTestId('make_a_payment_btn')).toBeDisabled();
+    await waitFor(() => {
+      // after submitting, it should be disabled again and flutterwave modal to be called
+      expect(container.queryByTestId('make_a_payment_btn')).toBeDisabled();
+    })
   });
 
   describe('Payment Form after transaction completion', ()=> {
@@ -110,7 +112,7 @@ describe('PaymentForm', () => {
           }
         }
       ]
-  
+
       const container = render(
         <MockedProvider mocks={verifyTransactionMock} addTypename={false}>
           <Context.Provider value={userMock}>
@@ -124,7 +126,7 @@ describe('PaymentForm', () => {
           </Context.Provider>
         </MockedProvider>
       );
-  
+
       expect(container.queryByTestId('payment_form')).toBeInTheDocument();
       expect(container.queryByTestId('invoice_number')).toBeInTheDocument();
       expect(container.queryByTestId('amount')).toBeInTheDocument();
