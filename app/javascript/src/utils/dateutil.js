@@ -165,7 +165,6 @@ function pad(padStr, str) {
  * @returns {String} Date || HR || Min
  */
 export function formatTimeZone(date, timezone) {
-  console.log(timezone)
   if (!date) return null
   if (date && timezone) {
     return momentTimezone(date).tz(timezone).format('YYYY-MM-DD HH:mm')
