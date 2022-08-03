@@ -245,6 +245,7 @@ export default function InvitedGuests() {
             inviteDetails={currentInvite}
             close={updateList}
             update
+            timeZone={timezone}
           />
           {Boolean(details.message?.length) && <CenteredContent>{details.message}</CenteredContent>}
         </DialogContent>
