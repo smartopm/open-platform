@@ -4,6 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Users::User, type: :model do
   describe 'schema' do
+    let!(:role) { create(:role) }
+    let!(:user) { create(:user_with_community, role: role) }
     it { is_expected.to have_db_column(:name).of_type(:string) }
     it { is_expected.to have_db_column(:email).of_type(:string) }
     it { is_expected.to have_db_column(:provider).of_type(:string) }
@@ -75,6 +77,8 @@ RSpec.describe Users::User, type: :model do
     it { is_expected.to have_db_column(:investment_timeline).of_type(:string) }
     it { is_expected.to have_db_column(:decision_timeline).of_type(:string) }
     it { is_expected.to have_db_column(:username).of_type(:string) }
+    it { is_expected.to have_db_column(:reset_password).of_type(:boolean) }
+    it { should validate_uniqueness_of(:username).scoped_to(:community_id) }
   end
 
   describe 'associations' do
