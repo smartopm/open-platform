@@ -10,10 +10,9 @@ import SelectAllIcon from '@mui/icons-material/SelectAll';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import CallIcon from '@mui/icons-material/Call';
 import PropTypes from 'prop-types';
-import { FormControl, Grid, Select, InputBase, MenuItem, Typography } from '@mui/material';
+import { FormControl, Grid, Select, MenuItem, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { useQuery, useMutation } from 'react-apollo';
-import withStyles from '@mui/styles/withStyles';
 import ScanIcon from '../../../../../assets/images/shape.svg';
 import Avatar from '../../../components/Avatar';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
@@ -27,18 +26,8 @@ import { Footer } from '../../../components/Footer';
 import FeatureCheck from '../../Features';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import PageWrapper from '../../../shared/PageWrapper';
-
-// TODO: move to shared directory
-export const BootstrapInput = withStyles(() => ({
-  input: {
-    borderRadius: 6,
-    position: 'relative',
-    border: '1px solid #fff',
-    fontSize: 18,
-    padding: '14px 26px 4px 16px',
-    height: 30
-  }
-}))(InputBase);
+import LanguageToggle from '../../i18n/Components/LanguageToggle';
+import { BootstrapInput } from '../../../utils/constants';
 
 export default function GuardHome() {
   const { t } = useTranslation(['dashboard', 'common']);
@@ -111,15 +100,13 @@ export function HomeGuard({ translate }) {
                 </div>
                 <Grid
                   container
-                  spacing={2}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    paddingLeft: largerScreens ? '300px' : '30px'
                   }}
                 >
-                  <Grid item md={4} xs={12}>
+                  <Grid item sm={6} md={3} xs={12}>
                     <Grid container style={{ display: 'flex', justifyContent: 'flex-start' }}>
                       <Grid item md={6} xs={6}>
                         <input
@@ -134,18 +121,18 @@ export function HomeGuard({ translate }) {
                           style={{
                             marginLeft: isMobile ? '-85' : largerScreens ? '-215' : '-55',
                             marginTop: 60,
-                            zIndex: 9
+                            zIndex: 9,
                           }}
                           color="#999"
                         />
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item md={4} xs={6}>
+                  <Grid item sm={6} md={3} xs={6}>
                     <FormControl
                       variant="filled"
                       style={{
-                        color: '#FFFFFF'
+                        color: '#FFFFFF',
                       }}
                     >
                       <span className={`${css(styles.switchAccount)}`}>Switch account</span>
@@ -158,14 +145,14 @@ export function HomeGuard({ translate }) {
                         style={{
                           width: 180,
                           backgroundColor: '#FFFFFF',
-                          color: '#000000'
+                          color: '#000000',
                         }}
                         variant="filled"
                         input={<BootstrapInput />}
                         IconComponent={() => (
                           <ArrowDropDownIcon
                             style={{
-                              marginLeft: -34
+                              marginLeft: -34,
                             }}
                           />
                         )}
@@ -180,17 +167,20 @@ export function HomeGuard({ translate }) {
                     </FormControl>
                   </Grid>
 
-                  <Grid item md={4} xs={6}>
+                  <Grid item sm={6} md={3} xs={6}>
                     <Link to="/scan">
                       <img
                         src={ScanIcon}
                         alt="scan icon"
                         className={` ${css(styles.scanIcon)}`}
                         style={{
-                          marginLeft: isMobile ? 50 : 150
+                          marginLeft: isMobile ? 50 : 150,
                         }}
                       />
                     </Link>
+                  </Grid>
+                  <Grid item sm={6} md={3} xs={12}>
+                    <LanguageToggle />
                   </Grid>
                 </Grid>
               </div>

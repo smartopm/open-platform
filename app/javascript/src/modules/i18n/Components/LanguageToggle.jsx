@@ -3,8 +3,7 @@ import { FormControl, Select, MenuItem } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useTranslation } from 'react-i18next';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
-import { BootstrapInput } from '../../Dashboard/Components/GuardHome';
-import { languages } from '../../../utils/constants';
+import { BootstrapInput, languages } from '../../../utils/constants';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 export default function LanguageToggle() {
@@ -12,8 +11,9 @@ export default function LanguageToggle() {
   const authState = useContext(Context);
   const defaultLanguage = authState.user?.community.language;
   const languageOptions = authState.user?.community?.supportedLanguages || languages;
-  // if the user has not set their language, then we initially show them the community default language
-  // else we show them the fallback language
+  /* if the user has not set their language,
+  ** then we initially show them the community default language
+  ** else we show them the fallback language */
   const [locale, setLocale] = useState(savedLang || defaultLanguage || 'en-US');
   const { i18n } = useTranslation();
 
