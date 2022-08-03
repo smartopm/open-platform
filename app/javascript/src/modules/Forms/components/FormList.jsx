@@ -60,6 +60,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
             actionType={id ? 'update' : undefined}
             formId={id}
             t={t}
+            routeBack
           />
         </Container>
       )}
