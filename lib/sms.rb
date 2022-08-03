@@ -36,7 +36,7 @@ class Sms
       # TODO: We need to allow alphanumeric codes to be sent to US numers
       # This is an urgent fix and this will be resolved properly
       # client.sms.send(from: 'DoubleGDP', to: to, text: message)
-      client.sms.send(from: config[:from], to: to, text: message) unless type.eql?('whatasapp')
+      client.sms.send(from: config[:from], to: to, text: message) unless type.eql?('whatsapp')
       twilio_client.messages.create(
         to: "whatsapp:+#{to}",
         from: "whatsapp:+#{from(community)}",
