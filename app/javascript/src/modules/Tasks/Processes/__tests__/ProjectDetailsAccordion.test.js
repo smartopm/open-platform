@@ -46,6 +46,7 @@ describe('Admin processes dashboard', () => {
                 body: 'received comment body',
                 createdAt: '2020-12-29T22:00:00Z',
                 groupingId: '67oe',
+                taggedAttachments: [],
                 user: {
                   id: 'yua788',
                   name: 'Received User Name',
@@ -104,9 +105,9 @@ describe('Admin processes dashboard', () => {
     },
     result: {
       data: {
-        project: {
-          id: 'f51a0723-59b7-416b-9280-9c2fee73ee66',
-          body: 'DoubleGDP'
+        task: {
+          id: '1345sfgh',
+          attachments: []
         }
       }
     }
