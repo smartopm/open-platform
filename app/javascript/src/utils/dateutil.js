@@ -157,6 +157,13 @@ function pad(padStr, str) {
   return padStr.substring(0, padStr.length - str.length) + str
 }
 
+/**
+ *
+ * @param {Date} date
+ * @param {String} timezone
+ * @description formats date with the passed timezone
+ * @returns {String} Date || HR || Min
+ */
 export function formatTimeZone(date, timezone) {
   if (!date) return null
   if (date && timezone) {

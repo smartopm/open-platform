@@ -6,7 +6,6 @@ export default function GuestSearch() {
   const authState = useContext(AuthStateContext);
   return (
     <>
-      {console.log(authState)}
       <GuestInviteForm timeZone={authState?.user?.community.timezone} />
     </>
   );

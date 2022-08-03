@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import dompurify from 'dompurify';
 import { paymentFilterFields } from '../../utils/constants'
+import { formatTimeZone } from '../../utils/dateutil'
 
 import {
   sentencizeAction,
@@ -370,5 +371,19 @@ describe('Anonymous', () => {
       document.body.append(dom);
       expect(downloadAsImage(dom, 'form')).toBeUndefined();
     });
-
 })
+
+describe('format date timezone', () => {
+  const date = 'Wed Aug 03 2022 17:39:00 GMT+0100 (West Africa Standard Time)'
+  it('returns null when no date is passed', () => {
+    expect(formatTimeZone()).toBeNull()
+  });
+
+  it('returns date when date and timezone is passed', () => {
+    expect(formatTimeZone(date, 'Africa/Nairobi')).toBe('2022-08-03 19:39')
+  });
+
+  it('returns date when timezone is not passed', () => {
+    expect(formatTimeZone(date)).toBe(date)
+  });
+});
