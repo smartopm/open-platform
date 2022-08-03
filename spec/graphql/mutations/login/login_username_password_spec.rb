@@ -18,6 +18,7 @@ RSpec.describe Mutations::Login::LoginUsernamePassword do
             user {
               id
             }
+            authToken
           }
         }     
       GQL
@@ -38,6 +39,7 @@ RSpec.describe Mutations::Login::LoginUsernamePassword do
                                                    }).as_json
         expect(result['errors']).to be nil
         expect(result.dig('data', 'loginUsernamePassword', 'user', 'id')).to eql admin.id
+        expect(result.dig('data', 'loginUsernamePassword', 'authToken')).to_not be nil
       end
     end
 

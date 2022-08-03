@@ -8,12 +8,16 @@ module Mutations
       argument :password, String, required: true
 
       field :user, Types::UserType, null: true
+      field :auth_token, String, null: true
 
       def resolve(vals)
         user = Users::User.authenticate(vals[:username], vals[:password])
         raise_bad_credentials_error if user.nil?
-
-        { user: user }
+        auth_token = user.auth_token
+        {
+          user: user,
+          auth_token: auth_token,
+        }
       end
 
       private

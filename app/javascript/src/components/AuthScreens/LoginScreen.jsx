@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Button,
   TextField,
@@ -32,6 +32,7 @@ import CenteredContent from '../../shared/CenteredContent';
 import SignupDialog from './SignupDialog';
 import PasswordInput from '../../shared/PasswordInput';
 import useMutationWrapper from '../../shared/hooks/useMutationWrapper';
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 
 export default function LoginScreen() {
   const { data: communityData, loading } = useQuery(CurrentCommunityQuery);
@@ -51,7 +52,7 @@ export default function LoginScreen() {
   const [
     loginWithUsernamePassword,
     passwordLoginLoading,
-  ] = useMutationWrapper(loginUsernamePasswordMutation, data => console.log(data));
+  ] = useMutationWrapper(loginUsernamePasswordMutation, data => routeUserAppropriately(data));
   const [loginWithEmail, emailLoginLoading] = useMutationWrapper(loginEmailMutation, () =>
     setEmailLoginSet(true)
   );
@@ -59,6 +60,8 @@ export default function LoginScreen() {
     loginPhoneMutation,
     routeToConfirmCode
   );
+
+  const authState = useContext(AuthStateContext);
 
   function routeToConfirmCode(data) {
     history.push({
@@ -68,6 +71,25 @@ export default function LoginScreen() {
         from: `${!state ? '/' : state.from.pathname}`,
       },
     });
+  }
+
+  function routeUserAppropriately(data) {
+    console.log('Mutuba debugging FE false', data?.hasResetPassword);
+    if (data?.hasResetPassword === false) {
+      // console.log('Mutuba debugging FE false');
+      history.push({
+        pathname: `/password_setup/${data.user.id}`,
+        state: {
+          firstTimeLogin: true,
+        },
+      });
+    } else {
+      console.log('Mutuba debugging fucked up');
+      authState.setToken({
+        type: 'update',
+        token: data?.authToken,
+      });
+    }
   }
 
   useEffect(() => {
