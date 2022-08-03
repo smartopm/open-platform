@@ -52,7 +52,7 @@ export default function LoginScreen() {
   const [
     loginWithUsernamePassword,
     passwordLoginLoading,
-  ] = useMutationWrapper(loginUsernamePasswordMutation, data => routeUserAppropriately(data));
+  ] = useMutationWrapper(loginUsernamePasswordMutation, data => handleUserRouting(data));
   const [loginWithEmail, emailLoginLoading] = useMutationWrapper(loginEmailMutation, () =>
     setEmailLoginSet(true)
   );
@@ -73,21 +73,18 @@ export default function LoginScreen() {
     });
   }
 
-  function routeUserAppropriately(data) {
-    console.log('Mutuba debugging FE false', data?.hasResetPassword);
-    if (data?.hasResetPassword === false) {
-      // console.log('Mutuba debugging FE false');
+  function handleUserRouting(data) {
+    if (data?.loginUsernamePassword?.user?.hasResetPassword === false) {
       history.push({
-        pathname: `/password_setup/${data.user.id}`,
+        pathname: `/password_setup/${data?.loginUsernamePassword?.user?.id}`,
         state: {
           firstTimeLogin: true,
         },
       });
     } else {
-      console.log('Mutuba debugging fucked up');
       authState.setToken({
         type: 'update',
-        token: data?.authToken,
+        token: data?.loginUsernamePassword?.authToken,
       });
     }
   }
@@ -232,13 +229,13 @@ export default function LoginScreen() {
             <Button
               href="/login_oauth"
               variant="outlined"
-              startIcon={
+              startIcon={(
                 <img
                   src={GoogleIcon}
                   alt="google-icon"
                   className={`${css(styles.socialLoginButtonIcons)}`}
                 />
-              }
+              )}
               className={`${css(styles.googleOAuthButton)} google-sign-in-btn`}
               size="large"
               fullWidth

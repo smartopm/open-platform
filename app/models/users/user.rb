@@ -277,9 +277,7 @@ module Users
     # the authenticate method from devise documentation
     def self.authenticate(username, password)
       user = User.find_for_authentication(username: username)
-      return unless user&.valid_password?(password)
-
-      user
+      user&.valid_password?(password) ? user : nil
     end
 
     def auto_generate_username_password
