@@ -75,9 +75,7 @@ test:jest:
   coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
   allow_failure: false
   script:
-    - yarn lint
-    - >
-      yarn test -u --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
+    - yarn test -u --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
       --collectCoverageFrom='!app/javascript/src/components/Map/PointsOfInterestMarker.jsx'
       --collectCoverageFrom='!app/javascript/src/components/LandParcels/LandParcelEditCoordinate.jsx'
       --collectCoverageFrom='!app/javascript/src/components/Map/MapEditor.jsx'
@@ -115,6 +113,23 @@ cypress:
     - master
   except:
     - schedules
+
+eslint:
+  stage: test
+  allow_failure: false
+  script:
+    - yarn lint --format gitlab ./app/javascript/src
+  artifacts:
+    reports:
+      codequality: gl-code-quality-report.json
+  except:
+    - tags
+    - schedules
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq cmake nodejs
+    - curl -o- -L https://yarnpkg.com/install.sh | bash
+    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+    - yarn install
 
 start_prod_push:
   extends: .base_db

@@ -209,7 +209,7 @@ export default function UserPaymentPlanItem({
       }
     })
       .then(() => {
-        showSnackbar({ type: messageType.success, message: t('misc.payment_cancelled')})
+        showSnackbar({ type: messageType.success, message: t('misc.payment_plan_cancelled')})
         setPlanDetails({...details, isLoading: false });
         refetch();
         balanceRefetch();

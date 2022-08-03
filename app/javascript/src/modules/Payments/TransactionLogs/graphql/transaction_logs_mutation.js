@@ -31,24 +31,22 @@ export const TransactionInitiateMutation = gql`
   mutation TransactionInitiate(
     $amount: Float!
     $invoiceNumber: String!
-    $redirectTo: String!
     $description: String
   ) {
     transactionInitiate(
       amount: $amount
       invoiceNumber: $invoiceNumber
       description: $description
-      redirectTo: $redirectTo
     ) {
-      link
+      paymentLink
     }
   }
 `;
 
 export const TransactionVerifyMutation = gql`
-  mutation TransactionVerify($transactionId: String!) {
-    transactionVerify(transactionId: $transactionId) {
-      success
+  mutation TransactionVerify($transactionRef: String!, $transactionId: ID) {
+    transactionVerify(transactionRef: $transactionRef, transactionId: $transactionId) {
+      status
     }
   }
 `;
