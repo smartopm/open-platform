@@ -43,8 +43,8 @@ export default function QuickLinks({ menuItems, translate }) {
           spacing={2}
           style={matches ? { padding: '20px 0' } : { padding: '20px 0' }}
         >
-          {menuItems.map(item => (
-            <Grid item xs={6} sm={3} key={item.menu_link}>
+          {menuItems.map((item, index) => (
+            <Grid item xs={6} sm={3} key={item.menu_link || index}>
               <Link href={item.menu_link} className={classes.quickLink}>
                 <Card variant="outlined" elevation={0} className={classes.card}>
                   <CardContent className={classes.card_content}>
