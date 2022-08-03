@@ -4,6 +4,8 @@ import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import LogEntryIcon from '@mui/icons-material/Assignment';
+import InvitationIcon from '@mui/icons-material/InsertInvitation';
+import GuardPostIcon from '@mui/icons-material/SensorDoor';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SearchIcon from '@mui/icons-material/Search';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
@@ -225,7 +227,7 @@ export function HomeGuard({ translate }) {
                         <h5 className="card-title">
                           <RecentActorsIcon color="primary" fontSize="large" />
                         </h5>
-                        <p>{translate('dashboard.log_entry')}</p>
+                        <p>{translate('dashboard.manual_entry')}</p>
                       </div>
                     </Link>
                   </div>
@@ -235,7 +237,27 @@ export function HomeGuard({ translate }) {
                         <h5 className="card-title">
                           <LogEntryIcon color="primary" fontSize="large" />
                         </h5>
-                        <p>{translate('dashboard.entry_logs')}</p>
+                        <p>{translate('dashboard.logs')}</p>
+                      </div>
+                    </Link>
+                  </div>
+                  <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
+                    <Link to="/guard_post" className="card-link">
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <GuardPostIcon color="primary" fontSize="large" />
+                        </h5>
+                        <p>{translate('dashboard.guard_post')}</p>
+                      </div>
+                    </Link>
+                  </div>
+                  <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
+                    <Link to="/logbook/invitations" className="card-link">
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <InvitationIcon color="primary" fontSize="large" />
+                        </h5>
+                        <p>{translate('dashboard.invitations')}</p>
                       </div>
                     </Link>
                   </div>
@@ -246,7 +268,7 @@ export function HomeGuard({ translate }) {
                           <h5 className="card-title">
                             <LogEntryIcon fontSize="large" color="primary" />
                           </h5>
-                          <p>Time Card</p>
+                          <p>{translate('common:misc.time_card')}</p>
                         </div>
                       </Link>
                     </div>
@@ -257,7 +279,7 @@ export function HomeGuard({ translate }) {
                         <h5 className="card-title">
                           <CallIcon color="primary" fontSize="large" />
                         </h5>
-                        Call Manager
+                        {translate('common:misc.call_manager')}
                       </div>
                     </a>
                   </div>
