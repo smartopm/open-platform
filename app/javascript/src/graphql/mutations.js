@@ -302,7 +302,8 @@ export const loginUsernamePasswordMutation = gql`
   mutation loginUsernamePassword($username: String!, $password: String!) {
     loginUsernamePassword(username: $username, password: $password) {
       user {
-        id
+        id,
+        resetPassword
       }
     }
   }
