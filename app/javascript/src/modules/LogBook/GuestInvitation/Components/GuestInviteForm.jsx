@@ -30,7 +30,7 @@ export default function GuestInviteForm({inviteDetails, onUpdate, close, update,
     visitationDate: formatTimeZone(inviteDetails?.visitationDate, timeZone),
     startsAt: formatTimeZone(inviteDetails?.startsAt, timeZone),
     endsAt: formatTimeZone(inviteDetails?.endsAt, timeZone),
-    occursOn: formatTimeZone(inviteDetails?.occursOn, timeZone),
+    occursOn: inviteDetails?.occursOn,
     visitEndDate: formatTimeZone(inviteDetails?.visitEndDate, timeZone),
     isLoading: inviteDetails?.loading,
     name: inviteDetails?.name
