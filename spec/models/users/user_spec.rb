@@ -77,7 +77,7 @@ RSpec.describe Users::User, type: :model do
     it { is_expected.to have_db_column(:investment_timeline).of_type(:string) }
     it { is_expected.to have_db_column(:decision_timeline).of_type(:string) }
     it { is_expected.to have_db_column(:username).of_type(:string) }
-    it { is_expected.to have_db_column(:reset_password).of_type(:boolean) }
+    it { is_expected.to have_db_column(:has_reset_password).of_type(:boolean) }
     it { should validate_uniqueness_of(:username).scoped_to(:community_id) }
   end
 

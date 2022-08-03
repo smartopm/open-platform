@@ -2,7 +2,7 @@ class AddUsernamePasswordPasswordResetTokenSignInCountToUser < ActiveRecord::Mig
   def change
     add_column :users, :username, :string, unique: true
     add_column :users, :encrypted_password, :string
-    add_column :users, :reset_password, :boolean, null: false, default: false
+    add_column :users, :has_reset_password, :boolean, null: false, default: false
 
     ## Recoverable
     add_column :users, :reset_password_token, :string, null: true

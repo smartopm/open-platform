@@ -969,7 +969,7 @@ ActiveRecord::Schema.define(version: 2022_07_26_063601) do
     t.string "division"
     t.string "username"
     t.string "encrypted_password"
-    t.boolean "reset_password", default: false, null: false
+    t.boolean "has_reset_password", default: false, null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
