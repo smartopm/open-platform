@@ -18,7 +18,7 @@ class Sms
 
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
-  def self.send(to, message, type = 'sms')
+  def self.send(to, message, community, type = 'sms')
     raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
 
     return if Rails.env.test?

@@ -55,7 +55,7 @@ module Mutations
         task = context[:site_community].notes.find_by(id: note_id)
         return unless task.present? || task&.category == 'whatsapp'
 
-        Sms.send(task.author.phone_number, body, 'whatsapp')
+        Sms.send(task.author.phone_number, body, context[:site_community], 'whatsapp')
       end
 
       # rubocop:disable Layout/LineLength

@@ -512,7 +512,7 @@ module Users
 
       Rails.logger.info "Sending #{token} to #{self[:phone_number]}"
       # Send number via Nexmo
-      Sms.send(self[:phone_number], "Your code is #{token}")
+      Sms.send(self[:phone_number], "Your code is #{token}", community)
     end
 
     # rubocop:disable Metrics/AbcSize
@@ -526,7 +526,7 @@ module Users
       url = "https://#{HostEnv.base_url(community)}/l/#{self[:id]}/#{token}"
       msg = "Your login link for #{community.name} is #{url}"
       Rails.logger.info "Sending '#{msg}' to #{self[:phone_number]}"
-      Sms.send(self[:phone_number], msg)
+      Sms.send(self[:phone_number], msg, community)
       url
     end
 
