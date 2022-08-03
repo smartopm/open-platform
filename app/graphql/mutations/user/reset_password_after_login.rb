@@ -33,7 +33,7 @@ module Mutations
         return user if user.present?
 
         raise GraphQL::ExecutionError,
-              I18n.t('errors.unauthorized')
+              I18n.t('errors.user.not_found')
       end
     end
   end
