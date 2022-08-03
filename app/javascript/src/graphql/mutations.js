@@ -303,7 +303,7 @@ export const loginUsernamePasswordMutation = gql`
     loginUsernamePassword(username: $username, password: $password) {
       user {
         id,
-        resetPassword
+        hasResetPassword
       }
     }
   }
