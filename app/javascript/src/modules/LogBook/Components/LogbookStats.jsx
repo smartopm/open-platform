@@ -22,7 +22,7 @@ export default function LogbookStats() {
   const { t } = useTranslation(['logbook', 'common']);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
-  const initialFilter = { type: 'allVisits', duration: null };
+  const initialFilter = { type: 'allVisits', duration: 'today' };
   const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
   const [loadStats, { data, loading }] = useLazyQuery(LogbookStatsQuery, {
     variables: { duration: statsTypeFilter.duration },
@@ -98,16 +98,19 @@ export default function LogbookStats() {
             id="choose_logbook_stat_duration"
             select
             label={t('common:misc.timeframe')}
-            value={!statsTypeFilter.duration ? 'All' : statsTypeFilter.duration}
+            value={statsTypeFilter.duration}
+            defaultValue="today"
             size="small"
             onChange={handleDurationFilter}
             fullWidth
           >
             {filterOptions(t).map((option, i) => (
-              <MenuItem data-testid={`${i}-${option.title}`} key={option.value} value={option.value}>
-                {
-                 `${t('common:misc.show')} ${option.title}`
-                }
+              <MenuItem
+                data-testid={`${i}-${option.title}`}
+                key={option.value}
+                value={option.value}
+              >
+                {option.title === 'All' ? 'Clear' : `${t('common:misc.show')} ${option.title}`}
               </MenuItem>
             ))}
           </TextField>
@@ -119,7 +122,8 @@ export default function LogbookStats() {
               style={{ color: '#FFFFFF' }}
               onClick={() => visitorData()}
               startIcon={guestsLoading && <Spinner />}
-              data-testid='export_data'
+              data-testid="export_data"
+              disableElevation
             >
               {matches ? <Download color="primary" /> : t('common:misc.export_data')}
             </Button>
@@ -141,7 +145,7 @@ export default function LogbookStats() {
       <br />
       <Grid container spacing={4}>
         {statsData.map(stat => (
-          <Grid item xs={4} key={stat.id} style={{cursor: 'pointer'}} data-testid='card'>
+          <Grid item xs={4} key={stat.id} style={{ cursor: 'pointer' }} data-testid="card">
             <Card className={classes.statCard} onClick={stat.action}>
               <CardContent>
                 <CenteredContent>
