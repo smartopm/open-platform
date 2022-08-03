@@ -18,6 +18,7 @@ require File.expand_path('support/controller_spec_helper.rb', __dir__)
 require File.expand_path('support/model_spec_helper.rb', __dir__)
 
 require 'devise'
+require 'webmock/rspec'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -63,6 +64,18 @@ RSpec.configure do |config|
   config.include ControllerSpecHelper, type: :controller
   config.include ModelSpecHelper
   config.include ActiveJob::TestHelper
+
+  # Configure bullet for tests
+  if Bullet.enable?
+    config.before(:each) do
+      Bullet.start_request
+    end
+
+    config.after(:each) do
+      Bullet.perform_out_of_channel_notifications if Bullet.notification?
+      Bullet.end_request
+    end
+  end
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false

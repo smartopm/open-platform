@@ -3,34 +3,37 @@
 // One Time Passcode Screen
 import React, { Fragment, useEffect, useState } from 'react';
 import { StyleSheet, css } from 'aphrodite';
-import Tooltip from '@material-ui/core/Tooltip';
-import { useParams } from 'react-router';
+import Tooltip from '@mui/material/Tooltip';
+import { useParams } from 'react-router-dom';
 import { useMutation } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import { SendOneTimePasscode } from '../graphql/mutations';
 import { formatError } from '../utils/helpers';
 import { Spinner } from '../shared/Loading';
+import PageWrapper from '../shared/PageWrapper';
 
 // call the OTP function once this component renders
 // this is to be consistent with the rest of the menu
 export default function OTPFeedbackScreen() {
-  const [msg, setMessage] = useState('');
-  const [userDetails, setDetails] = useState({})
+  const [errorMessage, setMessage] = useState('');
+  const [userDetails, setDetails] = useState({});
   const [loading, setLoading] = useState(true);
-  const params = useParams()
+  const params = useParams();
+  const { t } = useTranslation('common');
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode);
 
   function sendOTP() {
-    sendOneTimePasscode({variables: { userId: params.id }})
-      .then(({data}) => {
+    sendOneTimePasscode({ variables: { userId: params.id } })
+      .then(({ data }) => {
         setDetails({
           success: data.oneTimeLogin.success,
           url: data.oneTimeLogin.url
-        })
-        setLoading(false)
+        });
+        setLoading(false);
       })
       .catch(error => {
-        setMessage(formatError(error.message))
-        setLoading(false)
+        setMessage(formatError(error.message));
+        setLoading(false);
       });
   }
 
@@ -43,39 +46,43 @@ export default function OTPFeedbackScreen() {
 
   useEffect(() => {
     // call the mutation to send OTP
-    sendOTP()
+    sendOTP();
   }, [params.id]);
 
   return (
     <>
-      {
-        loading && <Spinner />
-      }
-      <div className={css(styles.passcodeSection)} data-testid="feedback">
-        {userDetails?.success && (
-          <p>
-            The One Time Pass code was successfully sent
-            <span className={css(styles.user)}>{userDetails?.user}</span>
-          </p>
-        )}
-        <br />
-        <Tooltip title={userDetails?.success ? 'Click to copy' : ''}>
-          <div>
-            {userDetails?.success && 'Url: '}
-            <span onClick={copyLink} className={css(styles.url)} data-testid="link_copier">
-              {' '}
-              {userDetails?.url}
-            </span>
-          </div>
-        </Tooltip>
-        <br />
-        <br />
-        {Boolean(msg.length) && (
-          <div className="alert alert-success" role="alert">
-            {msg}
-          </div>
-        )}
-      </div>
+      {loading && <Spinner />}
+      <PageWrapper
+        pageTitle={t('misc.otp')}
+        className={css(styles.passcodeSection)}
+        data-testid="feedback"
+      >
+        <div data-testid="feedback">
+          {userDetails?.success && (
+            <p>
+              The One Time Pass code was successfully sent
+              <span className={css(styles.user)}>{userDetails?.user}</span>
+            </p>
+          )}
+          <br />
+          <Tooltip title={userDetails?.success ? 'Click to copy' : ''}>
+            <div>
+              {userDetails?.success && 'Url: '}
+              <span onClick={copyLink} className={css(styles.url)} data-testid="link_copier">
+                {' '}
+                {userDetails?.url}
+              </span>
+            </div>
+          </Tooltip>
+          <br />
+          <br />
+          {Boolean(errorMessage.length) && (
+            <div className="alert alert-danger" role="alert">
+              {errorMessage}
+            </div>
+          )}
+        </div>
+      </PageWrapper>
     </>
   );
 }

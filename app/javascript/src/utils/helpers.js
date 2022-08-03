@@ -1,7 +1,13 @@
 /* eslint-disable */
+import React from 'react';
 import dompurify from 'dompurify';
 import { useLocation } from 'react-router';
 import { dateToString } from '../components/DateContainer';
+import { jsPDF as JsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
+
+
 // keep string methods [helpers]
 
 /**
@@ -189,7 +195,7 @@ export function getJustLabels(labels) {
  * @returns {boolean} true or false
  */
 export function validateEmail(email) {
-  const re = /\S+@\S+\.\S+/;
+  const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return re.test(String(email).toLowerCase());
 }
 
@@ -292,7 +298,7 @@ export const InvoiceType = {
 
 export function generateId() {
   if (!window.crypto) {
-    return ['233b1634-bf08-4ece-a213-b3f120a1e008', 'sdfsdfsdfsdfwerfwe']
+    return ['233b1634', 'bf08', '4ece', 'a213', 'b3f120a', '1e008', 'sdfsdfsdfsdfwerfwe', 1, 23, 4]
   }
   const array = new Uint32Array(10)
   return window.crypto.getRandomValues(array)
@@ -352,7 +358,7 @@ export function setObjectValue(object, key, value) {
  * @example snake_name ==> snakeName
  */
 export function toCamelCase(str){
-  return str.replace(/([-_]\w)/g, word => word[1].toUpperCase())
+  return str.replace(/([-_]\w)/g, word => word[1].toUpperCase());
 }
 
 /**
@@ -408,6 +414,7 @@ export function getHexColor (range) {
     currency: currencyData?.currency,
   })?.format(amount);
   return formatted;
+  return 10
  }
 
  /**
@@ -579,4 +586,167 @@ export function extractCountry(locale){
 
 export function ifNotTest(){
   return process.env.NODE_ENV !== 'test'
+}
+
+
+export function secureFileDownload(path) {
+  const link = document.createElement('a');
+  link.setAttribute('href', path);
+  link.setAttribute('download', '');
+  link.setAttribute('target', '_blank');
+  link.onclick = function(e) { e.preventDefault(); window.open(path, '_blank'); link.click(); };
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+/**
+ * split camelCase words
+ * @param {String} camelCase word
+ * @returns split words
+ */
+ export function splitCamelCase(word){
+  return word.replace(/([a-z])([A-Z])/g, '$1 $2');
+}
+
+export function sortTaskOrder(taskItem1, taskItem2){
+  if(!taskItem1 || !taskItem2) return;
+
+  return (
+    Number(taskItem1.order) - Number(taskItem2.order)
+  );
+}
+
+export function extractHostname(urlString) {
+  if (!urlString) return;
+  return {
+    hostname: urlString.split('/')[2],
+    userId: urlString.split('/')[4]
+  }
+}
+
+/**
+ * Get a key from an object, given the object and value of the corresponding key.
+ * @param {Object} obj object
+ * @param {String} option word
+ * @returns key for a value, if such value exists or undefined otherwise.
+ */
+export function getObjectKey(obj, option) {
+  return Object.keys(obj).find(key => objectAccessor(obj, key) === option);
+}
+
+/**
+ * @param {String} str a word or sentence consisting of
+ * HTML special character (in form of entity number )
+ * @returns decoded readable special character or symbol
+ */
+export function decodeHtmlEntity(str) {
+  return str.replace(/&#(\d+);/g, function(match, dec) {
+    return String.fromCharCode(dec);
+  });
+};
+
+export function replaceDocumentMentions(comment, onDocClick) {
+  const text = comment?.body;
+  if (!text) return;
+  if (!onDocClick) return text;
+
+  const formattedText = text
+    .trim()
+    .split(/(###.*?###)/)
+    .map((word, index) => {
+      if (/\###(.*?)\###/.test(word)) {
+        const documentId = word.split('__')[1];
+        const linkOptions = { key: index, href: '#' };
+        linkOptions['onClick'] = e => {
+          e.preventDefault();
+          onDocClick(comment, documentId);
+        };
+
+        return React.createElement('a', linkOptions, word.split('__')[2]);
+      }
+      return React.createElement('span', { key: index }, word);
+    });
+
+  return React.createElement('div', {}, formattedText);
+}
+
+/**
+ * Captures a page screenshot and convert to pdf,
+ * handles multiple pages
+ * @param {NodeElement} domElement the DOM container to captured
+ * @param {String} docName what to name the pdf document
+ */
+export function savePdf(domElement, docName = 'download') {
+  html2canvas(domElement).then(canvas => {
+    const img = canvas.toDataURL('image/jpeg');
+    const pdf = new JsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+    const imgWidth = 190; //a4 has 210mm, we used 190mm so as to leave space to left/right
+    const pageHeight = 270; // a4 has 297mm height, we used 270mm to leave space on top of page-1
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let heightLeft = imgHeight;
+    let position = 0;
+    pdf.addImage(img, 'JPEG', 10, 15, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+    while (heightLeft >= 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(img, 'JPEG', 10, position + 10, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+    pdf.save(`${docName}.pdf`);
+  }).catch((error) => { return error });
+}
+
+/**
+ * Check if required fields are satisfied and return an error with a helper text
+ * @param {String} fieldName
+ * @param {{isError: Boolean}} inputValidationMsg
+ * @param {[String]} requiredFields
+ * @returns {{ error: Boolean, helperText: String }}
+ */
+export function validateRequiredField(fieldName, inputValidationMsg={}, requiredFields=[], inputData={}, t) {
+  const validationError =
+    inputValidationMsg.isError &&
+    requiredFields.includes(fieldName) &&
+    !objectAccessor(inputData, fieldName);
+  return {
+    error: validationError,
+    helperText: validationError
+      ? t('form:errors.required_field', { fieldName })
+      : t(`amenity:helper_text.${fieldName}`)
+  };
+}
+
+/**
+ * This converts a DOM element/container to a png image.
+ * @param {DOMElement} currentRef is the current container to be converted to image
+ * @param {String} name is the proposed name for the prepared image
+ */
+export function downloadAsImage(currentRef, name) {
+  toPng(currentRef)
+    .then(dataUrl => {
+      const link = document.createElement('a');
+      link.download = `${name.replace(/ /g, '_')}.png`;
+      link.href = dataUrl;
+      link.click();
+    })
+    .catch(() => { return { error: true };
+    });
+}
+
+export function downloadCommentFile(comment, fileId) {
+  const clickedDoc = comment?.taggedAttachments.find(doc => doc.id === fileId);
+  secureFileDownload(clickedDoc.url);
+}
+
+/**
+ * A simple function that auto scroll to top of page
+ */
+export function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }

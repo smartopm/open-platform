@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 
@@ -23,6 +23,7 @@ export default function FormPropertySelector({
         name={name}
         required
         className="form-property-field-type-select-input"
+        inputProps={{'data-testid': "field_type_selector"}}
       >
         {Object.entries(options).map(([key]) => (
           <MenuItem key={key} value={key}>

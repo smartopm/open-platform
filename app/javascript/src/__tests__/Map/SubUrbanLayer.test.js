@@ -11,7 +11,7 @@ describe('<SubUrbanLayer />', () => {
       container = render(
         <MockedProvider>
           <BrowserRouter>
-            <SubUrbanLayer />
+            <SubUrbanLayer data={{}} />
           </BrowserRouter>
         </MockedProvider>
       )

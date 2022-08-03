@@ -5,8 +5,21 @@ require 'rails_helper'
 # rubocop:disable Layout/LineLength
 RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
   describe 'create actionflows' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'action_flow',
+                          role: admin_role,
+                          permissions: %w[can_create_action_flow])
+    end
+    let!(:user) do
+      create(:user_with_community, user_type: 'resident',
+                                   role: resident_role)
+    end
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id,
+                          user_type: 'admin', role: admin_role)
+    end
 
     let(:mutation) do
       <<~GQL
@@ -50,6 +63,7 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
+                                                   user_role: admin.role,
                                                  }).as_json
 
       expect(result.dig('data', 'actionFlowCreate', 'actionFlow', 'description')).to eq('Just a flow')
@@ -62,6 +76,7 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
                                                  context: {
                                                    current_user: user,
                                                    site_community: user.community,
+                                                   user_role: user.role,
                                                  }).as_json
       expect(result.dig('data', 'actionFlowCreate', 'actionFlow', 'description')).to be_nil
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
@@ -73,6 +88,7 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
+                                                   user_role: admin.role,
                                                  }).as_json
       expect(result.dig('data', 'actionFlowCreate', 'actionFlow', 'description')).to be_nil
       expect(JSON.parse(result.dig('errors', 0, 'message'))[0]).to eql 'Event type is not included in the list'

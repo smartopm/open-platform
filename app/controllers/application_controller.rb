@@ -6,8 +6,18 @@ class ApplicationController < ActionController::Base
 
   around_action :set_time_zone, if: :current_community
   before_action :set_locale
+  before_action :allow_iframe_on_forms
 
   private
+
+  def allow_iframe_on_forms
+    return unless request.fullpath.include?('/form')
+
+    form_id = request.fullpath.split('/')[2]
+    public_form = current_community&.forms&.find_by(id: form_id, is_public: true)
+    # only allow iframes if the form exists
+    response.headers.delete 'X-Frame-Options' unless public_form.nil?
+  end
 
   # Sets locale to lookup for translation.
   # @example community language is set to esponal(es-ES)

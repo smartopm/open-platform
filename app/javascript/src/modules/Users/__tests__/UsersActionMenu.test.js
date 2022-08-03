@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import UsersActionMenu from '../Components/UsersActionMenu'
-import '@testing-library/jest-dom/extend-expect'
+
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 const props = {
@@ -10,29 +10,35 @@ const props = {
   handleCampaignCreate: jest.fn(),
   handleLabelSelect: jest.fn(),
   setSelectAllOption: jest.fn(),
+  labelsRefetch: jest.fn(),
+  copyToClipBoard: jest.fn(),
   selectedUsers: [],
   selectCheckBox: true,
-  userList: [],
   usersCountData: {
     usersCount: 25
+  },
+  labelsData: {
+    labels: []
   }
 }
 describe('UsersActionMenu component', () => {
-  it('should render "Select" and hide "Create Campaign" link', () => {
+  it('should render hide "Create Campaign" link', () => {
     const container = render(
       <MockedThemeProvider>
         <UsersActionMenu {...props} />
       </MockedThemeProvider>
     )
 
-    expect(container.queryByText('common:misc.select')).toBeInTheDocument()
-    expect(container.queryByText('common:form_actions.create_campaign')).toBeNull()
+    expect(container.queryByText('common:form_actions.assign_label')).toBeNull();
+    expect(container.queryByText('common:form_actions.create_campaign')).toBeNull();
+    expect(container.queryByText('common:form_actions.copy_id')).toBeNull();
   })
 
-  it('should render both "Select" and bulk action links', () => {
+  it('should render both bulk action links', () => {
     const newProps = {
       ...props,
-      campaignCreateOption: 'all'
+      campaignCreateOption: 'all_on_this_page',
+      selectedUsers: ['hgjhwewhjebwuwd']
     }
     const container = render(
       <MockedThemeProvider>
@@ -40,9 +46,9 @@ describe('UsersActionMenu component', () => {
       </MockedThemeProvider>
     )
 
-    expect(container.queryByText('common:misc.select')).toBeInTheDocument()
-    expect(container.queryByText('common:form_actions.create_campaign')).toBeInTheDocument()
-    expect(container.queryByText('common:form_actions.assign_label')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.create_campaign')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.assign_label')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.copy_id')).toBeInTheDocument();
   })
 
   it('should render bulk action links if some users have been selected', () => {
@@ -56,7 +62,8 @@ describe('UsersActionMenu component', () => {
       </MockedThemeProvider>
     )
 
-    expect(container.queryByText('common:form_actions.create_campaign')).toBeInTheDocument()
-    expect(container.queryByText('common:form_actions.assign_label')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.create_campaign')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.assign_label')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.copy_id')).toBeInTheDocument();
   })
 })

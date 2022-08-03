@@ -2,7 +2,8 @@
     "news": {
       "recent_news": "Recent News",
       "read_more": "Read More",
-      "no_post": "No Post Found in this category",
+      "no_post": "No Posts Found in this category",
+      "no_posts": "No Posts Found",
       "news": "News",
       "post_discussion": "Post Discussion",
       "load_more_comments": "Load More Comments",
@@ -15,7 +16,9 @@
       "unfollow_tag": "Unfollow Tag",
       "filtered_categories": ["Private", "Uncategorized", "news", "Nkwashi Digest"],
       "visit_news_page": "Hi, visit {{communityName}} news page",
-      "posts": "Posts"
+      "posts": "Posts",
+      "no_post_found": "No post found",
+      "no_tags_found": "No tags found",
+      "no_categories_found": "No categories found"
     }
 }
-  

@@ -6,12 +6,16 @@ stages:
   - deploy
   - dast
 
-image: "ruby:2.6"
+image: 'ruby:2.6'
 
 include:
   - template: Dependency-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
   - template: DAST.gitlab-ci.yml
+
+semgrep-sast:
+  variables:
+    SAST_ANALYZER_IMAGE_TAG: '2.13.3'
 
 .default-cache: &default-cache
   cache:
@@ -33,7 +37,7 @@ include:
   variables:
     POSTGRES_DB: dgdp_test
     POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: "6f5e79b56aca56ecc1cdaa46f126370f"
+    POSTGRES_PASSWORD: '6f5e79b56aca56ecc1cdaa46f126370f'
     REDIS_URL: redis://redis:6379
   before_script:
     - apt-get update -qq && apt-get install -y -qq postgresql postgresql-contrib libpq-dev cmake nodejs
@@ -46,23 +50,6 @@ include:
     - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
     - yarn install
 
-
-pages:
-    stage: staging
-    extends: .base_db
-    allow_failure: true
-    when: always
-    # Export storybook as a static site (to public)
-    script:
-      # - npm install
-      - yarn build-storybook -o public
-    # Required artifact for GitLab Pages
-    artifacts:
-        paths:
-          - public
-    only:
-      - master
-
 test:rspec:
   extends: .base_db
   coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
@@ -73,11 +60,14 @@ test:rspec:
     - bundle exec rake
   artifacts:
     paths:
-      - "coverage/"
-    name: "Rails $CI_PIPELINE_ID Coverage Report"
+      - 'coverage/'
+    name: 'Rails $CI_PIPELINE_ID Coverage Report'
     expire_in: 24 hours
   cache:
     policy: pull-push
+  except:
+    - tags
+    - schedules
 
 test:jest:
   extends: .base_db
@@ -86,12 +76,20 @@ test:jest:
   allow_failure: false
   script:
     - yarn lint
-    - yarn test --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
+    - >
+      yarn test -u --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
+      --collectCoverageFrom='!app/javascript/src/components/Map/PointsOfInterestMarker.jsx'
+      --collectCoverageFrom='!app/javascript/src/components/LandParcels/LandParcelEditCoordinate.jsx'
+      --collectCoverageFrom='!app/javascript/src/components/Map/MapEditor.jsx'
+    - bundle exec rake jest_log:get_issue_count[$CI_JOB_ID,$GITLAB_TOKEN]
   artifacts:
     paths:
-      - "coverage/"
-    name: "Jest $CI_PIPELINE_ID Coverage Report"
+      - 'coverage/'
+    name: 'Jest $CI_PIPELINE_ID Coverage Report'
     expire_in: 24 hours
+  except:
+    - tags
+    - schedules
 
 cypress:
   image: docker:latest
@@ -99,7 +97,8 @@ cypress:
     - docker:dind
   stage: staging
   before_script:
-    - apk --update add nodejs
+    - apk --update add nodejs~=12.22 --repository="http://dl-cdn.alpinelinux.org/alpine/v3.12/main/"
+
     - apk add yarn
     - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
     - yarn install
@@ -107,12 +106,24 @@ cypress:
   script:
     - sh ./bin/integration_tests.sh 'ci'
   artifacts:
+    when: always
     paths:
-      - "tmp/cypress/"
-    name: "Cypress $CI_PIPELINE_ID Visual Report"
+      - 'tmp/cypress/'
+    name: 'Cypress $CI_PIPELINE_ID Visual Report'
     expire_in: 24 hours
   only:
     - master
+  except:
+    - schedules
+
+start_prod_push:
+  extends: .base_db
+  only:
+    - schedules
+  script:
+    - echo "Creating tag..."
+    - bundle exec rake deploy:create_tag[$GITLAB_TOKEN]
+    - echo "Tag created"
 
 staging:appdeploy:
   stage: staging
@@ -120,9 +131,10 @@ staging:appdeploy:
   when: on_success
   script:
     - echo 'deploying to STAGING'
-    - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
     - apt-get update -qy
+    - curl https://cli-assets.heroku.com/install.sh | sh
     - gem install dpl
+    - gem install faraday -v 1.8.0
     - dpl --provider=heroku --app=double-gdp-staging --api-key=$HEROKU_STAGING_API_KEY
     - echo 'running migration on STAGING'
     - HEROKU_API_KEY=$HEROKU_STAGING_API_KEY heroku run bundle exec rake db:migrate --exit-code --app double-gdp-staging
@@ -132,6 +144,8 @@ staging:appdeploy:
     url: https://double-gdp-staging.herokuapp.com/
   only:
     - master
+  except:
+    - schedules
 
 dev:deploy:
   stage: staging
@@ -139,9 +153,10 @@ dev:deploy:
   when: on_success
   script:
     - echo 'deploying to DEV'
-    - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
     - apt-get update -qy
+    - curl https://cli-assets.heroku.com/install.sh | sh
     - gem install dpl
+    - gem install faraday -v 1.8.0
     - dpl --provider=heroku --app=double-gdp-dev --api-key=$HEROKU_DEV_API_KEY
     - echo 'running migration on DEV'
     - HEROKU_API_KEY=$HEROKU_DEV_API_KEY heroku run bundle exec rake db:migrate --exit-code --app double-gdp-dev
@@ -152,6 +167,8 @@ dev:deploy:
     url: https://double-gdp-dev.herokuapp.com/
   only:
     - master
+  except:
+    - schedules
 
 production:
   stage: deploy
@@ -159,6 +176,7 @@ production:
   script:
     - echo 'deploying to PRODUCTION'
     - gem install dpl
+    - gem install faraday -v 1.8.0
     - dpl --provider=heroku --app=double-gdp-fe --api-key=$HEROKU_PRODUCTION_API_KEY
     - echo 'deployed to PRODUCTION'
   environment:

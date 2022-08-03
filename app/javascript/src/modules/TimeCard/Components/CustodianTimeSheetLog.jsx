@@ -2,14 +2,15 @@
 import React from 'react';
 import { useHistory } from 'react-router';
 import { StyleSheet, css } from 'aphrodite';
-import { Typography } from '@material-ui/core';
+import { Typography, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { dateToString } from '../../../components/DateContainer';
 import { differenceInHours } from '../../../utils/dateutil';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function CustodianTimeSheetLog({ data }) {
   const history = useHistory();
-  const { t } = useTranslation(['common', 'timecard'])
+  const { t } = useTranslation(['common', 'timecard']);
 
   function routeToEmployee({ userId, name }) {
     history.push({
@@ -21,11 +22,9 @@ export default function CustodianTimeSheetLog({ data }) {
   }
 
   return (
-    <div>
-      <div className="container">
-        <br />
-        <br />
-        {data.timeSheetLogs.map(shift => (
+    <PageWrapper pageTitle={t('misc.time_card')}>
+      <Container>
+        {data?.timeSheetLogs.map(shift => (
           <React.Fragment key={shift.id}>
             <div className="row justify-content-between">
               <div className="col-xs-8 nz_user shift-user-name">
@@ -34,8 +33,7 @@ export default function CustodianTimeSheetLog({ data }) {
               <div className="col-xs-4">
                 <span className={css(styles.subTitle)}>
                   {t('timecard:timecard.last_shift_worked')}
-                  : 
-                  {' '}
+                  :
                   {dateToString(shift.startedAt)}
                 </span>
               </div>
@@ -64,7 +62,8 @@ export default function CustodianTimeSheetLog({ data }) {
                   routeToEmployee({
                     userId: shift.userId,
                     name: shift.user.name
-                  })}
+                  })
+                }
               >
                 {t('misc.more_details')}
               </Typography>
@@ -72,8 +71,8 @@ export default function CustodianTimeSheetLog({ data }) {
             <div className="border-top my-3" />
           </React.Fragment>
         ))}
-      </div>
-    </div>
+      </Container>
+    </PageWrapper>
   );
 }
 

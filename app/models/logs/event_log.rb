@@ -4,6 +4,8 @@ module Logs
   # rubocop:disable Metrics/ClassLength
   # A list of all activity for a particular community
   class EventLog < ApplicationRecord
+    has_many_attached :images
+
     belongs_to :community
     belongs_to :acting_user, optional: true, class_name: 'Users::User'
     belongs_to :ref, polymorphic: true, optional: true
@@ -21,12 +23,12 @@ module Logs
     }
 
     VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_enrolled
-                        user_active user_feedback showroom_entry user_update user_temp
+                        user_active user_create user_feedback showroom_entry user_update user_temp
                         shift_start shift_end user_referred post_read post_shared
                         task_create task_update note_comment_create note_comment_update
                         form_create form_update form_publish form_submit form_update_submit
                         visit_request invoice_change deposit_create payment_update
-                        observation_log task_assign revoke_guest_entry].freeze
+                        observation_log task_assign revoke_guest_entry lead_update].freeze
     validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
     # Only log user activity if we haven't seen them

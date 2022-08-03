@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery } from 'react-apollo';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
-import Typography from '@material-ui/core/Typography';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import Typography from '@mui/material/Typography';
+import FormGroup from '@mui/material/FormGroup';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 import { Spinner } from '../../../../shared/Loading';
 import { UserLandParcelWithPlan } from '../../../../graphql/queries';
 import { formatMoney } from '../../../../utils/helpers';
@@ -25,7 +25,10 @@ export default function TransferPlanModal({
   refetch,
   balanceRefetch,
   planData,
-  currencyData
+  currencyData,
+  transferType,
+  paymentId,
+  paymentData
 }) {
   const [acceptanceCheckbox, setAcceptanceCheckbox] = useState(false);
   const [destinationPlanId, setDestinationPlanId] = useState('');
@@ -101,25 +104,27 @@ export default function TransferPlanModal({
       <PlanTransferConfirmDialog
         open={confirmTransferPlanOpen}
         handleClose={handleTransferPlanClose}
-        PaymentData={planPaymentSummaryDetail()}
+        paymentsSummary={planPaymentSummaryDetail()}
         paymentPlanId={paymentPlanId}
         destinationPlanId={destinationPlanId}
-        handleModalClose={handleModalClose}
         refetch={refetch}
         balanceRefetch={balanceRefetch}
+        transferType={transferType}
+        paymentId={paymentId}
+        paymentAmount={formatMoney(currencyData, paymentData?.amount)}
       />
       <CustomizedDialogs
         open={open}
         handleModal={handleModalClose}
-        dialogHeader={t('common:menu.transfer_plan')}
+        dialogHeader={transferType === 'plan' ? t('common:menu.transfer_plan') : t('common:menu.transfer_payment')}
         handleBatchFilter={handleTransferPlanSubmit}
-        saveAction={t('common:menu.transfer_plan')}
+        saveAction={transferType === 'plan' ? t('common:menu.transfer_plan') : t('common:menu.transfer_payment')}
         cancelAction={t('common:misc.close')}
         disableActionBtn={!canSubmit}
       >
         <div>
           <Typography paragraph variant="h6" color="textPrimary" data-testid='title'>
-            {t('common:misc.select_transfer_plan')}
+            {transferType === 'plan' ? t('common:misc.select_transfer_plan') : t('common:misc.select_plan_for_payment_transfer')}
           </Typography>
           <div
             className={classes.content}
@@ -128,11 +133,12 @@ export default function TransferPlanModal({
           >
             <PaymentPlansForTransferPlan
               data={data}
-              sourcePlanId={paymentPlanId}
+              sourcePlanId={transferType === 'plan' ? paymentPlanId : paymentData?.paymentPlan?.id}
               destinationPlanId={destinationPlanId}
               handleRadioChange={handleRadioChange}
               acceptanceCheckbox={acceptanceCheckbox}
               handleAcceptanceCheckChange={handleAcceptanceCheckChange}
+              transferType={transferType}
             />
           </div>
         </div>
@@ -147,7 +153,8 @@ export function PaymentPlansForTransferPlan({
   sourcePlanId,
   handleRadioChange,
   acceptanceCheckbox,
-  handleAcceptanceCheckChange
+  handleAcceptanceCheckChange,
+  transferType
 }) {
   const filteredPaymentPlans = data?.userLandParcelWithPlan?.filter(
     plan => plan.id !== sourcePlanId
@@ -189,7 +196,7 @@ export function PaymentPlansForTransferPlan({
                   name="acceptanceCheckbox"
                 />
           )}
-              label={t('common:misc.transfer_plan_acceptance')}
+              label={transferType === 'plan' ? t('common:misc.transfer_plan_acceptance'):  t('common:misc.transfer_payment_acceptance')}
               labelPlacement="end"
             />
           </FormGroup>
@@ -222,12 +229,21 @@ TransferPlanModal.propTypes = {
     currency: PropTypes.string,
     locale: PropTypes.string
   }).isRequired,
+  transferType: PropTypes.string.isRequired,
+  paymentId: PropTypes.string.isRequired,
+  paymentData: PropTypes.shape({
+    amount: PropTypes.number,
+    paymentPlan: PropTypes.shape({
+      id: PropTypes.string
+    })
+  }).isRequired
 };
 
 PaymentPlansForTransferPlan.defaultProps = {
   data: {
     userLandParcelWithPlan: []
-  }
+  },
+  sourcePlanId: null
 }
 
 PaymentPlansForTransferPlan.propTypes = {
@@ -238,11 +254,12 @@ PaymentPlansForTransferPlan.propTypes = {
       })
     )
   }),
-  sourcePlanId: PropTypes.string.isRequired,
+  sourcePlanId: PropTypes.string,
   destinationPlanId: PropTypes.string.isRequired,
   handleRadioChange: PropTypes.func.isRequired,
   acceptanceCheckbox: PropTypes.bool.isRequired,
-  handleAcceptanceCheckChange: PropTypes.func.isRequired
+  handleAcceptanceCheckChange: PropTypes.func.isRequired,
+  transferType: PropTypes.string.isRequired
 };
 
 const useStyles = makeStyles(() => ({

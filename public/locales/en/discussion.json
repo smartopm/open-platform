@@ -1,49 +1,54 @@
 {
-    "headers": {
-      "comments": "Comments",
-      "no_discussions": "No Discussions Topics",
-      "subscribe": "Subscribe to Discussion",
-      "create_discussion":"Create a discussion topic",
-      "update_email_header":"Update Email"
-    },
-    "form_actions": {
-      "more_discussions": "Load more discussions",
-      "send": "Send",
-      "agree": "Agree",
-      "disagree": "Disagree"
-    },
-    "form_fields": {
-      "email_address": "Email Address"
-    },
-    "messages": {
-      "image_uploaded":"Image uploaded",
-      "discussion_created": "Discussion created",
-      "unfolllow_ack_message": "You have unfollowed this discussion. You will no longer receive alerts for new messages posted by other community members on this board. Please provide us feedback on your discussion experience by sending us a message. We look forward to you participating in future discussions with the Nkwashi community!",
-      "update_email_helper": "To update your email, please enter your email in the field below and our customer support will reach out to you.",
-      "share_email_req": "Please share an email for your account",
-      "discussion_topic_created": "Discussion topic successfully created",
-      "no_description": "No Description",
-      "subscribed_first_part":"Thank you for following this discussion! You will receive daily email alerts for new messages posted by other community members on this board to",
-      "subscribed_second_part": ". To stop receiving the alerts, please unfollow this board. If this email is incorrect, please ",
-      "contact_team": "contact our support team",
-      "not_subscribed_first_part": "Thank you for following the discussion! ",
-      "not_subscribed_second_part": "Please share an email for your account",
-      "not_subscribed_third_part": "to receive daily email alert for new messages posted by other community members on this board. To stop receiving the alerts, please unfollow this board."
-
-    },
-    "label": {
-      "discussion_title": "Discussion Title",
-      "discussion_description":"Discussion Description"
-    },
-    "place_holder": {
-      "type_comment": "Type a comment here"
-    },
-    "helper_text":{
-      "invalid_email": "Invalid email."
-    },
-    "discussion_board_disclaimer":{
-      "first_line": "Comments and discussion boards are provided as a free service for logged in community members.",
-      "second_line": "Users must keep comments constructive, informative, positive, and free of profanity and obscenity.",
-      "third_line": "We reserve the right to remove posts or boards that veer from these principles."
-    }
+  "headers": {
+    "posts": "Posts",
+    "no_discussions": "No Discussions Topics",
+    "subscribe": "Subscribe to Discussion",
+    "create_discussion": "Create a discussion topic",
+    "update_email_header": "Update Email",
+    "community_news_header": "Community News"
+  },
+  "form_actions": {
+    "more_discussions": "Load more discussions",
+    "send": "Send",
+    "agree": "Agree",
+    "disagree": "Disagree",
+    "more_posts": "Load more posts",
+    "edit_post": "Edit Post",
+    "delete_post": "Delete Post"
+  },
+  "form_fields": {
+    "email_address": "Email Address"
+  },
+  "messages": {
+    "image_uploaded": "Image uploaded",
+    "discussion_created": "Discussion created",
+    "unfolllow_ack_message": "You have unfollowed this discussion. You will no longer receive alerts for new messages posted by other community members on this board. Please provide us feedback on your discussion experience by sending us a message. We look forward to you participating in future discussions with the Nkwashi community!",
+    "update_email_helper": "To update your email, please enter your email in the field below and our customer support will reach out to you.",
+    "share_email_req": "Please share an email for your account",
+    "discussion_topic_created": "Discussion topic successfully created",
+    "no_description": "No Description",
+    "subscribed_first_part": "Thank you for following this discussion! You will receive daily email alerts for new messages posted by other community members on this board to",
+    "subscribed_second_part": ". To stop receiving the alerts, please unfollow this board. If this email is incorrect, please ",
+    "contact_team": "contact our support team",
+    "not_subscribed_first_part": "Thank you for following the discussion! ",
+    "not_subscribed_second_part": "Please share an email for your account",
+    "not_subscribed_third_part": "to receive daily email alert for new messages posted by other community members on this board. To stop receiving the alerts, please unfollow this board.",
+    "delete_post": "Post Successfully Deleted"
+  },
+  "label": {
+    "discussion_title": "Discussion Title",
+    "discussion_description": "Discussion Description",
+    "more_topics": "More Topics"
+  },
+  "place_holder": {
+    "type_comment": "Type a comment here"
+  },
+  "helper_text": {
+    "invalid_email": "Invalid email."
+  },
+  "discussion_board_disclaimer": {
+    "first_line": "Posts and discussion boards are provided as a free service for logged in community members.",
+    "second_line": "Users must keep posts constructive, informative, positive, and free of profanity and obscenity.",
+    "third_line": "We reserve the right to remove posts or boards that veer from these principles."
   }
+}

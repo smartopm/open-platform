@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, TextField } from '@material-ui/core';
+import { Paper, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { colorPallete } from '../../../utils/constants';
 

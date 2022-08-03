@@ -17,10 +17,12 @@ module Policy
           'prospective_client' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
           'client' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
           'custodian' => {
-            'ability_list' => ['admin@can_see?', 'contractor@can_see?', 'security_guard@can_see?'],
+            'ability_list' => ['admin@can_see?', 'contractor@can_see?', 'security_guard@can_see?',
+                               'custodian@can_see?', 'site_worker@can_see?'],
             'can_see_self' => true,
           },
           'security_guard' => { 'ability_list' => ['*@*'], 'can_see_self' => true },
+          'security_supervisor' => { 'ability_list' => ['*@*'], 'can_see_self' => true },
           'contractor' => {
             'ability_list' => ['admin@can_see?', 'custodian@can_see?'],
             'can_see_self' => true,
@@ -31,6 +33,17 @@ module Policy
           },
           'resident' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
           'visitor' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
+          'site_manager' => {
+            'ability_list' => ['admin@can_see?', 'site_manager@can_see?'],
+            'can_see_self' => true,
+          },
+          'consultant' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
+          'developer' => {
+            'ability_list' => ['admin@can_see?', 'developer@can_see?'],
+            'can_see_self' => true,
+          },
+          'marketing_manager' => { 'ability_list' => ['*@*'], 'can_see_self' => true },
+          'marketing_admin' => { 'ability_list' => ['*@*'], 'can_see_self' => true },
         }
       end
       # rubocop:enable Metrics/MethodLength

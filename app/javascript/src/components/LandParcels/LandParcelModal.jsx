@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import { useLocation, Link } from 'react-router-dom'
+import makeStyles from '@mui/styles/makeStyles';
+import { useLocation, Link } from 'react-router-dom';
 import { useLazyQuery } from 'react-apollo';
 import {
   TextField,
@@ -10,11 +10,12 @@ import {
   Grid,
   Divider,
   Select,
+  useMediaQuery,
   MenuItem,
   InputLabel
-} from '@material-ui/core';
-import { DeleteOutline, Room } from '@material-ui/icons';
-import Autocomplete from '@material-ui/lab/Autocomplete'
+} from '@mui/material';
+import { DeleteOutline, Room } from '@mui/icons-material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { useTranslation } from 'react-i18next';
 import { CustomizedDialogs, ActionDialog } from '../Dialog';
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
@@ -26,9 +27,8 @@ import LandParcelEditCoordinate from './LandParcelEditCoordinate';
 import LandParcelMergeModal from './LandParcelMergeModal';
 import useDebounce from '../../utils/useDebounce';
 import UserAutoResult from '../../shared/UserAutoResult';
-import { dateToString } from "../DateContainer";
-import { capitalize, titleize, objectAccessor } from '../../utils/helpers'
-
+import { dateToString } from '../DateContainer';
+import { capitalize, titleize, objectAccessor, ifNotTest } from '../../utils/helpers';
 
 export default function LandParcelModal({
   open,
@@ -39,7 +39,7 @@ export default function LandParcelModal({
   landParcels,
   confirmMergeOpen,
   handleSubmitMerge,
-  propertyUpdateLoading,
+  propertyUpdateLoading
 }) {
   const classes = useStyles();
   const location = useLocation();
@@ -64,16 +64,19 @@ export default function LandParcelModal({
   const authState = useContext(AuthStateContext);
   const currency = objectAccessor(currencies, authState.user?.community.currency) || '';
   const isFormReadOnly = modalType === 'details' && !isEditing;
-  const [editCoordinates, setEditCoordinates] = useState(false)
-  const [mergeModalOpen, setMergeModalOpen] = useState(false)
-  const [mergeData, setMergeData] = useState(null)
-  const { t } = useTranslation(['common', 'property'])
+  const [editCoordinates, setEditCoordinates] = useState(false);
+  const [mergeModalOpen, setMergeModalOpen] = useState(false);
+  const [mergeData, setMergeData] = useState(null);
+  const { t } = useTranslation(['common', 'property']);
+  const matches = useMediaQuery('(max-width:800px)');
   useEffect(() => {
     setDetailsFields(landParcel);
     if (modalType === 'new' && location?.state?.from === 'users') {
-      setOwnershipFields([{name: location?.state?.user?.userName, userId: location?.state?.user?.userId}])
+      setOwnershipFields([
+        { name: location?.state?.user?.userName, userId: location?.state?.user?.userId }
+      ]);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
@@ -97,8 +100,8 @@ export default function LandParcelModal({
   }
 
   function userSearch(index) {
-      setCurrentIndex(Number(index));
-      searchUser();
+    setCurrentIndex(Number(index));
+    searchUser();
   }
 
   function removeOwnership(index) {
@@ -109,7 +112,11 @@ export default function LandParcelModal({
 
   const handleOwnershipChange = (selected, index) => {
     const fields = [...ownershipFields];
-    fields[Number(index)] = { ...objectAccessor(fields, index), name: selected?.name, userId: selected?.id };
+    fields[Number(index)] = {
+      ...objectAccessor(fields, index),
+      name: selected?.name,
+      userId: selected?.id
+    };
     setOwnershipFields(fields);
   };
 
@@ -133,10 +140,10 @@ export default function LandParcelModal({
     setIsEditing(false);
   }
 
-  function cleanUpOnModalClosing(){
+  function cleanUpOnModalClosing() {
     setIsEditing(false);
-    setMergeModalOpen(false)
-    handleClose()
+    setMergeModalOpen(false);
+    handleClose();
   }
 
   function handleParcelSubmit() {
@@ -158,15 +165,15 @@ export default function LandParcelModal({
       longX,
       latY,
       geom,
-      ownershipFields,
-    }
+      ownershipFields
+    };
 
     if (modalType === 'new_house') {
       variables = {
         ...variables,
         status: status || 'planned',
         objectType: objectType || 'house'
-      }
+      };
     }
 
     handleSubmit({
@@ -174,108 +181,122 @@ export default function LandParcelModal({
     });
   }
 
-  function handleTriggerMergeRoutine(){
+  function handleTriggerMergeRoutine() {
     // eslint-disable-next-line react/prop-types
-    const existingPlot = landParcels.find(p => p.parcelNumber === parcelNumber)
+    const existingPlot = landParcels.find(p => p.parcelNumber === parcelNumber);
 
     // skip merge when both properties have accounts or payments
-    if(checkPlotAccountsAndPayments({ plot: existingPlot})
-    && checkPlotAccountsAndPayments({ plot: landParcel})
-    ){
-      return cleanUpOnModalClosing()
+    if (
+      checkPlotAccountsAndPayments({ plot: existingPlot }) &&
+      checkPlotAccountsAndPayments({ plot: landParcel })
+    ) {
+      return cleanUpOnModalClosing();
     }
 
     // skip merge when both plots have geo-coordinates
-    if(landParcel.geom && existingPlot.geom){
-      return cleanUpOnModalClosing()
+    if (landParcel.geom && existingPlot.geom) {
+      return cleanUpOnModalClosing();
     }
 
-    const { plotToMerge, plotToRemove } = getPlotsToMerge({ existingPlot, selectedPlot: landParcel })
+    const { plotToMerge, plotToRemove } = getPlotsToMerge({
+      existingPlot,
+      selectedPlot: landParcel
+    });
 
     setMergeData({
       plotToMerge,
       plotToRemove,
       selectedPlot: { ...landParcel },
       existingPlot
-    })
-    return setMergeModalOpen(true)
+    });
+    return setMergeModalOpen(true);
   }
 
-  function getPlotsToMerge({ existingPlot, selectedPlot }){
+  function getPlotsToMerge({ existingPlot, selectedPlot }) {
     // transfer geo-coordinates to plots with account and no geom
-    if((checkPlotAccountsAndPayments({ plot: selectedPlot }) && !selectedPlot.geom)
-    && (!checkPlotAccountsAndPayments({ plot: existingPlot }) && existingPlot.geom)){
+    if (
+      checkPlotAccountsAndPayments({ plot: selectedPlot }) &&
+      !selectedPlot.geom &&
+      !checkPlotAccountsAndPayments({ plot: existingPlot }) &&
+      existingPlot.geom
+    ) {
       return {
         plotToMerge: { ...selectedPlot, geom: existingPlot.geom },
         plotToRemove: { ...existingPlot, parcelNumber: getBadPlotName(existingPlot.parcelNumber) }
-      }
+      };
     }
 
-    if((checkPlotAccountsAndPayments({ plot: existingPlot }) && !existingPlot.geom)
-    && (!checkPlotAccountsAndPayments({ plot: selectedPlot }) && selectedPlot.geom)){
+    if (
+      checkPlotAccountsAndPayments({ plot: existingPlot }) &&
+      !existingPlot.geom &&
+      !checkPlotAccountsAndPayments({ plot: selectedPlot }) &&
+      selectedPlot.geom
+    ) {
       return {
         plotToMerge: { ...existingPlot, geom: selectedPlot.geom },
         plotToRemove: { ...selectedPlot, parcelNumber: getBadPlotName(selectedPlot.parcelNumber) }
-      }
+      };
     }
 
     // keep plot with accounts, payments, or geo-coordinates
-    if(selectedPlot.geom || checkPlotAccountsAndPayments({ plot: selectedPlot })){
+    if (selectedPlot.geom || checkPlotAccountsAndPayments({ plot: selectedPlot })) {
       return {
         plotToMerge: { ...selectedPlot },
         plotToRemove: { ...existingPlot, parcelNumber: getBadPlotName(existingPlot.parcelNumber) }
-      }
+      };
     }
 
     return {
       plotToMerge: { ...existingPlot },
       plotToRemove: { ...selectedPlot, parcelNumber: getBadPlotName(selectedPlot.parcelNumber) }
-    }
+    };
   }
 
-  function getBadPlotName(parcelNo){
-    return `BAD-PLOT-${parcelNo}`
+  function getBadPlotName(parcelNo) {
+    return `BAD-PLOT-${parcelNo}`;
   }
 
-  function checkPlotAccountsAndPayments({ plot }){
-    return(
-      plot?.accounts.length > 0
-    )
+  function checkPlotAccountsAndPayments({ plot }) {
+    return plot?.accounts.length > 0;
   }
 
-  function handleMergeAndSave(){
-    setMergeModalOpen(false)
+  function handleMergeAndSave() {
+    setMergeModalOpen(false);
     const { plotToMerge, plotToRemove } = mergeData;
 
-    handleMerge(plotToMerge)
+    handleMerge(plotToMerge);
     setTimeout(() => {
-      handleMerge(plotToRemove)
+      handleMerge(plotToRemove);
     }, 500);
   }
 
-  function handleMerge(plot){
+  function handleMerge(plot) {
     handleSubmitMerge({
       id: plot.id,
       parcelNumber: plot.parcelNumber,
-      geom: plot.geom,
+      geom: plot.geom
     });
   }
 
   function landParcelOwners(parcel) {
-    return parcel.accounts.map(owner => ({ name: owner.fullName, address: owner.address1, userId: owner.user.id }));
+    return parcel.accounts.map(owner => ({
+      name: owner.fullName,
+      address: owner.address1,
+      userId: owner.user.id
+    }));
   }
 
   function handleChange(_event, newValue) {
     setTabValue(newValue);
   }
 
-  function totalPlanPayments(payments){
+  function totalPlanPayments(payments) {
     let totalAmount = 0;
     payments.forEach(payment => {
-      if(payment.status === 'paid'){
+      if (payment.status === 'paid') {
         totalAmount += payment.amount;
       }
-    })
+    });
     return totalAmount;
   }
 
@@ -291,19 +312,21 @@ export default function LandParcelModal({
 
   function filteredOwnerList(users) {
     if (!users) return [];
-    const currentOwners = (landParcel?.accounts.map((account) => account.user.Id) || []).concat(ownershipFields.map((field) => field.userId))
-    return users.filter((user) => !currentOwners?.includes(user.id))
+    const currentOwners = (landParcel?.accounts.map(account => account.user.Id) || []).concat(
+      ownershipFields.map(field => field.userId)
+    );
+    return users.filter(user => !currentOwners?.includes(user.id));
   }
 
-  function handleEditCoordinatesOpen(){
-    setEditCoordinates(true)
+  function handleEditCoordinatesOpen() {
+    setEditCoordinates(true);
   }
 
-  function handleEditCoordinatesClose(){
-    setEditCoordinates(false)
+  function handleEditCoordinatesClose() {
+    setEditCoordinates(false);
   }
 
-  function handleSaveMapEdit({ feature }){
+  function handleSaveMapEdit({ feature }) {
     setEditCoordinates(false);
 
     const { long_x: longitudeX, lat_y: latitudeY } = feature.properties;
@@ -328,7 +351,13 @@ export default function LandParcelModal({
         open={open}
         handleModal={cleanUpOnModalClosing}
         // eslint-disable-next-line no-nested-ternary
-        dialogHeader={modalType === 'new' ? t('property:dialog_headers.new_property') : modalType === 'new_house' ? t('property:dialog_headers.new_house') : t('property:dialog_headers.property', {parcelNumber: landParcel.parcelNumber})}
+        dialogHeader={
+          modalType === 'new'
+            ? t('property:dialog_headers.new_property')
+            : modalType === 'new_house'
+            ? t('property:dialog_headers.new_house')
+            : t('property:dialog_headers.property', { parcelNumber: landParcel.parcelNumber })
+        }
         handleBatchFilter={handleParcelSubmit}
         saveAction={saveActionText()}
         actionLoading={propertyUpdateLoading}
@@ -343,7 +372,7 @@ export default function LandParcelModal({
         <TabPanel value={tabValue} index="Details">
           <div className={classes.parcelForm}>
             <TextField
-              autoFocus
+              autoFocus={ifNotTest()}
               margin="dense"
               id="parcel-number"
               inputProps={{
@@ -355,6 +384,7 @@ export default function LandParcelModal({
               value={parcelNumber}
               onChange={e => setParcelNumber(e.target.value)}
               required
+              className="property-parcel-number-txt-input"
             />
             <TextField
               margin="dense"
@@ -364,6 +394,7 @@ export default function LandParcelModal({
               type="text"
               value={address1}
               onChange={e => setAddress1(e.target.value)}
+              className="property-address1-txt-input"
             />
             <TextField
               margin="dense"
@@ -373,6 +404,7 @@ export default function LandParcelModal({
               type="text"
               value={address2}
               onChange={e => setAddress2(e.target.value)}
+              className="property-address2-txt-input"
             />
             <TextField
               margin="dense"
@@ -382,6 +414,7 @@ export default function LandParcelModal({
               type="text"
               value={city}
               onChange={e => setCity(e.target.value)}
+              className="property-city-txt-input"
             />
             <TextField
               margin="dense"
@@ -403,6 +436,7 @@ export default function LandParcelModal({
               inputProps={{ 'data-testid': 'country', readOnly: isFormReadOnly }}
               value={country}
               onChange={e => setCountry(e.target.value)}
+              className="property-country-txt-input"
             />
             <TextField
               margin="dense"
@@ -415,6 +449,7 @@ export default function LandParcelModal({
               type="text"
               value={parcelType}
               onChange={e => setParcelType(e.target.value)}
+              className="property-parcel-type-txt-input"
             />
             <TextField
               margin="dense"
@@ -427,6 +462,7 @@ export default function LandParcelModal({
               type="number"
               value={postalCode}
               onChange={e => setPostalCode(e.target.value)}
+              className="property-postal-code-txt-input"
             />
             {modalType === 'new_house' && (
               <>
@@ -443,7 +479,11 @@ export default function LandParcelModal({
                     readOnly: isFormReadOnly
                   }}
                 >
-                  {PropertyStatus.house.map(v => (<MenuItem key={v} value={v}>{titleize(v)}</MenuItem>))}
+                  {PropertyStatus.house.map(v => (
+                    <MenuItem key={v} value={v}>
+                      {titleize(v)}
+                    </MenuItem>
+                  ))}
                 </Select>
                 <br />
                 <InputLabel id="object_type">Category</InputLabel>
@@ -453,27 +493,31 @@ export default function LandParcelModal({
                   onChange={e => setObjectType(e.target.value)}
                   fullWidth
                   inputProps={{
-                      'data-testid': 'object-type',
-                      readOnly: isFormReadOnly
-                    }}
+                    'data-testid': 'object-type',
+                    readOnly: isFormReadOnly
+                  }}
                 >
-                  <MenuItem key="house" value="house">House</MenuItem>
+                  <MenuItem key="house" value="house">
+                    House
+                  </MenuItem>
                 </Select>
               </>
             )}
             <br />
             <br />
-            {!landParcel?.geom && !(['new', 'new_house'].includes(modalType)) &&  !(landParcel?.objectType === 'house') && (
-            <IconButton
-              onClick={handleEditCoordinatesOpen}
-              aria-label="edit-coordinate"
-            >
-              <Room />
-              {' '}
-              {' '}
-              <Typography>{t('property:buttons.edit_coordinates')}</Typography>
-            </IconButton>
-            )}
+            {!landParcel?.geom &&
+              !['new', 'new_house'].includes(modalType) &&
+              !(landParcel?.objectType === 'house') && (
+                <IconButton
+                  onClick={handleEditCoordinatesOpen}
+                  aria-label="edit-coordinate"
+                  size="large"
+                >
+                  <Room />
+                  {' '}
+                  <Typography>{t('property:buttons.edit_coordinates')}</Typography>
+                </IconButton>
+              )}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index="Ownership">
@@ -513,33 +557,36 @@ export default function LandParcelModal({
           {ownershipFields?.map((_field, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <div key={index} style={{ display: 'flex', marginBottom: '30px' }}>
-              <div style={{ width: "100%" }}>
+              <div style={{ width: '100%' }}>
                 <Autocomplete
-                  style={{ width: "100%" }}
+                  style={{ width: matches ? 300 : '100%', marginLeft: matches && -30 }}
                   id="address-input"
-                  inputProps={{
-                    'data-testid': 'owner'
-                  }}
                   options={filteredOwnerList(data?.usersLite)}
                   getOptionLabel={option => option?.name}
-                  getOptionSelected={(option, value) => option.name === value.name}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
                   value={objectAccessor(ownershipFields, index)}
                   onChange={(_event, newValue) => handleOwnershipChange(newValue, index)}
-                  classes={{ option: classes.autocompleteOption, listbox: classes.autocompleteOption }}
-                  renderOption={(option) => (
-                    <UserAutoResult user={option} />
+                  classes={{
+                    option: classes.autocompleteOption,
+                    listbox: classes.autocompleteOption
+                  }}
+                  renderOption={(props, option) => (
+                    <li {...props}>
+                      <UserAutoResult user={option} t={t} />
+                    </li>
                   )}
                   renderInput={params => (
                     <TextField
                       {...params}
                       label={t('property:form_fields.add_owner')}
-                      style={{ width: "100%" }}
+                      style={{ width: '100%' }}
                       name="name"
                       onChange={event => onChangeOwnershipField(event, index)}
-                        // eslint-disable-next-line no-unused-vars
-                      onKeyDown={(_e) => userSearch(index)}
+                      // eslint-disable-next-line no-unused-vars
+                      onKeyDown={_e => userSearch(index)}
+                      className={`property-owner-name-txt-input-${index}`}
                     />
-                    )}
+                  )}
                 />
                 <TextField
                   id="user-search-"
@@ -550,8 +597,8 @@ export default function LandParcelModal({
                   label={t('property:form_fields.address')}
                   onChange={event => onChangeOwnershipField(event, index)}
                   name="address"
-                  className={classes.textField}
                   style={{ marginBottom: '15px' }}
+                  className={`property-owner-address-txt-input-${index} ${classes.textField}`}
                 />
               </div>
               <div className={classes.removeIcon}>
@@ -559,6 +606,7 @@ export default function LandParcelModal({
                   style={{ marginTop: 13 }}
                   onClick={() => removeOwnership(index)}
                   aria-label="remove"
+                  size="large"
                 >
                   <DeleteOutline />
                 </IconButton>
@@ -566,18 +614,19 @@ export default function LandParcelModal({
             </div>
           ))}
           {(modalType === 'new' || isEditing) && (
-          <>
-            <AddMoreButton title={t('property:buttons.new_owner')} handleAdd={addOwnership} />
-          </>
+            <>
+              <AddMoreButton title={t('property:buttons.new_owner')} handleAdd={addOwnership} />
+            </>
           )}
         </TabPanel>
         <TabPanel value={tabValue} index="Plan History">
-          { (landParcel?.paymentPlans?.length ? (
-              landParcel?.paymentPlans?.sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
+          {landParcel?.paymentPlans?.length ? (
+            landParcel?.paymentPlans
+              ?.sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
               .map(paymentPlan => (
                 <>
                   <div key={paymentPlan.id} className={classes.planContainer}>
-                    <Grid container spacing={1} data-testid='start-date'>
+                    <Grid container spacing={1} data-testid="start-date">
                       <Grid item xs={6}>
                         <Typography variant="h6" color="primary">
                           {paymentPlan?.user?.name}
@@ -610,9 +659,7 @@ export default function LandParcelModal({
                       </Grid>
                       <Grid item xs={6}>
                         <Link to={`/user/${paymentPlan?.userId}?tab=Plans`}>
-                          <Typography>
-                            {t('property:misc.view_plan')}
-                          </Typography>
+                          <Typography>{t('property:misc.view_plan')}</Typography>
                         </Link>
                       </Grid>
                       <Grid item xs={6} />
@@ -623,9 +670,9 @@ export default function LandParcelModal({
                   </div>
                 </>
               ))
-            ) : (
-              <div>{t('property:misc.no_payment_plans')}</div>
-            ))}
+          ) : (
+            <div>{t('property:misc.no_payment_plans')}</div>
+          )}
         </TabPanel>
       </CustomizedDialogs>
       <LandParcelEditCoordinate
@@ -679,7 +726,7 @@ LandParcelModal.defaultProps = {
   landParcels: [],
   confirmMergeOpen: false,
   handleSubmitMerge: () => {},
-  propertyUpdateLoading: false,
+  propertyUpdateLoading: false
 };
 
 LandParcelModal.propTypes = {
@@ -691,17 +738,18 @@ LandParcelModal.propTypes = {
   landParcel: PropTypes.object,
   landParcels: PropTypes.arrayOf(
     PropTypes.shape({
-    id: PropTypes.string,
-    parcelNumber: PropTypes.string,
-    address1: PropTypes.string,
-    address2: PropTypes.string,
-    city: PropTypes.string,
-    postalCode: PropTypes.string,
-    stateProvince: PropTypes.string,
-    country: PropTypes.string,
-    parcelType: PropTypes.string
-  })),
+      id: PropTypes.string,
+      parcelNumber: PropTypes.string,
+      address1: PropTypes.string,
+      address2: PropTypes.string,
+      city: PropTypes.string,
+      postalCode: PropTypes.string,
+      stateProvince: PropTypes.string,
+      country: PropTypes.string,
+      parcelType: PropTypes.string
+    })
+  ),
   confirmMergeOpen: PropTypes.bool,
   handleSubmitMerge: PropTypes.func,
-  propertyUpdateLoading: PropTypes.bool,
+  propertyUpdateLoading: PropTypes.bool
 };

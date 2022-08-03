@@ -1,15 +1,24 @@
 {
   "panic_alerts": {
     "am_safe": "Estoy bien.",
+    "am_safe_feedback_body": "Haremos saber a nuestros administradores y al personal de seguridad la actualización de su estado. ",
+    "am_safe_feedback_header": "NOS ALEGRA QUE ESTÉ BIEN",
+    "cancel_emergency_success_alert": "Has cancelado exitosamente la solicitud de emergencia",
     "click_to_call": "LLAMAR",
+    "for_3_seconds": "por 3 segundos",
     "header": "MANTENGA LA CALMA",
     "info": "Después de presionar SOS, se enviará una notificación a nuestros administradores y un miembro del equipo de seguridad se comunicará con usted.",
     "panic_error_alert": "Lo sentimos, Emergencia No Activada. Necesita presionar el botón por 3 segundos.",
     "panic_success_alert": "Se ha enviado un mensaje al equipo de seguridad.",
+    "press_and_hold": "Presione el botón SOS y espere.",
     "press_for_3_seconds": "Presiona por 3 segundos",
     "sos": "SOS",
     "sos_disclaimer": "*Use este servicio sólo en casos de Emergencia Extrema. Por favor utilice el Formulario de Reporte de Incidentes para ayuda en casos de no emergencia.",
+    "sos_disclaimer_body": "Por favor diríjase a Atención al Cliente o al reporte de Informar de un Problema para no emergencias.",
+    "sos_disclaimer_header": "SÓLO PARA SEGURIDAD URGENTE ",
     "sos_feedback": "Por favor espere, estamos solicitando ayuda.",
+    "sos_feedback_body": "Su solicitud de ayuda ha sido enviada a nuestros administradores y un miembro de nuestros equipo de seguridad se comunicará con usted pronto.",
+    "sos_feedback_header": "POR FAVOR ESPERE",
     "user_location_heeader": "Ubicación actual estimada",
     "user_message": "ha iniciado una solicitud de Ayuda de Emergencia. Por favor confirme que la persona está a salvo y que la emergencia se resolvió."
   }

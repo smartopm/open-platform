@@ -4,6 +4,8 @@ module Mutations
   module Form
     # For updating a category
     class CategoryUpdate < BaseMutation
+      include Helpers::FormHelper
+
       argument :category_id, ID, required: true
       argument :field_name, String, required: true
       argument :order, Int, required: true
@@ -24,7 +26,7 @@ module Mutations
 
         form = category.form
         if form.entries?
-          new_form = duplicate_form(form, values)
+          new_form = duplicate_form(form, values, :category_update)
           { message: 'New version created', new_form_version: new_form } if new_form.persisted?
         else
           if category.update(values.except(:category_id))
@@ -36,11 +38,11 @@ module Mutations
           raise GraphQL::ExecutionError, category.errors.full_messages
         end
       end
-
       # rubocop:enable Metrics/MethodLength
+
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(module: :forms, permission: :can_update_category)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
@@ -55,30 +57,6 @@ module Mutations
 
         raise GraphQL::ExecutionError, I18n.t('errors.category.not_found')
       end
-
-      # rubocop:disable Metrics/MethodLength
-      # Duplicates form with new version number
-      #
-      # @param form [Forms::Form]
-      # @param values [Hash]
-      #
-      # @return new_form [Forms::Form]
-      def duplicate_form(form, values)
-        ActiveRecord::Base.transaction do
-          last_version_number = form.last_version
-          new_form = form.dup
-          new_form.version_number = (last_version_number + 1)
-          new_name = form.name.gsub(/\s(V)\d*/, '')
-          new_form.name = "#{new_name} V#{last_version_number + 1}"
-
-          if new_form.save!
-            form.duplicate(new_form, values, :category_update)
-            form.deprecated!
-            new_form
-          end
-        end
-      end
-      # rubocop:enable Metrics/MethodLength
     end
   end
 end

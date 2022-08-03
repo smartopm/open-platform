@@ -17,7 +17,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(module: :land_parcel, permission: :can_delete_point_of_interest)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

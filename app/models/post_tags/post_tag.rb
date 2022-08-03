@@ -5,8 +5,6 @@ module PostTags
   # PostTag, tags from wordpress
   class PostTag < ApplicationRecord
     belongs_to :community
-    # TODO: association is defined with user, however column user_id is not there in table.
-    belongs_to :user, class_name: 'Users::User', optional: true
     has_many :post_tag_users, dependent: :destroy
     has_many :users, through: :post_tag_users
 

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe ActionFlows::Actions::Notification do
   let!(:user) { create(:user_with_community) }
-  let!(:acting_user) { create(:user_with_community, community: user.community) }
+  let!(:acting_user) { create(:user, community: user.community, role: user.role) }
   let!(:event_log) do
     create(:event_log, subject: 'user_login', ref_type: 'Users::User', ref_id: user.id,
                        acting_user: acting_user, community: user.community)
@@ -33,6 +33,6 @@ RSpec.describe ActionFlows::Actions::Notification do
       label: 'com_news',
       user_id: '123',
     )
-    described_class.execute_action(event.data_set, flow.action_fields)
+    described_class.execute_action(event.data_set, flow.action_fields, event_log)
   end
 end

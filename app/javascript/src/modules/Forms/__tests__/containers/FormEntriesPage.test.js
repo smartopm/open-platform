@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
-import { BrowserRouter } from 'react-router-dom/';
+import { render, waitFor } from '@testing-library/react';
+
+import routeData, { MemoryRouter } from 'react-router/';
 import { MockedProvider } from '@apollo/react-testing';
 import FormEntriesPage from '../../containers/FormEntriesPage';
 import { Context } from "../../../../containers/Provider/AuthStateProvider";
@@ -10,17 +10,22 @@ import authState from "../../../../__mocks__/authstate";
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('FormEntriesPage Component', () => {
-  it('renders loader when loading form', () => {
+  const mockParams = {
+    formId: '/123',
+  }
+  beforeEach(() => {
+    jest.spyOn(routeData, 'useParams').mockReturnValue(mockParams)
+  });
+  it('renders loader when loading form', async () => {
     const container = render(
-      <Context.Provider value={authState}>
-        <MockedProvider>
-          <BrowserRouter>
+      <MemoryRouter>
+        <Context.Provider value={authState}>
+          <MockedProvider>
             <FormEntriesPage />
-          </BrowserRouter>
-        </MockedProvider>
-      </Context.Provider>
+          </MockedProvider>
+        </Context.Provider>
+      </MemoryRouter>
     );
-
-    expect(container.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    await waitFor(() => expect(container.queryAllByTestId('loader')[0]).toBeInTheDocument())
   });
 });

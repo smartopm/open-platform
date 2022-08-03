@@ -22,8 +22,7 @@ export default function ActionFlowsList({ openFlowModal, data, refetch }) {
 }
 
 ActionFlowsList.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  data: PropTypes.object.isRequired,
+  data: PropTypes.instanceOf(Object).isRequired,
   openFlowModal: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired
 }

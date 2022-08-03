@@ -4,10 +4,9 @@
 # rubocop:disable Layout/LineLength
 # rubocop:disable Metrics/MethodLength
 class Deploy
-  TOKEN = ENV['GITLAB_TOKEN']
   BASE_URL = 'https://gitlab.com/api/v4/projects/13905080'
 
-  def self.create_tag!
+  def self.create_tag!(gitlab_token)
     tag_name = new_tag_name
     message = tag_message
     return if message.empty?
@@ -21,11 +20,11 @@ class Deploy
                              headers: {
                                'Content-Type' => 'application/json',
                                'Accept' => 'application/json',
-                               'Authorization' => "Bearer #{TOKEN}",
+                               'Authorization' => "Bearer #{gitlab_token}",
                              })
 
     if response.code == 201
-      create_release!(tag_name)
+      create_release!(tag_name, gitlab_token)
       Rails.logger.info "Successfully created #{tag_name}, you can verify the release here https://gitlab.com/doublegdp/app/-/releases/#{tag_name}"
     else
       Rails.logger.error "Error: #{response.message}"
@@ -47,7 +46,7 @@ class Deploy
     message.join('')
   end
 
-  def self.create_release!(name)
+  def self.create_release!(name, gitlab_token)
     HTTParty.post("#{BASE_URL}/releases",
                   body: {
                     name: name,
@@ -57,7 +56,7 @@ class Deploy
                   headers: {
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
-                    'Authorization' => "Bearer #{TOKEN}",
+                    'Authorization' => "Bearer #{gitlab_token}",
                   })
   end
 

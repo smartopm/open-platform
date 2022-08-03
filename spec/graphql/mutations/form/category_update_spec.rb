@@ -4,16 +4,28 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Form::FormCreate do
   describe 'create categories' do
-    let!(:user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[can_update_category])
+    end
+
+    let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
+    let!(:admin) do
+      create(:user, user_type: 'admin', community_id: user.community_id, role: admin_role)
+    end
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community: community) }
     let!(:form) { create(:form, community: community) }
     let!(:category) { create(:category, form: form, general: true, field_name: 'info') }
     let!(:form_property) do
       create(:form_property, form: form, field_type: 'text', category: category,
                              field_name: 'Select Business')
     end
-    let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
+    let(:form_user) do
+      create(:form_user, form: form, user: user, status: :approved, status_updated_by: admin)
+    end
 
     let(:mutation) do
       <<~GQL
@@ -61,6 +73,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to eql 'Category not found'
       end
@@ -80,6 +93,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         category_result = result.dig('data', 'categoryUpdate', 'category')
@@ -107,6 +121,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(
@@ -116,6 +131,32 @@ RSpec.describe Mutations::Form::FormCreate do
         new_form = Forms::Form.where.not(id: form.id).first
         updated_category = new_form.categories.first
         expect(updated_category.field_name).to eql 'personal info'
+      end
+
+      it 'retains associated process for new form version' do
+        process = create(:process, form_id: form.id, name: 'Test Process', community: community)
+        create(:note_list, community: community, process_id: process.id, name: 'Test Note List')
+        expect(form.associated_process?).to eq(true)
+
+        variables = {
+          categoryId: category.id,
+          fieldName: 'Updated Category',
+          order: 1,
+          headerVisible: true,
+          general: false,
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                     user_role: admin.role,
+                                                   }).as_json
+
+        expect(result.dig('errors', 0, 'message')).to be_nil
+        new_form = Forms::Form.where.not(id: form.id).first
+        expect(process.reload.form_id).to eq(new_form.id)
+        expect(new_form.associated_process?).to eq(true)
       end
     end
 
@@ -133,6 +174,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: user,
                                                      site_community: community,
+                                                     user_role: user.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
       end

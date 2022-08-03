@@ -1,19 +1,11 @@
-/* eslint-disable */
-import React from 'react'
-import SupportCard from '../Components/SupportCard'
-import { cleanup, render } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom/'
-import { MockedProvider } from '@apollo/react-testing'
+import React from 'react';
+import { cleanup, render } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom/';
+import { MockedProvider } from '@apollo/react-testing';
+import SupportCard from '../Components/SupportCard';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Contact page', () => {
-
-
-  const sendMessage = {
-    pathname: `/message/863a-45eq-dsf78`,
-    clientName: 'Contact Support',
-    clientNumber: '290974624573',
-    from: 'contact'
-  }
   const authState = {
     loaded: true,
     loggedIn: true,
@@ -29,64 +21,57 @@ describe('Contact page', () => {
       phoneNumber: '260971500748',
       userType: 'security_guard'
     }
-  }
+  };
 
   it('render without error', () => {
     render(
       <MockedProvider>
         <BrowserRouter>
-          <SupportCard
-            handleSendMessage={sendMessage}
-            user={authState.user}
-            // authState={authState}
-          />
+          <MockedThemeProvider>
+            <SupportCard handleSendMessage={jest.fn()} user={authState.user} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
-    )
-  })
-
-
+    );
+  });
 
   it('clicks pay with mobile money then opens use window', () => {
     const { getByTestId } = render(
       <BrowserRouter>
-        <SupportCard
-          handleSendMessage={sendMessage}
-          user={authState.user}
-        />
+        <MockedThemeProvider>
+          <SupportCard handleSendMessage={jest.fn()} user={authState.user} />
+        </MockedThemeProvider>
       </BrowserRouter>
-    )
-    const button = getByTestId('pwmm')
-    expect(button).toBeTruthy()
-  })
+    );
+    const button = getByTestId('pwmm');
+    expect(button).toBeTruthy();
+  });
 
-  it('clicks pay with mobile money then opens use window', () => {
-    window.open = jest.fn()
+  it('clicks pay with mobile money use window', () => {
+    window.open = jest.fn();
     const { getAllByTestId } = render(
       <BrowserRouter>
-        <SupportCard
-          handleSendMessage={sendMessage}
-          user={authState.user}
-        />
+        <MockedThemeProvider>
+          <SupportCard handleSendMessage={jest.fn()} user={authState.user} />
+        </MockedThemeProvider>
       </BrowserRouter>
-    )
-    const payWithMoMo = getAllByTestId('pwmm')
-    expect(payWithMoMo[0].textContent).toContain('buttons.pay_with_mobile_money')
-  })
+    );
+    const payWithMoMo = getAllByTestId('pwmm');
+    expect(payWithMoMo[0].textContent).toContain('buttons.pay_with_mobile_money');
+  });
 
   it('clicks privacy and terms of service', () => {
-    window.open = jest.fn()
+    window.open = jest.fn();
     const { getByTestId } = render(
       <BrowserRouter>
-        <SupportCard
-          handleSendMessage={sendMessage}
-          user={authState.user}
-        />
+        <MockedThemeProvider>
+          <SupportCard handleSendMessage={jest.fn()} user={authState.user} />
+        </MockedThemeProvider>
       </BrowserRouter>
-    )
-    const tos = getByTestId('tos')
-    expect(tos.textContent).toContain('buttons.privacy_and_terms')
-  })
+    );
+    const tos = getByTestId('tos');
+    expect(tos.textContent).toContain('buttons.privacy_and_terms');
+  });
 
-  afterEach(cleanup)
-})
+  afterEach(cleanup);
+});

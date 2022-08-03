@@ -20,10 +20,9 @@ module Mutations
       end
 
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.custodian?
+        return true if permitted?(module: :timesheet, permission: :can_manage_shift)
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

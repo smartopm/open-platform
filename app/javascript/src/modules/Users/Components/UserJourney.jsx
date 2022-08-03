@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
 import { dateFormatter } from '../../../components/DateContainer';
 import { userSubStatus } from '../../../utils/constants';
 import UserJourneyDialog from './UserJourneyDialog';
@@ -37,7 +37,7 @@ export function getInitialSubStatusContent({ date, newStatus, previousStatus }) 
 
 export function getSubStatusChangeContent({ startDate, stopDate, previousStatus, newStatus }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { t } = useTranslation('users')
+  const { t } = useTranslation(['users', 'common'])
   return (
     <span data-testid="log_content">
       {' '}
@@ -59,7 +59,7 @@ export function getSubStatusChangeContent({ startDate, stopDate, previousStatus,
   );
 }
 
-export function subsStatusLogsFormatter(subStatusLogs) {
+export function subsStatusLogsFormatter(subStatusLogs, t) {
   /*
   Sort by startDate. Don't mutate object
   Time lapse = startDate[index + 1] to startDate[index]
@@ -69,7 +69,7 @@ export function subsStatusLogsFormatter(subStatusLogs) {
   return sortedLogsDescending.map(log => {
     if (!log.stopDate) {
       const content = getInitialSubStatusContent({
-        date: dateFormatter(log.startDate),
+        date: dateFormatter(log.startDate, t),
         newStatus: log.newStatus,
         previousStatus: log.previousStatus
       });
@@ -84,8 +84,8 @@ export function subsStatusLogsFormatter(subStatusLogs) {
       };
     }
 
-    const startDate = dateFormatter(log.startDate);
-    const stopDate = dateFormatter(log.stopDate);
+    const startDate = dateFormatter(log.startDate, t);
+    const stopDate = dateFormatter(log.stopDate, t);
     const { newStatus, previousStatus } = log;
 
     const content = getSubStatusChangeContent({ startDate, stopDate, previousStatus, newStatus });
@@ -111,7 +111,7 @@ export default function UserJourney({ data, refetch }) {
     setCurrentLog(log);
     setIsEditing(true);
   }
-  const formattedSubStatusLogs = subsStatusLogsFormatter(data.user?.substatusLogs);
+  const formattedSubStatusLogs = subsStatusLogsFormatter(data.user?.substatusLogs, t);
   return (
     <>
       <UserJourneyDialog
@@ -121,10 +121,10 @@ export default function UserJourney({ data, refetch }) {
         refetch={refetch}
       />
       {
-        !formattedSubStatusLogs.length && (
-          <CenteredContent>{t("users.user_journey_message")}</CenteredContent>
-        )
-      }
+      !formattedSubStatusLogs.length && (
+        <CenteredContent>{t("users.user_journey_message")}</CenteredContent>
+      )
+    }
       {formattedSubStatusLogs.map(log => (
         <Grid container spacing={3} key={log.id}>
           <Grid item xs={10}>
@@ -132,13 +132,13 @@ export default function UserJourney({ data, refetch }) {
               <b>{data.user.name}</b>
               {log.content}
               {
-                log.updatedBy && (
-                  <span className={classes.changedBy}>
-                    Updated by &nbsp;
-                    <b>{log.updatedBy}</b>
-                  </span>
-                  )
-              }
+              log.updatedBy && (
+                <span className={classes.changedBy}>
+                  Updated by &nbsp;
+                  <b>{log.updatedBy}</b>
+                </span>
+                )
+            }
             </Typography>
           </Grid>
           <Grid item xs={2}>
@@ -147,14 +147,15 @@ export default function UserJourney({ data, refetch }) {
               color="primary"
               onClick={() => handleEdit(log)}
               data-testid="edit_journey"
+              size="large"
             >
               <EditIcon />
             </IconButton>
           </Grid>
         </Grid>
-      ))}
+    ))}
     </>
-  );
+);
 }
 
 const useStyles = makeStyles({

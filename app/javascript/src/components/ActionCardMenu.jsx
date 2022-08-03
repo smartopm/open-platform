@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
-import { Menu, MenuItem } from '@material-ui/core'
+import { Menu, MenuItem } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 import ActionFLowDelete from './ActionFlows/ActionFlowDelete'
 
-export default function ActionCardMenu({ data, open, handleClose, anchorEl, openFlowModal, refetch }) {
+export default function ActionCardMenu({
+  data, open, handleClose, anchorEl, openFlowModal, refetch
+}) {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const { t } = useTranslation(['common'])
-  
+
   function handleDelete() {
     setDeleteOpen(true)
   }
@@ -47,7 +49,12 @@ export default function ActionCardMenu({ data, open, handleClose, anchorEl, open
           </MenuItem>
         </div>
       </Menu>
-      <ActionFLowDelete open={deleteOpen} handleClose={() => setDeleteOpen(false)} data={data} refetch={refetch} />
+      <ActionFLowDelete
+        open={deleteOpen}
+        handleClose={() => setDeleteOpen(false)}
+        data={data}
+        refetch={refetch}
+      />
     </>
   )
 }
@@ -57,12 +64,11 @@ ActionCardMenu.defaultProps = {
  }
 ActionCardMenu.propTypes = {
   data: PropTypes.shape({
-    id: PropTypes.string
+    id: PropTypes.string,
   }).isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   openFlowModal: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  anchorEl: PropTypes.object,
-  refetch: PropTypes.func.isRequired
-}
+  anchorEl: PropTypes.instanceOf(Object),
+  refetch: PropTypes.func.isRequired,
+};

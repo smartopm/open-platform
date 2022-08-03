@@ -1,31 +1,36 @@
+/* eslint-disable complexity */
 import React, { useContext, useState } from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import Drawer from '@material-ui/core/Drawer';
-import MenuIcon from '@material-ui/icons/Menu';
+import Drawer from '@mui/material/Drawer';
+import Grid from '@mui/material/Grid';
+import MenuIcon from '@mui/icons-material/Menu';
 import { StyleSheet, css } from 'aphrodite';
-import { Button, IconButton, SvgIcon } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import CloseIcon from '@mui/icons-material/Close';
+import { Button, IconButton, Skeleton, SvgIcon, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
-import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
+import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
 import SOSIcon from './SOSIcon';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import SideMenu from './SideMenu';
-import NotificationBell from '../../../components/NotificationBell';
+import NotificationBell from './NotificationBell';
 import modules from '../..';
 import CommunityName from '../../../shared/CommunityName';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 import userProps from '../../../shared/types/user';
-import UserAvatar from '../../Users/Components/UserAvatar';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
-import Loading from '../../../shared/Loading';
 import SOSModal from './SOSModal';
-import useGeoLocation from '../../../hooks/useGeoLocation'
+import useGeoLocation from '../../../hooks/useGeoLocation';
 import { filterQuickLinksByRole } from '../../Dashboard/utils';
-import { allUserTypes, sosAllowedUsers } from '../../../utils/constants';
+import { allUserTypes } from '../../../utils/constants';
 import BackArrow from './BackArrow';
+import { canAccessSOS } from '../utils';
+import CustomDrawer from '../../../shared/CustomDrawer';
+import DrawerContent from './DrawerContent';
 
 const drawerWidth = 260;
 
@@ -41,7 +46,8 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     height: 50,
-    backgroundColor: '#FFFFFF' // get this color from the theme
+    backgroundColor: '#FFFFFF', // get this color from the theme
+    borderBottom: '1px solid #E0E0E0'
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -55,6 +61,9 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3)
+  },
+  notification: {
+    color: '#FFFFFF'
   }
 }));
 
@@ -64,13 +73,17 @@ export default function Main() {
 }
 
 export function MainNav({ authState }) {
-  const matches = useMediaQuery('(max-width:600px)');
-  const path = useLocation().pathname
+  const { t } = useTranslation('notification');
+  const matchesSmall = useMediaQuery('(max-width:500px)');
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const path = useLocation().pathname;
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const location = useGeoLocation();
-  const menuQuickLinks = authState?.user?.community?.menuItems?.filter((quickLink) => quickLink?.display_on?.includes('Menu'))
+  const menuQuickLinks = authState?.user?.community?.menuItems?.filter(quickLink =>
+    quickLink?.display_on?.includes('Menu')
+  );
   const quickLinks = filterQuickLinksByRole(menuQuickLinks, authState?.user?.userType);
 
   const dynamicMenu =
@@ -99,24 +112,36 @@ export function MainNav({ authState }) {
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
-
-    if (window.screen.width > 768) {
-      // A hack to dynamically change app-container's margin-left
-      // There's a react-way of doing it but it re-renders the whole <App /> component
-      document.getElementById('app-container').style.marginLeft = drawerOpen
-        ? 0
-        : `${drawerWidth}px`;
-    }
   };
 
-  const communityHasEmergencyNumber = Boolean(authState.user?.community?.emergencyCallNumber)
-  const communityHasEmergencySMSNumber = Boolean(authState.user?.community?.smsPhoneNumbers?.filter(Boolean)?.length !== 0)
+  const communityHasEmergencyNumber = Boolean(authState.user?.community?.emergencyCallNumber);
+  const communityHasEmergencySMSNumber = Boolean(
+    authState.user?.community?.smsPhoneNumbers?.filter(Boolean)?.length !== 0
+  );
 
-  if (!location.loaded) return <Loading />;
+  const showSOS =
+    canAccessSOS({ authState }) && communityHasEmergencyNumber && communityHasEmergencySMSNumber;
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.appBar}>
+      <CustomDrawer open={openDrawer} anchor="right" handleClose={() => setOpenDrawer(false)}>
+        <Grid container>
+          <Grid item md={10} sm={10} xs={10}>
+            <Typography variant="h6" className={classes.notification}>
+              {t('notification.notifications')}
+            </Typography>
+          </Grid>
+          <Grid item md={2} sm={2} xs={2} style={{ textAlign: 'right' }}>
+            <IconButton onClick={() => setOpenDrawer(false)}>
+              <CloseIcon className={classes.notification} />
+            </IconButton>
+          </Grid>
+          <Grid item md={12} sm={12} xs={12}>
+            <DrawerContent userId={authState?.user?.id} setOpenDrawer={setOpenDrawer} />
+          </Grid>
+        </Grid>
+      </CustomDrawer>
+      <AppBar position="fixed" className={classes.appBar} elevation={0}>
         <Toolbar>
           <IconButton
             color="primary"
@@ -126,6 +151,7 @@ export function MainNav({ authState }) {
             className={`${classes.menuButton} left-menu-collapsible`}
             style={{ paddingTop: drawerOpen ? '20px' : '0px' }}
             data-testid="drawer"
+            size="large"
           >
             {drawerOpen ? (
               <DoubleArrowOutlinedIcon
@@ -135,35 +161,42 @@ export function MainNav({ authState }) {
               <MenuIcon />
             )}
           </IconButton>
-          
-          {matches && <BackArrow path={path} />}
-          
-          {sosAllowedUsers.includes(authState?.user?.userType?.toLowerCase())
-           && communityHasEmergencyNumber && communityHasEmergencySMSNumber
-           && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}
 
-          {!matches && <BackArrow path={path} />}
+          {!location.loaded ? (
+            <Skeleton variant="rectangular" width={35} height={35} />
+          ) : (
+            showSOS && (
+              <SvgIcon
+                component={SOSIcon}
+                viewBox="0 0 384 512"
+                setOpen={setOpen}
+                data-testid="sos-icon"
+              />
+            )
+          )}
 
+          <BackArrow path={path} />
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
-          <UserAvatar imageUrl={authState?.user?.imageUrl} />
-          <UserActionOptions />
-          <NotificationBell user={authState.user} />
-          {matches ? (
-            <div>
-              <CommunityName authState={authState} />
-            </div>
+          {matchesSmall ? (
+            <CommunityName authState={authState} logoStyles={styles} />
           ) : (
             <CenteredContent>
               <CommunityName authState={authState} />
             </CenteredContent>
           )}
+          <NotificationBell
+            user={authState.user}
+            openDrawer={openDrawer}
+            setOpenDrawer={setOpenDrawer}
+          />
+          <UserActionOptions />
         </Toolbar>
       </AppBar>
       {authState.loggedIn && (
         <nav className={classes.drawer} aria-label="mailbox folders" data-testid="nav-container">
           <Drawer
-            variant={window.screen.width <= 768 ? 'temporary' : 'persistent'}
+            variant='temporary'
             anchor="left"
             open={drawerOpen}
             onClose={handleDrawerToggle}
@@ -183,10 +216,6 @@ export function MainNav({ authState }) {
           </Drawer>
         </nav>
       )}
-      <br />
-      <br />
-      <br />
-      <br />
     </div>
   );
 }
@@ -195,7 +224,7 @@ export function NewsNav({ children, history }) {
   return (
     <nav className={css(styles.topNav)} style={{ minHeight: '50px' }}>
       <div className={css(styles.topNav)}>
-        <Button onClick={() => history.push('/')}>
+        <Button onClick={() => history.push('/news')} data-testid="take_me_back_icon">
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
         </Button>
         <ul
@@ -219,13 +248,31 @@ MainNav.propTypes = {
 NewsNav.propTypes = {
   children: PropTypes.node.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  history: PropTypes.func.isRequired
-
+  history: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
   logo: {
-    height: '25px'
+    '@media (max-width: 600px)': {
+      height: 35
+    },
+    '@media (max-width: 350px)': {
+      marginLeft: 6,
+      height: 30
+    },
+    '@media (min-width: 350px) and (max-width: 405px)': {
+      marginLeft: '1.8em',
+      height: 25
+    },
+    '@media (min-width: 406px) and (max-width: 470px)': {
+      marginLeft: '3em'
+    },
+    '@media (min-width: 470px) and (max-width: 500px)': {
+      marginLeft: '5em'
+    },
+    '@media (min-width: 501px) and (max-width: 550px)': {
+      marginLeft: '-3em'
+    }
   },
   topNav: {
     width: '100%',

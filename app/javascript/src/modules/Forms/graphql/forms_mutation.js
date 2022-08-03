@@ -7,6 +7,8 @@ export const FormPropertyCreateMutation = gql`
     $categoryId: ID!
     $fieldName: String!
     $fieldType: String!
+    $shortDesc: String
+    $longDesc: String
     $required: Boolean!
     $adminUse: Boolean!
     $order: String!
@@ -16,6 +18,8 @@ export const FormPropertyCreateMutation = gql`
       formId: $formId
       categoryId: $categoryId
       fieldName: $fieldName
+      shortDesc: $shortDesc
+      longDesc: $longDesc
       order: $order
       required: $required
       adminUse: $adminUse
@@ -37,7 +41,9 @@ export const FormCreateMutation = gql`
     $expiresAt: String
     $description: String
     $multipleSubmissionsAllowed: Boolean!
+    $hasTermsAndConditions: Boolean!
     $preview: Boolean!
+    $isPublic: Boolean!
     $roles: [String]
   ) {
     formCreate(
@@ -45,7 +51,9 @@ export const FormCreateMutation = gql`
       expiresAt: $expiresAt
       description: $description
       multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+      hasTermsAndConditions: $hasTermsAndConditions
       preview: $preview
+      isPublic: $isPublic
       roles: $roles
     ) {
       form {
@@ -77,7 +85,9 @@ export const FormUpdateMutation = gql`
     $description: String
     $status: String
     $multipleSubmissionsAllowed: Boolean
+    $hasTermsAndConditions: Boolean
     $preview: Boolean
+    $isPublic: Boolean
     $roles: [String]
     ) {
     formUpdate(
@@ -87,7 +97,9 @@ export const FormUpdateMutation = gql`
       description: $description
       status: $status
       multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+      hasTermsAndConditions: $hasTermsAndConditions
       preview: $preview
+      isPublic: $isPublic
       roles: $roles
     ){
       form {
@@ -98,8 +110,8 @@ export const FormUpdateMutation = gql`
 `;
 
 export const FormUserCreateMutation = gql`
-  mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!) {
-    formUserCreate(formId: $formId, userId: $userId, propValues: $propValues) {
+  mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!, $status: String, $hasAgreedToTerms: Boolean) {
+    formUserCreate(formId: $formId, userId: $userId, propValues: $propValues, status: $status, hasAgreedToTerms: $hasAgreedToTerms) {
       formUser {
         id
       }
@@ -133,29 +145,42 @@ mutation updateProps(
   $categoryId: ID!
   $fieldName: String!
   $fieldType: String!
+  $shortDesc: String
+  $longDesc: String
   $required: Boolean!
   $adminUse: Boolean!
   $order: String!
   $fieldValue: JSON
-) {
-  formPropertiesUpdate(
-    formPropertyId: $formPropertyId
-    categoryId: $categoryId
-    fieldName: $fieldName
-    order: $order
-    required: $required
-    adminUse: $adminUse
-    fieldType: $fieldType
-    fieldValue: $fieldValue
   ) {
-    formProperty {
-      id
-      fieldName
+    formPropertiesUpdate(
+      formPropertyId: $formPropertyId
+      categoryId: $categoryId
+      fieldName: $fieldName
+      shortDesc: $shortDesc
+      longDesc: $longDesc
+      order: $order
+      required: $required
+      adminUse: $adminUse
+      fieldType: $fieldType
+      fieldValue: $fieldValue
+      ) {
+        formProperty {
+          id
+          fieldName
+        }
+        newFormVersion {
+          id
+        }
+        message
+      }
     }
-    newFormVersion {
-      id
+    `;
+    
+    
+export const PublicUserMutation = gql`
+  mutation loginPublicUser {
+    loginPublicUser {
+        authToken
     }
-    message
   }
-}
 `;

@@ -1,0 +1,72 @@
+{
+  "id": 3536714,
+  "txRef": "121",
+  "flwRef": "FLW-MOCK-fd79d143cad37be0aeba5c72c2578e",
+  "orderRef": "URF_16569143705_6243435",
+  "paymentPlan": null,
+  "paymentPage": null,
+  "createdAt": "2022-07-04T05:59:30.000Z",
+  "amount": 11,
+  "charged_amount": 11,
+  "status": "failed",
+  "IP": "52.209.124.143",
+  "currency": "ZMW",
+  "appfee": 0.42,
+  "merchantfee": 0,
+  "merchantbearsfee": 1,
+  "customer": {
+    "id": 167988,
+    "phone": null,
+    "fullName": "John Doe",
+    "customertoken": null,
+    "email": "john@doublegdp.com",
+    "createdAt": "2022-07-04T05:59:30.000Z",
+    "updatedAt": "2022-07-04T05:59:30.000Z",
+    "deletedAt": null,
+    "AccountId": 1757962
+  }, 
+  "entity": {
+    "card6": "555765",
+    "card_last4": "1684",
+    "card_country_iso": "AU",
+    "createdAt": "2020-06-21T01:08:58.000Z"
+  },
+  "event.type": "CARD_TRANSACTION",
+  "controller": "transaction",
+  "action": "webhook",
+  "transaction": {
+    "id": 3536714,
+    "txRef": "121",
+    "flwRef": "FLW-MOCK-fd79d1f143c0aeba5c72c2578e",
+    "orderRef": "URF_1656914370205_6235",
+    "paymentPlan": null,
+    "paymentPage": null,
+    "createdAt": "2022-07-04T05:59:30.000Z",
+    "amount": 11,
+    "charged_amount": 11,
+    "status": "failed",
+    "IP": "52.219.194.143",
+    "currency": "ZMW",
+    "appfee": 0.42,
+    "merchantfee": 0,
+    "merchantbearsfee": 1,
+    "customer": {
+      "id": 1679318,
+      "phone": null,
+      "fullName": "John Doe",
+      "customertoken": null,
+      "email": "john@doublegdp.com",
+      "createdAt": "2022-07-04T05:59:30.000Z",
+      "updatedAt": "2022-07-04T05:59:30.000Z",
+      "deletedAt": null,
+      "AccountId": 1757962
+    },
+    "entity": {
+      "card6": "555155",
+      "card_last4": "1884",
+      "card_country_iso": "AU",
+      "createdAt": "2020-06-21T01:08:58.000Z"
+    },
+    "event.type": "CARD_TRANSACTION"
+  }
+}

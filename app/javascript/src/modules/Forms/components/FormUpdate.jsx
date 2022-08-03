@@ -1,34 +1,53 @@
+/* eslint-disable complexity */
+/* eslint-disable max-lines */
+/* eslint-disable max-statements */
 /* eslint-disable no-use-before-define */
 /* eslint-disable security/detect-object-injection */
-/* eslint-disable no-unused-expressions */
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useRef, useState, useEffect } from 'react';
-import { Button, Container, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, Divider, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import DatePickerDialog, {
   DateAndTimePickers,
   ThemedTimePicker
 } from '../../../components/DatePickerDialog';
 import { FormUserQuery, UserFormPropertiesQuery } from '../graphql/forms_queries';
-import ErrorPage from '../../../components/Error';
-import CenteredContent from '../../../components/CenteredContent';
 import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../graphql/forms_mutation';
 import TextInput from './FormProperties/TextInput';
-import { convertBase64ToFile, sortPropertyOrder, objectAccessor } from '../../../utils/helpers';
+import {
+  convertBase64ToFile,
+  sortPropertyOrder,
+  objectAccessor,
+  secureFileDownload,
+  formatError
+} from '../../../utils/helpers';
 import DialogueBox from '../../../shared/dialogs/DeleteDialogue';
 import UploadField from './FormProperties/UploadField';
 import SignaturePad from './FormProperties/SignaturePad';
-import { useFileUpload } from '../../../graphql/useFileUpload';
-import { dateFormatter } from '../../../components/DateContainer';
-import { formStatus as updatedFormStatus } from '../../../utils/constants';
+import useFileUpload from '../../../graphql/useFileUpload';
 import RadioInput from './FormProperties/RadioInput';
 import ImageAuth from '../../../shared/ImageAuth';
-import Loading from '../../../shared/Loading';
+import { Spinner } from '../../../shared/Loading';
 import FormTitle from './FormTitle';
 import CheckboxInput from './FormProperties/CheckboxInput';
+import ListWrapper from '../../../shared/ListWrapper';
+import CategoryItem from './Category/CategoryItem';
+import MessageAlert from '../../../components/MessageAlert';
+import SubmittedFileItem from '../../../shared/imageUpload/SubmittedFileItem';
+import { handleFileSelect, handleFileUpload, removeBeforeUpload, isUploaded } from '../utils';
+import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
+import TermsAndCondition from './TermsAndCondition';
+import PaymentInput from './FormProperties/PaymentInput';
+import { currencies } from '../../../utils/constants';
+import CenteredContent from '../../../shared/CenteredContent';
 
 // date
 // text input (TextField or TextArea)
@@ -40,18 +59,34 @@ const initialData = {
   radio: { value: { label: '', checked: null } }
 };
 
-export default function FormUpdate({ formUserId, userId, authState }) {
+export default function FormUpdate({ formUserId, userId, authState, categoriesData }) {
+  const state = {
+    isSubmitting: false,
+    isUploading: false,
+    currentPropId: '',
+    previewable: false,
+    currentFileNames: []
+  };
+  const [imgUploadError, setImgUploadError] = useState(false);
   const [properties, setProperties] = useState(initialData);
   const [message, setMessage] = useState({ err: false, info: '', signed: false });
+  const [messageAlert, setMessageAlert] = useState('');
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [formAction, setFormAction] = useState('');
+  const [filesToUpload, setFilesToUpload] = useState([]);
   const history = useHistory();
   const signRef = useRef(null);
   const { t } = useTranslation(['form', 'common']);
+  const classes = useStyles();
   // create form user
   const [updateFormUser] = useMutation(FormUserUpdateMutation);
   const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation);
+  const [formState, setFormState] = useState(state);
+  const matches = useMediaQuery('(max-width:900px)');
+  const communityCurrency = objectAccessor(currencies, authState.user?.community?.currency) || '';
 
   const { data, error, loading } = useQuery(UserFormPropertiesQuery, {
     variables: { userId, formUserId },
@@ -65,7 +100,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     errorPolicy: 'all'
   });
 
-  const { onChange, status, url, signedBlobId } = useFileUpload({
+  const { status, url, signedBlobId, contentType, startUpload, filename } = useFileUpload({
     client: useApolloClient()
   });
   const {
@@ -75,6 +110,38 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   } = useFileUpload({
     client: useApolloClient()
   });
+
+  function createPropertyObj(propertyId) {
+    return {
+      filesToUpload,
+      setFilesToUpload,
+      propertyId,
+      setMessageAlert,
+      setIsSuccessAlert
+    };
+  }
+
+  function handleSelectObject(propertyId) {
+    return {
+      setMessageAlert,
+      setIsSuccessAlert,
+      setFormState,
+      formState,
+      propertyId,
+      startUpload
+    };
+  }
+
+  function removeUploadObject() {
+    return {
+      uploadedImages,
+      setUploadedImages,
+      formState,
+      setFormState,
+      filesToUpload,
+      setFilesToUpload
+    };
+  }
 
   useEffect(() => {
     const checkboxProperties = data?.formUserProperties?.filter(
@@ -90,6 +157,21 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       });
     });
   }, [data]);
+
+  useEffect(() => {
+    if (status === 'DONE' && formState.currentPropId) {
+      setFormState({
+        ...formState,
+        isUploading: false,
+        currentFileNames: [...formState.currentFileNames, `${filename}${formState.currentPropId}`]
+      });
+      setUploadedImages([
+        ...uploadedImages,
+        { blobId: signedBlobId, propertyId: formState.currentPropId, contentType, url, filename }
+      ]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   async function handleSignatureUpload() {
     setMessage({ ...message, signed: true });
@@ -150,10 +232,15 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       .catch(err => setMessage({ ...message, err: true, info: err.message }));
   }
 
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setMessageAlert('');
+    setImgUploadError('');
+  }
+
   function saveFormData() {
-    const fileUploadType = data.formUserProperties.filter(
-      item => item.formProperty.fieldType === 'image'
-    )[0];
     const fileSignType = data.formUserProperties.filter(
       item => item.formProperty.fieldType === 'signature'
     )[0];
@@ -173,14 +260,15 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       };
       filledInProperties.push(newValue);
     }
-    // check if we uploaded then attach the blob id to the newValue
-    if (signedBlobId && url) {
-      const newValue = {
-        value: signedBlobId,
-        form_property_id: fileUploadType.formProperty.id,
-        image_blob_id: signedBlobId
-      };
-      filledInProperties.push(newValue);
+
+    if (uploadedImages.length > 0) {
+      uploadedImages.forEach(upload => {
+        filledInProperties.push({
+          value: upload.blobId,
+          form_property_id: upload.propertyId,
+          image_blob_id: upload.blobId
+        });
+      });
     }
 
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
@@ -208,8 +296,12 @@ export default function FormUpdate({ formUserId, userId, authState }) {
 
   function handleActionClick(_event, action) {
     _event.preventDefault(); // especially on submission trigger
+    if (filesToUpload.length !== uploadedImages.length) {
+      return setImgUploadError(true);
+    }
     setFormAction(action);
     setOpenModal(!openModal);
+    return true
   }
 
   function handleAction() {
@@ -234,27 +326,45 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       setLoading(false);
       history.goBack();
     }, 2000);
+    return true;
+  }
+
+  function downloadFile(event, path) {
+    event.preventDefault();
+    secureFileDownload(path);
   }
 
   function renderForm(formPropertiesData) {
     const editable = !formPropertiesData.formProperty.adminUse
       ? false
       : !(formPropertiesData.formProperty.adminUse && authState.user.userType === 'admin');
+
+    const uploadedFile = uploadedImages.find(
+      im => im.propertyId === formPropertiesData.formProperty.id
+    );
     const fields = {
       text: (
-        <TextInput
-          id={formPropertiesData.formProperty.id}
-          key={formPropertiesData.formProperty.id}
-          properties={formPropertiesData.formProperty}
-          value={formPropertiesData.value}
-          handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
-          editable={editable}
-          name={formPropertiesData.formProperty.fieldName}
-        />
+        <ListWrapper className={classes.space} key={formPropertiesData.formProperty.id}>
+          <TextInput
+            id={formPropertiesData.formProperty.id}
+            properties={formPropertiesData.formProperty}
+            value={formPropertiesData.value}
+            handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
+            editable={editable}
+            name={formPropertiesData.formProperty.fieldName}
+          />
+        </ListWrapper>
       ),
       date: (
         <DatePickerDialog
           key={formPropertiesData.formProperty.id}
+          textFieldStyle={{
+            background: '#F5F5F4',
+            padding: '10px 15px',
+            borderRadius: '10px',
+            marginBottom: '20px'
+          }}
+          inputVariant="outlined"
           selectedDate={
             objectAccessor(properties, formPropertiesData.formProperty.fieldName)?.value ||
             formPropertiesData.value
@@ -267,11 +377,19 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             )
           }
           label={formPropertiesData.formProperty.fieldName}
+          t={t}
         />
       ),
       time: (
         <ThemedTimePicker
           key={formPropertiesData.formProperty.id}
+          textFieldStyle={{
+            background: '#F5F5F4',
+            padding: '10px 15px',
+            borderRadius: '10px',
+            marginBottom: '20px'
+          }}
+          inputVariant="outlined"
           time={
             objectAccessor(properties, formPropertiesData.formProperty.fieldName)?.value ||
             formPropertiesData.value
@@ -285,11 +403,19 @@ export default function FormUpdate({ formUserId, userId, authState }) {
           }
           label={formPropertiesData.formProperty.fieldName}
           style={{ width: '100%' }}
+          t={t}
         />
       ),
       datetime: (
         <DateAndTimePickers
           key={formPropertiesData.formProperty.id}
+          textFieldStyle={{
+            background: '#F5F5F4',
+            padding: '10px 15px',
+            borderRadius: '10px',
+            marginBottom: '20px'
+          }}
+          inputVariant="outlined"
           selectedDateTime={
             objectAccessor(properties, formPropertiesData.formProperty.fieldName)?.value ||
             formPropertiesData.value
@@ -302,50 +428,132 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             )
           }
           label={formPropertiesData.formProperty.fieldName}
+          t={t}
         />
       ),
       file_upload: (
         <div key={formPropertiesData.formProperty.id}>
-          <br />
-          <br />
-          <div data-testid="attachment-name">{formPropertiesData.formProperty.fieldName}</div>
-          {formPropertiesData.imageUrl && (
-            <>
-              <ImageAuth
-                type={formPropertiesData.fileType?.split('/')[0]}
-                imageLink={formPropertiesData.imageUrl}
-                token={authState.token}
-              />
-            </>
-          )}
-          <UploadField
-            detail={{ type: 'file', status }}
-            key={formPropertiesData.id}
-            upload={evt => onChange(evt.target.files[0])}
-            editable={editable}
+          <MessageAlert
+            type={!isSuccessAlert || imgUploadError ? 'error' : 'success'}
+            message={
+              messageAlert || (
+                <div>
+                  <Typography variant="body1">{t('misc.upload_error')}</Typography>
+                  {' '}
+                  <Typography variant="body2">{t('misc.upload_error_content_one')}</Typography>
+                  <Typography variant="body2">{t('misc.upload_error_content_two')}</Typography>
+                  <Typography variant="body2">
+                    {t('misc.upload_error_content_three')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {t('misc.upload_error_content_four')}
+                  </Typography>
+                </div>
+              )
+            }
+            open={!!messageAlert || imgUploadError}
+            handleClose={handleMessageAlertClose}
           />
+          <Grid
+            container
+            direction="row"
+            spacing={1}
+            alignItems="flex-start"
+            className={classes.fileUploadField}
+          >
+            <Grid item md={12} xs={12}>
+              <div>
+                {formPropertiesData.attachments?.length ? (
+                  formPropertiesData.attachments.map(attachment => (
+                    <ListWrapper className={classes.space} key={attachment.id}>
+                      <SubmittedFileItem
+                        attachment={attachment}
+                        translate={t}
+                        downloadFile={downloadFile}
+                        classes={classes}
+                        legacyFile={formPropertiesData}
+                      />
+                    </ListWrapper>
+                  ))
+                ) : (
+                  <ListWrapper className={classes.space}>
+                    <SubmittedFileItem
+                      translate={t}
+                      downloadFile={downloadFile}
+                      classes={classes}
+                      legacyFile={formPropertiesData}
+                    />
+                  </ListWrapper>
+                )}
+              </div>
+            </Grid>
+            <ListWrapper className={classes.space} key={formPropertiesData.id}>
+              <UploadField
+                detail={{
+                  type: 'file',
+                  status,
+                  id: formPropertiesData.formProperty.id,
+                  label: formPropertiesData.formProperty.fieldName,
+                  required: formPropertiesData.formProperty.required,
+                  fileCount: uploadedImages.filter(
+                    file => file.propertyId === formPropertiesData.formProperty.id
+                  ).length,
+                  currentPropId: formState.currentPropId
+                }}
+                upload={evt =>
+                  handleFileSelect(evt, createPropertyObj(formPropertiesData.formProperty.id), t)
+                }
+                uploaded={!!uploadedFile}
+                editable={editable}
+                showDetails
+                btnColor="primary"
+              />
+            </ListWrapper>
+            {filesToUpload
+              .filter(file => file.propertyId === formPropertiesData.formProperty.id)
+              .map(file => (
+                <UploadFileItem
+                  file={file}
+                  formPropertyId={formPropertiesData.formProperty.id}
+                  handleUpload={() =>
+                    handleFileUpload(
+                      file,
+                      handleSelectObject(formPropertiesData.formProperty.id),
+                      t
+                    )
+                  }
+                  handleRemoveFile={removeBeforeUpload}
+                  formState={{ ...formState, uploaded: uploadedImages }}
+                  isUploaded={isUploaded(uploadedImages, file, formPropertiesData.formProperty.id)}
+                  key={file.fileNameId}
+                  translate={t}
+                  removeUploadObject={removeUploadObject}
+                />
+              ))}
+          </Grid>
         </div>
       ),
       signature: (
         <div key={formPropertiesData.formProperty.id}>
           {formPropertiesData.imageUrl && (
             <>
-              {t('misc.signature')}
+              <Typography variant="caption">{t('misc.signature')}</Typography>
               <br />
-              <ImageAuth imageLink={formPropertiesData.imageUrl} token={authState.token} />
+              <ImageAuth imageLink={formPropertiesData.imageUrl} auth />
             </>
           )}
-          <SignaturePad
-            key={formPropertiesData.id}
-            detail={{ type: 'signature', status: signatureStatus }}
-            signRef={signRef}
-            onEnd={() => handleSignatureUpload(formPropertiesData.id)}
-          />
+          <ListWrapper className={classes.space}>
+            <SignaturePad
+              key={formPropertiesData.id}
+              detail={{ type: 'signature', status: signatureStatus }}
+              signRef={signRef}
+              onEnd={() => handleSignatureUpload(formPropertiesData.id)}
+            />
+          </ListWrapper>
         </div>
       ),
       radio: (
-        <Fragment key={formPropertiesData.formProperty.id}>
-          <br />
+        <ListWrapper key={formPropertiesData.formProperty.id} className={classes.space}>
           <br />
           <RadioInput
             properties={formPropertiesData}
@@ -359,11 +567,10 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             }
           />
           <br />
-        </Fragment>
+        </ListWrapper>
       ),
       checkbox: (
-        <Fragment key={formPropertiesData.formProperty.id}>
-          <br />
+        <ListWrapper key={formPropertiesData.formProperty.id} className={classes.space}>
           <br />
           <CheckboxInput
             properties={formPropertiesData}
@@ -377,110 +584,145 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             }
           />
           <br />
-        </Fragment>
+        </ListWrapper>
       ),
       dropdown: (
-        <TextInput
-          id={formPropertiesData.formProperty.id}
-          key={formPropertiesData.formProperty.id}
-          properties={formPropertiesData.formProperty}
-          value={formPropertiesData.value}
-          handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
-          editable={editable}
-          name={formPropertiesData.formProperty.fieldName}
-        />
-      )
+        <ListWrapper className={classes.space} key={formPropertiesData.formProperty.id}>
+          <TextInput
+            id={formPropertiesData.formProperty.id}
+            properties={formPropertiesData.formProperty}
+            value={formPropertiesData.value}
+            handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
+            editable={editable}
+            name={formPropertiesData.formProperty.fieldName}
+          />
+        </ListWrapper>
+      ),
+      payment: (
+        <ListWrapper className={classes.space} key={formPropertiesData.formProperty.id}>
+          <PaymentInput
+            properties={formPropertiesData.formProperty}
+            communityCurrency={communityCurrency}
+          />
+        </ListWrapper>
+      ),
     };
     return objectAccessor(fields, formPropertiesData.formProperty.fieldType);
   }
 
-  if (loading || formUserData.loading) return <Loading />;
-  if (error || formUserData.error)
-    return <ErrorPage title={error?.message || formUserData.error?.message} />;
+  if (loading || formUserData.loading) return <Spinner />;
+  if (error || formUserData.error) {
+    return(
+      <CenteredContent>
+        {formatError(error?.message || formUserData.error?.message )}
+      </CenteredContent>
+    )
+  }
 
   return (
     <>
-      <Container>
-        <FormTitle
-          name={formUserData.data?.formUser.form.name}
-          description={formUserData.data?.formUser.form.description}
+      <>
+        <MessageAlert
+          type={message.error ? 'error' : 'success'}
+          message={message.info}
+          open={!!message.info}
+          handleClose={() => setMessage({ ...message, info: '', error: false })}
         />
+        <Grid style={!matches ? { padding: '0  100px 0 100px' } : {}}>
+          <FormTitle
+            name={formUserData.data?.formUser.form.name}
+            description={formUserData.data?.formUser.form.description}
+          />
+        </Grid>
         <form onSubmit={event => handleActionClick(event, 'update')}>
-          {authState.user.userType === 'admin' && userId && (
-            <>
-              <TextField
-                label={t('form_fields.form_status')}
-                value={`${objectAccessor(
-                  updatedFormStatus,
-                  formUserData.data?.formUser.status
-                )} - ${dateFormatter(formUserData.data?.formUser.updatedAt)}`}
-                disabled
-                margin="dense"
-                InputLabelProps={{
-                  shrink: true
-                }}
-                style={{ width: '100%' }}
-              />
-              <TextField
-                label={t('form_fields.form_status_updated_by')}
-                value={formUserData.data.formUser.statusUpdatedBy.name}
-                disabled
-                margin="dense"
-                InputLabelProps={{
-                  shrink: true
-                }}
-                style={{ width: '100%' }}
-              />
-            </>
-          )}
-          {data?.formUserProperties.sort(sortPropertyOrder).map(renderForm)}
-          <br />
-          <br />
-          <div className="d-flex row justify-content-center">
-            <Button
-              type="submit"
-              color="primary"
-              aria-label="form_update"
-              variant="outlined"
-              disabled={isLoading}
-            >
-              {t('form_status_actions.update')}
-            </Button>
-            {authState.user.userType === 'admin' && (
-              <>
-                <Button
-                  variant="contained"
-                  onClick={event => handleActionClick(event, 'approve')}
-                  color="primary"
-                  aria-label="form_approve"
-                  style={{ marginLeft: '10vw' }}
-                  disabled={isLoading}
-                >
-                  {t('form_status_actions.approved')}
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={event => handleActionClick(event, 'reject')}
-                  aria-label="form_reject"
-                  style={{ marginLeft: '10vw', backgroundColor: '#DC004E', color: '#FFFFFF' }}
-                  disabled={isLoading}
-                >
-                  {t('form_status_actions.rejected')}
-                </Button>
-              </>
-            )}
-          </div>
+          {Boolean(categoriesData) &&
+            categoriesData.map(category => (
+              <div key={category.id}>
+                <CategoryItem category={category} editMode={false}>
+                  <div
+                    style={!matches ? { padding: ' 20px  120px 0 120px' } : { paddingTop: '20px' }}
+                  >
+                    {data?.formUserProperties
+                      .sort(sortPropertyOrder)
+                      .filter(prop => category.id === prop.formProperty.category.id)
+                      .map(renderForm)}
+                  </div>
+                </CategoryItem>
+              </div>
+            ))}
 
           <br />
-          <CenteredContent>
-            {Boolean(message.info.length) && (
-              <Typography variant="subtitle1" color={message.err ? 'error' : 'primary'}>
-                {message.info}
-              </Typography>
+          <Grid
+            container
+            justifyContent="space-between"
+            direction="row"
+            spacing={2}
+            style={!matches ? { padding: ' 20px  120px 0 120px' } : {}}
+            id="form_update_actions"
+          >
+            {
+              formUserData?.data?.formUser.form.hasTermsAndConditions && (
+              <Grid item xs={12} md={12} style={{ paddingBottom: '20px' }}>
+                <TermsAndCondition
+                  categoriesData={categoriesData}
+                  isChecked={formUserData.data?.formUser.hasAgreedToTerms}
+                />
+              </Grid>
+            )
+          }
+            <Grid item xs={12} md={12} style={{ paddingBottom: '20px' }}>
+              <Divider />
+            </Grid>
+            {authState.user.userType === 'admin' && (
+              <>
+                <Grid item xs={4}>
+                  <Button
+                    onClick={event => handleActionClick(event, 'approve')}
+                    color="primary"
+                    aria-label="form_approve"
+                    disabled={isLoading}
+                    size="small"
+                    fullWidth={matches}
+                    variant="outlined"
+                    data-testid='approved'
+                  >
+                    {t('form_status_actions.approved')}
+                  </Button>
+                </Grid>
+                <Grid item xs={4} style={{ textAlign: 'center' }}>
+                  <Button
+                    onClick={event => handleActionClick(event, 'reject')}
+                    aria-label="form_reject"
+                    style={{ backgroundColor: '#DC004E', color: '#FFFFFF' }}
+                    disabled={isLoading}
+                    size="small"
+                    fullWidth={matches}
+                    variant="outlined"
+                    data-testid='rejected'
+                  >
+                    {t('form_status_actions.rejected')}
+                  </Button>
+                </Grid>
+              </>
             )}
-          </CenteredContent>
+            <Grid item xs={4} className={classes.alignRight}>
+              <Button
+                type="submit"
+                color="primary"
+                aria-label="form_update"
+                variant="contained"
+                disabled={isLoading}
+                size="small"
+                fullWidth={matches}
+                data-testid='submit'
+              >
+                {t('form_status_actions.submit_form')}
+              </Button>
+            </Grid>
+          </Grid>
+          <br />
         </form>
-      </Container>
+      </>
 
       {/* dialog */}
       <DialogueBox
@@ -494,11 +736,74 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   );
 }
 
+const useStyles = makeStyles(() => ({
+  downloadButton: {
+    display: 'flex',
+    marginTop: '12px'
+  },
+  downloadButtonMobile: {
+    marginTop: '-12px'
+  },
+  filePreview: {
+    position: 'relative',
+    marginTop: 18,
+    maxWidth: '50%',
+    '& iframe': {
+      height: '400px',
+      width: '600px'
+    }
+  },
+  filePreviewMobile: {
+    position: 'relative',
+    marginTop: 18,
+    maxWidth: '80%',
+    '& iframe': {
+      height: '300px',
+      width: '300px'
+    }
+  },
+  iconButton: {
+    right: 2,
+    marginRight: -25,
+    marginTop: -25,
+    background: 'white',
+    position: 'absolute',
+    '&:hover': {
+      background: 'white'
+    }
+  },
+  space: {
+    marginBottom: '20px'
+  },
+  buttonBg: {
+    background: '#FFFFFF',
+    marginLeft: -10
+  },
+  alignRight: {
+    textAlign: 'right'
+  }
+}));
+
+FormUpdate.defaultProps = {
+  categoriesData: []
+};
+
 FormUpdate.propTypes = {
   userId: PropTypes.string.isRequired,
   formUserId: PropTypes.string.isRequired,
   authState: PropTypes.shape({
-    user: PropTypes.shape({ userType: PropTypes.string }),
-    token: PropTypes.string
-  }).isRequired
+    user: PropTypes.shape({
+      userType: PropTypes.string,
+      community: PropTypes.shape({
+        currency: PropTypes.string
+      })
+    })
+  }).isRequired,
+  categoriesData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      fieldName: PropTypes.string,
+      headerVisible: PropTypes.bool
+    })
+  )
 };

@@ -1,19 +1,21 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@material-ui/core';
-import Loading from '../../../shared/Loading';
+import { Button } from '@mui/material';
+import { Spinner } from '../../../shared/Loading';
 import ScanIcon from '../../../../../assets/images/shape.svg';
-import ErrorPage from '../../../components/Error';
+import { formatError } from '../../../utils/helpers';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 import { UserSearchQuery } from '../../../graphql/queries';
 import useDebounce from '../../../utils/useDebounce';
 import UserAutoResult from '../../../shared/UserAutoResult';
+import AccessCheck from '../../Permissions/Components/AccessCheck';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export function NewRequestButton() {
   const { t } = useTranslation('search');
@@ -22,14 +24,14 @@ export function NewRequestButton() {
       <Link className={css(styles.requestLink)} to="/new/user">
         <Button variant="contained" color="primary">
           {/* This should be renamed to Create a user */}
-          {t('search.create_request')}
+          {t('search.create_user_request')}
         </Button>
       </Link>
     </CenteredContent>
   );
 }
 
-export function Results({ data, loading, called, authState }) {
+export function Results({ data, loading, called }) {
   const { t } = useTranslation(['search', 'common']);
   function memberList(users) {
     return (
@@ -41,7 +43,7 @@ export function Results({ data, loading, called, authState }) {
             data-testid="link_search_user"
             className={`${css(styles.linkStyles)} user-search-result`}
           >
-            <UserAutoResult user={user} />
+            <UserAutoResult user={user} t={t} />
           </Link>
         ))}
         <br />
@@ -49,7 +51,7 @@ export function Results({ data, loading, called, authState }) {
     );
   }
   if (called && loading) {
-    return <Loading />;
+    return <Spinner />;
   }
 
   if (called && data) {
@@ -64,7 +66,9 @@ export function Results({ data, loading, called, authState }) {
         )}
 
         {/* only show this when the user is admin */}
-        {authState.user?.userType === 'admin' && <NewRequestButton />}
+        <AccessCheck module="user" allowedPermissions={['can_create_user']} show404ForUnauthorized={false}>
+          <NewRequestButton />
+        </AccessCheck>
       </div>
     );
   }
@@ -77,6 +81,8 @@ export default function SearchContainer({ location }) {
   const debouncedValue = useDebounce(name, 500);
   const { t } = useTranslation(['search', 'common']);
   const limit = 50;
+  const currentQueryPath = decodeURIComponent(location?.search).replace('?', '');
+  const [searchQuery, setSearchQuery] = useState('');
 
   function updateSearch(e) {
     const { value } = e.target;
@@ -84,9 +90,20 @@ export default function SearchContainer({ location }) {
   }
 
   const { called, loading, error, data, fetchMore } = useQuery(UserSearchQuery, {
-    variables: { query: debouncedValue, limit, offset },
-    errorPolicy: 'all'
+    variables: { query: finalQuery(), limit, offset },
+    errorPolicy: 'all',
   });
+
+  useEffect(() => {
+    if (currentQueryPath) {
+      setSearchQuery(currentQueryPath);
+    }
+  }, [currentQueryPath]);
+
+  function finalQuery() {
+    return searchQuery ? `${searchQuery} AND ${debouncedValue}` : debouncedValue;
+  }
+
   const authState = useContext(Context);
 
   function loadMoreResults() {
@@ -101,16 +118,20 @@ export default function SearchContainer({ location }) {
     setOffset(0);
   }
 
-  if (!['security_guard', 'admin', 'custodian'].includes(authState.user?.userType.toLowerCase())) {
+  if (
+    !['security_guard', 'admin', 'custodian', 'security_supervisor', 'marketing_admin'].includes(
+      authState.user?.userType.toLowerCase()
+    )
+  ) {
     return <Redirect to="/" />;
   }
   if (error && !/permission|permiso/.test(error.message)) {
-    return <ErrorPage title={error.message} />;
+    return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
 
   return (
-    <div className="container">
-      <div className={`row justify-content-center ${css(styles.inputGroup)}`}>
+    <PageWrapper oneCol pageTitle={t('search.search')} loading={called && loading}>
+      <div className={`${css(styles.inputGroup)}`}>
         <input
           className={`form-control ${css(styles.input)} user-search-input`}
           onChange={updateSearch}
@@ -138,7 +159,7 @@ export default function SearchContainer({ location }) {
           </>
         )}
       </div>
-    </div>
+    </PageWrapper>
   );
 }
 

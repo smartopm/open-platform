@@ -1,20 +1,34 @@
-/* eslint-disable */
 import React, { useState, useEffect, useContext } from 'react'
 import QrReader from 'react-qr-reader'
-import { Redirect } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import { Redirect, useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { FormControlLabel, Switch } from '@material-ui/core'
+import { FormControlLabel, Switch, Typography } from '@mui/material'
+import { useMutation } from 'react-apollo'
 import { Footer } from '../components/Footer'
-import { Context } from './Provider/AuthStateProvider.js'
+import { Context } from './Provider/AuthStateProvider'
+import { extractHostname } from '../utils/helpers'
+import { AddActivityLog } from '../graphql/mutations'
+import useTimer from '../utils/customHooks'
+import CenteredContent from '../shared/CenteredContent'
+import PageWrapper from '../shared/PageWrapper'
 
 /* istanbul ignore next */
-export default function QRScan() {
+export default function QRScan({ isKiosk }) {
   const [scanned, setScanned] = useState(false)
   const [error, setError] = useState(null)
   const [isTorchOn, setToggleTorch] = useState(false)
-  const { t } = useTranslation(['scan', 'common'])
+  const { t } = useTranslation(['scan', 'common', 'logbook'])
   const authState = useContext(Context)
+  const history = useHistory()
+  const [addLogEntry] = useMutation(AddActivityLog);
+  const time = useTimer(15)
 
+  const status = {
+    denied: 'error',
+    success: 'success',
+    error: 'error'
+  }
 
   useEffect(() => {
     const video = document.querySelector('video')
@@ -35,10 +49,12 @@ export default function QRScan() {
         const track = stream.getVideoTracks()[0]
 
         video.addEventListener('loadedmetadata', () => {
-          window.setTimeout(
-            () => onCapabilitiesReady(track.getCapabilities()),
-            500
-          )
+          if(track.getCapabilities){
+            window.setTimeout(
+              () => onCapabilitiesReady(track.getCapabilities()),
+              500
+            )
+          }
         })
 
         function onCapabilitiesReady(capabilities) {
@@ -49,74 +65,110 @@ export default function QRScan() {
               })
               .catch(e => {
                 setError(JSON.stringify(e))
-                return
+                
               })
           } else {
            setError(isTorchOn && t('common:errors.flashlight_not_supported'))
-          return
+          
           }
         }
       })
       .catch(err => {
         setError(JSON.stringify(err))
-        return
+        
       })
   }, [isTorchOn])
 
+
+  // Reroute to error page if 15sec run out and we are in kiosk mode
+  useEffect(() => {
+    if(time === 0 && isKiosk){
+      history.push(`/logbook/kiosk/error?status=timeout`) 
+    }
+  }, [time, isKiosk])
+
+  // automatically grant access when using this from kiosk mode
   const handleScan = data => {
     if (data) {
+      if (window.location.hostname !== extractHostname(data).hostname) {
+        setError(t('common:errors.invalid_qr_data'))
+        return
+      }
       setScanned(true)
-      window.location = data
+      if(isKiosk) {
+        addLogEntry({ variables: { userId: extractHostname(data).userId } })
+        .then((response) => {
+          return history.push(`/logbook/kiosk/${status[response.data.activityLogAdd.status]}`)
+        })
+        .catch(() => {
+          return history.push(`/logbook/kiosk/error`)
+        })
+      } else {
+         window.location = data
+      }
     }
   }
 
+  const allowedTypes = ['security_guard', 'admin', 'custodian', 'security_supervisor', 'code_scanner']
   const handleError = err => {
-    console.error(err)
+    setError(err)
   }
 
-  if (!['security_guard', 'admin', 'custodian'].includes(authState.user.userType.toLowerCase())) {
+  // TODO: Replace this with permissions
+  if (!allowedTypes.includes(authState.user.userType.toLowerCase())) {
     return <Redirect to='/' />
   }
 
+  // TODO: Update elements to MUI
   return (
-    <div>
+    <PageWrapper pageTitle={t('misc.scan')}>
       {scanned ? (
-        <h1 className="text-center">Decoding...</h1>
+        <h1 className="text-center">{t('misc.decoding')}</h1>
       ) : (
-          <>
-            <video
-              style={{
-                display: 'none'
-              }}
-            ></video>
-            <QrReader
-              delay={100}
-              torch={true}
-              onError={handleError}
-              onScan={handleScan}
-              style={{ width: '100%' }}
-            />
-            {error && <p className="text-center text-danger">{error}</p>}
+        <>
+          {error && <p className="text-center text-danger">{error}</p>}
+          {
+          // eslint-disable-next-line jsx-a11y/media-has-caption
+            <video data-testid="qr_wrapper" style={{ display: 'none' }} />
+          }
 
-            <div
-              className="row justify-content-center align-items-center "
-              style={{
-                marginTop: 60
-              }}
-            >
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={isTorchOn}
-                    onChange={() => setToggleTorch(!isTorchOn)}
-                  />
-                }
-                label={t('scan.torch')}
-              />
-            </div>
-          </>
-        )}
-      <Footer position="5vh" />
-    </div>
-  )
+          <CenteredContent>
+            <Typography variant="h6" textAlign="center">
+              {t('logbook:kiosk.center_your_qr_code')}
+            </Typography>
+          </CenteredContent>
+          <br />
+
+          <CenteredContent>
+            <FormControlLabel
+              control={<Switch checked={isTorchOn} onChange={() => setToggleTorch(!isTorchOn)} />}
+              label={t('scan.torch')}
+            />
+          </CenteredContent>
+
+          <br />
+          <QrReader
+            delay={100}
+            torch
+            onError={handleError}
+            onScan={handleScan}
+            style={{ width: '100%' }}
+          />
+        </>
+      )}
+      {
+        !isKiosk && (
+        <Footer position="5vh" />
+        )
+      }
+    </PageWrapper>
+  );
+}
+
+
+QRScan.defaultProps = {
+  isKiosk: false
+}
+QRScan.propTypes = {
+  isKiosk: PropTypes.bool
 }

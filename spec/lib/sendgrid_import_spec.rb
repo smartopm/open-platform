@@ -6,7 +6,7 @@ require 'email_msg'
 RSpec.describe Users::User, type: :model do
   let!(:community) { create(:community) }
   let!(:current_user) { create(:user_with_community, community_id: community.id) }
-  let!(:another) { create(:user_with_community, community_id: community.id) }
+  let!(:another) { create(:user, community_id: community.id, role: current_user.role) }
   let!(:admin) { create(:admin_user, community_id: community.id) }
   let!(:msg_id) { 'gzJ5spFzQFGzvp_8h_inlQ.filterdrecv-p3mdw1' }
 

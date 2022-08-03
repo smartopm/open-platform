@@ -111,6 +111,8 @@ module Payments
     #
     # @return [void]
     def create_plan_payment(payment_plan, amount_paid, receipt_number)
+      return if amount_paid.to_d.zero?
+
       plan_payments.create!(
         user_id: user_id,
         community_id: community_id,

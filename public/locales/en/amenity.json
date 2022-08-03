@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "amenity_name": "Amenity Name",
+    "amenity_description": "Description",
+    "amenity_location": "Location",
+    "amenity_hours": "Hours",
+    "calendly_link": "Calendly Link"
+  },
+  "misc": {
+    "configure_amenity": "Configure Amenity",
+    "amenity_created": "Amenity created Successfully",
+    "amenity_updated": "Amenity updated Successfully",
+    "amenity_deleted": "Amenity deleted Successfully",
+    "delete_warning": "You are about to delete this amenity!. Cancel if you are not sure.",
+    "no_amenity_added": "No amenities added yet",
+    "reserve": "Reserve"
+  },
+  "helper_text": {
+    "description": "Note that character count shouldn't exceed 150",
+    "name": "Note that character count shouldn't exceed 30",
+    "location":"",
+    "hours":"",
+    "invitationLink": "Adding a calendar link here will add a Reserve button to the Amenity and will open a separate  tab when clicked"
+  }
+}

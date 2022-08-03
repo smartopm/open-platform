@@ -66,17 +66,21 @@ mutation MergeProperty($id: ID!,
 `;
 
 export const PointOfInterestCreate = gql`
-mutation PointOfInterestCreate($longX: Float!,
-  $latY: Float!,
-  $geom: String!) {
-    pointOfInterestCreate(longX: $longX,
-    latY: $latY,
-    geom: $geom) {
+mutation PointOfInterestCreate($longX: Float!, $latY: Float!, $geom: String!, $imageBlobIds: [String!]) {
+    pointOfInterestCreate(longX: $longX, latY: $latY, geom: $geom, imageBlobIds: $imageBlobIds) {
       landParcel {
         id
         parcelType
         parcelNumber
     }
+  }
+}
+`;
+
+export const PointOfInterestUpdate = gql`
+mutation PointOfInterestUpdate($id: ID!, $longX: Float, $latY: Float, $geom: String, $imageBlobIds: [String!]) {
+  pointOfInterestUpdate(id: $id, longX: $longX, latY: $latY, geom: $geom, imageBlobIds: $imageBlobIds) {
+    success
   }
 }
 `;

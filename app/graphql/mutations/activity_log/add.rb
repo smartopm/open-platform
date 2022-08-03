@@ -14,17 +14,23 @@ module Mutations
 
       field :user, Types::UserType, null: true
       field :event_log, Types::EventLogType, null: true
+      field :status, String, null: true
 
       def resolve(user_id:, note: nil, timestamp: nil, digital: nil, subject: 'user_entry')
-        user = Users::User.find(user_id)
+        user = Users::User.find_by(id: user_id)
         raise_user_not_found_error(user)
 
-        event_log = instantiate_event_log(user, note, timestamp, digital, subject)
+        ActiveRecord::Base.transaction do
+          associate_with_entry_request(user)
+          return { status: 'denied' } if user.deactivated?
 
-        send_notifications(user)
-        return { event_log: event_log, user: user } if event_log.save
+          event_log = instantiate_event_log(user, note, timestamp, digital, subject)
 
-        raise GraphQL::ExecutionError, event_log.errors.full_messages
+          send_notifications(user)
+          return { event_log: event_log, user: user, status: 'success' } if event_log.save
+
+          raise GraphQL::ExecutionError, event_log.errors.full_messages
+        end
       end
 
       def instantiate_event_log(user, note, timestamp, digital, subject)
@@ -36,12 +42,37 @@ module Mutations
 
       def send_notifications(user)
         number = user.phone_number
-        feedback_link = "https://#{HostEnv.base_url(user.community)}/feedback"
+        link = "https://#{HostEnv.base_url(user.community)}/feedback"
         return if number.nil?
 
         # disabled rubocop to keep the structure of the message
-        Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: feedback_link))
+        Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: link),
+                 user.community)
       end
+
+      # create an entry if it doesnt exit
+      # if an entry exist mark it as granted_access
+      # avoid duplicate events
+
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
+      def associate_with_entry_request(user)
+        grantor = context[:current_user]
+        request = context[:site_community].entry_requests.find_by(guest_id: user.id)
+        state = user.deactivated? ? 2 : 3
+
+        return grant_or_deny_request(grantor, request, user) if request.present?
+
+        grantor.entry_requests.create!(
+          name: user.name,
+          guest_id: user.id,
+          granted_at: Time.zone.now,
+          grantor_id: grantor.id,
+          granted_state: state,
+        )
+      end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       # TODO: Better auth here
       # Verifies if current user is present or not.
@@ -60,6 +91,12 @@ module Mutations
         return if user
 
         raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
+      end
+
+      def grant_or_deny_request(grantor, request, user)
+        return request.deny!(grantor) if user.deactivated?
+
+        request.grant!(grantor, 'no_event')
       end
     end
   end

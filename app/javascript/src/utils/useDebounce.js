@@ -15,7 +15,7 @@ export default function useDebounce(value, delay) {
 
       // Return a cleanup function that will be called every time ...
       // ... useEffect is re-called. useEffect will only be re-called ...
-      // ... if value changes (see the inputs array below). 
+      // ... if value changes (see the inputs array below).
       // This is how we prevent debouncedValue from changing if value is ...
       // ... changed within the delay period. Timeout gets cleared and restarted.
       // To put it in context, if the user is typing within our app's ...
@@ -29,8 +29,8 @@ export default function useDebounce(value, delay) {
     // You could also add the "delay" var to inputs array if you ...
     // ... need to be able to change that dynamically.
     // /* /* eslint-disable */ */-next-line react-hooks/exhaustive-deps
-    [value] 
+    [value]
   );
 
-  return debouncedValue;
+  return debouncedValue?.trim();
 }

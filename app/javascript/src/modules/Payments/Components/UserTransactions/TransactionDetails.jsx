@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Grid from '@material-ui/core/Grid';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Grid from '@mui/material/Grid';
 import { DetailsDialog } from '../../../../components/Dialog';
 import { dateToString } from '../../../../components/DateContainer';
 import { formatMoney } from '../../../../utils/helpers';
@@ -24,7 +24,7 @@ export default function TransactionDetails({ open, handleModalClose, data, curre
         open={open}
         handleClose={handleModalClose}
         title="Transaction Details"
-        color="default"
+        color="primary"
       >
         <div className={!matches ? classes.body : classes.bodyMobile}>
           <Typography className={classes.title} data-testid="title">
@@ -57,13 +57,13 @@ export default function TransactionDetails({ open, handleModalClose, data, curre
             </Grid>
           </Grid>
           {data?.planPayments ? data?.planPayments.map((trans) => (
-            <TransactionDetailsCard 
+            <TransactionDetailsCard
               key={trans.id}
               data={trans}
               currencyData={currencyData}
             />
           )) : (
-            <TransactionDetailsCard 
+            <TransactionDetailsCard
               data={data}
               currencyData={currencyData}
             />
@@ -104,7 +104,7 @@ export function TransactionDetailsCard({ data, currencyData }) {
       <Grid item xs={6}>
         <Typography className={classes.detailsTitle}>{t('table_headers.plot_no')}</Typography>
         <Typography className={classes.plot}>
-          {data?.paymentPlan?.landParcel?.parcelNumber}
+          {data?.paymentPlan?.status !== 'general' ? data?.paymentPlan?.landParcel?.parcelNumber : 'General Funds'}
         </Typography>
         <Typography className={classes.detailsTitle} style={{ marginBottom: '15px' }}>
           {t('table_headers.remaining_balance', {
@@ -183,6 +183,7 @@ TransactionDetailsCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.shape({
     paymentPlan: PropTypes.shape({
+      status: PropTypes.string,
       landParcel: PropTypes.shape({
         parcelNumber: PropTypes.string
       }),

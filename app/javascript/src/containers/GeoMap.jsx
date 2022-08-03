@@ -1,18 +1,20 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery, useLazyQuery } from 'react-apollo'
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { renderToString } from 'react-dom/server'
 import L from 'leaflet'
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup } from 'react-leaflet'
-import { StyleSheet, css } from 'aphrodite'
+import makeStyles from '@mui/styles/makeStyles';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import NkwashiCoverageData from '../data/nkwashi_coverage_boundary.json'
 import CMCoverageData from '../data/cm_coverage_boundary.json'
 import DGDPCoverageData from '../data/doublegdp_boundary.json'
 import NkwashiSuburbBoundaryData from '../data/nkwashi_suburb_boundary.json'
+import poiIcon from '../../../assets/images/poi-icon.svg'
 import { LandParcelGeoData, LandParcel } from '../graphql/queries'
 import LandParcelMarker from '../components/Map/LandParcelMarker'
-import PointsOfInterestMarker from '../components/Map/PointsOfInterestMarker'
 import LandParcelLegend from '../components/Map/LandParcelLegend'
 import SubUrbanLayer from '../components/Map/SubUrbanLayer'
 import { checkValidGeoJSON, objectAccessor } from '../utils/helpers'
@@ -82,6 +84,8 @@ function getSubUrbanData(communityName){
 }
 
 export default function GeoMap() {
+  const classes = useStyles()
+  const matches = useMediaQuery('(max-width:600px)');
   const [selectedPoi, setSelectedPoi] = useState(null)
   const [ loadGeoData, { data: geoData } ] = useLazyQuery(LandParcelGeoData, {
     fetchPolicy: 'cache-and-network'
@@ -94,7 +98,7 @@ export default function GeoMap() {
 
   const communityName = communityData?.currentCommunity?.name;
   const properties = geoData?.landParcelGeoData.filter(({ geom, objectType, parcelType }) => geom && objectType === 'land' && parcelType !== 'poi') || null
-  const poiData = geoData?.landParcelGeoData.filter(({  geom, parcelType }) => geom && parcelType === 'poi') || null
+  const poiData = geoData?.landParcelGeoData.filter(({  geom, parcelType }) => geom && parcelType === 'poi' &&  checkValidGeoJSON(geom)) || []
   const houseData = geoData?.landParcelGeoData.filter(({ geom, objectType }) => geom && objectType === 'house') || null
   const featureCollection = { type: 'FeatureCollection',  features: [] }
   const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
@@ -104,6 +108,19 @@ export default function GeoMap() {
   // monkey-patch to remove focus on zoom control buttons
   /* eslint-disable-next-line no-underscore-dangle */
   L.Control.prototype._refocusOnMap = function _refocusOnMap() {};
+  // reset the default icon size
+  L.Icon.Default.prototype.options.shadowSize = [0, 0];
+
+  poiData.map(({ id, geom, parcelNumber, parcelType }) => {
+    const feature = JSON.parse(geom)
+   
+    feature.properties.id = id
+    feature.properties.parcel_no = parcelNumber
+    feature.properties.parcel_type = parcelType
+    return poiFeatureCollection.features.push(feature)
+  });
+
+  
 
   /* istanbul ignore next */
   function handleCloseDrawer(){
@@ -112,17 +129,19 @@ export default function GeoMap() {
 
   /* istanbul ignore next */
   function handlePoiLayerClick({ target }){
-    const { properties: { id, icon, poi_name: poiName, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY }
+    const { properties: { id, icon, poi_name: poiName, poi_description: description, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY, video_urls: videoUrls }
   } = target.feature
 
     setSelectedPoi({
       id,
       icon,
       poiName,
+      description,
       parcelNumber,
       parcelType,
       longX,
       latY,
+      videoUrls: videoUrls || [],
     })
 
     loadParcel({ variables: { id } });
@@ -175,12 +194,26 @@ export default function GeoMap() {
 
     /* istanbul ignore next */
     /* eslint-disable consistent-return */
-  function onEachPoiLayerFeature(feature, layer){
-    if(feature.properties.parcel_no && feature.properties.parcel_type === 'poi'){
-      layer.on({
-        click: handlePoiLayerClick,
-      })
+    function onEachPoiLayerFeature(feature, layer){
+      if(feature.properties.parcel_no && feature.properties.parcel_type === 'poi'){
+        layer.on({
+          click: handlePoiLayerClick,
+        })
+      }
     }
+    
+    /* istanbul ignore next */
+  function onEachPoiPointToLayer(feature, latlng) {
+    const divIcon = L.divIcon({
+      html: `<div class=${classes.markerContainer}>
+              <div class=${classes.markerLabel}>${feature.properties.poi_name || 'POI'}</div>
+              <img src="${poiIcon}" class=${classes.markerIcon} />
+            <div/>`
+    })
+
+    return L.marker(latlng, {
+      icon: divIcon,
+    })
   }
 
     /* istanbul ignore next */
@@ -203,9 +236,6 @@ export default function GeoMap() {
     // TODO: Victor control map canvas re-size from useMap (v3.2.1)
     setTimeout(()=> window.dispatchEvent(new Event('resize')), 1000);
   })
-
-  // if (loading || loadingCommunityData) return <Spinner />;
-  if (loadingCommunityData) return <Spinner />;
 
    return (
      <>
@@ -240,9 +270,21 @@ export default function GeoMap() {
           box-shadow: none;
         }
         .leaflet-container {
-          height: 800px;
+          position: fixed;
+          top: 0;
+          overflow: hidden;
+          height: 100%;
           width: 100%;
-          margin: 0 auto;
+        }
+        .leaflet-control-container .leaflet-top {
+          top: 12%;
+        }
+        .leaflet-control-container .leaflet-control-zoom {
+          display: ${matches ? 'none' : 'block'};
+        }
+        .leaflet-div-icon{
+          background: none;
+          border: none;
         }
         `
           }}
@@ -251,16 +293,17 @@ export default function GeoMap() {
          <Map
            center={getMapCenterPoint()}
            zoom={11}
-           className={css(styles.mapContainer)}
+           className={classes.mapContainer}
            attributionControl
-           zoomControl
+           zoomControl={!matches}
            doubleClickZoom
            scrollWheelZoom
            dragging
            animate
            easeLinearity={0.35}
            onZoomEnd={handleMapZoom}
-           maxZoom={30}
+           maxZoom={40}
+           minZoom={5}
          >
            <MapLayers>
              {Array.isArray(properties) && properties?.length && (
@@ -289,30 +332,19 @@ export default function GeoMap() {
              {Array.isArray(poiData) && poiData?.length && (
                <LayersControl.Overlay checked name="Points of Interest">
                  <FeatureGroup>
-                   {poiData.map(({ id, geom, parcelNumber, parcelType }) => {
-                            if(checkValidGeoJSON(geom)){
-                              const feature = JSON.parse(geom)
-                              const markerProps = {
-                                geoLatY: feature.properties.lat_y || 0,
-                                geoLongX: feature.properties.long_x || 0,
-                                iconUrl: feature.properties.icon || '',
-                                poiName: feature.properties.poi_name || 'Point of Interest',
-                                geomType: feature.geometry.type || 'Polygon'
-                            }
-                            feature.properties.id = id
-                            feature.properties.parcel_no = parcelNumber
-                            feature.properties.parcel_type = parcelType
-                            poiFeatureCollection.features.push(feature)
-                            return (<PointsOfInterestMarker key={id} markerProps={markerProps} />)
-                          }
-                          return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
-                        })}
-                   <GeoJSON
-                     key={Math.random()}
-                     data={poiFeatureCollection}
-                     style={geoJSONStyle}
-                     onEachFeature={onEachPoiLayerFeature}
-                   />
+                   <MarkerClusterGroup
+                     spiderfyDistanceMultiplier={2}
+                     showCoverageOnHover={false}
+                     spiderfyOnMaxZoom
+                   >
+                     <GeoJSON
+                       key={Math.random()}
+                       data={poiFeatureCollection}
+                       style={geoJSONStyle}
+                       onEachFeature={onEachPoiLayerFeature}
+                       pointToLayer={onEachPoiPointToLayer}
+                     />
+                   </MarkerClusterGroup>
                  </FeatureGroup>
                </LayersControl.Overlay>
                 )}
@@ -337,14 +369,16 @@ export default function GeoMap() {
                </FeatureGroup>
              </LayersControl.Overlay>
               )}
-             {subUrbanData && (
+             {loadingCommunityData && <Spinner />}
+             {!loadingCommunityData && subUrbanData && (
                <LayersControl.Overlay name="Sub-urban Areas">
                  <FeatureGroup>
                    <SubUrbanLayer data={subUrbanData} />
                  </FeatureGroup>
                </LayersControl.Overlay>
                )}
-             {coverageData && (
+             {loadingCommunityData && <Spinner />}
+             {!loadingCommunityData && coverageData && (
                <LayersControl.Overlay checked name="Coverage Area">
                  <FeatureGroup>
                    <Popup>
@@ -359,22 +393,23 @@ export default function GeoMap() {
          </Map>
        </div>
      </>
-  )
+   )
 }
 
 export function MapLayers({ children }){
   return (
     <LayersControl position="topleft">
-      <LayersControl.BaseLayer name="Mapbox">
+      <LayersControl.BaseLayer checked name="Mapbox">
         <TileLayer
           attribution={attribution}
           url={`${mapboxStreets}${mapboxPublicToken}`}
         />
       </LayersControl.BaseLayer>
-      <LayersControl.BaseLayer checked name="OSM">
+      <LayersControl.BaseLayer name="OSM">
         <TileLayer
           attribution={attribution}
           url={openStreetMap}
+          maxZoom={18}
         />
       </LayersControl.BaseLayer>
       <LayersControl.BaseLayer name="Satellite">
@@ -388,10 +423,26 @@ export function MapLayers({ children }){
   )
 }
 
+const useStyles = makeStyles(() => ({
+  mapContainer: {},
+  markerContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '200px',
+  },
+  markerLabel: {
+    width: '170px',
+    textAlign: 'right',
+    color: '#080808',
+    padding: '3px',
+  },
+  markerIcon: {
+    height: '26px',
+    width: '26px',
+  },
+}));
+
 MapLayers.propTypes = {
   children: PropTypes.node.isRequired
 }
-
-const styles = StyleSheet.create({
-  mapContainer: {}
-})

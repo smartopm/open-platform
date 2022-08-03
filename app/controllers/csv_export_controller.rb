@@ -26,6 +26,10 @@ class CsvExportController < ApplicationController
     send_file 'public/bulk_import_sample.csv', filename: 'bulk_import_sample.csv'
   end
 
+  def download_lead_sample_csv
+    send_file 'public/lead_import_sample.csv', filename: 'lead_import_sample.csv'
+  end
+
   private
 
   def get_event_logs(_params)
@@ -56,7 +60,7 @@ class CsvExportController < ApplicationController
   end
 
   def ensure_admin
-    @user = Users::User.find_via_auth_token(params[:token], @site_community)
+    @user = Users::User.find_via_auth_token(params[:token], @current_community)
     raise I18n.t('errors.unauthorized') unless @user && @user&.role?(%i[admin])
   end
 end

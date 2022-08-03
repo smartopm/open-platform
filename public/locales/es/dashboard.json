@@ -1,7 +1,11 @@
 {
   "dashboard": {
-    "call_manager": "Gestor de llamadas",
-    "entry_logs": "Registro de ingresos",
+    "add_photo": "Agregar una Foto",
+    "call_manager": "Llamar al Supervisor",
+    "created_post": "Publicación creada con éxito",
+    "dashboard": "Inicio",
+    "edit_post": "Editar Publicación",
+    "entry_logs": "Libro de Registros",
     "explore": "Explorar",
     "finance": "Finanzas",
     "identity": "Identificación\n",
@@ -11,11 +15,12 @@
       "overOneMonth": "Total de facturas vencidas con más de 1 mes",
       "today": "Total de facturas vencidas hoy"
     },
-    "log_entry": "Entrada Manual",
+    "log_entry": "Registro Manual",
     "make_new_payment": "Realizar un nuevo pago",
     "my_account": "Mi cuenta",
     "my_id_card": "Mi código",
     "my_messages": "Mis mensajes",
+    "my_qr_code": "Mi Código QR",
     "my_thebe_portal": "Mi portal de Thebe",
     "need_help_to_next_journey": "Necesito ayuda para pasar a la siguiente etapa.",
     "new_user": "Nuevo usuario",
@@ -28,18 +33,23 @@
       "today": "Importe total pagado hoy"
     },
     "pending_tasks_text": "Tus tareas pendientes aparecerán aquí",
+    "plot": "Gráfico",
+    "plot_plural": "Parcelas",
+    "plot_detail": "Detalle de la trama",
+    "plot_detail_plural": "Detalle de la tramas",
     "plots_appear_here": "Tus lotes aparecerán aquí ",
     "quick_links": "Enlaces Rápidos",
     "recent_news": "Ultimas Novedades",
     "request": "Peticiones",
     "scan": "Escanear",
+    "see_more_reminders": "Ver Más Recordatorios",
+    "start_post": "Comenzar una Publicación",
     "support": "Ayuda",
     "task_reminders": "Recordatorio de tareas",
+    "updated_post": "Publicación actualizada con éxito",
     "view_customer_journey": "Ver Etapa del Cliente",
-    "your_customer_journey": "Su Etapa de Cliente",
-    "plot": "Gráfico",
-    "plot_plural": "Parcelas",
-    "plot_detail": "Detalle de la trama",
-    "plot_detail_plural": "Detalle de la tramas"
+    "whats_happening": "¿Qué está pasando cerca?",
+    "who_can_see_post": "¿Quién puede ver esta publicación?",
+    "your_customer_journey": "Su Etapa de Cliente"
   }
 }

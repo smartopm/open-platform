@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Settings::NotificationPreference do
   describe 'Add or Update user notification preferences' do
-    let!(:user) { create(:user_with_community, user_type: 'resident') }
+    let!(:user) { create(:resident) }
 
     let(:query) do
       <<~GQL

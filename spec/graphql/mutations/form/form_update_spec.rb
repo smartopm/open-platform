@@ -4,8 +4,19 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Form::FormUpdate do
   describe 'Update for forms' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[can_update_form])
+    end
+
+    let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
+
     let!(:form) { create(:form, community_id: user.community_id, roles: ['resident']) }
 
     let(:mutation) do
@@ -49,6 +60,7 @@ RSpec.describe Mutations::Form::FormUpdate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
+                                                   user_role: admin.role,
                                                  }).as_json
       form_result = result.dig('data', 'formUpdate', 'form')
       expect(form_result['name']).to eql 'Updated Name'
@@ -68,6 +80,7 @@ RSpec.describe Mutations::Form::FormUpdate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
+                                                   user_role: admin.role,
                                                  }).as_json
       expect(result.dig('data', 'formUpdate', 'form', 'id')).to_not be_nil
       expect(result['errors']).to be_nil
@@ -83,6 +96,7 @@ RSpec.describe Mutations::Form::FormUpdate do
                                                  context: {
                                                    current_user: user,
                                                    site_community: user.community,
+                                                   user_role: user.role,
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end

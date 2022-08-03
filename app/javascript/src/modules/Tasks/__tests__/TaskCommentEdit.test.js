@@ -1,9 +1,9 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import ReactTestUtils from "react-dom/test-utils";
-import '@testing-library/jest-dom/extend-expect'
+
 import TaskCommentEdit from '../Components/TaskCommentEdit'
 import { TaskCommentUpdate } from '../../../graphql/mutations'
 
@@ -20,7 +20,7 @@ describe('Comment Edit Field Component', () => {
   const handleClose = jest.fn
   const data = {
     id: 'jwhekw',
-    body: 'whgeukhw',
+    body: '',
     createdAt: "2020-09-30T20:32:17Z",
     user: {
       imageUrl: '',
@@ -48,7 +48,11 @@ describe('Comment Edit Field Component', () => {
   
     ReactTestUtils.Simulate.change(body, { target: { value: "new body" } });
     expect(body.value).toBe('new body')
-    fireEvent.click(commentButton)
+    await waitFor(() => {
+      fireEvent.click(commentButton)
+      expect(commentButton).not.toBeDisabled()
+    }, 10)
+
   })
 
   it('render with error', async () => {
@@ -78,8 +82,10 @@ describe('Comment Edit Field Component', () => {
     expect(body).toBeInTheDocument();
     expect(commentButton).toBeInTheDocument();
   
-    ReactTestUtils.Simulate.change(body, { target: { value: "new body" } });
-    expect(body.value).toBe('new body')
-    fireEvent.click(commentButton)
+    ReactTestUtils.Simulate.change(body, { target: { value: "" } });
+    expect(body.value).toBe('')
+    await waitFor(() => {
+      fireEvent.click(commentButton)
+    }, 10)
   })
 })

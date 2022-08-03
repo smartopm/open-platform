@@ -1,10 +1,10 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import OTPFeedbackScreen from '../../containers/OTPScreen';
 import { SendOneTimePasscode } from '../../graphql/mutations';
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('One time password page', () => {
@@ -28,7 +28,9 @@ describe('One time password page', () => {
     const container = render(
       <MockedProvider mocks={mocks}>
         <BrowserRouter>
-          <OTPFeedbackScreen />
+          <MockedThemeProvider>
+            <OTPFeedbackScreen />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );

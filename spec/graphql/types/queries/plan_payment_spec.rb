@@ -4,12 +4,23 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::PlanPayment do
   describe 'Plan Payment queries' do
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'plan_payment',
+                          role: admin_role,
+                          permissions: %w[
+                            can_fetch_payments_list
+                            can_fetch_payment_stat_details
+                            can_access_all_payments
+                          ])
+    end
     let!(:user) do
       create(:user_with_community, ext_ref_id: '396745', email: 'demo@xyz.com',
-                                   phone_number: '260123456')
+                                   phone_number: '260123456', role: visitor_role)
     end
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: community.id) }
+    let!(:admin) { create(:admin_user, community_id: community.id, role: admin_role) }
     let!(:land_parcel) do
       create(:land_parcel, community_id: community.id,
                            parcel_number: 'Plot001', parcel_type: 'Basic')
@@ -54,8 +65,8 @@ RSpec.describe Types::Queries::PlanPayment do
 
     let(:payment_receipt) do
       <<~GQL
-        query paymentReceipt($id: ID!){
-          paymentReceipt(id: $id) {
+        query paymentReceipt($userId: ID!, $id: ID!){
+          paymentReceipt(userId: $userId, id: $id) {
             amount
             status
             createdAt
@@ -232,7 +243,7 @@ RSpec.describe Types::Queries::PlanPayment do
     describe '#payment_receipt' do
       context 'when payment id is invalid' do
         it 'raises transaction not found error' do
-          variables = { id: '1234' }
+          variables = { userId: user.id, id: '1234' }
           result = DoubleGdpSchema.execute(payment_receipt,
                                            variables: variables,
                                            context: {
@@ -247,7 +258,7 @@ RSpec.describe Types::Queries::PlanPayment do
         before { payment_plan.update(pending_balance: 1200) }
 
         it 'return payment receipt details' do
-          variables = { id: plan_payment.id }
+          variables = { userId: user.id, id: plan_payment.id }
           result = DoubleGdpSchema.execute(payment_receipt,
                                            variables: variables,
                                            context: {

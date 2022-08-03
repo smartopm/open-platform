@@ -1,6 +1,6 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { render, waitFor } from '@testing-library/react';
+
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import CommunitySettings from '../components/SettingsPage';
@@ -8,7 +8,7 @@ import CommunitySettings from '../components/SettingsPage';
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('Feedback Component', () => {
-  it('renders loader when loading settings', () => {
+  it('renders loader when loading settings', async () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -16,7 +16,6 @@ describe('Feedback Component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-
-    expect(container.queryByTestId('loader')).toBeInTheDocument();
+    await waitFor(() => expect(container.queryByTestId('loader')).toBeInTheDocument());
   });
 });

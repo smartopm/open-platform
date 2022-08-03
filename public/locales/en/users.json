@@ -6,7 +6,8 @@
     "save_note": "Saving note ...",
     "add_outgoing_calls_answered": "Add Outgoing call answered for",
     "add_outgoing_calls_not_answered": "Add Outgoing call not answered for",
-    "upload": "Upload",
+    "upload": "New User Upload",
+    "lead_management_upload": "Lead Users Upload",
     "create_report": "Create Report",
     "user_stats": "User Stats",
     "personal_details": "Edit personal details",
@@ -34,6 +35,16 @@
     "make_payment": "Record New Payment",
     "add_invoice": "Add an Invoice",
     "process_csv": "Process CSV Data",
-    "download_csv": "Download CSV"
+    "download_csv": "Download CSV",
+    "copy_id_message": "Id Lists Successfully Copied to Clipboard",
+    "user_journey": " User Journey"
+  },
+  "messages": {
+    "activation_confirmation": "Are you sure you want to activate {{userName}}. By clicking the Activate User button, this user will have access to the app",
+    "deactivation_confirmation": "Are you sure you want to deactivate {{userName}}. By clicking the Deactivation User button, this user will no longer have access to the app"
+  },
+  "buttons": {
+    "activate_user": "Activate User",
+    "deactivate_user": "Deactivate User"
   }
 }

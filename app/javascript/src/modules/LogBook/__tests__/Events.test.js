@@ -1,10 +1,9 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
 import Events from '../Components/Events'
-import LogView from '../Components/LogView'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 describe('Should Render Events Component', () => {
@@ -65,25 +64,5 @@ describe('Should Render Events Component', () => {
       container.queryByText('User john doe was recorded leaving')
     ).toBeNull()
     expect(container.queryByText('User john doe was active')).toBeNull()
-  })
-
-  it('entry logs view', () => {
-      const log = {
-        id: '1',
-        subject: 'visit_request',
-        sentence: '',
-        createdAt: '2021-05-13',
-        data: {
-          ref_name: 'Some User',
-          type: 'client'
-        }
-      }
-    const { getByText } = render(
-      <MockedProvider>
-        <LogView user={log} />
-      </MockedProvider>
-      )
-    expect(getByText('Some User')).toBeInTheDocument()
-    expect(getByText('user_types.client')).toBeInTheDocument()
   })
 })

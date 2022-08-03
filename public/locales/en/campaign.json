@@ -1,0 +1,67 @@
+{
+  "campaign": {
+    "status": "Status",
+    "draft": "Draft",
+    "scheduled_date": "Scheduled Date",
+    "scheduled_time": "Scheduled Time",
+    "total_scheduled": "Total Scheduled",
+    "total_sent": "Total Sent",
+    "total_clicked": "Total Clicked",
+    "success": "Total Success",
+    "more_details": "More Details",
+    "campaigns": "Campaigns",
+    "communicate": "Communicate with the community.",
+    "campaign": "Campaign",
+    "campaign_detail": "Campaign Detail",
+    "click_rate": "Click Rate",
+    "open_rate": "Open Rate"
+  },
+  "form_fields": {
+    "campaign_type": "Campaign Type",
+    "campaign_name": "Campaign Name",
+    "message": "Message",
+    "user_id_list": "User ID List",
+    "batch_time": "Batch Time",
+    "reply_link": "Include reply link",
+    "sms": "SMS",
+    "email": "Email",
+    "assign_label": "Assign Label",
+    "select_label": "Select Label",
+    "draft": "Draft",
+    "scheduled": "Scheduled",
+    "sending": "Sending",
+    "done": "Done",
+    "link_reply": "Reply Link",
+    "include_link": "Include Link",
+    "mailing_list": "Setup Mailing List"
+  },
+  "actions": {
+    "create_campaign": "Create Campaign",
+    "update_campaign": "Update Campaign",
+    "delete_campaign": "Delete Campaign",
+    "new_campaign": "New Campaign",
+    "edit_campaign": "Edit Campaign",
+    "use_label": "USE LABEL",
+    "use_id_lists": "USE ID LIST"
+  },
+  "message": {
+    "sure_to_delete": "Are you sure you want to delete this campaign?",
+    "no_campaigns": "No campaigns has been created yet.",
+    "select_campaign": "Select a campaign to edit or create a new one.",
+    "add_a_campaign": "Add a Campaign Title",
+    "add_a_message": "Add a message",
+    "paste_userid_list": "Paste User ID list from User's page here to build a mailing list",
+    "include_name": "Please include a name",
+    "include_batch_time": "Please include a batch time",
+    "include_message": "Please include a message",
+    "include_user_list": "Please include userIdList",
+    "include_email_template": "Please include email template",
+    "campaign_successfully_created": "Campaign successfully created",
+    "campaign_successfully_updated": "Campaign successfully updated"
+  },
+  "misc": {
+    "yes": "Yes",
+    "no": "No",
+    "open_campaign_details": "Open Campaign Details"
+  }
+}

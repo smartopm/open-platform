@@ -1,0 +1,30 @@
+# frozen_string_literal: true
+
+module ActionFlows
+  module Events
+    # User Create Event to handle related action
+    class UserCreateEvent < ActionFlows::EventPop
+      EVENT_TYPE = 'user_create'
+      EVENT_DESC = 'User Create'
+
+      def self.event_metadata
+        {
+          'User' => obj_data['User'],
+        }
+      end
+
+      def self.event_description
+        EVENT_DESC
+      end
+
+      def self.event_type
+        EVENT_TYPE
+      end
+
+      def preload_data(event_log)
+        user = event_log.ref_type.constantize.find_by(id: event_log.ref_id)
+        load_data('User' => user) if user.present? && !user.user_type.eql?('lead')
+      end
+    end
+  end
+end

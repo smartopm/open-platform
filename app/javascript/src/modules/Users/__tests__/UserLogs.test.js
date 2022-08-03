@@ -1,35 +1,72 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { render, screen, waitFor } from '@testing-library/react';
+
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import UserLogs from '../Containers/UserLogs';
-import { AllEventLogsForUserQuery } from '../../../graphql/queries'
+import ReactRouter from 'react-router';
+import UserLogs, { AllEventLogs } from '../Containers/UserLogs';
+import { AllEventLogsForUserQuery } from '../../../graphql/queries';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('UserLogs', () => {
+  jest.spyOn(ReactRouter, 'useParams').mockReturnValue({ id: '5gh673' });
   const props = {
     history: {},
-    match: { params: { id: '5gh673' } }
+    subjects: null
   };
-
-  const mock = {
+  const logsMock = {
     request: {
       query: AllEventLogsForUserQuery,
-      variables: { subject: null, userId: "5gh673" }
+      variables: { subject: null, userId: '5gh673', offset: 0, limit: 50 }
     },
     result: {
-      id: '1234'
+      data: {
+        result: [
+          {
+            id: '1212938123asd2e34',
+            sentence: 'I am testing this again',
+            actingUser: {
+              name: 'Some Name',
+              id: '5gh673'
+            },
+            refType: '',
+            subject: '',
+            refId: '9238492dasd',
+            data: {},
+            createdAt: '2020-09-10'
+          }
+        ]
+      }
     }
   };
 
-  it('should render the component', () => {
+  it('should render the component', async () => {
     render(
-      <MockedProvider mock={[mock]}>
+      <MockedProvider mocks={[logsMock]} addTypename={false}>
         <BrowserRouter>
-          <UserLogs {...props} />
+          <MockedThemeProvider>
+            <UserLogs />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
-    // expect(getByText('I am testing this again')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('2020-09-10')).toBeInTheDocument();
+    }, 20);
+  });
+  it('should render the component with the right data', async () => {
+    const { getByText } = render(
+      <MockedProvider mocks={[logsMock]} addTypename={false}>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <AllEventLogs {...props} />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    await waitFor(() => {
+      expect(getByText('I am testing this again')).toBeInTheDocument();
+    }, 20);
   });
 });

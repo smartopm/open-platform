@@ -30,7 +30,9 @@ module Types::Queries::TimeSheet
 
   # rubocop:disable Metrics/MethodLength
   def time_sheet_logs(offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_custodian
+    unless authorized_to_access_timesheets(:can_fetch_time_sheet_logs)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     com_id = context[:current_user].community_id
     query = ''
@@ -53,21 +55,24 @@ module Types::Queries::TimeSheet
 
   # rubocop:disable Metrics/AbcSize
   def user_time_sheet_logs(user_id:, offset: 0, limit: 300, date_to: nil, date_from: nil)
-    unless admin_or_custodian || context[:current_user]&.id.eql?(user_id)
+    unless authorized_to_access_timesheets(:can_fetch_user_time_sheet_logs) ||
+           context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
     date_from = date_from.blank? ? Time.current.beginning_of_month : DateTime.parse(date_from)
-    u = get_allow_user(user_id)
-    end_date = DateTime.parse(date_to)
-    return u.time_sheets.monthly_records(date_from - 1, end_date, limit, offset) if u.present?
+    user = get_allow_user(user_id)
+    return [] if user.nil?
 
-    []
+    end_date = DateTime.parse(date_to)
+    user.time_sheets.monthly_records(date_from - 1, end_date, limit, offset)
   end
   # rubocop:enable Metrics/AbcSize
 
   def user_last_shift(user_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_custodian
+    unless authorized_to_access_timesheets(:can_fetch_user_last_shift)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].users.find(user_id).time_sheets.first
   end
@@ -82,5 +87,9 @@ module Types::Queries::TimeSheet
 
   def admin_or_custodian
     context[:current_user].admin? || context[:current_user].custodian?
+  end
+
+  def authorized_to_access_timesheets(permission)
+    permitted?(module: :timesheet, permission: permission)
   end
 end

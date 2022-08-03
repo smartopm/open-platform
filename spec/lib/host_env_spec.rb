@@ -4,13 +4,20 @@ require 'rails_helper'
 require 'host_env'
 
 RSpec.describe HostEnv do
-  before { ENV.stub(:[]).with('APP_ENV').and_return('production') }
+  before do
+    ENV.stub(:[]).with('BULLET_DEBUG').and_return(false)
+    ENV.stub(:[]).with('APP_ENV').and_return('production')
+  end
   let!(:community1) do
     create(:community, name: 'DoubleGDP')
   end
 
   let!(:community2) do
     create(:community, name: 'Ciudad Morazán')
+  end
+
+  let!(:community3) do
+    create(:community, name: 'Tilisi')
   end
 
   describe 'case doubleGDP' do
@@ -24,6 +31,13 @@ RSpec.describe HostEnv do
     it 'returns correct base url Ciudad Morazán' do
       url = HostEnv.base_url(community2)
       expect(url).to eql 'morazancity.doublegdp.com'
+    end
+  end
+
+  describe 'Tilisi' do
+    it 'returns correct base url Tilisi' do
+      url = HostEnv.base_url(community3)
+      expect(url).to eql 'tilisi.doublegdp.com'
     end
   end
 end

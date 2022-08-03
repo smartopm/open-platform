@@ -1,27 +1,33 @@
 /* eslint-disable react/jsx-no-undef */
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
-import 'leaflet'
-import 'leaflet-draw'
+import 'leaflet';
+import 'leaflet-draw';
 import LandParcelPage from '../../containers/LandParcels/LandParcel';
 import LandParcelList from '../../components/LandParcels/LandParcel';
-import '@testing-library/jest-dom/extend-expect';
+
 import { LandParcel as LandParcelQuery, ParcelsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
-jest.mock('leaflet-draw')
+jest.mock('leaflet-draw');
 describe('Land Property Page', () => {
   it('renders land parcel page', async () => {
     render(
       <MockedProvider addTypename={false}>
         <BrowserRouter>
-          <LandParcelPage />
+          <MockedThemeProvider>
+            <LandParcelPage />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
+    await waitFor(() => {
+      expect(screen.queryByText('buttons.new_property')).toBeInTheDocument();
+    }, 5);
   });
 
   it('should test for landparcel queries', async () => {
@@ -72,25 +78,27 @@ describe('Land Property Page', () => {
     const container = render(
       <MockedProvider mocks={landParcelMock} addTypename={false}>
         <BrowserRouter>
-          <LandParcelList />
+          <MockedThemeProvider>
+            <LandParcelList />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
-    expect(container.queryByText(('buttons.new_property'))).toBeInTheDocument()
+    expect(container.queryByText('buttons.new_property')).toBeInTheDocument();
 
     const loader = render(<Spinner />);
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
     await waitFor(
       () => {
-        expect(container.queryByText("EAC Country")).toBeInTheDocument()
-        expect(container.queryByText("LaLagos")).toBeInTheDocument()
-        expect(container.queryByText("Lagos drive")).toBeInTheDocument()
-        expect(container.queryByText("Basic-664354")).toBeInTheDocument()
-        expect(container.queryByText("232")).toBeInTheDocument()
-        expect(container.queryByText("232 Street Av")).toBeInTheDocument()
+        expect(container.queryByText('EAC Country')).toBeInTheDocument();
+        expect(container.queryByText('LaLagos')).toBeInTheDocument();
+        expect(container.queryByText('Lagos drive')).toBeInTheDocument();
+        expect(container.queryByText('Basic-664354')).toBeInTheDocument();
+        expect(container.queryByText('232')).toBeInTheDocument();
+        expect(container.queryByText('232 Street Av')).toBeInTheDocument();
       },
-      { timeout: 100 }
+      { timeout: 10 }
     );
   });
 });

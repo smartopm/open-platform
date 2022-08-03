@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import TransactionsList from '../Components/UserTransactions/Transactions';
@@ -12,27 +12,29 @@ describe('Transactions Component', () => {
   it('should render the transactions list component', async () => {
     const userId = generateId()[1];
     const transData = {
-      userTransactions: [{
-        allocatedAmount: 200,
-        unallocatedAmount: 200,
-        source: 'cash',
-        transactionNumber: 12345,
-        createdAt: '2021-01-26',
-        id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-        status: 'paid',
-        depositor: {
+      userTransactions: [
+        {
+          allocatedAmount: 200,
+          unallocatedAmount: 200,
+          source: 'cash',
+          transactionNumber: 12345,
+          createdAt: '2021-01-26',
           id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-          name: 'some name'
-        },
-        user: {
-          id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-          name: 'some name',
-          email: 'email@email.com',
-          phoneNumber: '123456',
-          extRefId: '25734'
+          status: 'paid',
+          depositor: {
+            id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+            name: 'some name'
+          },
+          user: {
+            id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+            name: 'some name',
+            email: 'email@email.com',
+            phoneNumber: '123456',
+            extRefId: '25734'
+          }
         }
-      }]
-    }
+      ]
+    };
 
     const user = {
       id: '939453bef34-f3',
@@ -45,13 +47,22 @@ describe('Transactions Component', () => {
 
     const userData = {
       name: 'some name'
-    }
+    };
 
     const container = render(
       <MockedProvider>
         <AuthStateProvider>
           <BrowserRouter>
-            <TransactionsList userId={userId} user={user} transData={transData} userData={userData} refetch={jest.fn()} balanceRefetch={jest.fn()} />
+            <TransactionsList
+              userId={userId}
+              user={user}
+              transData={transData}
+              userData={userData}
+              refetch={jest.fn()}
+              balanceRefetch={jest.fn()}
+              setFiltering={jest.fn()}
+              filtering={false}
+            />
           </BrowserRouter>
         </AuthStateProvider>
       </MockedProvider>

@@ -1,10 +1,9 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext } from 'react';
+import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
 import { forceLinkHttps, objectAccessor } from '../utils/helpers';
 import ImageAuth from '../shared/ImageAuth';
-import { Context } from '../containers/Provider/AuthStateProvider';
 
 export function safeAvatarLink({ imageUrl, user }) {
   if (user?.avatarUrl || user?.imageUrl) {
@@ -13,10 +12,17 @@ export function safeAvatarLink({ imageUrl, user }) {
   return forceLinkHttps(imageUrl);
 }
 
-export default function Avatar({ imageUrl, user, style, searchedUser }) {
-  const { token } = useContext(Context);
+const handleImgError = (e) => {
+  e.target.onerror = null;
+  e.target.src = '/images/default_avatar.svg';
+}
+
+// TODO: Refactor this component to make it simpler and use MUI's Avatar
+export default function Avatar({ imageUrl, user, style, searchedUser, alt }) {
   const imageStyles = {
+    xSmall: styles.extraSmall,
     small: styles.avatarSmall,
+    semiSmall: styles.avatarSemiSmall,
     medium: styles.avatarMedium,
     big: styles.avatarBig
   };
@@ -27,9 +33,8 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
     return (
       <ImageAuth
         imageLink={safeAvatarLink({ imageUrl: searchedUser.avatarUrl})}
-        token={token}
         className={css(objectAccessor(imageStyles, style))}
-        alt="avatar for the user"
+        alt={alt}
       />
     );
   }
@@ -39,7 +44,8 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
       <img
         src={safeAvatarLink({ imageUrl: searchedUser.imageUrl})}
         className={css(objectAccessor(imageStyles, style))}
-        alt="avatar for the user"
+        onError={(e) => handleImgError(e)}
+        alt={alt}
         data-testid="searched_auth_user_avatar"
       />
     );
@@ -52,7 +58,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
       <img
         src={safeAvatarLink({ imageUrl: '/images/default_avatar.svg' })}
         className={css(objectAccessor(imageStyles, style))}
-        alt="avatar for the user"
+        alt={alt}
         data-testid="searched_default_user_avatar"
       />
     );
@@ -62,9 +68,8 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
     return (
       <ImageAuth
         imageLink={safeAvatarLink({ imageUrl, user })}
-        token={token}
         className={css(objectAccessor(imageStyles, style))}
-        alt="avatar for the user"
+        alt={alt}
       />
     );
   }
@@ -73,7 +78,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
       <img
         src={safeAvatarLink({ imageUrl: '/images/default_avatar.svg' })}
         className={css(objectAccessor(imageStyles, style))}
-        alt="avatar for the user"
+        alt={alt}
         data-testid="searched_default_user_avatar"
       />
     )
@@ -82,8 +87,9 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
     <img
       src={safeAvatarLink({ user, imageUrl })}
       className={css(objectAccessor(imageStyles, style))}
-      alt="avatar for the user"
+      alt={alt}
       data-testid="user_avatar"
+      onError={(e) => handleImgError(e)}
     />
   );
 }
@@ -96,6 +102,7 @@ Avatar.defaultProps = {
   imageUrl: '/images/default_avatar.svg',
   style: 'small',
   searchedUser: null,
+  alt: '',
 };
 
 Avatar.propTypes = {
@@ -105,6 +112,7 @@ Avatar.propTypes = {
     avatarUrl: PropTypes.string
   }),
   style: PropTypes.string,
+  alt: PropTypes.string,
   searchedUser: PropTypes.shape({
     imageUrl: PropTypes.string,
     avatarUrl: PropTypes.string
@@ -112,6 +120,11 @@ Avatar.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  extraSmall: {
+    width: '20px',
+    height: '20px',
+    borderRadius: '10px'
+  },
   avatarSmall: {
     width: '40px',
     height: '40px',
@@ -126,5 +139,10 @@ const styles = StyleSheet.create({
     maxWidth: '200px',
     maxHeight: '200px',
     borderRadius: '100px',
+  },
+  avatarSemiSmall: {
+    width: '56px',
+    height: '56px',
+    borderRadius: '40px'
   }
 });

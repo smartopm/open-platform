@@ -10,9 +10,8 @@ module Notifications
     belongs_to :user, class_name: 'Users::User'
     belongs_to :sender, class_name: 'Users::User'
     belongs_to :note, class_name: 'Notes::Note', optional: true
-    belongs_to :note_entity, polymorphic: true, optional: true
     has_one :notification, as: :notifable, dependent: :destroy
-    has_one :campaign, dependent: :restrict_with_exception
+    belongs_to :campaign, optional: true
 
     default_scope { order(created_at: :asc) }
     after_create :update_campaign_message_count, if: :campaign_id?
@@ -53,27 +52,17 @@ module Notifications
       text = 'Click this link to reply to this message in our app '
       link = "https://#{HostEnv.base_url(user.community)}/message/#{id}"
       new_message = "#{sender[:name]} from #{user.community.name} said: \n" if add_prefix
-      new_message += message
+      new_message += message if message.present?
       new_message += "\n\n#{text} \n#{link}" if include_reply_link?
-      Sms.send(receiver_phone_number, new_message)
+      Sms.send(receiver_phone_number, new_message, user.community)
     end
     # rubocop:enable Metrics/AbcSize:
 
-    # rubocop:disable Metrics/MethodLength
-    def create_message_task(body = nil)
-      msg_obj = {
-        body: "Reply to
-        <a href=\"https://#{HostEnv.base_url(user.community)}/message/#{user.id}\">message</a>
-        from: #{user.name} \n #{body}",
-        category: 'message',
-        flagged: true,
-        completed: false,
-        due_date: 5.days.from_now,
-      }
-      note_id = user.generate_note(msg_obj).id
+    def create_message_task
+      note_id = user.generate_note(message_task_params).id
+      update(note_id: note_id) if note_id
       assign_message_task(note_id)
     end
-    # rubocop:enable Metrics/MethodLength
 
     def assign_message_task(note_id)
       assign = user.community.notes.find(note_id)
@@ -105,6 +94,18 @@ module Notifications
       return true if campaign_id.nil?
 
       Campaign.find(campaign_id).include_reply_link
+    end
+
+    private
+
+    def message_task_params
+      {
+        body: 'Reply to message',
+        category: 'message',
+        flagged: true,
+        completed: false,
+        due_date: 5.days.from_now,
+      }
     end
   end
 end

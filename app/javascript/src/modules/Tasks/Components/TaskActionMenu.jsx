@@ -1,12 +1,28 @@
 // This is the top menu for bulk operations
 
-import React from 'react';
-import { Grid, Select, MenuItem, Typography, Button, Checkbox } from '@material-ui/core';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import React, { useState, useRef } from 'react';
+import {
+  Grid,
+  Select,
+  MenuItem,
+  Typography,
+  Button,
+  Checkbox,
+  ClickAwayListener,
+  Grow,
+  Paper,
+  Popper,
+  MenuList,
+  useMediaQuery,
+  IconButton
+} from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import PropTypes from 'prop-types';
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next';
 import { Spinner } from '../../../shared/Loading';
+import { objectAccessor } from '../../../utils/helpers';
 
 export default function TaskActionMenu({
   currentTile,
@@ -18,7 +34,7 @@ export default function TaskActionMenu({
   bulkUpdating,
   handleBulkUpdate
 }) {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('common');
 
   return (
     <Grid container spacing={3}>
@@ -34,7 +50,7 @@ export default function TaskActionMenu({
               style={{ padding: '0px', marginRight: '15px' }}
             />
           </Grid>
-          <Typography>  
+          <Typography> 
             {' '}
             {t('misc.select')}
             {' '}
@@ -71,7 +87,11 @@ export default function TaskActionMenu({
               disabled={bulkUpdating}
               data-testid="bulk_update"
             >
-              {`${currentTile === 'completedTasks' ? t('form_actions.note_incomplete') : t('form_actions.note_complete')} `}
+              {`${
+                currentTile === 'completedTasks'
+                  ? t('form_actions.note_incomplete')
+                  : t('form_actions.note_complete')
+              } `}
             </Button>
           )}
         </Grid>
@@ -80,13 +100,137 @@ export default function TaskActionMenu({
   );
 }
 
-TaskActionMenu.propTypes = {
-    currentTile: PropTypes.string.isRequired,
-    setSelectAllOption: PropTypes.func.isRequired,
-    selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
-    taskListIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-    checkedOptions: PropTypes.string.isRequired,
-    handleCheckOptions: PropTypes.func.isRequired,
-    bulkUpdating: PropTypes.bool.isRequired,
-    handleBulkUpdate: PropTypes.func.isRequired
+export function TaskQuickAction({ checkedOptions, handleCheckOptions }) {
+  const [open, setOpen] = useState(false);
+  const [selectedKey, setSelectedKey] = useState('');
+  const matches = useMediaQuery('(max-width:900px)');
+  const anchorRef = useRef(null);
+  const { t } = useTranslation('common');
+  const options = {
+    all: t('misc.all'),
+    all_on_the_page: t('misc.all_this_page'),
+    none: t('misc.none')
+  };
+
+  const handleToggle = () => {
+    setOpen(prevOpen => !prevOpen);
+  };
+
+  const handleClose = event => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleMenuItemClick(key) {
+    setSelectedKey(key);
+    setOpen(false);
+    handleCheckOptions(key);
+  }
+
+  return (
+    <>
+      {matches ? (
+        <IconButton color="primary" onClick={handleToggle} ref={anchorRef}>
+          <CheckBoxIcon />
+        </IconButton>
+      ) : (
+        <Button startIcon={<CheckBoxIcon />} ref={anchorRef} onClick={handleToggle}>
+          {checkedOptions === 'none' ? t('misc.select') : objectAccessor(options, selectedKey)}
+        </Button>
+      )}
+      <Popper open={open} anchorEl={anchorRef.current} transition style={{ zIndex: 10000 }}>
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList id="split-button-menu" data-testid="select_option">
+                  {Object.entries(options).map(([key, val]) => (
+                    <MenuItem
+                      key={key}
+                      selected={key === selectedKey}
+                      onClick={() => handleMenuItemClick(key)}
+                      value={key}
+                    >
+                      {val}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </>
+  );
 }
+
+export function TaskBulkUpdateAction({
+  checkedOptions,
+  bulkUpdating,
+  handleBulkUpdate,
+  currentTile,
+  selectedTasks
+}) {
+  const { t } = useTranslation('common');
+
+  return (
+    <>
+      {(checkedOptions !== 'none' || selectedTasks.length > 0) && (
+        <Grid item style={{ marginLeft: '20px', marginTop: '-4px' }}>
+          {bulkUpdating ? (
+            <Spinner />
+          ) : (
+            <Button
+              onClick={handleBulkUpdate}
+              color="primary"
+              startIcon={
+                currentTile === 'completedTasks' ? <CheckCircleOutlineIcon /> : <CheckCircleIcon />
+              }
+              style={{ textTransform: 'none' }}
+              disabled={bulkUpdating}
+              data-testid="bulk_update"
+            >
+              {`${
+                currentTile === 'completedTasks'
+                  ? t('form_actions.note_incomplete')
+                  : t('form_actions.note_complete')
+              } `}
+            </Button>
+          )}
+        </Grid>
+      )}
+    </>
+  );
+}
+
+TaskActionMenu.propTypes = {
+  currentTile: PropTypes.string.isRequired,
+  setSelectAllOption: PropTypes.func.isRequired,
+  selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
+  taskListIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  checkedOptions: PropTypes.string.isRequired,
+  handleCheckOptions: PropTypes.func.isRequired,
+  bulkUpdating: PropTypes.bool.isRequired,
+  handleBulkUpdate: PropTypes.func.isRequired
+};
+
+TaskQuickAction.propTypes = {
+  checkedOptions: PropTypes.string.isRequired,
+  handleCheckOptions: PropTypes.func.isRequired
+};
+
+TaskBulkUpdateAction.propTypes = {
+  currentTile: PropTypes.string.isRequired,
+  selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
+  checkedOptions: PropTypes.string.isRequired,
+  bulkUpdating: PropTypes.bool.isRequired,
+  handleBulkUpdate: PropTypes.func.isRequired
+};

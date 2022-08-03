@@ -5,10 +5,11 @@ import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import ActionFlows from '../containers/ActionFlows/ActionFlows'
 import { Flows } from '../graphql/queries'
 import Loading from '../shared/Loading'
-import '@testing-library/jest-dom/extend-expect'
+
 import MockedThemeProvider from '../modules/__mocks__/mock_theme'
 import { Context } from '../containers/Provider/AuthStateProvider'
 import userMock from '../__mocks__/userMock'
+import MockedSnackbarProvider from '../modules/__mocks__/mock_snackbar'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 const mocks = {
@@ -42,7 +43,9 @@ describe('ActionFlows', () => {
         <MockedProvider mocks={[mocks]} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ActionFlows />
+              <MockedSnackbarProvider>
+                <ActionFlows />
+              </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -83,7 +86,9 @@ describe('ActionFlows', () => {
       <MockedProvider mocks={[newMocks]} addTypename={false}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <ActionFlows />
+            <MockedSnackbarProvider>
+              <ActionFlows />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

@@ -35,6 +35,10 @@ class MergeUsers
     merge_accounts_and_general_payments(user, duplicate_user)
     raise_update_failed_error if Payments::PlanPayment.where(user_id: user_id).any?
 
+    # Update PaymentPlan user
+    user.payment_plans.update_all(user_id: duplicate_id)
+    raise_update_failed_error if Properties::PaymentPlan.where(user_id: user_id).any?
+
     # Updates accounts details to their associated user's details
     duplicate_user.update_associated_accounts_details
     raise_update_failed_error if Properties::Account.where(user_id: user_id).any?
@@ -43,11 +47,11 @@ class MergeUsers
     merge_user_wallets(user_id, duplicate_id)
 
     # Update showroom User
-    showrooms = Showroom.where(userId: user_id)
+    showrooms = Showroom.where(user_id: user_id)
     showrooms.each do |showroom|
-      showroom.update(userId: duplicate_id)
+      showroom.update(user_id: duplicate_id)
     end
-    raise_update_failed_error if Showroom.where(userId: user_id).any?
+    raise_update_failed_error if Showroom.where(user_id: user_id).any?
 
     # Update author in Notes
     notes_auth = Notes::Note.where(author_id: user_id)
@@ -163,6 +167,19 @@ class MergeUsers
     end
     raise_update_failed_error if PostTags::PostTagUser.where(user_id: user_id).any?
 
+    # Update ContactInfo user
+    contact_infos = Users::ContactInfo.where(user_id: user_id)
+    contact_infos.each do |contact_info|
+      if Users::ContactInfo.exists?(user_id: duplicate_id,
+                                    contact_type: contact_info.contact_type,
+                                    info: contact_info.info)
+        contact_info.destroy
+      else
+        contact_info.update(user_id: duplicate_id)
+      end
+    end
+    raise_update_failed_error if Users::ContactInfo.where(user_id: user_id).any?
+
     models_with_user_id.each do |table_name|
       next if table_name.constantize.where(user_id: user_id).empty?
 
@@ -173,7 +190,7 @@ class MergeUsers
   end
 
   def self.merge_accounts_and_general_payments(user, duplicate_user)
-    if user.land_parcels.unscope(where: :status).general.first.present?
+    if user.land_parcels.general.first.present?
       # Updates plan payments of general plan
       general_plan = duplicate_user.general_payment_plan
       user.general_payment_plan.plan_payments.update_all(user_id: duplicate_user.id,
@@ -201,14 +218,14 @@ class MergeUsers
     model_names = []
     payment_models = %w[Invoice PaymentInvoice Payment Wallet WalletTransaction
                         Transaction]
-    property_models = %w[PaymentPlan Valuation]
+    property_models = %w[Valuation]
     note_models = %w[Note NoteHistory]
     form_models = %w[FormUser UserFormProperty]
     discussion_models = %w[Discussion]
     comment_models = %w[Comment NoteComment]
     log_models = %w[ActivityLog EventLog ImportLog SubstatusLog EntryRequest]
     notification_models = %w[EmailTemplate Message Notification]
-    user_models = %w[ContactInfo Feedback ActivityPoint TimeSheet]
+    user_models = %w[Feedback ActivityPoint TimeSheet]
     ActiveRecord::Base.connection.tables.map(&:classify).each do |class_name|
       model_name = case class_name
                    when *payment_models then "Payments::#{class_name}"

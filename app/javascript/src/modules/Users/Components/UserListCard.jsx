@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { List } from '@material-ui/core'
+import { List } from '@mui/material'
 import UserItem from './UserItem'
 
 export default function UserListCard({
@@ -9,7 +9,8 @@ export default function UserListCard({
   handleUserSelect,
   selectedUsers,
   offset,
-  selectCheckBox
+  selectCheckBox,
+  refetch
 }) {
   return (
     <List>
@@ -22,6 +23,7 @@ export default function UserListCard({
           selectedUsers={selectedUsers}
           offset={offset}
           selectCheckBox={selectCheckBox}
+          refetch={refetch}
         />
       ))}
     </List>
@@ -36,5 +38,6 @@ UserListCard.propTypes = {
   handleUserSelect: PropTypes.func.isRequired,
   offset: PropTypes.number.isRequired,
   selectCheckBox: PropTypes.bool.isRequired,
-  selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired
+  selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired,
+  refetch: PropTypes.func.isRequired,
 }

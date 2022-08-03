@@ -1,19 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import ImageAuth from './ImageAuth';
 import userProps from './types/user';
 
-// TODO: This component needs to be revisited
 export default function CommunityName({ authState, logoStyles }) {
-  if (authState.id && authState.community) {
-    if (authState.community.logoUrl) {
+  if (authState && authState.user?.community) {
+    const { community } = authState.user;
+    if (community.imageUrl) {
       return (
-        <Link to="/">
-          <img
-            src={authState.community.logoUrl}
+        <Link to="/" style={{ textDecoration: 'none' }} data-testid="community_logo">
+          <ImageAuth
+            imageLink={community.imageUrl}
             className={logoStyles.logo ? css(logoStyles.logo) : css(styles.logo)}
             alt="community logo"
           />
@@ -21,46 +21,38 @@ export default function CommunityName({ authState, logoStyles }) {
       );
     }
     return (
-      <Link to="/" style={{ textDecoration: 'none' }}>
-        <Typography color="primary">{authState.community.name}</Typography>
+      <Link to="/" style={{ textDecoration: 'none' }} data-testid="community_name">
+        <Typography color="primary">{community.name}</Typography>
       </Link>
     );
-  }
-  return (
-    <Link to="/" style={{ textDecoration: 'none' }}>
-      <ImageAuth
-        imageLink={authState.user?.community.imageUrl}
-        token={authState.token}
-        className={logoStyles.logo ? css(logoStyles.logo) : css(styles.logo)}
-      />
-    </Link>
-  );
+  };
+  return null;
 }
 
 CommunityName.defaultProps = {
   logoStyles: {
     logo: null
   }
-}
+};
 
 CommunityName.propTypes = {
-  authState: PropTypes.shape({ 
-      id: PropTypes.string,
-      user: userProps,
-      community: PropTypes.shape({
-          name: PropTypes.string,
-          logoUrl: PropTypes.string
-      }),
-      token: PropTypes.string,
-   }).isRequired,
-   logoStyles: PropTypes.shape({
-     logo: PropTypes.shape({
-     })
-   })
+  authState: PropTypes.shape({
+    id: PropTypes.string,
+    user: userProps,
+    community: PropTypes.shape({
+      name: PropTypes.string,
+      logoUrl: PropTypes.string
+    })
+  }).isRequired,
+  logoStyles: PropTypes.shape({
+    logo: PropTypes.shape({})
+  })
 };
 
 const styles = StyleSheet.create({
   logo: {
-    height: '25px'
+    margin: '-10px 0 0 30%',
+    width: '25%',
+    height: '25%'
   }
 });

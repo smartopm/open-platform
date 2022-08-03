@@ -7,7 +7,12 @@ RSpec.describe PostTagsAlertJob, type: :job do
   let!(:user) { create(:user_with_community, community: community) }
   let!(:post_tag) { create(:post_tag, community_id: community.id, slug: 'hir') }
 
-  before { Rails.env.stub(production?: true) }
+  before do
+    Rails.env.stub(production?: true)
+    WebMock.allow_net_connect!
+  end
+
+  after {  WebMock.disable_net_connect! }
 
   describe '#perform_later get community tags' do
     it 'should enqueue a job to send email to users if there is a new post' do

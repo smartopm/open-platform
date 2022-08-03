@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useLazyQuery } from 'react-apollo';
-import { makeStyles } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useHistory } from 'react-router-dom';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {
   Grid,
   Typography,
@@ -16,9 +17,9 @@ import {
   Menu,
   MenuItem,
   IconButton
-} from '@material-ui/core';
-import { MoreHorizOutlined } from '@material-ui/icons';
-import EditIcon from '@material-ui/icons/Edit';
+} from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
 import {
@@ -32,7 +33,6 @@ import {
 import Text from '../../../../shared/Text';
 import Label from '../../../../shared/label/Label';
 import { invoiceStatus } from '../../../../utils/constants';
-import MessageAlert from '../../../../components/MessageAlert';
 import PaymentPlanUpdateMutation, {
   PaymentPlanCancelMutation
 } from '../../graphql/payment_plan_mutations';
@@ -49,6 +49,7 @@ import PlanDetail from './PlanDetail';
 import TransactionDetails from './TransactionDetails';
 import TransferPlanModal from './TransferPlanModal';
 import PlanMobileDataList, { PaymentMobileDataList } from './PaymentMobileDataList';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function UserPaymentPlanItem({
   plans,
@@ -64,13 +65,14 @@ export default function UserPaymentPlanItem({
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchor, setAnchor] = useState(null);
   const [planAnchor, setPlanAnchor] = useState(null);
-  const [transactionId, setTransactionId] = useState('');
+  const [paymentId, setPaymentId] = useState('');
   const [planId, setPlanId] = useState('');
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [transDetailOpen, setTransDetailOpen] = useState(false);
   const [transData, setTransData] = useState({});
   const [planDetailOpen, setPlanDetailOpen] = useState(false);
   const [planData, setPlanData] = useState({});
+  const [paymentData, setPaymentData] = useState({});
   const [statementOpen, setStatementOpen] = useState(false);
   const [details, setPlanDetails] = useState({
     isLoading: false,
@@ -80,16 +82,19 @@ export default function UserPaymentPlanItem({
   });
   const [confirmPlanCancelOpen, setConfirmPlanCancelOpen] = useState(false);
   const [TransferPlanModalOpen, setTransferPlanModalOpen] = useState(false);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
+  const [transferType, setTransferType] = useState('');
   const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
   const [cancelPaymentPlan] = useMutation(PaymentPlanCancelMutation);
   const validDays = [...Array(28).keys()];
-  const matches = useMediaQuery('(max-width:600px)');
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
   const anchorElOpen = Boolean(anchor);
   const planAnchorElOpen = Boolean(planAnchor);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [loadReceiptDetails, { loading, error, data }] = useLazyQuery(ReceiptPayment, {
-    variables: { id: transactionId },
+    variables: { userId, id: paymentId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -122,8 +127,13 @@ export default function UserPaymentPlanItem({
   const menuList = [
     {
       content: t('common:menu.view_receipt'),
-      isAdmin: true,
+      isAdmin: false,
       handleClick: event => handleClick(event)
+    },
+    {
+      content: t('actions.transfer_payment'),
+      isAdmin: true,
+      handleClick: event => handleConfirmPlanTransferClick(event, 'payment')
     }
   ];
 
@@ -151,7 +161,7 @@ export default function UserPaymentPlanItem({
     {
       content: t('common:menu.transfer_payment_plan'),
       isAdmin: true,
-      handleClick: event => handleConfirmPlanTransferClick(event)
+      handleClick: event => handleConfirmPlanTransferClick(event, 'plan')
     }
   ];
 
@@ -183,6 +193,11 @@ export default function UserPaymentPlanItem({
     setConfirmPlanCancelOpen(true);
   }
 
+  function handleTransferPlanModalClose() {
+    setTransferPlanModalOpen(false)
+    setAnchor(null);
+  }
+
   function handleCancelPlan(event) {
     event.stopPropagation();
     handleCloseConfirmModal();
@@ -194,22 +209,14 @@ export default function UserPaymentPlanItem({
       }
     })
       .then(() => {
-        setPlanDetails({
-          ...details,
-          isLoading: false,
-          isError: false,
-          info: t('misc.payment_cancelled')
-        });
+        showSnackbar({ type: messageType.success, message: t('misc.payment_cancelled')})
+        setPlanDetails({...details, isLoading: false });
         refetch();
         balanceRefetch();
       })
       .catch(err => {
-        setPlanDetails({
-          ...details,
-          isLoading: false,
-          isError: true,
-          info: formatError(err.message)
-        });
+        showSnackbar({ type: messageType.error, message: formatError(err.message)})
+        setPlanDetails({...details, isLoading: false });
       });
   }
 
@@ -225,12 +232,14 @@ export default function UserPaymentPlanItem({
     history.push(`?tab=Plans&subtab=Transactions&id=${planId}`);
   }
 
-  function handleConfirmPlanTransferClick(event) {
+  function handleConfirmPlanTransferClick(event, transferObject) {
     event.stopPropagation();
+    setTransferType(transferObject);
     setTransferPlanModalOpen(true);
   }
 
   function transactionDetailOpen(trans) {
+    if (currentUser.userType !== 'admin') return;
     setTransData(trans);
     setTransDetailOpen(true);
   }
@@ -240,10 +249,11 @@ export default function UserPaymentPlanItem({
     setPlanDetailOpen(true);
   }
 
-  function handleTransactionMenu(event, payId) {
+  function handleTransactionMenu(event, pay) {
     event.stopPropagation();
     setAnchor(event.currentTarget);
-    setTransactionId(payId);
+    setPaymentId(pay.id);
+    setPaymentData(pay)
   }
 
   function handlePlanMenu(event, plan) {
@@ -279,22 +289,14 @@ export default function UserPaymentPlanItem({
       }
     })
       .then(() => {
-        setPlanDetails({
-          ...details,
-          isLoading: false,
-          isError: false,
-          info: t('misc.pay_day_updated')
-        });
+        showSnackbar({ type: messageType.success, message: t('misc.pay_day_updated')})
+        setPlanDetails({ ...details, isLoading: false });
         refetch();
         balanceRefetch();
       })
       .catch(err => {
-        setPlanDetails({
-          ...details,
-          isLoading: false,
-          isError: true,
-          info: formatError(err.message)
-        });
+        showSnackbar({ type: messageType.error, message: formatError(err.message)})
+        setPlanDetails({ ...details, isLoading: false });
       });
   }
 
@@ -302,13 +304,6 @@ export default function UserPaymentPlanItem({
     event.stopPropagation();
     setAnchor(null);
   }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
-  };
 
   const menuData = {
     menuList,
@@ -351,25 +346,22 @@ export default function UserPaymentPlanItem({
           currencyData={currencyData}
           updatePaymentPlan={updatePaymentPlan}
           plansRefetch={refetch}
-          setMessageAlert={setMessageAlert}
-          setIsSuccessAlert={setIsSuccessAlert}
+          showSnackbar={showSnackbar}
+          messageType={messageType}
         />
       )}
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
       <TransferPlanModal
         open={TransferPlanModalOpen}
-        handleModalClose={() => setTransferPlanModalOpen(!TransferPlanModalOpen)}
+        handleModalClose={handleTransferPlanModalClose}
         planData={planData}
         userId={userId}
         paymentPlanId={planId}
         refetch={refetch}
         balanceRefetch={balanceRefetch}
         currencyData={currencyData}
+        transferType={transferType}
+        paymentId={paymentId}
+        paymentData={paymentData}
       />
       {error && <CenteredContent>{error.message}</CenteredContent>}
       {statementError && <CenteredContent>{statementError.message}</CenteredContent>}
@@ -400,12 +392,6 @@ export default function UserPaymentPlanItem({
         handleClose={handleCloseConfirmModal}
         handleOnSave={handleCancelPlan}
       />
-      <MessageAlert
-        type={!details.isError ? 'success' : 'error'}
-        message={details.info}
-        open={!!details.info}
-        handleClose={() => setPlanDetails({ ...details, info: '' })}
-      />
       <Menu
         id="set-payment-date-menu"
         anchorEl={anchorEl}
@@ -424,7 +410,7 @@ export default function UserPaymentPlanItem({
           </MenuItem>
         ))}
       </Menu>
-      {plans?.map(plan => (
+      {plans.filter(plan => plan.status !== 'general').map(plan => (
         <Accordion key={plan.id} style={{ backgroundColor: '#FDFDFD' }}>
           <AccordionSummary
             aria-label="Expand"
@@ -433,14 +419,14 @@ export default function UserPaymentPlanItem({
             data-testid="summary"
             className={classes.accordion}
           >
-            {matches ? (
+            {!matches ? (
               <PlanMobileDataList
                 keys={planHeader}
                 data={[
                   renderPlan(
                     plan,
                     currencyData,
-                    currentUser.userType,
+                    currentUser,
                     {
                       handleMenu: event => handleOpenDateMenu(event, plan.id),
                       loading: details.isLoading,
@@ -459,7 +445,7 @@ export default function UserPaymentPlanItem({
                   renderPlan(
                     plan,
                     currencyData,
-                    currentUser.userType,
+                    currentUser,
                     {
                       handleMenu: event => handleOpenDateMenu(event, plan.id),
                       loading: details.isLoading
@@ -481,12 +467,12 @@ export default function UserPaymentPlanItem({
                 <div>
                   <Typography
                     color="primary"
-                    className={!matches ? classes.payment : classes.paymentMobile}
+                    className={matches ? classes.payment : classes.paymentMobile}
                   >
                     {t('common:menu.payment_plural')}
                   </Typography>
                   <div className={classes.paymentList}>
-                    {!matches && <ListHeader headers={paymentHeader} color />}
+                    {matches && <ListHeader headers={paymentHeader} color />}
                   </div>
                 </div>
               )}
@@ -496,15 +482,15 @@ export default function UserPaymentPlanItem({
                 pay =>
                   (currentUser.userType === 'admin' || pay?.status !== 'cancelled') && (
                     <div key={pay.id}>
-                      {!matches ? (
+                      {matches ? (
                         <div className={classes.paymentList}>
                           <DataList
                             keys={paymentHeader}
                             data={[
-                              renderPayments(pay, currencyData, currentUser.userType, menuData)
+                              renderPayments(pay, currencyData, currentUser, menuData)
                             ]}
                             hasHeader={false}
-                            clickable
+                            clickable={currentUser.userType === 'admin'}
                             handleClick={() => transactionDetailOpen(pay)}
                             color
                           />
@@ -512,7 +498,7 @@ export default function UserPaymentPlanItem({
                       ) : (
                         <PaymentMobileDataList
                           keys={paymentHeader}
-                          data={[renderPayments(pay, currencyData, currentUser.userType, menuData)]}
+                          data={[renderPayments(pay, currencyData, currentUser, menuData)]}
                           clickable
                           handleClick={() => transactionDetailOpen(pay)}
                         />
@@ -530,7 +516,7 @@ export default function UserPaymentPlanItem({
 export function renderPlan(
   plan,
   currencyData,
-  userType,
+  currentUser,
   { handleMenu, loading, planList },
   menuData,
   t
@@ -547,6 +533,10 @@ export function renderPlan(
 
     planMenuList.push({ ...obj });
   });
+
+  const paymentPlanPermissions = currentUser?.permissions?.find(permissionObject => permissionObject.module === 'payment_plan')
+  const canViewMenuList = paymentPlanPermissions? paymentPlanPermissions.permissions.includes('can_view_menu_list'): false
+  const canUpdatePaymentDay = paymentPlanPermissions? paymentPlanPermissions.permissions.includes('can_update_payment_day'): false
 
   return {
     'Plot Number': (
@@ -602,15 +592,15 @@ export function renderPlan(
       <Grid item xs={12} md={2}>
         <Button
           aria-controls="set-payment-date-menu"
-          variant={userType === 'admin' ? 'outlined' : 'text'}
+          variant={canUpdatePaymentDay ? 'outlined' : 'text'}
           aria-haspopup="true"
           data-testid="menu"
-          disabled={userType !== 'admin'}
+          disabled={!canUpdatePaymentDay}
           onClick={handleMenu}
         >
           {loading && <Spinner />}
 
-          {!loading && userType === 'admin' ? (
+          {!loading && canUpdatePaymentDay ? (
             <span>
               <EditIcon fontSize="small" style={{ marginBottom: -4 }} />
               {`   ${suffixedNumber(plan.paymentDay)}`}
@@ -623,8 +613,8 @@ export function renderPlan(
       </Grid>
     ),
     Menu: (
-      <Grid item xs={12} md={1} data-testid="menu">
-        {userType === 'admin' && (
+      <Grid item xs={12} md={1} data-testid="menu" style={{textAlign: 'right'}}>
+        {canViewMenuList && (
           <>
             <IconButton
               aria-controls="simple-menu"
@@ -632,8 +622,10 @@ export function renderPlan(
               data-testid="plan-menu"
               dataid={plan.id}
               onClick={event => menuData.handlePlanMenu(event, plan)}
+              color='primary'
+              size="large"
             >
-              <MoreHorizOutlined />
+              <MoreVertIcon />
             </IconButton>
             <MenuList
               open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === plan.id}
@@ -649,7 +641,7 @@ export function renderPlan(
   };
 }
 
-export function renderPayments(pay, currencyData, userType, menuData) {
+export function renderPayments(pay, currencyData, currentUser, menuData) {
   return {
     'Payment Date': (
       <Grid item xs={12} md={2} data-testid="payment-date">
@@ -675,16 +667,18 @@ export function renderPayments(pay, currencyData, userType, menuData) {
       </Grid>
     ),
     Menu: (
-      <Grid item xs={12} md={1} data-testid="menu">
-        {userType === 'admin' && pay.status !== 'cancelled' && (
+      <Grid item xs={12} md={1} data-testid="menu" style={{textAlign: 'right'}}>
+        {pay.status === 'paid' && (
           <IconButton
             aria-controls="simple-menu"
             aria-haspopup="true"
             data-testid="pay-menu"
             dataid={pay.id}
-            onClick={event => menuData.handleTransactionMenu(event, pay.id)}
+            onClick={event => menuData.handleTransactionMenu(event, pay)}
+            color='primary'
+            size="large"
           >
-            <MoreHorizOutlined />
+            <MoreVertIcon />
           </IconButton>
         )}
         <MenuList
@@ -715,7 +709,10 @@ UserPaymentPlanItem.propTypes = {
   }).isRequired,
   userId: PropTypes.string.isRequired,
   currentUser: PropTypes.shape({
-    userType: PropTypes.string
+    userType: PropTypes.string,
+    permissions: PropTypes.arrayOf(PropTypes.shape({
+        permissions: PropTypes.arrayOf(PropTypes.string)
+      }))
   }).isRequired,
   refetch: PropTypes.func.isRequired,
   balanceRefetch: PropTypes.func.isRequired

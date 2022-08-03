@@ -2,9 +2,10 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import UserStyledTabs from '../Components/UserTabs';
-import '@testing-library/jest-dom/extend-expect';
+
 import { UserActivePlanQuery } from '../../../graphql/queries/user';
 import { Spinner } from '../../../shared/Loading';
+import MockedThemeProvider from "../../__mocks__/mock_theme";
 
 describe('component that with styled tabs', () => {
   const mock = [
@@ -21,7 +22,7 @@ describe('component that with styled tabs', () => {
   ];
   it('should render correct tabs when user is admin', async () => {
     const props = {
-      tabValue: 'note',
+      tabValue: 'Notes',
       handleChange: jest.fn(),
       user: {
         userType: 'admin',
@@ -30,14 +31,16 @@ describe('component that with styled tabs', () => {
             Tasks: { features: [] },
             Messages: { features: [] },
             Payments: { features: [] },
-            Properties: { features: []}
+            Properties: { features: [] }
           }
         }
       }
     };
     const container = render(
       <MockedProvider mocks={mock}>
-        <UserStyledTabs {...props} />
+        <MockedThemeProvider>
+          <UserStyledTabs {...props} />
+        </MockedThemeProvider>
       </MockedProvider>
     );
 
@@ -52,13 +55,13 @@ describe('component that with styled tabs', () => {
       expect(container.queryByText('common:misc.payments')).toBeInTheDocument();
       expect(container.queryByText('common:misc.plots')).toBeInTheDocument();
       // verify number of tabs in case they get changed
-      expect(container.queryAllByTestId('tabs')).toHaveLength(6)
-    },10);
+      expect(container.queryAllByTestId('tabs')).toHaveLength(6);
+    }, 10);
   });
 
   it('should not show communication and note tabs when user is not admin', async () => {
     const props = {
-      tabValue: 'note',
+      tabValue: 'Contacts',
       handleChange: jest.fn(),
       user: {
         userType: 'client',
@@ -67,14 +70,16 @@ describe('component that with styled tabs', () => {
             Tasks: { features: [] },
             Messages: { features: [] },
             Payments: { features: [] },
-            Properties: { features: []}
+            Properties: { features: [] }
           }
         }
       }
     };
     const container = render(
       <MockedProvider mocks={mock}>
-        <UserStyledTabs {...props} />
+        <MockedThemeProvider>
+          <UserStyledTabs {...props} />
+        </MockedThemeProvider>
       </MockedProvider>
     );
     const loader = render(<Spinner />);
@@ -87,44 +92,45 @@ describe('component that with styled tabs', () => {
       expect(container.queryByText('common:misc.contact')).toBeInTheDocument();
       expect(container.queryByText('common:misc.payments')).toBeInTheDocument();
       expect(container.queryByText('common:misc.plots')).toBeInTheDocument();
-    },10);
+    }, 10);
   });
-    it('should show error when something wrong happens', async () => {
-      const erroredMock = [
-        {
-          request: {
-            query: UserActivePlanQuery
-          },
-          error: new Error('An error occurred while fetching'),
-        }
-      ];
-      const props = {
-        tabValue: 'note',
-        handleChange: jest.fn(),
-        user: {
-          userType: 'admin',
-          community: {
-            features: {
-              Tasks: { features: [] },
-              Messages: { features: [] },
-              Payments: { features: [] },
-              Properties: { features: []}
-            }
+  it('should show error when something wrong happens', async () => {
+    const erroredMock = [
+      {
+        request: {
+          query: UserActivePlanQuery
+        },
+        error: new Error('An error occurred while fetching')
+      }
+    ];
+    const props = {
+      tabValue: 'Notes',
+      handleChange: jest.fn(),
+      user: {
+        userType: 'admin',
+        community: {
+          features: {
+            Tasks: { features: [] },
+            Messages: { features: [] },
+            Payments: { features: [] },
+            Properties: { features: [] }
           }
         }
-      };
-      const container = render(
-        <MockedProvider mocks={erroredMock}>
+      }
+    };
+    const container = render(
+      <MockedProvider mocks={erroredMock}>
+        <MockedThemeProvider>
           <UserStyledTabs {...props} />
-        </MockedProvider>
-      );
-  
-      const loader = render(<Spinner />);
-  
-      expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
-      await waitFor(() => {
-        expect(container.queryByText('An error occurred while fetching')).toBeInTheDocument()
-      },10);
-    })
+        </MockedThemeProvider>
+      </MockedProvider>
+    );
 
+    const loader = render(<Spinner />);
+
+    expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.queryByText('An error occurred while fetching')).toBeInTheDocument();
+    }, 10);
+  });
 });

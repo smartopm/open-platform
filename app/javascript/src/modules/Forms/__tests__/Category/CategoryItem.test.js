@@ -1,18 +1,17 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import CategoryItem from '../../components/Category/CategoryItem';
 import FormContextProvider, { FormContext } from '../../Context';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => []);
 describe('CategoryItem', () => {
-
   const category = {
     fieldName: 'Main Category',
     headerVisible: true,
     id: '34234234'
-  }
+  };
   const props = {
     handleAddField: jest.fn(),
     handleEditCategory: jest.fn(),
@@ -32,22 +31,22 @@ describe('CategoryItem', () => {
   );
 
   it('should properly render given props', () => {
-    expect(wrapper.queryByText('Some child component')).toBeInTheDocument();
-    expect(wrapper.queryByLabelText(/delete this category/)).toBeInTheDocument();
-    expect(wrapper.queryByLabelText(/edit this category/)).toBeInTheDocument();
-    expect(wrapper.queryByLabelText(/add questions to this category/)).toBeInTheDocument();
-    expect(wrapper.queryByTestId('add-icon')).toBeInTheDocument();
+    expect(wrapper.queryByTestId('add_property')).toBeInTheDocument();
+    expect(wrapper.queryByTestId('category_option')).toBeInTheDocument();
 
-    fireEvent.click(wrapper.queryByLabelText(/delete this category/))
-    expect(props.handleDeleteCategory).toBeCalled()
+    fireEvent.click(wrapper.queryByTestId('add_property'));
+    expect(props.handleAddField).toBeCalled();
 
-    fireEvent.click(wrapper.queryByLabelText(/edit this category/))
-    expect(props.handleEditCategory).toBeCalled()
+    fireEvent.click(wrapper.queryByTestId('category_option'));
+    expect(wrapper.queryByText('common:menu.edit')).toBeInTheDocument();
+    fireEvent.click(wrapper.queryByText('common:menu.edit'));
+    expect(props.handleEditCategory).toBeCalled();
 
-    fireEvent.click(wrapper.queryByLabelText(/add questions to this category/))
-    expect(props.handleAddField).toBeCalled()
-
+    expect(wrapper.queryByText('common:menu.delete')).toBeInTheDocument();
+    fireEvent.click(wrapper.queryByText('common:menu.delete'));
+    expect(props.handleDeleteCategory).toBeCalled();
   });
+  
   it('should not show the category if not matching condition', () => {
     const hiddenCategory = {
       fieldName: 'Main Category',
@@ -58,7 +57,7 @@ describe('CategoryItem', () => {
         value: 'fine',
         groupingId: '9e50f4db-3d75-431d-a772-261971a6ed92'
       }
-    }
+    };
 
     const properties = {
       'How are you?': {
@@ -68,9 +67,8 @@ describe('CategoryItem', () => {
       Name: {
         form_property_id: '9e50f4db-3d75-431d-a772-261971-a6ed92',
         value: 'their name'
-      },
-    }
-    
+      }
+    };
 
     const hiddenWrapper = render(
       <MockedProvider>
@@ -83,5 +81,5 @@ describe('CategoryItem', () => {
     );
     expect(hiddenWrapper.queryByText('Main Category')).not.toBeInTheDocument();
     expect(hiddenWrapper.queryByText('Some child component')).not.toBeInTheDocument();
-  })
+  });
 });

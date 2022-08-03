@@ -1,26 +1,24 @@
 import React from 'react'
-import { TextField, MenuItem } from '@material-ui/core'
+import { TextField, MenuItem } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 
-export default function TextInput({id, handleValue, properties, value, editable, inputValidation }) {
+export default function TextInput({id, handleValue, properties, value, editable, inputValidation, ...rest }) {
     const { t } = useTranslation('form');
     return (
       <TextField
         id={id}
         label={properties.fieldName}
-        style={{ width: '100%' }}
+        fullWidth
         className={`form-txt-input-property-${properties.fieldName}`}
+        style={{background: '#FFFFFF'}}
         defaultValue={value}
         onChange={handleValue}
         margin="dense"
-        variant="standard"
+        variant="outlined"
         aria-label="text-input"
         name={properties.fieldName}
         inputProps={{ 'data-testid': `${properties.fieldName}-id`, readOnly: editable }}
-        InputLabelProps={{
-          shrink: true
-        }}
         required={properties.required}
          /* eslint-disable no-nested-ternary */
         select={properties.fieldType === 'dropdown'}
@@ -32,6 +30,7 @@ export default function TextInput({id, handleValue, properties, value, editable,
              : inputValidation.error
                ? t('errors.required_field', { fieldName: properties.fieldName })
                : ''}
+        {...rest}
       >
         { properties.fieldType === 'dropdown' &&
          (

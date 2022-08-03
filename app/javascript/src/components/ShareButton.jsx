@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import Fab from '@material-ui/core/Fab';
-import Box from '@material-ui/core/Box';
-import Popper from '@material-ui/core/Popper';
-import ShareIcon from '@material-ui/icons/Share';
+import Fab from '@mui/material/Fab';
+import Box from '@mui/material/Box';
+import Popper from '@mui/material/Popper';
+import ShareIcon from '@mui/icons-material/Share';
 import ReactGA from 'react-ga';
-import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
-import { Snackbar, SnackbarContent } from '@material-ui/core';
-import CheckCircleIconBase from '@material-ui/icons/CheckCircle';
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
+import { Snackbar, SnackbarContent } from '@mui/material';
+import CheckCircleIconBase from '@mui/icons-material/CheckCircle';
 import {
   FacebookShareButton,
   EmailShareButton,
@@ -144,7 +144,9 @@ ShareButton.defaultProps = {
     bottom: 24,
     right: 57
   },
-  doOnShare: () => {}
+  doOnShare: () => {},
+  url: '',
+  communityName: '',
 };
 ShareButton.propTypes = {
   styles: PropTypes.shape({
@@ -152,9 +154,9 @@ ShareButton.propTypes = {
     bottom: PropTypes.number,
     right: PropTypes.number
   }),
-  url: PropTypes.string.isRequired,
+  url: PropTypes.string,
   doOnShare: PropTypes.func,
-  communityName: PropTypes.string.isRequired
+  communityName: PropTypes.string,
 };
 
 export const styles = StyleSheet.create({

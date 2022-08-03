@@ -1,89 +1,120 @@
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable no-use-before-define */
-import React, { useState } from 'react'
-import Avatar from '@material-ui/core/Avatar';
-import PropTypes from 'prop-types'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import { useMutation } from 'react-apollo'
-import Button from '@material-ui/core/Button';
-import CommentCard from './CommentCard'
-import { TaskComment } from '../../../graphql/mutations'
+import CommentCard from './CommentCard';
+import { TaskComment } from '../../../graphql/mutations';
+import CommentTextField from '../../../shared/CommentTextField';
+import { downloadCommentFile } from '../../../utils/helpers';
 
-export default function CommentTextField({ data, refetch, authState, taskId }) {
-  const classes = useStyles();
-  const [commentCreate] = useMutation(TaskComment)
-  const [body, setBody] = useState('')
-  const [error, setErrorMessage] = useState('')
-  const { t } = useTranslation('common')
+export default function CommentField({
+  data,
+  refetch,
+  taskId,
+  commentsRefetch,
+  forProcess,
+  taskAssignees,
+  taskDocuments
+}) {
+  const initialOptions = {
+    autoCompleteOpen: false,
+    sendToFormOwner: false
+  };
+  const [commentCreate] = useMutation(TaskComment);
+  const [body, setBody] = useState('');
+  const [replyFrom, setReplyFrom] = useState(null);
+  const [error, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [mentionedDocuments, setMentionedDocuments] = useState([]);
+  const [commentOptions, setCommentOptions] = useState(initialOptions);
+  const { t } = useTranslation('common');
 
   function handleSubmit(event) {
     event.preventDefault();
-    commentCreate({ variables: {
+    let variables = {
       noteId: taskId,
+      taggedDocuments: mentionedDocuments,
+      sendToResident: commentOptions.sendToFormOwner,
       body
-    }}).then(() => {
-      setBody('')
-      refetch()
-    }).catch((err) => {
-      setErrorMessage(err)
+    };
+    if (replyFrom) {
+      variables = {
+        ...variables,
+        replyRequired: true,
+        replyFromId: replyFrom.id
+      };
+    }
+
+    setLoading(true);
+    commentCreate({
+      variables
     })
+      .then(() => {
+        setBody('');
+        setMentionedDocuments([]);
+        refetch();
+        commentsRefetch();
+        setReplyFrom(null);
+        setCommentOptions(initialOptions);
+        setLoading(false);
+      })
+      .catch(err => {
+        setErrorMessage(err);
+        setLoading(false);
+      });
   }
-  return(
+
+  const mentionsData = taskDocuments?.map(doc => {
+    return { id: doc.id, display: doc.filename };
+  });
+  return (
     <>
-      <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
-        <Avatar style={{ marginTop: '7px' }} src={authState.user.imageUrl} alt="avatar-image" />
-        <div className={classes.root} style={{ display: 'flex', flexDirection: 'column' }}>
-          <TextField
-            value={body}
-            multiline
-            id="outlined-size-small"
-            variant="outlined"
-            size="small"
-            onChange={e => setBody(e.target.value)}
-            inputProps={{ 'data-testid': 'body_input' }}
-          />
-          <Button variant="contained" color="primary" type="submit" disabled={!body.length} data-testid='share'>{t('misc.share')}</Button>
-        </div>
-      </form>
-      <CommentCard data={data} refetch={refetch} />
-      <p className="text-center">
-        {Boolean(error.length) && error}
-      </p>
+      <CommentTextField
+        value={body}
+        setValue={setBody}
+        handleSubmit={handleSubmit}
+        actionTitle={t('misc.comment')}
+        placeholder={t('misc.type_comment')}
+        forProcess={forProcess}
+        selectedUser={replyFrom}
+        setSelectedUser={setReplyFrom}
+        setCommentOptions={setCommentOptions}
+        commentOptions={commentOptions}
+        taskAssignees={taskAssignees}
+        loading={loading}
+        mentionsData={mentionsData}
+        setMentionedDocuments={setMentionedDocuments}
+      />
+      <CommentCard
+        comments={data.taskComments}
+        refetch={refetch}
+        commentsRefetch={commentsRefetch}
+        mentionsData={mentionsData}
+        forProcess={forProcess}
+        taggedDocOnClick={downloadCommentFile}
+        forAccordionSection
+      />
+      {Boolean(error.length) && <p className="text-center">{error}</p>}
     </>
-  )
+  );
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '70%',
-    '& .MuiTextField-root': {
-      margin: theme.spacing(1)
-    },
-    '& .MuiOutlinedInput-root': {
-      borderRadius: '10px'
-    },
-    '& .MuiButton-contained': {
-      width: 100,
-      marginLeft: '8px',
-      color: "white"
-    },
-    '& .Mui-disabled': {
-      color: 'white',
-      border: '2px white solid'
-    }
-  }
-}));
-
-CommentTextField.defaultProps = {
+CommentField.defaultProps = {
   data: {},
-  authState: {},
-  taskId: ''
- }
- CommentTextField.propTypes = {
-   data: PropTypes.object,
-   authState: PropTypes.object,
-   refetch: PropTypes.func.isRequired,
-   taskId: PropTypes.string,
- }
+  taskId: '',
+  commentsRefetch: () => {},
+  forProcess: false,
+  taskAssignees: null,
+  taskDocuments: null
+};
+CommentField.propTypes = {
+  data: PropTypes.shape({
+    taskComments: PropTypes.arrayOf(PropTypes.object)
+  }),
+  refetch: PropTypes.func.isRequired,
+  taskId: PropTypes.string,
+  commentsRefetch: PropTypes.func,
+  forProcess: PropTypes.bool,
+  taskAssignees: PropTypes.array,
+  taskDocuments: PropTypes.arrayOf(PropTypes.object)
+};

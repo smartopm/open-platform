@@ -1,6 +1,6 @@
 import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { List, Dialog, DialogTitle } from '@material-ui/core';
+import { List, Dialog, DialogTitle } from '@mui/material';
 import { useLazyQuery } from 'react-apollo';
 import { objectAccessor, toCamelCase } from '../../../utils/helpers';
 import { TaskStatsQuery } from '../graphql/task_queries';

@@ -4,10 +4,20 @@ require 'rails_helper'
 
 RSpec.describe Mutations::EntryRequest do
   describe 'creating an entry request' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:contractor) { create(:contractor, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_create_entry_request])
+    end
 
+    let!(:user) do
+      create(:user_with_community, user_type: 'visitor', role: visitor_role)
+    end
+    let!(:admin) do
+      create(:user, user_type: 'admin', community_id: user.community_id, role: admin_role)
+    end
     let(:query) do
       <<~GQL
         mutation CreateEntryRequest(
@@ -84,10 +94,21 @@ RSpec.describe Mutations::EntryRequest do
   end
 
   describe 'updating an entry request' do
-    let!(:user) { create(:user_with_community) }
-    let!(:random_user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:entry_request) { user.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_update_entry_request])
+    end
+
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
+    let!(:random_user) { create(:user_with_community, role: visitor_role) }
+    let!(:entry_request) do
+      user.entry_requests.create(name: 'Mark Percival', reason: 'Visiting', is_guest: true)
+    end
 
     let(:query) do
       <<~GQL
@@ -165,8 +186,17 @@ RSpec.describe Mutations::EntryRequest do
   end
 
   describe 'denying an entry request' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_deny_entry])
+    end
+
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
     let!(:entry_request) { admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
 
     let(:query) do
@@ -217,7 +247,7 @@ RSpec.describe Mutations::EntryRequest do
                                                 current_user: admin,
                                               }).as_json
       expect(result['errors']).not_to be_nil
-      expect(result.dig('errors', 0, 'message')).to include 'Logs::EntryRequest not found'
+      expect(result.dig('errors', 0, 'message')).to include 'EntryRequest not found'
     end
 
     it 'returns error when provided wrong inputs' do
@@ -234,12 +264,21 @@ RSpec.describe Mutations::EntryRequest do
   end
 
   describe 'granting an entry request' do
-    let!(:user) { create(:user_with_community) }
-    let!(:another_user) { create(:user, community_id: user.community_id) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_grant_entry])
+    end
+
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
+    let!(:another_user) { create(:user, community_id: user.community_id, role: visitor_role) }
     let!(:entry_request) { admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
     let!(:event) do
-      user.generate_events('visitor_entry', entry_request)
+      user.generate_events('visitor_entry', entry_request, ref_name: entry_request.name)
     end
     let!(:contractor) { create(:contractor, community_id: user.community_id) }
 
@@ -331,9 +370,22 @@ RSpec.describe Mutations::EntryRequest do
   end
 
   describe 'adding an observation note to an entry request' do
-    let!(:user) { create(:user_with_community) }
-    let!(:guard) { create(:security_guard, community_id: user.community_id) }
-    let!(:contractor) { create(:contractor, community_id: user.community_id) }
+    let!(:contractor_role) { create(:role, name: 'contractor') }
+    let!(:guard_role) { create(:role, name: 'security_guard') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: guard_role,
+                          permissions: %w[can_add_entry_request_note])
+    end
+
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:contractor) do
+      create(:contractor, community_id: user.community_id,
+                          role: contractor_role)
+    end
+
+    let!(:guard) { create(:security_guard, community_id: user.community_id, role: guard_role) }
     let!(:entry_request) { guard.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
     let!(:event) do
       guard.generate_events('observation_log', entry_request)
@@ -341,12 +393,25 @@ RSpec.describe Mutations::EntryRequest do
 
     let(:query) do
       <<~GQL
-        mutation addObservationNote($id: ID, $note: String, $refType: String, $eventLogId: ID) {
-          entryRequestNote(id: $id, note: $note, refType: $refType, eventLogId: $eventLogId) {
+        mutation addObservationNote($id: ID,
+        $note: String,
+        $refType: String,
+        $eventLogId: ID,
+        $attachedImages: JSON) {
+          entryRequestNote(id: $id,
+          note: $note,
+          refType: $refType,
+          eventLogId: $eventLogId,
+          attachedImages: $attachedImages) {
             event {
               id
               data
-              refType
+              refType,
+              imageUrls
+              entryRequest {
+                id
+                exitedAt
+              }
             }
           }
         }
@@ -354,10 +419,16 @@ RSpec.describe Mutations::EntryRequest do
     end
 
     it 'adds a note to an entry request' do
+      image = ActiveStorage::Blob.create_and_upload!(
+        io: File.open(Rails.root.join('spec/support/test_image.png')),
+        filename: 'test_image.png',
+        content_type: 'image/png',
+      )
       variables = {
         id: entry_request.id,
         note: 'The vehicle was too noisy',
         refType: 'Logs::EntryRequest',
+        attachedImages: [image],
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -417,6 +488,24 @@ RSpec.describe Mutations::EntryRequest do
       expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'entryRequestNote', 'event', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'cannot be empty'
+    end
+
+    it 'updates a request with an exited_at when it\'s an exit note' do
+      variables = {
+        id: entry_request.id,
+        note: 'Exited',
+        refType: 'Logs::EntryRequest',
+      }
+      expect(entry_request.exited_at).to be_nil
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: guard,
+                                                site_community: guard.community,
+                                              }).as_json
+      expect(result['errors']).to be_nil
+      expect(result.dig('data', 'entryRequestNote', 'event', 'id')).to_not be_nil
+      expect(result.dig('data', 'entryRequestNote', 'event', 'entryRequest',
+                        'exitedAt')).to_not be_nil
     end
 
     it 'returns Unauthorized for non admin and security_guard' do

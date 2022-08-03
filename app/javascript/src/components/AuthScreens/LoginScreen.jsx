@@ -8,27 +8,32 @@ import {
   Divider,
   FormControl,
   MenuItem,
-  InputLabel
-} from '@material-ui/core'
+  InputLabel,
+  Grid
+} from '@mui/material'
 import { StyleSheet, css } from 'aphrodite'
 import { useHistory, useLocation, Link } from 'react-router-dom'
 import { useMutation, useQuery } from 'react-apollo'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
-import FacebookIcon from '@material-ui/icons/Facebook'
+import FacebookIcon from '@mui/icons-material/Facebook'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import EmailIcon from '@mui/icons-material/Email';
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
 import PhoneInput from 'react-phone-input-2'
-import { getAuthToken } from '../../utils/apollo'
+import { AUTH_FORWARD_URL_KEY, getAuthToken } from '../../utils/apollo'
 import { ModalDialog } from '../Dialog'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
-import { loginPhone } from '../../graphql/mutations'
+import { loginPhoneMutation, loginEmailMutation } from '../../graphql/mutations'
 import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
 import { Spinner } from '../../shared/Loading'
 import { extractCountry } from '../../utils/helpers'
 
 export default function LoginScreen() {
   const { data: communityData, loading } = useQuery(CurrentCommunityQuery)
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [loginPhoneStart] = useMutation(loginPhone)
+  const [loginPhoneStart] = useMutation(loginPhoneMutation)
+  const [loginEmail] = useMutation(loginEmailMutation)
   const [open, setOpen] = useState(false)
   const [username, setUsername] = useState('')
   const [phone, setPhone] = useState('')
@@ -40,6 +45,8 @@ export default function LoginScreen() {
   const { state } = useLocation()
   const history = useHistory()
   const { t } = useTranslation(['login', 'common'])
+  const [userLogin, setUserLogin] = useState({ email: '', phone: ''})
+  const [emailLoginSent, setEmailLoginSet] = useState(false)
 
   const communityName = communityData?.currentCommunity?.name || 'Double GDP'
   const communitySupportEmail = (communityData?.currentCommunity?.supportEmail
@@ -69,13 +76,10 @@ export default function LoginScreen() {
     }
   }
 
-  function loginWithPhone(event, type = 'input') {
-
-    // submit on both click and Enter Key pressed
-    if (event.keyCode === 13 || type === 'btnClick') {
+  function loginWithPhone() {
       setIsLoading(true)
       loginPhoneStart({
-        variables: { phoneNumber: phoneNumber.trim() }
+        variables: { phoneNumber: userLogin.phone.trim() }
       })
         .then(({ data }) => {
           setIsLoading(false)
@@ -85,7 +89,7 @@ export default function LoginScreen() {
           history.push({
             pathname: `/code/${  data.loginPhoneStart.user.id}`,
             state: {
-              phoneNumber,
+              phoneNumber: userLogin.phone,
               from: `${!state ? '/' : state.from.pathname}`
             }
           })
@@ -94,8 +98,24 @@ export default function LoginScreen() {
           setError(err.message.replace(/GraphQL error:/, ""))
           setIsLoading(false)
         })
-    }
   }
+
+  function loginWithEmail(){
+    setIsLoading(true)
+      loginEmail({
+        variables: { email: userLogin.email.trim() }
+      })
+        .then(() => {
+          setIsLoading(false)
+          setEmailLoginSet(true)
+          sessionStorage.setItem(AUTH_FORWARD_URL_KEY, state.from.pathname)
+        })
+        .catch(err => {
+          setError(err.message.replace(/GraphQL error:/, ""))
+          setIsLoading(false)
+        })
+  }
+
   useEffect(() => {
     // check if user is logged in
     const token = getAuthToken()
@@ -127,6 +147,29 @@ export default function LoginScreen() {
     setOpen(!open)
   }
 
+  function handleUserLogin(event, type = 'input'){
+    // submit on both click and Enter Key pressed
+    if (event.keyCode === 13 || type === 'btnClick') {
+      if(userLogin.email) {
+        // handle login with email
+        loginWithEmail()
+      }
+
+      if(userLogin.phone) {
+        // handle login with phone
+        loginWithPhone()
+      }
+    }
+  }
+
+  function handleOAuthLogin(url){
+    if(history.location.search) {
+      sessionStorage.setItem(AUTH_FORWARD_URL_KEY, state.from.pathname)
+    }
+    
+    window.location.assign(url)
+  }
+
   return (
     <div style={{ overflow: 'hidden' }}>
       {
@@ -139,7 +182,7 @@ export default function LoginScreen() {
         </nav>
 )
       }
-      <div className="container ">
+      <div className="container">
         <div
           className={`justify-content-center align-items-center ${css(
             styles.welcomeContainer
@@ -154,30 +197,92 @@ export default function LoginScreen() {
 
           <br />
           <br />
-          <Typography color="textSecondary" variant="body2">
-            {t('login.login_text')}
-            :
-          </Typography>
         </div>
-        <div
-          className={`${css(
-            styles.phoneNumberInput
-          )} row justify-content-center align-items-center`}
-        >
-
-          <PhoneInput
-            value={phoneNumber}
-            containerStyle={{ width: "55%" }}
-            inputClass="phone-login-input"
-            inputStyle={{ width: "100%", height: 51 }}
-            country={extractCountry(communityData?.currentCommunity?.locale)}
-            enableSearch
-            placeholder={t('common:form_placeholders.phone_number')}
-            onChange={value => setPhoneNumber(value)}
-            preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
-          />
-        </div>
-
+        <Grid container className="justify-content-center">
+          <Grid item xs={12} md={5}>
+            <Typography color="textSecondary" variant="body2">{t('login.login_text')}</Typography>
+            <div
+              className={`${css(
+                  styles.phoneNumberInput
+                )}`}
+            >
+              <PhoneInput
+                value={userLogin.phone}
+                containerStyle={{ width: "100%" }}
+                inputClass="phone-login-input"
+                inputStyle={{ width: "100%", height: "3.5em" }}
+                country={extractCountry(communityData?.currentCommunity?.locale)}
+                enableSearch
+                placeholder={t('common:form_placeholders.phone_number')}
+                onChange={value => setUserLogin({phone: value, email: '' })}
+                preferredCountries={['hn', 'ke', 'zm', 'cr', 'ng', 'in', 'us']}
+              />
+            </div>
+          </Grid>
+          <Grid item xs={12} md={1}>
+            <div className={`${css(styles.verticalDivider)}`}>
+              <Divider className={`${css(styles.verticalDividerLine)}`} />
+              {' '}
+              <p style={{ marginLeft: '40%', marginTop: '0.2em', marginBottom: '0.2em' }}>{t('common:misc:or')}</p>
+              {' '}
+              <Divider className={`${css(styles.verticalDividerLine)}`} />
+            </div>
+            <div className={`${css(styles.horizontalDivider)}`}>
+              <Divider className={`${css(styles.horizontalDividerLine)}`} />
+              {' '}
+              <p style={{  marginTop: '4%', marginLeft: '0.2em', marginRight: '0.2em' }}>{t('common:misc:or')}</p>
+              {' '}
+              <Divider className={`${css(styles.horizontalDividerLine)}`} />
+            </div>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <div className={`${css(styles.socialLoginSection )}`}>
+              <TextField
+                value={userLogin.email}
+                variant="outlined"
+                fullWidth
+                type="email"
+                name="email_login"
+                data-testid="email_text_input"
+                className={`${css(styles.emailLoginTextField )}`}
+                placeholder={t('login.login_email')}
+                label={t('login.login_email')}
+                onChange={event => setUserLogin({email: event.target.value, phone: '' })}
+                InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <IconButton size="large">
+                              <EmailIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
+              />
+              <Button
+                onClick={() => handleOAuthLogin('/fb_oauth')}
+                variant="outlined"
+                startIcon={<FacebookIcon className={`${css(styles.socialLoginButtonIcons )}`} />}
+                size="large"
+                fullWidth
+                className={`${css(styles.facebookOAuthButton )}`}
+                data-testid="login-with-facebook-btn"
+              >
+                {t('login.login_facebook')}
+              </Button>
+              <Button
+                onClick={() => handleOAuthLogin('/login_oauth')}
+                variant="outlined"
+                startIcon={<img src={GoogleIcon} alt="google-icon" className={`${css(styles.socialLoginButtonIcons )}`} />}
+                className={`${css(styles.googleOAuthButton )} google-sign-in-btn`}
+                size="large"
+                fullWidth
+                data-testid="login-with-google-btn"
+              >
+                {t('login.login_google')}
+              </Button>
+            </div>
+          </Grid>
+        </Grid>
         {error && <p className=" text-center text-danger">{error}</p>}
         <div
           className={`row justify-content-center align-items-center ${css(
@@ -185,66 +290,23 @@ export default function LoginScreen() {
           )}`}
         >
           <Button
+            data-testid="login-btn"
             variant="contained"
             color="primary"
+            style={((!userLogin.email && !userLogin.phone) || isLoading || emailLoginSent) ? {}: { backgroundColor: '#ff8000' }}
+            endIcon={<ArrowForwardIcon />}
             className={`${css(styles.getStartedButton)} enz-lg-btn next-btn`}
-            onClick={event => loginWithPhone(event, 'btnClick')}
-            disabled={isLoading}
+            onClick={event => handleUserLogin(event, 'btnClick')}
+            disabled={(!userLogin.email && !userLogin.phone) || isLoading || emailLoginSent}
           >
             {isLoading ? (
               <CircularProgress size={25} color="primary" />
             ) : (
-              <span>{t('login.login_button_text')}</span>
+              <span>{emailLoginSent ? t('login.email_otp_text') : t('login.login_button_text')}</span>
               )}
           </Button>
         </div>
-
         <br />
-        <div className="d-flex row justify-content-center align-items-center">
-          <Divider
-            style={{ width: '24%', height: 1, backgroundColor: 'grey' }}
-          />
-          {' '}
-          <p style={{ margin: 10 }}>{t('common:misc:or')}</p>
-          {' '}
-          <Divider
-            style={{ width: '24%', height: 1, backgroundColor: 'grey' }}
-          />
-        </div>
-
-        <div className="container">
-          <div className="d-flex row justify-content-center ">
-            <Button
-              href="/login_oauth"
-              style={{
-                backgroundColor: 'white',
-                textTransform: 'none'
-              }}
-              variant="contained"
-              startIcon={<img src={GoogleIcon} alt="google-icon" />}
-              className="google-sign-in-btn"
-            >
-              {t('login.login_google')}
-            </Button>
-          </div>
-          <br />
-          <br />
-          <div className="d-flex row justify-content-center ">
-            <Button
-              href="/fb_oauth"
-              variant="contained"
-              startIcon={<FacebookIcon />}
-              style={{
-                backgroundColor: 'white',
-                textTransform: 'none',
-                color: '#3b5998'
-              }}
-            >
-              {t('login.login_facebook')}
-            </Button>
-          </div>
-          <br />
-        </div>
       </div>
 
       <div
@@ -253,7 +315,7 @@ export default function LoginScreen() {
         className="row justify-content-center align-items-center"
       >
         <p style={{ marginTop: '1%' }}>
-          <Button size="medium" id="trigger-modal-dialog" onClick={handleModal} style={{ textTransform: 'none'}}>
+          <Button size="medium" id="trigger-modal-dialog" data-testid="trouble-logging-in-btn" onClick={handleModal} style={{ textTransform: 'none'}}>
             <u>
               <strong>{t('login.request_account')}</strong>
             </u>
@@ -270,7 +332,7 @@ export default function LoginScreen() {
         <div className="container">
           <div className="d-flex row justify-content-center ">
             <Button
-              href="/login_oauth"
+              onClick={() => handleOAuthLogin('/login_oauth')}
               style={{ backgroundColor: 'white', textTransform: 'none' }}
               variant="contained"
               startIcon={<img src={GoogleIcon} alt="google-icon" />}
@@ -278,7 +340,7 @@ export default function LoginScreen() {
               {t('login.login_google')}
             </Button>
             <Button
-              href="/fb_oauth"
+              onClick={() => handleOAuthLogin('/fb_oauth')}
               variant="contained"
               startIcon={<FacebookIcon />}
               className={css(styles.signUpBtns)}
@@ -342,6 +404,7 @@ export default function LoginScreen() {
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
+            data-testid="interest"
             value={interest}
             onChange={event => setInterest(event.target.value)}
             label="interest"
@@ -362,6 +425,7 @@ export default function LoginScreen() {
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
+            data-testid="impact"
             value={impact}
             onChange={event => setImpact(event.target.value)}
             label="impact"
@@ -376,7 +440,7 @@ export default function LoginScreen() {
         </FormControl>
       </ModalDialog>
     </div>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -412,12 +476,51 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   phoneNumberInput: {
-    marginTop: 30
+    marginTop: '0.5em'
   },
-  googleLink: {
-    margin: 40,
-    marginBottom: 47,
-    textDecoration: 'none'
+  socialLoginSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    marginTop: '1.6em',
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      marginTop: 0,
+     } ,
+
+     '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
+       marginTop: 0,
+     },
+
+     '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
+       marginTop: 0,
+     },
+     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
+       marginTop: 0,
+     }
+  },
+  emailLoginTextField:{
+    height: '4em',
+  },
+  facebookOAuthButton: {
+    backgroundColor: 'white',
+    textTransform: 'none',
+    color: '#3b5998',
+    height: '4em',
+    display: 'flex',
+    justifyContent: 'left',
+  },
+  googleOAuthButton: {
+    backgroundColor: 'white',
+    textTransform: 'none',
+    marginTop: '0.5em',
+    height: '4em',
+    display: 'flex',
+    justifyContent: 'left',
+  },
+  socialLoginButtonIcons: {
+    marginLeft: '0.5em',
+    marginRight: '0.5em'
   },
   "[type='number']": {
     fontSize: 30
@@ -439,5 +542,52 @@ const styles = StyleSheet.create({
   loginInput: {
     width: '55%',
     marginLeft: 100
+  },
+  verticalDivider: {
+    height: '100%',
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      display: "none",
+     } ,
+
+     '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
+       display: "none",
+     },
+
+     '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
+       display: "none",
+     },
+     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
+       display: "none",
+     }
+  },
+  horizontalDivider: {
+    display: 'none',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+     display: "flex",
+    } ,
+
+    '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
+      display: "flex",
+    },
+
+    '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
+      display: "flex",
+    },
+    '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
+      display: "flex",
+    }
+  },
+  horizontalDividerLine: {
+    width: '40%',
+    height: '1px',
+    backgroundColor: 'grey' ,
+  },
+  verticalDividerLine: {
+    width: '1px',
+    height: '40%',
+    backgroundColor: 'grey',
+    marginLeft: '50%'
   }
 })

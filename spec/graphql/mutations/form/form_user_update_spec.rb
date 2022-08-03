@@ -4,9 +4,23 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Form::FormUserUpdate do
   describe 'update mutation for forms' do
-    let!(:current_user) { create(:user_with_community) }
-    let!(:another_user) { create(:user, community_id: current_user.community_id) }
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[can_update_form_user])
+    end
+
+    let!(:current_user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: current_user.community_id, role: admin_role,
+                          user_type: 'admin')
+    end
+    let!(:another_user) do
+      create(:user, community_id: current_user.community_id,
+                    role: resident_role, user_type: 'resident')
+    end
     let!(:form) { create(:form, community_id: current_user.community_id) }
     let!(:form_property) { create(:form_property, form: form, field_type: 'text') }
     let!(:form_user) do
@@ -19,6 +33,7 @@ RSpec.describe Mutations::Form::FormUserUpdate do
             formUserUpdate(userId: $userId, formUserId: $formUserId, propValues: $propValues){
             formUser {
               id
+              status
               form {
                 id
               }
@@ -45,6 +60,7 @@ RSpec.describe Mutations::Form::FormUserUpdate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: current_user.community,
+                                                   user_role: admin.role,
                                                  }).as_json
       expect(result.dig('data', 'formUserUpdate', 'formUser', 'id')).not_to be_nil
       expect(result.dig('data', 'formUserUpdate', 'formUser', 'form', 'id')).to eql form.id
@@ -69,6 +85,7 @@ RSpec.describe Mutations::Form::FormUserUpdate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: current_user.community,
+                                                   user_role: admin.role,
                                                  }).as_json
 
       expect(result.dig('errors', 0, 'message')).to eql 'Record not found'
@@ -92,8 +109,35 @@ RSpec.describe Mutations::Form::FormUserUpdate do
                                                  context: {
                                                    current_user: another_user,
                                                    site_community: current_user.community,
+                                                   user_role: another_user.role,
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+    end
+
+    it 'should update form-user to pending if it was previously draft' do
+      form_user.update!(status: 'draft')
+      values = {
+        user_form_properties: [
+          {
+            form_property_id: form_property.id,
+            value: 'something new',
+          },
+        ],
+      }
+      variables = {
+        formUserId: form_user.id,
+        userId: current_user.id,
+        propValues: values.to_json,
+      }
+      result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                 context: {
+                                                   current_user: current_user,
+                                                   site_community: current_user.community,
+                                                   user_role: current_user.role,
+                                                 }).as_json
+
+      expect(result.dig('data', 'formUserUpdate', 'formUser', 'status')).to eq('pending')
+      expect(result.dig('errors', 0, 'message')).to be_nil
     end
   end
 end

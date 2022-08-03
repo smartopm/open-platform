@@ -1,24 +1,25 @@
-import React, { useState, useEffect } from 'react'
-import Button from '@material-ui/core/Button';
+import React, { useState, useEffect, useContext } from 'react'
+import Button from '@mui/material/Button';
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo';
 import { useHistory } from 'react-router-dom'
-import { makeStyles } from "@material-ui/core/styles"
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 import { PointOfInterestCreate } from '../../graphql/mutations/land_parcel';
-import MessageAlert from "../MessageAlert"
 import PointOfInterestModal from './PointOfInterestModal'
 import { formatError, useParamsQuery } from '../../utils/helpers'
+import { SnackbarContext } from '../../shared/snackbar/Context';
 
 export default function CreatePointOfInterest({ refetch }) {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
-  const [messageAlert, setMessageAlert] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const history = useHistory()
   const path = useParamsQuery('')
   const type = path.get('type');
   const { t } = useTranslation('property')
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const [addPointOfInterest] = useMutation(PointOfInterestCreate);
 
@@ -28,23 +29,17 @@ export default function CreatePointOfInterest({ refetch }) {
     }
   }, [type])
 
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return
-    }
-    setMessageAlert('')
-  }
-
   function handleSubmit(variables) {
+    setIsSubmitting(true)
     addPointOfInterest({ variables }).then(() => {
-      setMessageAlert(t('messages.poi_added'))
-      setIsSuccessAlert(true)
+      showSnackbar({ type: messageType.success, message: t('messages.poi_added') })
       setOpen(false);
+      setIsSubmitting(false)
       refetch();
       history.push('/land_parcels')
+      window.location.reload()
     }).catch((err) => {
-      setMessageAlert(formatError(err.message))
-      setIsSuccessAlert(false)
+      showSnackbar({ type: messageType.error, message: formatError(err.message) })
     })
   }
 
@@ -72,13 +67,8 @@ export default function CreatePointOfInterest({ refetch }) {
       <PointOfInterestModal
         open={open}
         handleClose={closeNewPointOfInterestModal}
+        isSubmitting={isSubmitting}
         handleSubmit={handleSubmit}
-      />
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
       />
     </>
   )

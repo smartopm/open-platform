@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { isWeekend, isSaturday, isSunday } from 'date-fns'
-
+import { useTranslation } from 'react-i18next';
 const date = new Date()
 export const lastDayOfTheMonth = new Date(date.getFullYear(), date.getMonth(), 26)
 
@@ -43,6 +43,7 @@ export function dateToString(date) {
  * @deprecated prefer using the helpers in DateContainer
  */
 function formatDate(datetime) {
+  const { t } = useTranslation('common');
   if (datetime) {
     const date = fromISO8601(datetime)
     return (
@@ -53,7 +54,7 @@ function formatDate(datetime) {
       pad('00', date.getDate())
     )
   }
-  return 'Never'
+  return t('misc.never');
 }
 
 /**

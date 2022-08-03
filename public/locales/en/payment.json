@@ -12,7 +12,10 @@
     "export_data": "Export Data",
     "save_csv": "Save CSV",
     "edit_subscription_plan": "Edit plan",
-    "edit_plan_settings": "Edit Plan Settings"
+    "edit_plan_settings": "Edit Plan Settings",
+    "view_history": "VIEW HISTORY",
+    "view_all_subscription_plans": "View All Subscription Plans",
+    "transfer_payment": "Transfer Payment"
   },
   "misc": {
     "active": "Active",
@@ -51,6 +54,7 @@
     "payment_cancelled": "Payment Plan successfully canceled",
     "payment_day": "Payment Day",
     "payment_plan_updated": "Payment Plan successfully updated",
+    "payment_successful": "Your Payment was successful",
     "pay_day_updated": "Payment Day successfully updated",
     "transaction_title": "Kindly find your transaction details below.",
     "subscription_plan_created": "Plan created successfuly",
@@ -76,7 +80,15 @@
     "expected_monthly_payment": "Expected Monthly Payment",
     "total_balance_remaining": "Total Balance Remaining",
     "currency": "Currency",
-    "plot_plan_no": "Plot/Plan No."
+    "plot_plan_no": "Plot/Plan No.",
+    "send_payment_reminder": "Send Payment Reminder",
+    "plan_count": "Showing {{count}} results",
+    "plan_reminder_confirmation": "You are about to send an email to owners of {{planCount}} selected plans",
+    "no_payments_made": "No payments have been made yet",
+    "payment_due_date": "Next Payment Due: {{date}}",
+    "installment_amount": "Installment Amount: {{amount}}",
+    "payment_transferred_successfully": "Payment transferred successfully",
+    "pay_for_item": "Pay For this item"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",

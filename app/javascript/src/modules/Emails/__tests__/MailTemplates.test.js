@@ -1,10 +1,12 @@
 import React from 'react';
 import { render, act, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import MailTemplates from '../components/MailTemplateList';
 import { EmailTemplatesQuery } from '../graphql/email_queries';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('Mail Templates Component', () => {
   it('renders Mail Templates', async () => {
@@ -33,7 +35,11 @@ describe('Mail Templates Component', () => {
       const container = render(
         <MockedProvider mocks={[templateMock]} addTypename={false}>
           <BrowserRouter>
-            <MailTemplates />
+            <MockedThemeProvider>
+              <MockedSnackbarProvider>
+                <MailTemplates />
+              </MockedSnackbarProvider>
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       );

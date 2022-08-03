@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 namespace :import do
   desc 'Migrate System Emails'
   task :migrate_email_templates, %i[community_name] => :environment do |_t, args|
@@ -11,7 +10,7 @@ namespace :import do
 
     system_email_templates = [
       {
-        name: 'welcome_template',
+        name: 'welcome',
         subject: "Welcome To #{community.name}",
       },
       {
@@ -42,6 +41,10 @@ namespace :import do
         name: 'form_update_submit_template',
         subject: 'A form submission has been updated',
       },
+      {
+        name: 'one_time_login_template',
+        subject: 'One Time Login',
+      },
     ]
 
     ActiveRecord::Base.transaction do
@@ -64,4 +67,3 @@ namespace :import do
     puts "Done Successfully. #{system_email_templates.size} migrated"
   end
 end
-# rubocop:enable Metrics/BlockLength

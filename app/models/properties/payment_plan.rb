@@ -20,9 +20,13 @@ module Properties
     has_many :plan_ownerships, dependent: :destroy
     has_many :co_owners, class_name: 'Users::User', through: :plan_ownerships, source: :user
 
-    default_scope { where.not(status: %i[deleted general]) }
+    default_scope { where.not(status: :deleted) }
+    scope :excluding_general_plans, lambda {
+      where.not(status: :general)
+    }
 
     before_create :set_pending_balance
+    after_create :allocate_general_funds
 
     validates :payment_day,
               numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 28 }
@@ -90,7 +94,7 @@ module Properties
         self.status = :active if pending_balance.eql?(0)
         self.pending_balance = pending_balance + amount
       end
-      save
+      save!
     end
 
     # Returns maximum amount that can be allocated to plan.
@@ -109,11 +113,23 @@ module Properties
     # @return [void]
     def transfer_payments(plan)
       plan.plan_payments.paid.order(amount: :asc).each do |payment|
-        payment.note = "Migrated to plan #{payment_plan_name} Id - #{id}"
-        payment.status = :cancelled
-        payment.save!
-        create_new_payment(plan, payment)
+        transfer_payment(plan, payment)
       end
+    end
+
+    # Transfers individual payment
+    #
+    # @param [PaymentPlan] plan
+    # @param [PlanPayment] payment
+    #
+    # @return [Boolean]
+    def transfer_payment(plan, payment)
+      payment.note = "Migrated to plan #{payment_plan_name} Id - #{id}"
+      payment.status = :cancelled
+      payment.save!
+      reload
+      create_new_payment(plan, payment)
+      plan.update_pending_balance(payment.amount, :revert)
     end
 
     # Returns PaymentPlan name by concatenating parcel number and start date.
@@ -189,6 +205,41 @@ module Properties
       owing_amount.positive? ? 'behind' : 'on_track'
     end
 
+    # Returns upcoming installment due date
+    #
+    # @return [DateTime]
+    def upcoming_installment_due_date
+      return end_date if plan_status.eql?('completed')
+
+      start_date + frequency_based_duration(paid_installments + 1) - 1.day
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
+    # Allocates the general fund
+    #
+    # @return [void]
+    def allocate_general_funds
+      return if !status.eql?('active') || user.payment_plans.general.empty?
+
+      payments = user.general_payment_plan.plan_payments.paid.order(:amount)
+      payments.each do |payment|
+        next if pending_balance.eql?(0)
+
+        payment_amount = allocated_amount(payment.amount)
+        if payment_amount.eql?(payment.amount)
+          payment.payment_plan_id = id
+          payment.note = 'Migrated from General Funds' if payment.note.blank?
+          payment.save!
+        else
+          process_split_allocation(payment)
+        end
+        update_pending_balance(payment_amount)
+      end
+    end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
+
     private
 
     # Assigns pending balance(product of installmemt amount & duration).
@@ -221,7 +272,7 @@ module Properties
     def create_new_payment(plan, payment)
       new_payment = plan_payments.build(payment_attributes(payment))
       new_payment.note = "Migrated from plan #{plan.payment_plan_name} Id - #{plan.id}"
-      receipt_number = payment.manual_receipt_number&.split('MI')
+      receipt_number = payment.manual_receipt_number_without_prefix
       new_payment.manual_receipt_number = receipt_number[1] if receipt_number.present?
       if pending_balance.positive?
         new_payment = process_payment(new_payment, plan, payment)
@@ -249,7 +300,7 @@ module Properties
 
       new_payment.amount = pending_balance
       new_payment.automated_receipt_number = "#{payment.automated_receipt_number}-1"
-      receipt_number = payment.manual_receipt_number&.split('MI')
+      receipt_number = payment.manual_receipt_number_without_prefix
       new_payment.manual_receipt_number = "#{receipt_number[1]}-1" if receipt_number.present?
       create_split_payment(plan, payment)
       new_payment
@@ -269,7 +320,7 @@ module Properties
         automated_receipt_number: "#{payment.automated_receipt_number}-2",
         note: "Migrated from plan #{plan.payment_plan_name} Id - #{plan.id}",
       )
-      receipt_number = payment.manual_receipt_number&.split('MI')
+      receipt_number = payment.manual_receipt_number_without_prefix
       split_payment.manual_receipt_number = "#{receipt_number[1]}-2" if receipt_number.present?
       split_payment.save!
     end
@@ -287,6 +338,7 @@ module Properties
         'user_id',
         'community_id',
         'automated_receipt_number',
+        'created_at',
       ).merge('status': 'paid')
     end
 
@@ -342,6 +394,55 @@ module Properties
     # @return [Boolean]
     def plan_is_not_active?
       return true if !status.eql?('active') || start_date.to_date > Time.zone.today
+    end
+
+    # Splits the general payment and cancels the general payment entry
+    #
+    # @return [void]
+    def process_split_allocation(payment)
+      create_new_payment_for_allocation(payment)
+      create_general_payment(payment)
+      payment.cancelled!
+    end
+
+    # Creates payment for the plan with amount of the pending balance
+    #
+    # @return [void]
+    def create_new_payment_for_allocation(payment)
+      new_payment = payment.dup
+      new_payment.assign_attributes(
+        amount: pending_balance,
+        payment_plan_id: id,
+        created_at: payment.created_at,
+      )
+      new_payment.note = 'Migrated from General Funds' if payment.note.blank?
+      update_receipt_numbers(new_payment, payment, 1)
+      new_payment.save!
+    end
+
+    # Creates payment for the general fund with remaining amount
+    #
+    # @return [void]
+    def create_general_payment(payment)
+      general_payment = payment.dup
+      general_payment.assign_attributes(
+        amount: payment.amount - pending_balance,
+        payment_plan: user.general_payment_plan,
+        created_at: payment.created_at,
+      )
+      update_receipt_numbers(general_payment, payment, 2)
+      general_payment.save!
+    end
+
+    # Updates receipt number with -1 or -2
+    #
+    # @return [void]
+    def update_receipt_numbers(new_payment, payment, number)
+      receipt_number = payment.manual_receipt_number_without_prefix
+      if receipt_number.present?
+        new_payment.manual_receipt_number = "#{receipt_number[1]}-#{number}"
+      end
+      new_payment.automated_receipt_number = "#{payment.automated_receipt_number}-#{number}"
     end
   end
   # rubocop:enable Metrics/ClassLength

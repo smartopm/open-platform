@@ -1,13 +1,15 @@
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
 import ActionFlowDelete from '../components/ActionFlows/ActionFlowDelete'
 import { DeleteActionFlow } from '../graphql/mutations'
+import { mockedSnackbarProviderProps } from '../modules/__mocks__/mock_snackbar'
+import { SnackbarContext } from '../shared/snackbar/Context'
 
 describe('action flow delete component', () => {
   it('show correct delete modal', async () => {
+
     const data = {
       id: '1235'
     }
@@ -26,12 +28,14 @@ describe('action flow delete component', () => {
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
-          <ActionFlowDelete
-            data={data}
-            refetch={refetch}
-            open={open}
-            handleClose={handleClose}
-          />
+          <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+            <ActionFlowDelete
+              data={data}
+              refetch={refetch}
+              open={open}
+              handleClose={handleClose}
+            />
+          </SnackbarContext.Provider>
         </BrowserRouter>
       </MockedProvider>
     )
@@ -42,7 +46,10 @@ describe('action flow delete component', () => {
     await waitFor(() => {
       expect(handleClose).toBeCalled()
       expect(refetch).toBeCalled()
-      expect(container.queryByText('actionflow:messages.delete_message')).toBeInTheDocument()
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        message: 'actionflow:messages.delete_message',
+        type: mockedSnackbarProviderProps.messageType.success
+      });
     }, 10)
   })
 
@@ -67,12 +74,14 @@ describe('action flow delete component', () => {
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
-          <ActionFlowDelete
-            data={data}
-            refetch={refetch}
-            open={open}
-            handleClose={handleClose}
-          />
+          <SnackbarContext.Provider value={{...mockedSnackbarProviderProps}}>
+            <ActionFlowDelete
+              data={data}
+              refetch={refetch}
+              open={open}
+              handleClose={handleClose}
+            />
+          </SnackbarContext.Provider>
         </BrowserRouter>
       </MockedProvider>
     )
@@ -81,7 +90,10 @@ describe('action flow delete component', () => {
     await waitFor(() => {
       expect(handleClose).toBeCalled()
       expect(refetch).not.toBeCalled()
-      expect(container.queryByText('An error occurred')).toBeInTheDocument()
+      expect(mockedSnackbarProviderProps.showSnackbar).toHaveBeenCalledWith({
+        message: ' An error occurred',
+        type: mockedSnackbarProviderProps.messageType.error
+      });
     }, 10)
   })
 })

@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { cleanup, render, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import UserPlotInfo from '../Components/UserPlotInfo'
-import '@testing-library/jest-dom/extend-expect'
+
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 describe('User Plot Info Page', () => {
@@ -40,7 +40,27 @@ describe('User Plot Info Page', () => {
   const userMock = {
     userName:'some name',
     userId: 'bwekwjkewj',
-    userType: 'admin'
+    userType: 'admin',
+    permissions: [
+        {
+          module: 'land_parcel',
+          permissions: [
+            'can_create_land_parcel'
+          ]
+        }
+    ]
+  }
+
+  const nonAdminMock = {
+    userName:'some name',
+    userId: 'bwekwjkewj',
+    userType: 'client',
+    permissions: [
+        { 
+          module: 'land_parcel',
+          permissions: []
+        }
+    ]
   }
 
   it('should include this type of a plot', () => {
@@ -48,7 +68,12 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} currentUserType={userMock.userType} />
+            <UserPlotInfo 
+              account={account}
+              userId={userMock.userId}
+              userName={userMock.userName} 
+              currentUser={userMock}
+            />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -63,7 +88,12 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} currentUserType={userMock.userType} />
+            <UserPlotInfo 
+              account={account}
+              userId={userMock.userId}
+              userName={userMock.userName}
+              currentUser={userMock}
+            />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -76,7 +106,12 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={[]} userId={userMock.userId} userName={userMock.userName} currentUserType={userMock.userType} />
+            <UserPlotInfo 
+              account={[]}
+              userId={userMock.userId}
+              userName={userMock.userName}
+              currentUser={userMock}
+            />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -92,7 +127,12 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} currentUserType={userMock.userType} />
+            <UserPlotInfo 
+              account={account}
+              userId={userMock.userId}
+              userName={userMock.userName}
+              currentUser={userMock}
+            />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -105,7 +145,12 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} currentUserType='client' />
+            <UserPlotInfo 
+              account={account}
+              userId={userMock.userId}
+              userName={userMock.userName}
+              currentUser={nonAdminMock}
+            />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

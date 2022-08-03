@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
 import { CustomizedDialogs } from '../../../components/Dialog';
-import MessageAlert from '../../../components/MessageAlert';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { UserJourneyUpdateMutation } from '../../../graphql/mutations/user_journey';
 import { formatError } from '../../../utils/helpers';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function UserJourneyDialog({ open, handleModalClose, refetch, log }) {
-  const { t } = useTranslation('users')
+  const { t } = useTranslation(['users', 'common'])
   const [state, setState] = useState({
     isError: false,
     message: '',
@@ -17,6 +17,8 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
     isLoading: false
   });
   const [startDate, setDates] = useState(log.startDate);
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [updateUserJourney] = useMutation(UserJourneyUpdateMutation);
 
   // force startDate to update when we pick a different log
@@ -35,27 +37,17 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
       }
     })
       .then(() => {
-        setState({ ...state, isLoading: false, message: t("users.user_success"), isOpen: true });
+        showSnackbar({type: messageType.success, message: t('users.user_success')});
+        setState({ ...state, isLoading: false });
         refetch();
       })
       .catch(error => {
-        setState({
-          ...state,
-          isLoading: false,
-          message: formatError(error.message),
-          isOpen: true,
-          isError: true
-        });
+        showSnackbar({type: messageType.error, message: formatError(error.message) });
+        setState({ ...state, isLoading: false });
       });
   }
   return (
     <>
-      <MessageAlert
-        type={!state.isError ? 'success' : 'error'}
-        message={state.message}
-        open={state.isOpen}
-        handleClose={() => setState({ ...state, isOpen: false })}
-      />
       <CustomizedDialogs
         open={open}
         handleModal={handleModalClose}
@@ -70,6 +62,7 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
           label={t("users.journey_start")}
           handleDateChange={date => setDates(date)}
           maxDate={log.stopDate || undefined}
+          t={t}
         />
       </CustomizedDialogs>
     </>
@@ -82,8 +75,8 @@ UserJourneyDialog.propTypes = {
   log: PropTypes.shape({
     id: PropTypes.string,
     userId: PropTypes.string,
-    stopDate: PropTypes.string,
-    startDate: PropTypes.string,
+    stopDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+    startDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     previousStatus: PropTypes.string
   }).isRequired,
   refetch: PropTypes.func.isRequired

@@ -1,16 +1,16 @@
 /* eslint-disable no-use-before-define */
 import React from 'react'
 import PropTypes from 'prop-types'
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
+import Divider from '@mui/material/Divider';
+import { Typography } from '@mui/material';
 
 export default function TaskUpdateItem({ user, content, icon, date }) {
 
   return(
     <>
-      <div style={{display: 'flex'}}>
+      <div style={{display: 'flex', alignItems: 'center', margin: '8px 0' }}>
         {icon}
-        <Typography variant="body2" style={{marginTop: '10px', marginLeft: '12px'}}>
+        <Typography variant="body2" style={{ marginLeft: '12px' }}>
           <b>
             {user}
           </b>
@@ -21,7 +21,7 @@ export default function TaskUpdateItem({ user, content, icon, date }) {
           {date}
         </Typography>
       </div>
-      <Divider orientation="vertical" />
+      <Divider orientation="vertical" data-testid="history_update_divider" />
     </>
   )
 }

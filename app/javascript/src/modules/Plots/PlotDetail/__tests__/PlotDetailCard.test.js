@@ -1,20 +1,21 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import PlotDetailCard from '../Components/PlotDetailCard';
 import { Spinner } from '../../../../shared/Loading';
 import { UserPlans } from '../../../Payments/graphql/payment_query';
+import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 describe('Plot Detail Card', () => {
   const authState = {
     id: 'noehr945',
     community: {
-      currency: 'zambian_kwacha', 
+      currency: 'zambian_kwacha',
       locale: 'en-ZM'
     }
-  }
+  };
 
   const mock = {
     request: {
@@ -23,22 +24,32 @@ describe('Plot Detail Card', () => {
     },
     result: {
       data: {
-        userPlansWithPayments: [{
-          id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-          planType: 'basic',
-          startDate: '2021-01-26',
-          installmentAmount: '200',
-          paymentDay: 1,
-          pendingBalance: 200,
-          planValue: 300,
-          duration: 12,
-          frequency: 'monthly',
-          status: 'paid',
-          endDate: '2021-07-31',
-          landParcel: {
-            parcelNumber: 'Basic-123'
+        userPlansWithPayments: [
+          {
+            id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+            planType: 'basic',
+            startDate: '2021-01-26',
+            installmentAmount: '200',
+            paymentDay: 1,
+            pendingBalance: 200,
+            planValue: 300,
+            duration: 12,
+            frequency: 'monthly',
+            status: 'paid',
+            endDate: '2021-07-31',
+            renewDate: '2021-07-31',
+            coOwners: [],
+            paidPaymentsExists: null,
+            planPayments: null,
+            renewable: true,
+            landParcel: {
+              id: '9283492834912',
+              parcelNumber: 'Basic-123',
+              parcelType: 'Basic-123',
+              objectType: 'Basic-123'
+            }
           }
-        }]
+        ]
       }
     }
   };
@@ -47,7 +58,9 @@ describe('Plot Detail Card', () => {
     const container = render(
       <MockedProvider mocks={[mock]} addTypename={false}>
         <BrowserRouter>
-          <PlotDetailCard authState={authState} />
+          <MockedThemeProvider>
+            <PlotDetailCard authState={authState} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
@@ -58,7 +71,7 @@ describe('Plot Detail Card', () => {
 
     await waitFor(
       () => {
-        expect(container.queryByTestId('plot')).toHaveTextContent('dashboard.plot_detail')
+        expect(container.queryByTestId('plot')).toHaveTextContent('dashboard.plot_detail');
       },
       { timeout: 100 }
     );

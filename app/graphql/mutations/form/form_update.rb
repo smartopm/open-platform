@@ -10,7 +10,9 @@ module Mutations
       argument :description, String, required: false
       argument :expires_at, String, required: false
       argument :preview, Boolean, required: false
+      argument :is_public, Boolean, required: false
       argument :multiple_submissions_allowed, Boolean, required: false
+      argument :has_terms_and_conditions, Boolean, required: false
       argument :roles, [String, { null: true }], required: false
 
       field :form, Types::FormType, null: true
@@ -38,7 +40,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(module: :forms, permission: :can_update_form)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

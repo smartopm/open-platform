@@ -110,6 +110,48 @@ phrase:
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: support-contact
         update_translations: true
+    - file: ./public/locales/en/campaign.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: campaign
+        update_translations: true
+    - file: ./public/locales/en/feedback.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: feedback
+        update_translations: true
+    - file: ./public/locales/en/users.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: users
+        update_translations: true
+    - file: ./public/locales/en/search.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: search
+        update_translations: true
+    - file: ./public/locales/en/community.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: community
+        update_translations: true
+    - file: ./public/locales/en/news.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: news
+        update_translations: true
+    - file: ./public/locales/en/amenity.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: amenity
+        update_translations: true
     - file: ./config/locales/en.yml
       params:
         file_format: yml
@@ -127,6 +169,7 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: dashboard
+    - file: ./public/locales/es/scan.json
       params:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
@@ -171,6 +214,41 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: support-contact
+    - file: ./public/locales/es/campaign.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: campaign
+    - file: ./public/locales/es/feedback.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: feedback
+    - file: ./public/locales/es/users.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: users
+    - file: ./public/locales/es/search.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: search
+    - file: ./public/locales/es/community.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: community
+    - file: ./public/locales/es/news.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: news
+    - file: ./public/locales/es/amenity.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: amenity
     - file: ./config/locales/es.yml
       params:
         file_format: yml
@@ -188,6 +266,11 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: dashboard
+    - file: ./public/locales/es/discussion.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: discussion
     - file: ./public/locales/es/scan.json
       params:
         file_format: i18next
@@ -258,6 +341,41 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: support-contact
+    - file: ./public/locales/es/campaign.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: campaign
+    - file: ./public/locales/es/feedback.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: feedback
+    - file: ./public/locales/es/users.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: users
+    - file: ./public/locales/es/search.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: search
+    - file: ./public/locales/es/community.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: community
+    - file: ./public/locales/es/news.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: news
+    - file: ./public/locales/es/amenity.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: amenity
     - file: ./config/locales/es.yml
       params:
         file_format: yml

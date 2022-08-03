@@ -5,7 +5,7 @@ module Mutations
     # Revoke an entry request
     class GuestEntryRequestRevoke < BaseMutation
       argument :id, ID, required: true
-      argument :user_id, ID, required: true
+      # argument :user_id, ID, required: true
 
       field :entry_request, Types::EntryRequestType, null: true
 
@@ -21,8 +21,9 @@ module Mutations
       def authorized?(vals)
         entry_request = Logs::EntryRequest.find_by(id: vals[:id])
         raise_entry_request_not_found_error(entry_request)
-        return true if context[:current_user]&.role?(%i[custodian admin security_guard]) ||
-                       entry_request.user_id.eql?(vals[:user_id])
+        return true if permitted?(module: :entry_request,
+                                  permission: :can_revoke_entry_request) ||
+                       current_user_is_owner(entry_request)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
@@ -32,6 +33,14 @@ module Mutations
         return if entry_request
 
         raise GraphQL::ExecutionError, I18n.t('errors.entry_request.not_found')
+      end
+
+      def permissions_check?
+        permitted?(module: :entry_request, permission: :can_revoke_entry_request)
+      end
+
+      def current_user_is_owner(entry_request)
+        return true if entry_request.user_id.eql?(context[:current_user].id)
       end
     end
   end

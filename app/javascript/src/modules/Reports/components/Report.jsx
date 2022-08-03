@@ -1,14 +1,14 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useContext, useState, useEffect } from 'react';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import makeStyles from '@mui/styles/makeStyles';
 import { StyleSheet } from 'aphrodite';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import { useLazyQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
-import Container from '@material-ui/core/Container';
+import Container from '@mui/material/Container';
 import groupBy from 'lodash/groupBy';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { DetailsDialog, FullScreenDialog } from '../../../components/Dialog';
@@ -30,7 +30,7 @@ export default function Report() {
   const [reportingDate, setReportingDate] = useState({ startDate: null, endDate: null });
   const [rangerPickerOpen, setRangePickerOpen] = useState(true);
   const [alertOpen, setAlertOpen] = useState(false)
-  const { t } = useTranslation('report')
+  const { t } = useTranslation(['report', 'common'])
   const history = useHistory();
   const [loadReportData, { data, error, loading, called }] = useLazyQuery(FormSubmissionsQuery, {
     variables: {
@@ -82,7 +82,7 @@ export default function Report() {
         handleClose={handleCloseReport}
         open={rangerPickerOpen}
         title={t('misc.pick_reporting_range')}
-        color="default"
+        color="primary"
       >
         <Container>
           <Grid container direction="row" spacing={4}>
@@ -91,6 +91,7 @@ export default function Report() {
                 selectedDate={reportingDate.startDate}
                 handleDateChange={date => setReportingDate({ ...reportingDate, startDate: date })}
                 label={t('misc.pick_start_date')}
+                t={t}
               />
             </Grid>
             <Grid item>
@@ -98,6 +99,7 @@ export default function Report() {
                 selectedDate={reportingDate.endDate}
                 handleDateChange={date => setReportingDate({ ...reportingDate, endDate: date })}
                 label={t('misc.pick_end_date')}
+                t={t}
               />
             </Grid>
           </Grid>

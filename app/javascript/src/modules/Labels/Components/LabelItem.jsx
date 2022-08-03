@@ -1,64 +1,103 @@
 import React, { useState } from 'react';
-import { ListItem, Typography, IconButton, Grid } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { IconButton, Grid } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import { MoreHorizOutlined } from '@mui/icons-material';
 import LabelActionMenu from './LabelActionMenu';
 import Label from '../../../shared/label/Label';
+import DataList from '../../../shared/list/DataList';
+import Text from '../../../shared/Text';
 
 export default function LabelItem({ label, userType, refetch }) {
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const { t } = useTranslation('common');
+  const anchorElOpen = Boolean(anchorEl);
+  const classes = useStyles();
+  const labelsHeader = [
+    {
+      title: 'Labels',
+      value: t('table_headers.labels'),
+      col: 2
+    },
+    { title: 'No of Users', value: t('table_headers.labels_total_no_of_users'), col: 2 },
+    {
+      title: 'Description',
+      value: t('table_headers.labels_description'),
+      col: 2
+    },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
+  ];
 
-  function handleClose() {
-    setAnchorEl(null);
-  }
-
-  function handleOpenMenu(event) {
-    setAnchorEl(event.currentTarget);
-  }
+  const menuData = {
+    handleClick: event => setAnchorEl(event.currentTarget),
+    anchorEl,
+    open: anchorElOpen,
+    handleClose: () => setAnchorEl(null),
+    refetch
+  };
   return (
-    <ListItem key={label.id} className={classes.labelItem}>
-      <Grid container spacing={6}>
-        <Grid item xs={3} className={classes.labelGrid} data-testid="label-title">
-          <Label color={label.color} title={label.shortDesc} />
+    <>
+      <div className={classes.planList}>
+        <DataList
+          keys={labelsHeader}
+          data={renderLabels(label, menuData, userType)}
+          hasHeader={false}
+        />
+      </div>
+    </>
+  );
+}
+
+export function renderLabels(label, menuData, userType) {
+  return [
+    {
+      Labels: (
+        <Grid item xs={12} md={2} data-testid="short_desc">
+          <Label
+            color={label.color}
+            title={label.shortDesc}
+            groupingName={label.groupingName}
+          />
         </Grid>
-        <Grid item xs={3} className={classes.labelGrid}>
-          <Typography variant="subtitle1" data-testid="label-users">
-            {label.userCount}
-          </Typography>
+      ),
+      'No of Users': (
+        <Grid item xs={12} md={2} data-testid="user_count">
+          <Text content={label.userCount} />
         </Grid>
-        <Grid item xs={3} className={classes.labelGrid}>
-          <Typography variant="subtitle1" data-testid="label-description">
-            {label.description}
-          </Typography>
+      ),
+      Description: (
+        <Grid item xs={12} md={2} data-testid="description">
+          <Text content={label.description} />
         </Grid>
-        <Grid item xs={3}>
+      ),
+      Menu: (
+        <Grid item xs={12} md={1} data-testid="menu">
           {userType === 'admin' && (
-            <IconButton
-              className={classes.menuButton}
-              aria-label={`more-${label.shortDesc}`}
-              aria-controls="long-menu"
-              aria-haspopup="true"
-              onClick={handleOpenMenu}
-              dataid={label.id}
-              data-testid="label_icon"
-            >
-              <MoreVertIcon />
-            </IconButton>
+            <>
+              <IconButton
+                aria-controls="sub-menu"
+                aria-haspopup="true"
+                data-testid="label-menu"
+                dataid={label.id}
+                onClick={event => menuData.handleClick(event)}
+                size="large"
+              >
+                <MoreHorizOutlined />
+              </IconButton>
+              <LabelActionMenu
+                data={label}
+                anchorEl={menuData.anchorEl}
+                handleClose={menuData.handleClose}
+                open={menuData.open && menuData?.anchorEl?.getAttribute('dataid') === label.id}
+                refetch={menuData.refetch}
+              />
+            </>
           )}
         </Grid>
-        <LabelActionMenu
-          data={label}
-          anchorEl={anchorEl}
-          handleClose={handleClose}
-          open={open}
-          refetch={refetch}
-        />
-      </Grid>
-    </ListItem>
-  );
+      )
+    }
+  ];
 }
 
 LabelItem.propTypes = {

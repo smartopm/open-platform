@@ -12,12 +12,12 @@ export default function Businesses() {
 
     if (loading) return <Loading />
     if (error) {
-        return <ErrorPage title={error.message || error} /> // error could be a string sometimes
+        return <ErrorPage title={error?.message || error} /> // error could be a string sometimes
       }
-   
+
     return (
       <>
-        <Business businessData={data} refetch={refetch} userType={authState.user.userType} />
+        <Business businessData={data} refetch={refetch} authState={authState} />
       </>
     )
 }

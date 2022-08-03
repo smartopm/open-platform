@@ -1,17 +1,31 @@
 import React, { useContext } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
+// import PropTypes from 'prop-types';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import UserForm from '../Components/UserForm';
 
-export default function FormContainer() {
-  const { state, pathname } = useLocation();
-  const previousRoute = state && state.from;
-  const isFromRef = previousRoute === 'ref' || false;
+export default function UserEdit() {
+  const location = useLocation();
+
+  const { pathname } = location;
+
+  const isFromRef = pathname.includes('/referral');
   const isEditing = pathname.includes('edit');
   const authState = useContext(Context);
-  const isAdmin = authState.user.userType === 'admin';
+  const isAdminOrMarketingAdmin = (authState.user.roleName === 'Admin') || (authState.user.roleName === 'Marketing Admin');
 
-  return <UserForm isEditing={isEditing} isFromRef={isFromRef} isAdmin={isAdmin} />;
+  return (
+    <UserForm
+      isEditing={isEditing}
+      isFromRef={isFromRef}
+      isAdminOrMarketingAdmin={isAdminOrMarketingAdmin}
+    />
+  );
 }
 
-FormContainer.displayName = 'UserForm';
+UserEdit.propTypes = {
+  // commented as its not passed as prop
+  // location: PropTypes.shape({
+  //   pathname: PropTypes.string
+  // }).isRequired
+};

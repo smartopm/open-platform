@@ -16,7 +16,7 @@ module Mutations
       end
 
       def authorized?(_vals)
-        return true if context[:current_user]&.role?(%i[security_guard admin])
+        return true if permitted?(module: :entry_request, permission: :can_deny_entry)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

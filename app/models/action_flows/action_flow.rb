@@ -8,7 +8,7 @@ module ActionFlows
     belongs_to :community
 
     validates :title, :description, :event_type, :event_condition, :event_action, presence: true
-    validates :title, uniqueness: { case_sensitive: false }
+    validates :title, uniqueness: { case_sensitive: false, scope: :community_id }
     validates :event_type, inclusion: { in: VALID_EVENT_TYPES, allow_nil: false }
     # TODO: Find a good way to validate the content of event_action: Nurudeen
 

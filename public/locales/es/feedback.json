@@ -1,0 +1,17 @@
+{
+  "actions": {
+    "skip": "Omitir",
+    "submit": "Enviar"
+  },
+  "feedback": {
+    "thankyou_for_feedback": "Gracias por tus comentarios",
+    "value_your_feedback": "Valoramos sus comentarios. ¿Tiene alguna sugerencia sobre cómo podemos mejorar?"
+  },
+  "misc": {
+    "down": "Abajo",
+    "gave_thumbs": "Dio un pulgar",
+    "on": "En",
+    "review": "Revizar",
+    "up": "Arriba"
+  }
+}

@@ -2,18 +2,22 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/no-array-index-key */
 import React, { Fragment } from 'react';
-import Grid from '@material-ui/core/Grid';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
 import { objectAccessor } from '../../utils/helpers';
 import ListHeader from './ListHeader';
 import CenteredContent from '../../components/CenteredContent';
 
+/**
+ * @deprecated
+ */
 export default function DataList({ keys, data, hasHeader, clickable, handleClick, color, defaultView }) {
   const classes = useStyles();
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.down('sm'));
+  const matches = useMediaQuery(theme.breakpoints.down('md'));
   if (hasHeader && keys.length !== Object.keys(data[0]).length) {
     throw new Error(
       'headers must have same length as number of columns in the data prop or set hasHeader to false'
@@ -25,53 +29,53 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
   return (
     <>
       {
-        matches && defaultView ? (
-          <div>
-            {data.map((item, index) => (
-              // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-              <div
-                key={item.id || index}
-                style={{display: 'flex'}}
+      matches && defaultView ? (
+        <div>
+          {data.map((item, index) => (
+            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+            <div
+              key={item.id || index}
+              style={{display: 'flex'}}
+              className={clickable ? classes.clickable : classes.list}
+              onClick={clickable ? () => handleClick(item) : null}
+            >
+              <div style={{marginRight: '10px', width: '50%'}}>
+                <MobileCellData propNames={keys.slice(0, 2)} dataObj={item} />
+                <MobileCellData propNames={keys} dataObj={item} singlePropName={{status: true, value: 'Status'}} />
+              </div>
+              <div style={{marginRight: '3px', width: '40%'}}>
+                <MobileCellData propNames={keys.slice(2, keys.length)} dataObj={item} />
+              </div>
+              <div>
+                <MobileCellData propNames={keys} dataObj={item} singlePropName={{status: true, value: 'Menu'}} />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div>
+          {hasHeader && <ListHeader headers={keys} />}
+          {data.map((item, index) => {
+            return (
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-around"
+                alignItems="center"
                 className={clickable ? classes.clickable : classes.list}
                 onClick={clickable ? () => handleClick(item) : null}
+                key={item.id || index}
+                spacing={1}
+                style={color ? {backgroundColor: '#FDFDFD'} : {marginBottom: '7px'}}
               >
-                <div style={{marginRight: '10px', width: '50%'}}>
-                  <MobileCellData propNames={keys.slice(0, 2)} dataObj={item} />
-                  <MobileCellData propNames={keys} dataObj={item} singlePropName={{status: true, value: 'Status'}} />
-                </div>
-                <div style={{marginRight: '3px', width: '40%'}}>
-                  <MobileCellData propNames={keys.slice(2, keys.length)} dataObj={item} />
-                </div>
-                <div>
-                  <MobileCellData propNames={keys} dataObj={item} singlePropName={{status: true, value: 'Menu'}} />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div>
-            {hasHeader && <ListHeader headers={keys} />}
-            {data.map((item, index) => {
-              return (
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-around"
-                  alignItems="center"
-                  className={clickable ? classes.clickable : classes.list}
-                  onClick={clickable ? () => handleClick(item) : null}
-                  key={item.id || index}
-                  spacing={1}
-                  style={color ? {backgroundColor: '#FDFDFD'} : {marginBottom: '7px'}}
-                >
-                  <CellData propNames={keys} dataObj={item} />
-                </Grid>
-              )})}
-          </div>
-        )
+                <CellData propNames={keys} dataObj={item} />
+              </Grid>
+            );})}
+        </div>
+      )
 }
     </>
-  );
+);
 }
 
 export function CellData({ propNames, dataObj }) {

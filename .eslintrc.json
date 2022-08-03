@@ -33,14 +33,18 @@
     "max-len": 1,
     "max-nested-callbacks": 1,
     "max-params": 1,
-    "complexity": 1,
-    "max-statements": 1,
+    "complexity": [1, 20],
+    "max-statements": [1, 30],
     "jest/no-disabled-tests": 1,
     "jest/no-focused-tests": 2,
     "jest/no-identical-title": 2,
     "jest/prefer-to-have-length": 1,
     "jest/valid-expect": 2,
-    "jest/no-mocks-import": 0
+    "jest/no-mocks-import": 0,
+    "no-nested-ternary": 0,
+    "react/jsx-no-bind": 1,
+    "react/forbid-prop-types": 1,
+    "react/jsx-indent": 1
   },
   "env": {
     "browser": true,

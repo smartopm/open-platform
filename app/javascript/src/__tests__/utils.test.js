@@ -19,7 +19,8 @@ import {
   extractCountry,
   checkAllowedCommunityFeatures,
   ifNotTest,
-  toTitleCase
+  toTitleCase,
+  splitCamelCase
 } from '../utils/helpers'
 
 const message =
@@ -165,6 +166,7 @@ describe('array methods', () => {
   it('should generate random string', () => {
     expect(generateId()).toBeTruthy()
     expect(generateId()).toBeInstanceOf(Array)
+    expect(generateId()).toHaveLength(10)
   })
 
   // property accessor
@@ -264,3 +266,9 @@ describe('toTitleCase', () => {
     expect(toTitleCase('prospective_client')).toBe('Prospective Client');
   });
 });
+
+describe('slit camelCase', () => {
+  it('should return split words', () => {
+    expect(splitCamelCase('SampleCamel')).toBe('Sample Camel')
+  })
+})

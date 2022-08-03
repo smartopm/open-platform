@@ -4,8 +4,8 @@
     "pay_with_mobile_money": "Pay with mobile money",
     "feedback": "Feedback",
     "explore": "Explore",
-    "privacy_and_terms": "Privacy and terms of service"
-  }, 
+    "privacy_and_terms": "Privacy and Terms of Use"
+  },
   "partnership": {
     "feedback_and_contact": "We love receiving questions and feedback. You can contact us through any of the following channels:",
     "about_app_partnership": "partners with DoubleGDP on this mobile app to better connect with clients and residents, and to deliver efficient and responsive public services.",
@@ -13,7 +13,7 @@
     "about_app_support_desk": "and support desk functionality to ensure your queries are answered to your satisfaction",
     "registration_kiosk": "registration kiosk at the showroom",
     "incident_management": "incident management",
-    "adding_more_fetures": ", and are continually adding new features based on your requests"
+    "adding_more_features": ", and are continually adding new features based on your requests"
   },
   "misc": {
     "sales_support": "Sales Support",

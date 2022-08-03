@@ -4,6 +4,8 @@ module Mutations
   module Form
     # For updating fields to a form
     class FormPropertiesUpdate < BaseMutation
+      include Helpers::FormHelper
+
       argument :form_property_id, ID, required: true
       argument :category_id, ID, required: false
       argument :order, String, required: false
@@ -29,7 +31,7 @@ module Mutations
         grouping_id = form_property.grouping_id
 
         if form.entries? && destructive_change?(vals, form_property)
-          new_form = duplicate_form(form, vals)
+          new_form = duplicate_form(form, vals, :property_update)
           update_category_display_condition(new_form, grouping_id)
           { message: 'New version created', new_form_version: new_form } if new_form.persisted?
         else
@@ -54,7 +56,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(module: :forms, permission: :can_update_form_properties)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
@@ -67,30 +69,6 @@ module Mutations
 
         raise GraphQL::ExecutionError, I18n.t('errors.form_property.not_found')
       end
-
-      # rubocop:disable Metrics/MethodLength
-      # Duplicates form with new version number
-      #
-      # @param form [Forms::Form]
-      # @param vals [Hash]
-      #
-      # @return new_form [Forms::Form]
-      def duplicate_form(form, vals)
-        ActiveRecord::Base.transaction do
-          last_version_number = form.last_version
-          new_form = form.dup
-          new_form.version_number = (last_version_number + 1)
-          new_name = form.name.gsub(/\s(V)\d*/, '')
-          new_form.name = "#{new_name} V#{last_version_number + 1}"
-
-          if new_form.save!
-            form.duplicate(new_form, vals, :property_update)
-            form.deprecated!
-          end
-          new_form
-        end
-      end
-      # rubocop:enable Metrics/MethodLength
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength

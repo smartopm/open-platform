@@ -10,6 +10,9 @@ module Types::Queries::Form
     # Get form entries
     field :forms, [Types::FormType], null: true do
       description 'Get all forms'
+      # this optional argument, will be passed when an admin is loading a user profile
+      # to submit forms on users behalf
+      argument :user_id, GraphQL::Types::ID, required: false
     end
 
     # Get form, using the form id
@@ -20,7 +23,7 @@ module Types::Queries::Form
     # Get form properties
     field :form_properties, [Types::FormPropertiesType], null: true do
       description 'Get form properties by form id'
-      argument :form_id, GraphQL::Types::ID, required: true
+      argument :form_id, GraphQL::Types::ID, required: false
     end
     # Get form property
     field :form_property, Types::FormPropertiesType, null: true do
@@ -61,37 +64,60 @@ module Types::Queries::Form
       description 'Get all categories of a form'
       argument :form_id, GraphQL::Types::ID, required: true
     end
+
+    field :submitted_forms, [Types::FormUsersType], null: true do
+      description 'Get all form submissions for user'
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
+
+    field :form_comments, [Types::NoteCommentType], null: true do
+      description 'return comments for one task'
+      argument :form_user_id, GraphQL::Types::ID, required: true
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
-  def forms
-    user = context[:current_user]
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if user.blank?
+  def forms(user_id: nil)
+    user = if !user_id.nil?
+             find_user_by_id(user_id)
+           else
+             context[:current_user]
+           end
+    unless permitted?(module: :forms, permission: :can_access_forms)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].forms.not_deprecated.by_published(user)
                             .by_role(user.user_type).order(created_at: :desc)
   end
 
   def form(id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    unless permitted?(module: :forms, permission: :can_fetch_form)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].forms.find(id)
   end
 
   def form_properties(form_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    unless permitted?(module: :forms, permission: :can_fetch_form_properties)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].forms.find(form_id).form_properties
   end
 
   def form_property(form_id:, form_property_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    unless permitted?(module: :forms, permission: :can_fetch_form_property)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].forms.find(form_id).form_properties.find_by(id: form_property_id)
   end
 
   def form_user(user_id:, form_user_id:)
-    unless context[:current_user]&.admin? || context[:current_user]&.id.eql?(user_id)
+    unless permitted?(module: :forms, permission: :can_view_form_user) ||
+           context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -113,23 +139,22 @@ module Types::Queries::Form
     query = updated_query(query)
     form_users = Forms::FormUser.where(form_id: Forms::Form.where(grouping_id: form.grouping_id)
                                 .select(:id))
-                                .includes(:user).search(query).order(created_at: :desc)
+                                .search(query)
                                 .limit(limit).offset(offset)
     { form_name: form.name, form_users: form_users }
   end
 
   # rubocop:disable Metrics/MethodLength
   def form_user_properties(user_id:, form_user_id:)
-    unless context[:current_user]&.admin? || context[:current_user]&.id.eql?(user_id)
+    unless form_permissions_check? || context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    Forms::FormUser.find_by(id: form_user_id)
-                   .user_form_properties.eager_load(form_property: :category).with_attached_image
+    Forms::FormUser.find_by(id: form_user_id).user_form_properties
   end
 
   def form_submissions(start_date:, end_date:)
-    unless context[:current_user]&.admin?
+    unless permitted?(module: :forms, permission: :can_view_form_form_submissions)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -162,12 +187,30 @@ module Types::Queries::Form
   #
   # @return [Array<Forms::Category>]
   def form_categories(form_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    unless permitted?(module: :forms, permission: :can_fetch_form_categories)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     form = Forms::Form.find_by(id: form_id)
     raise_form_not_found_error(form)
 
     form.categories.order(:order)
+  end
+
+  # Returns all form submissions for current user
+  #
+  # @return [Array<Forms::FormUsers>]
+  def submitted_forms(user_id:)
+    validate_authorization(:my_forms, :can_access_own_forms)
+
+    user = context[:site_community].users.find(user_id)
+    user.form_users.order(created_at: :desc)
+  end
+
+  def form_comments(form_user_id:)
+    validate_authorization(:my_forms, :can_fetch_form_task_comments)
+
+    Forms::FormUser.find(form_user_id).comments.order(created_at: :desc)
   end
 
   private
@@ -176,7 +219,7 @@ module Types::Queries::Form
   #
   # @return [GraphQL::ExecutionError]
   def raise_unauthorized_error
-    return if context[:current_user]&.admin?
+    return true if permitted?(module: :forms, permission: :can_view_form_entries)
 
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
@@ -190,6 +233,17 @@ module Types::Queries::Form
     return if form.present?
 
     raise GraphQL::ExecutionError, I18n.t('errors.form.not_found')
+  end
+
+  def find_user_by_id(user_id)
+    user = Users::User.find_by(id: user_id)
+    return user if user.present?
+
+    raise GraphQL::ExecutionError, I18n.t('errors.user.not_found_with_id', user_id: user_id)
+  end
+
+  def form_permissions_check?
+    permitted?(module: :forms, permission: :can_view_form_user_properties)
   end
 
   # Returns query by concatinating status and created at

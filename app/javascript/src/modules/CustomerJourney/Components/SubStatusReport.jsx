@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, DialogTitle } from '@material-ui/core';
+import { Dialog, DialogTitle } from '@mui/material';
 import { useLazyQuery } from 'react-apollo';
 import { SubStatusQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';

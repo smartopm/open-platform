@@ -4,9 +4,19 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Transaction do
   describe 'Transaction queries' do
-    let!(:community) { create(:community, timezone: 'Africa/Lusaka') }
-    let!(:user) { create(:user, community_id: community.id) }
-    let!(:admin) { create(:admin_user, community_id: community.id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'payment_records',
+                          role: admin_role,
+                          permissions: %w[can_fetch_accounting_stats
+                                          can_fetch_transaction_summary
+                                          can_fetch_user_transactions])
+    end
+    let!(:user) { create(:user_with_community) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
+    let!(:community) { user.community }
     let!(:land_parcel) do
       create(:land_parcel, community_id: community.id,
                            parcel_number: 'Plot01')
@@ -55,6 +65,9 @@ RSpec.describe Types::Queries::Transaction do
             unallocatedAmount
             depositor{
               name
+            }
+            planPayments {
+              id
             }
           }
         }
@@ -152,11 +165,22 @@ RSpec.describe Types::Queries::Transaction do
     end
 
     describe '#payment_accounting_stats' do
+      context 'when current user is not an admin' do
+        it 'raises unauthorized error' do
+          result = DoubleGdpSchema.execute(payment_stat_query,
+                                           context: {
+                                             current_user: user,
+                                             site_community: community,
+                                           })
+          expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+        end
+      end
+
       context 'when query is fetched' do
         it 'returns the transaction accounting stats' do
           result = DoubleGdpSchema.execute(payment_stat_query,
                                            context: {
-                                             current_user: user,
+                                             current_user: admin,
                                              site_community: community,
                                            })
           payment_stats = result.dig('data', 'paymentAccountingStats', 0)

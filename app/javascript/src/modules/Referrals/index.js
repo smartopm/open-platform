@@ -1,4 +1,4 @@
-import Referral from '../Users/Components/UserEdit';
+import Referral from '../Users/Containers/UserEdit';
 
 export default {
   routeProps: {

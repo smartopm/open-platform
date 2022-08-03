@@ -2,6 +2,7 @@
 
 module Types
   # MutationType
+  # rubocop: disable Metrics/ClassLength
   class MutationType < Types::BaseObject
     field :activity_log_add, mutation: Mutations::ActivityLog::Add
     field :activity_log_update_log, mutation: Mutations::ActivityLog::UpdateLog
@@ -19,16 +20,21 @@ module Types
     field :entry_request_deny, mutation: Mutations::EntryRequest::EntryRequestDeny
     field :entry_request_acknowledge, mutation: Mutations::EntryRequest::EntryRequestAcknowledge
     field :entry_request_note, mutation: Mutations::EntryRequest::EntryRequestNote
+    field :invitation_create, mutation: Mutations::EntryRequest::InvitationCreate
     field :send_guest_qr_code, mutation: Mutations::EntryRequest::SendQrCode
     field :guest_entry_request_revoke, mutation: Mutations::EntryRequest::GuestEntryRequestRevoke
+    field :invitation_update, mutation: Mutations::EntryRequest::InvitationUpdate
 
     # User login
     field :login_phone_start, mutation: Mutations::Login::LoginPhoneStart
     field :login_phone_complete, mutation: Mutations::Login::LoginPhoneComplete
     field :login_switch_user, mutation: Mutations::Login::LoginSwitchUser
+    field :login_email, mutation: Mutations::Login::LoginEmail
+    field :login_public_user, mutation: Mutations::Login::LoginPublicUser
 
     # Notes
     field :note_create, mutation: Mutations::Note::NoteCreate
+    field :task_list_create, mutation: Mutations::Note::TaskListCreate
     field :note_update, mutation: Mutations::Note::NoteUpdate
     field :note_assign, mutation: Mutations::Note::NoteAssign
     field :note_comment_create, mutation: Mutations::Note::NoteCommentCreate
@@ -36,6 +42,15 @@ module Types
     field :note_comment_delete, mutation: Mutations::Note::NoteCommentDelete
     field :note_bulk_update, mutation: Mutations::Note::NoteBulkUpdate
     field :set_note_reminder, mutation: Mutations::Note::SetNoteReminder
+    field :unset_note_reminder, mutation: Mutations::Note::UnsetNoteReminder
+    field :note_document_delete, mutation: Mutations::Note::NoteDocumentDelete
+    field :note_comments_resolve, mutation: Mutations::Note::NoteCommentsResolve
+    field :note_list_update, mutation: Mutations::Note::NoteListUpdate
+    field :note_list_delete, mutation: Mutations::Note::NoteListDelete
+    field :note_delete, mutation: Mutations::Note::NoteDelete
+
+    # Process
+    field :process_update, mutation: Mutations::Process::ProcessUpdate
 
     # Feedback
     field :feedback_create, mutation: Mutations::Feedback::FeedbackCreate
@@ -68,6 +83,10 @@ module Types
     field :discussion_create, mutation: Mutations::Discussion::DiscussionCreate
     field :discussion_update, mutation: Mutations::Discussion::DiscussionUpdate
     field :discussion_user_create, mutation: Mutations::Discussion::DiscussionUserCreate
+    field :post_create, mutation: Mutations::Discussion::PostCreate
+    field :post_image_delete, mutation: Mutations::Discussion::PostImageDelete
+    field :post_update, mutation: Mutations::Discussion::PostUpdate
+    field :post_delete, mutation: Mutations::Discussion::PostDelete
 
     # labels
     field :label_create, mutation: Mutations::Label::LabelCreate
@@ -79,11 +98,12 @@ module Types
 
     # notifications
     field :notification_preference, mutation: Mutations::Settings::NotificationPreference
+    field :notification_update, mutation: Mutations::Notification::NotificationUpdate
 
     # businesses
     field :business_create, mutation: Mutations::Business::BusinessCreate
-    # Businesses
     field :business_delete, mutation: Mutations::Business::BusinessDelete
+    field :business_update, mutation: Mutations::Business::BusinessUpdate
 
     # posts
     field :log_read_post, mutation: Mutations::Post::LogReadPost
@@ -110,6 +130,7 @@ module Types
     field :property_update, mutation: Mutations::LandParcel::PropertyUpdate
     field :property_merge, mutation: Mutations::LandParcel::PropertyMerge
     field :point_of_interest_create, mutation: Mutations::LandParcel::PointOfInterestCreate
+    field :point_of_interest_update, mutation: Mutations::LandParcel::PointOfInterestUpdate
     field :point_of_interest_delete, mutation: Mutations::LandParcel::PointOfInterestDelete
     field :poi_image_upload, mutation: Mutations::LandParcel::PointOfInterestImageCreate
 
@@ -121,6 +142,7 @@ module Types
     # community
     field :community_update, mutation: Mutations::Community::CommunityUpdate
     field :community_emergency, mutation: Mutations::Community::CommunityEmergency
+    field :community_emergency_cancel, mutation: Mutations::Community::CommunityEmergencyCancel
 
     # contact_info
     field :contact_info_delete, mutation: Mutations::ContactInfo::Delete
@@ -132,14 +154,15 @@ module Types
     # payments
     field :plan_payment_cancel, mutation: Mutations::Payment::PlanPaymentCancel
     field :plan_payment_create, mutation: Mutations::Payment::PlanPaymentCreate
+    field :transfer_plan_payment, mutation: Mutations::Payment::TransferPlanPayment
 
     # payment_plan
     field :payment_plan_create, mutation: Mutations::PaymentPlan::PaymentPlanCreate
     field :payment_plan_cancel, mutation: Mutations::PaymentPlan::PaymentPlanCancel
     field :payment_plan_update, mutation: Mutations::PaymentPlan::PaymentPlanUpdate
-    field :payment_day_update, mutation: Mutations::PaymentPlan::PaymentDayUpdate
     field :transfer_payment_plan, mutation: Mutations::PaymentPlan::TransferPaymentPlan
     field :payment_reminder_create, mutation: Mutations::PaymentPlan::PaymentReminderCreate
+    field :allocate_general_funds, mutation: Mutations::PaymentPlan::AllocateGeneralFunds
 
     # subscription_plan
     field :subscription_plan_create, mutation: Mutations::SubscriptionPlan::SubscriptionPlanCreate
@@ -152,11 +175,32 @@ module Types
     field :transaction_create, mutation: Mutations::Transaction::TransactionCreate
     field :transaction_revert, mutation: Mutations::Transaction::TransactionRevert
 
+    # transaction_log
+    field :transaction_log_create, mutation: Mutations::TransactionLog::TransactionLogCreate
+
     # email_template
     field :email_template_create, mutation: Mutations::EmailTemplate::TemplateCreate
     field :email_template_update, mutation: Mutations::EmailTemplate::TemplateUpdate
 
     # substatus_logs
     field :substatus_log_update, mutation: Mutations::SubstatusLog::SubstatusLogUpdate
+
+    # process
+    field :process_create, mutation: Mutations::Process::ProcessCreate
+    field :process_delete, mutation: Mutations::Process::ProcessDelete
+
+    # lead logs
+    field :lead_log_create, mutation: Mutations::Log::LeadLogCreate
+    field :lead_log_update, mutation: Mutations::Log::LeadLogUpdate
+
+    # amenity
+    field :amenity_create, mutation: Mutations::Amenity::AmenityCreate
+    field :amenity_update, mutation: Mutations::Amenity::AmenityUpdate
+    field :amenity_delete, mutation: Mutations::Amenity::AmenityDelete
+
+    # flutterwave
+    field :transaction_initiate, mutation: Mutations::Flutterwave::TransactionInitiate
+    field :transaction_verify, mutation: Mutations::Flutterwave::TransactionVerify
   end
+  # rubocop: enable Metrics/ClassLength
 end

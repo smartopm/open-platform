@@ -1,0 +1,45 @@
+{
+  "status": "success",
+  "message": "Transaction fetched successfully",
+  "data": {
+    "id": 12345,
+    "tx_ref": "12-as-21",
+    "flw_ref": "FLW-MOCK-50dfecffe0c33243",
+    "device_fingerprint": "7373192d7e1c9540e01fc43",
+    "amount": 10,
+    "currency": "ZMW",
+    "charged_amount": 10,
+    "app_fee": 0.38,
+    "merchant_fee": 0,
+    "processor_response": "successful",
+    "auth_model": "PIN",
+    "ip": "52.209.134.143",
+    "narration": "CARD Transaction ",
+    "status": "successful",
+    "payment_type": "card",
+    "created_at": "2022-06-21T07:20:42.000Z",
+    "account_id": 1754762,
+    "card": {
+      "first_6digits": "553388",
+      "last_4digits": "2050",
+      "issuer": "CREDIT",
+      "country": "NIGERIA NG",
+      "type": "MASTERCARD",
+      "token": "flw-t1nf-5c943245d141d6caea9da28a7009-m03k",
+      "expiry": "09/32"
+    },
+    "meta": {
+      "__CheckoutInitAddress": "https://ravemodal-dev.herokuapp.com/v3/hosted/pay",
+      "invoice_number": "232",
+      "input_amount": "10"
+    },
+    "amount_settled": 9.62,
+    "customer": {
+      "id": 1665515,
+      "name": "John Doe",
+      "phone_number": "N/A",
+      "email": "john@doublegdp.com",
+      "created_at": "2022-06-21T07:20:42.000Z"
+    }
+  }
+}

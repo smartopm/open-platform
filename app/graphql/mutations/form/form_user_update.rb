@@ -6,13 +6,17 @@ module Mutations
     class FormUserUpdate < BaseMutation
       argument :user_id, ID, required: true
       argument :form_user_id, ID, required: true
+      argument :has_agreed_to_terms, Boolean, required: false
       argument :prop_values, GraphQL::Types::JSON, required: true
 
       field :form_user, Types::FormUsersType, null: true
 
       def resolve(vals)
-        form_user = Forms::FormUser.find_by(id: vals[:form_user_id])
-        return add_user_form_properties(form_user, vals) if form_user.present?
+        ActiveRecord::Base.transaction do
+          form_user = Forms::FormUser.find_by(id: vals[:form_user_id])
+          form_user.pending! if form_user&.draft?
+          return add_user_form_properties(form_user, vals) if form_user.present?
+        end
 
         raise GraphQL::ExecutionError, I18n.t('errors.record_not_found')
       end
@@ -38,7 +42,7 @@ module Mutations
       end
 
       def authorized?(vals)
-        return true if context[:current_user]&.admin? ||
+        return true if permissions_checks? ||
                        context[:current_user]&.id.eql?(vals[:user_id])
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
@@ -53,6 +57,10 @@ module Mutations
         return if property
 
         raise GraphQL::ExecutionError, I18n.t('errors.user_form_property.not_found')
+      end
+
+      def permissions_checks?
+        permitted?(module: :forms, permission: :can_update_form_user)
       end
     end
   end

@@ -1,16 +1,29 @@
 import React from 'react'
-import ForumIcon from '@material-ui/icons/Forum';
+import ForumIcon from '@mui/icons-material/Forum';
 import Labels from './Containers/Labels';
+import AccessCheck from '../Permissions/Components/AccessCheck';
+
+const labelPermissions = ['can_fetch_all_labels'];
+const currentModule = 'label';
+
+function RenderLabels() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={labelPermissions}>
+      <Labels />
+    </AccessCheck>
+  )
+}
 
 export default {
   routeProps: {
     path: '/labels',
-    component: Labels
+    component: RenderLabels
   },
   styleProps: {
     icon: <ForumIcon />
   },
   name: t => t('misc.labels'),
   featureName: 'Labels',
-  accessibleBy: ['admin']
+  moduleName: currentModule,
+  accessibleBy: []
 };

@@ -1,6 +1,7 @@
 /* eslint-disable no-eval */
 /* eslint-disable security/detect-eval-with-expression */
 import dompurify from 'dompurify';
+import { objectAccessor, titleCase, truncateString } from '../../utils/helpers';
 
 /**
  *
@@ -38,7 +39,6 @@ export function flattenFormProperties(categories) {
 }
 
 /**
- * We always want to show a category when we are editing the form
  * We always want to show a category when it has no display condition
  * We can only display a category when its groupingId in displayCondition matches the value in the matching property
  * Otherwise we just dont display a category
@@ -54,8 +54,10 @@ export function checkCondition(category, properties, editMode) {
   if (!category.displayCondition?.groupingId) {
     return true;
   }
-  const property = properties.find(prop => prop.form_property_id === category.displayCondition.groupingId);
-  const value = typeof property?.value === 'object' ? property?.value?.checked : property?.value
+  const property = properties.find(
+    prop => prop.form_property_id === category.displayCondition.groupingId
+  );
+  const value = typeof property?.value === 'object' ? property?.value?.checked : property?.value;
   const processedValue = value?.trim().toLowerCase();
   const processedConditionValue = category?.displayCondition?.value.trim().toLowerCase();
   if (
@@ -77,28 +79,28 @@ export function checkCondition(category, properties, editMode) {
  * @param {object} item
  * @returns {boolean}
  */
-export function nonNullValues(item){
-  return item.value && item.value?.checked !== null && item.form_property_id !== null
+export function nonNullValues(item) {
+  return item.value && item.value?.checked !== null && item.form_property_id !== null;
 }
 
 /**
  *
  * @param {object} formProperties
- * @param {String} type This is the type of action we are trying, whether just extracting or submitting 
+ * @param {String} type This is the type of action we are trying, whether just extracting or submitting
  * @description removes the field name from a property so focus on groupingId and value
  * @returns {[object]}
  */
-export function extractValidFormPropertyValue(formProperties, type="extract") {
-  if(!Object.keys(formProperties).length) return []
+export function extractValidFormPropertyValue(formProperties, type = 'extract') {
+  if (!Object.keys(formProperties).length) return [];
   return Object.entries(formProperties)
     .map(([, prop]) => {
-      if(prop.type === 'checkbox') {
+      if (prop.type === 'checkbox') {
         return {
           value: type === 'extract' ? Object.keys(prop.value).join(', ') : prop.value,
-          form_property_id: prop.form_property_id,
-        }
+          form_property_id: prop.form_property_id
+        };
       }
-      return prop
+      return prop;
     })
     .filter(nonNullValues);
 }
@@ -109,20 +111,22 @@ export function extractValidFormPropertyValue(formProperties, type="extract") {
  * @returns [{object}]
  */
 export function extractValidFormPropertyFieldNames(formProperties) {
-  if(!Object.keys(formProperties).length) return []
+  if (!Object.keys(formProperties).length) return [];
   return Object.entries(formProperties)
     .map(([key, prop]) => {
-      if(prop.type === 'checkbox') {
+      if (prop.type === 'checkbox') {
         return {
-          value: Object.entries(prop.value).map(([k, val]) => val ? k : null).filter(Boolean).join(', '),
-          fieldName: key,
-        }
+          value: Object.entries(prop.value)
+            .map(([k, val]) => (val ? k : null))
+            .filter(Boolean)
+            .join(', '),
+          fieldName: key
+        };
       }
-      return {fieldName: key, value: prop.value?.checked || prop.value}
+      return { fieldName: key, value: prop.value?.checked || prop.value };
     })
     .filter(nonNullValues);
 }
-
 
 /**
  * gets a markdown text and a list of formproperties with their values and finds variables that matches
@@ -132,61 +136,71 @@ export function extractValidFormPropertyFieldNames(formProperties) {
  * @returns {string}
  */
 export function parseRenderedText(categories, data) {
-  if(!categories) return ''
-  const properties = extractValidFormPropertyFieldNames(data)
-  const renderedText = extractRenderedTextFromCategory(data, categories)
+  if (!categories) return '';
+  const properties = extractValidFormPropertyFieldNames(data);
+  const renderedText = extractRenderedTextFromCategory(data, categories);
   const words = renderedText.split(' ');
   return words
-    .map((word) => {
-      const wordToReplace = word.split('_').join(' ')
-      const formProperty = properties.find((prop) => {
-        return prop.fieldName?.toLowerCase().trim() === wordToReplace.replace(/\n|#/gi, '').replace(/[,.]/, '').toLowerCase()
+    .map(word => {
+      const wordToReplace = word.split('_').join(' ');
+      const formProperty = properties.find(prop => {
+        return (
+          prop.fieldName?.toLowerCase().trim() ===
+          wordToReplace
+            .replace(/\n|#/gi, '')
+            .replace(/[,.]/, '')
+            .toLowerCase()
+        );
       });
       if (formProperty) {
-        return word.replace(/#(\w+)/i, formProperty.value)
+        return word.replace(/#(\w+)/i, formProperty.value);
       }
       return word;
     })
     .join(' ');
 }
 
-
 /**
  * Ensure we only show contract preview for currently enabled categories in this form
- * @param {[object]} formProperties 
- * @param {[object]} categoriesData 
+ * @param {[object]} formProperties
+ * @param {[object]} categoriesData
  * @returns {string}
  */
-export function extractRenderedTextFromCategory(formProperties, categoriesData){
-  if(!categoriesData) return ''
-  const properties = extractValidFormPropertyValue(formProperties)
-  const validCategories = categoriesData.filter(category => checkCondition(category, properties, false))
+export function extractRenderedTextFromCategory(formProperties, categoriesData) {
+  if (!categoriesData) return '';
+  const properties = extractValidFormPropertyValue(formProperties);
+  const validCategories = categoriesData.filter(category =>
+    checkCondition(category, properties, false)
+  );
   const text = validCategories.map(category => `${category.renderedText}  `).join('');
-  return text
+  return text;
 }
 
 /**
  * Validates required fields
  * @param {[object]} filledInProperties
- * @param {[object]} formData
+ * @param {[object]} categories
  * @returns {Boolean}
  */
-export function requiredFieldIsEmpty(filledInProperties, formData) {
-  let result = false
-  const valid = formData.filter(category => checkCondition(category, filledInProperties, false))
+export function requiredFieldIsEmpty(filledInProperties, categories) {
+  let result = false;
+  const valid = categories.filter(category => checkCondition(category, filledInProperties, false));
 
   // TODO: This could use some optimization
   // eslint-disable-next-line no-restricted-syntax
   for (const category of valid) {
     // eslint-disable-next-line no-restricted-syntax
     for (const form of category.formProperties) {
-      if (form.required && !filledInProperties.find(filled => form.id === filled.form_property_id)?.value) {
+      if (
+        form.required &&
+        !filledInProperties.find(filled => form.id === filled.form_property_id)?.value
+      ) {
         result = true;
         break;
       }
     }
   }
-  return result
+  return result;
 }
 
 /**
@@ -195,38 +209,248 @@ export function requiredFieldIsEmpty(filledInProperties, formData) {
  * @param {[object]} formData
  * @returns {Boolean}
  */
-export function checkRequiredFormPropertyIsFilled(property, formData){
-  if(property
-    && Array.isArray(formData?.categories)
-    && formData?.categories.length > 0
-    && Array.isArray(formData?.filledInProperties)
-    && formData?.filledInProperties.length > 0
-    ){
-    const activeCategories = formData?.categories?.filter(category => checkCondition(category, formData?.filledInProperties, false))
-    const propertyBelongsToActiveCategory = activeCategories.some(category => category.formProperties.some(prop => prop.id === property.id))
-    
+export function checkRequiredFormPropertyIsFilled(property, formData) {
+  if (
+    property &&
+    Array.isArray(formData?.categories) &&
+    formData?.categories.length > 0 &&
+    Array.isArray(formData?.filledInProperties) &&
+    formData?.filledInProperties.length > 0
+  ) {
+    const activeCategories = formData?.categories?.filter(category =>
+      checkCondition(category, formData?.filledInProperties, false)
+    );
+    const propertyBelongsToActiveCategory = activeCategories.some(category =>
+      category.formProperties.some(prop => prop.id === property.id)
+    );
+
     // Validate properties from active categories only
-    if(propertyBelongsToActiveCategory){
-      if(formData.error && property.required) {
-        if(property.fieldType === 'checkbox') {
-          const fieldValues = formData?.filledInProperties.find(filledProp => property.id === filledProp.form_property_id)?.value
-          return(
-            !fieldValues || Object.values(fieldValues).some(val => !val)
-          )
+    if (propertyBelongsToActiveCategory) {
+      if (formData.error && property.required) {
+        if (property.fieldType === 'checkbox') {
+          const fieldValues = formData?.filledInProperties.find(
+            filledProp => property.id === filledProp.form_property_id
+          )?.value;
+          return !fieldValues || Object.values(fieldValues).some(val => !val);
         }
 
-        if(['date', 'time', 'datetime'].includes(property.fieldType)){
-          const fieldValue = formData?.filledInProperties.find(filledProp => property.id === filledProp.form_property_id)?.value
-          return (!fieldValue || Number.isNaN(Date.parse(fieldValue)))
+        if (['date', 'time', 'datetime'].includes(property.fieldType)) {
+          const fieldValue = formData?.filledInProperties.find(
+            filledProp => property.id === filledProp.form_property_id
+          )?.value;
+          return !fieldValue || Number.isNaN(Date.parse(fieldValue));
         }
 
-        return (
-          !(formData?.filledInProperties
-            .find(filledProp => property.id === filledProp.form_property_id)?.value)
-        )
+        return !formData?.filledInProperties.find(
+          filledProp => property.id === filledProp.form_property_id
+        )?.value;
       }
     }
   }
 
- return false
+  return false;
+}
+
+/**
+ * Generate an iframe snippet that can be embedded elsewhere
+ * @param {{id: String, name: String}} form
+ * @param {String} hostname
+ * @returns
+ */
+export function generateIframeSnippet(form, hostname) {
+  const url = `https://${hostname}/form/${form.id}/public`;
+  return `<iframe src=${url} name=${form.name} title=${form.name} scrolling="auto" width="100%" height="500px" />`;
+}
+
+/**
+ *
+ * @param {Number} bytes
+ * @returns the converted size of the file to upload
+ *
+ */
+export function convertUploadSize(bytes) {
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  if (bytes === 0) {
+    return 'N/A';
+  }
+  const convertedBytes = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+  const size = objectAccessor(sizes, convertedBytes);
+  if (convertedBytes === 0) {
+    return `${bytes} ${size}`;
+  }
+  return `${(bytes / 1024 ** convertedBytes).toFixed(0)} ${size}`;
+}
+
+/**
+ * Remove extension from files and truncate them to save some space on mobile
+ * @param {String} name
+ * @returns {String}
+ */
+export function cleanFileName(name) {
+  if (!name) return '';
+  const filename = name.split('.')[0];
+  return titleCase(truncateString(filename, 18));
+}
+
+/**
+ * Return translated versions of the known file types
+ * @param {Function} t
+ * @returns
+ */
+export function fileTypes(t) {
+  return {
+    'image/jpeg': t('common:file_types.image'),
+    'image/jpg': t('common:file_types.image'),
+    'image/png': t('common:file_types.image'),
+    'image/gif': t('common:file_types.image'),
+    'image/x-dwg': t('common:file_types.autocad'),
+    'image/x-dwf': t('common:file_types.autocad'),
+    'image/x-dxf': t('common:file_types.autocad'),
+    'image/svg+xml': t('common:file_types.image'),
+    wav: t('common:file_types.audio'),
+    'audio/mpeg': t('common:file_types.audio'),
+    'video/mp4': t('common:file_types.video'),
+    'video/mpeg': t('common:file_types.video'),
+    'application/pdf': t('common:file_types.pdf'),
+    'application/zip': t('common:file_types.compressed_file'),
+    'application/x-7z-compressed': t('common:file_types.compressed_file'),
+    'application/x-zip-compressed': t('common:file_types.compressed_file')
+  };
+}
+
+/**
+ *
+ * @param {[object]} uploads
+ * @param {{name: String}} file
+ * @param {String} propertyId
+ * @returns
+ */
+export function isUploaded(uploads, file, propertyId) {
+  if (!uploads || !file || !propertyId) {
+    return false;
+  }
+  return uploads.some(upload => upload.filename === file.name && upload.propertyId === propertyId);
+}
+
+export function isFileNameSelect(filenames, file, propertyId) {
+  if (!filenames || !file || !propertyId) {
+    return false;
+  }
+  return filenames.some(filename => filename.name === file && filename.propertyId === propertyId);
+}
+
+export async function handleFileSelect(event, propertyObj, t) {
+  const checkSelectFile = await Object.values(event.target.files).some(file =>
+    isFileNameSelect(propertyObj.filesToUpload, file.name, propertyObj.propertyId)
+  );
+
+  if (checkSelectFile) {
+    propertyObj.setMessageAlert(t('form:errors.file_exists'));
+    propertyObj.setIsSuccessAlert(false);
+    return;
+  }
+  const newFiles = await Object.values(event.target.files).map(file =>
+    Object.assign(file, {
+      propertyId: propertyObj.propertyId,
+      fileNameId: `${file.name}${propertyObj.propertyId}`
+    })
+  );
+  await propertyObj.setFilesToUpload([...propertyObj.filesToUpload, ...newFiles]);
+}
+
+export function handleFileUpload(file, propertyObj, t) {
+  const fileType = ['pdf'];
+  const validType =
+  fileType.includes(file.type.split('/')[1]) || file.type.split('/')[0] === 'image';
+  if (!validType) {
+    propertyObj.setMessageAlert(t('form:errors.wrong_file_type'));
+    propertyObj.setIsSuccessAlert(false);
+    return;
+  }
+  propertyObj.setFormState({
+    ...propertyObj.formState,
+    currentPropId: propertyObj.propertyId,
+    isUploading: true,
+    currentFileNames: [...propertyObj.formState.currentFileNames, `${file.name}${file.propertyId}`]
+  });
+  propertyObj.startUpload(file);
+}
+
+export function onNotUploadedImageRemove(file, propertyObj) {
+  const filteredImages = propertyObj.filesToUpload.filter(
+    item => item.fileNameId !== file.fileNameId
+  );
+  propertyObj.setFilesToUpload(filteredImages);
+}
+
+export async function onImageRemove(imagePropertyId, file, propertyObj) {
+  const filteredImages = propertyObj.uploadedImages.filter(im => im.propertyId !== imagePropertyId);
+  const filtCurrentUploadedImg = propertyObj.uploadedImages.filter(
+    im => im.propertyId === imagePropertyId && im.filename !== file.name
+  );
+  await propertyObj.setUploadedImages([...filteredImages, ...filtCurrentUploadedImg]);
+  const filterFileName = propertyObj.formState.currentFileNames.filter(
+    im => im !== `${file.name}${file.propertyId}`
+  );
+  await propertyObj.setFormState({ ...propertyObj.formState, currentFileNames: filterFileName });
+  onNotUploadedImageRemove(file, propertyObj);
+}
+
+/**
+ *
+ * @param {object} file
+ * @param {boolean} isFileUploaded
+ * @param {string} formPropertyId
+ * @param {object} propertyObj
+ * @returns
+ */
+export function removeBeforeUpload(file, isFileUploaded, formPropertyId, propertyObj) {
+  if (isFileUploaded) {
+    return onImageRemove(formPropertyId, file, propertyObj);
+  }
+  return onNotUploadedImageRemove(file, propertyObj);
+}
+
+/**
+ * check if the event is from calendly so that we can decide what to
+ * @param {object} event
+ */
+
+ export function isCalendlyEvent(event) {
+  return (
+    event.origin === 'https://calendly.com' && event.data.event && event.data.event.indexOf('calendly.') === 0
+  );
+}
+
+/**
+ * A callback used for tracking calendly events and handling form submission
+ * @param {object} e
+ * @param {Function} submitForm
+ */
+export function calendlyCallback(e, submitForm) {
+  if (isCalendlyEvent(e)) {
+    if(e.data.event === 'calendly.event_scheduled') {
+      // attempt to close the calendly modal after submission
+      const closeBtn = document.getElementsByClassName('calendly-popup-close')[0]
+      closeBtn?.click()
+      // submit the form after confirming the appointment
+      submitForm()
+    }
+  }
+}
+
+
+/**
+ * Find a property and return its shortDesc and its description
+ * @param {object} properties
+ * @param {string} propertyName
+ * @returns an object consisting of shortDesc and description
+ */
+export function getValueFromProperty(properties, propertyName) {
+  const property = properties.find(field => field.fieldType === propertyName);
+  return {
+    amount: property?.shortDesc, // deprecate this and replace from other files
+    value: property?.shortDesc,
+    description: property?.description,
+  }
 }

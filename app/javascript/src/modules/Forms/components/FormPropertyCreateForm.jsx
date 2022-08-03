@@ -1,34 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useLazyQuery, useMutation, useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Grid,
+  Typography,
+  useMediaQuery
+} from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { makeStyles } from '@mui/styles';
 import { FormPropertyCreateMutation, FormPropertyUpdateMutation } from '../graphql/forms_mutation';
-import CenteredContent from '../../../components/CenteredContent';
 import FormPropertySelector from './FormPropertySelector';
 import FormOptionInput from './FormOptionInput';
 import SwitchInput from './FormProperties/SwitchInput';
 import { FormPropertyQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
-import MessageAlert from '../../../components/MessageAlert';
 import { LiteFormCategories } from '../graphql/form_category_queries';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
+import fieldTypes from '../constants';
 
-// Replace this with translation and remove options on FormPropertySelector
-const fieldTypes = {
-  text: 'Text',
-  radio: 'Radio',
-  checkbox: 'Checkbox',
-  date: 'Date',
-  time: 'Time',
-  datetime: 'Date with Time',
-  dropdown: 'Dropdown',
-  signature: 'Signature',
-  file_upload: 'File Upload'
-};
-
-export default function FormPropertyCreateForm({ formId, refetch, propertyId, categoryId, close }) {
+export default function FormPropertyCreateForm({
+  formId,
+  refetch,
+  propertyId,
+  categoryId,
+  close,
+  formDetailRefetch
+}) {
   const initData = {
     fieldName: '',
     fieldType: '',
@@ -36,16 +41,21 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
     adminUse: false,
     order: '1',
     fieldValue: [],
-    categoryId
+    categoryId,
+    shortDesc: '',
+    longDesc: ''
   };
   const [propertyData, setProperty] = useState(initData);
   const [isLoading, setMutationLoading] = useState(false);
+  const classes = useStyles();
   const [options, setOptions] = useState(['']);
   const { t } = useTranslation('form');
-  const [message, setMessage] = useState({ isError: false, detail: '' });
   const [formPropertyCreate] = useMutation(FormPropertyCreateMutation);
   const [formPropertyUpdate] = useMutation(FormPropertyUpdateMutation);
   const history = useHistory();
+  const matches = useMediaQuery('(max-width:900px)');
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   const [loadFields, { data }] = useLazyQuery(FormPropertyQuery, {
     variables: { formId, formPropertyId: propertyId }
   });
@@ -90,14 +100,16 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
     formPropertyCreate({
       variables: {
         ...propertyData,
+        shortDesc: String(propertyData.shortDesc),
         fieldValue,
         formId
       }
     })
       .then(() => {
         refetch();
+        formDetailRefetch();
         setMutationLoading(false);
-        setMessage({ ...message, isError: false, detail: t('misc.created_form_property') });
+        showSnackbar({ type: messageType.success, message: t('misc.created_form_property') });
         setProperty({
           ...initData,
           order: nextOrder.toString()
@@ -105,7 +117,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
         setOptions(['']);
       })
       .catch(err => {
-        setMessage({ ...message, isError: true, detail: formatError(err.message) });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setMutationLoading(false);
       });
   }
@@ -116,7 +128,8 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
       variables: {
         ...propertyData,
         fieldValue,
-        formPropertyId: propertyId
+        formPropertyId: propertyId,
+        shortDesc: String(propertyData.shortDesc)
       }
     })
       .then(res => {
@@ -131,111 +144,159 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
           order: nextOrder.toString()
         });
         setOptions(['']);
-        setMessage({ ...message, isError: false, detail: t('misc.updated_form_property') });
+        showSnackbar({ type: messageType.success, message: t('misc.updated_form_property') });
         close();
       })
       .catch(err => {
-        setMessage({ ...message, isError: true, detail: formatError(err.message) });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setMutationLoading(false);
       });
   }
 
+  const showValueInput = propertyData.fieldType === 'payment' || propertyData.fieldType === 'appointment'
   return (
     <>
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '' })}
-      />
-
       <form
         onSubmit={propertyId ? updateFormProperty : saveFormProperty}
         data-testid="form_property_submit"
+        className={classes.container}
       >
-        <TextField
-          id="standard-basic"
-          label={t('form_fields.field_name')}
-          variant="outlined"
-          value={propertyData.fieldName}
-          onChange={handlePropertyValueChange}
-          name="fieldName"
-          style={{ width: '100%' }}
-          className="form-property-field-name-txt-input"
-          inputProps={{ 'data-testid': 'field_name' }}
-          margin="normal"
-          autoFocus={process.env.NODE_ENV !== 'test'}
-          required
-        />
-
-        <FormPropertySelector
-          label={t('form_fields.field_type')}
-          name="fieldType"
-          value={propertyData.fieldType}
-          handleChange={handlePropertyValueChange}
-          options={fieldTypes}
-        />
-        {(propertyData.fieldType === 'radio' ||
-          propertyData.fieldType === 'dropdown' ||
-          propertyData.fieldType === 'checkbox') && (
-          <FormOptionInput label="Option" options={options} setOptions={setOptions} />
-        )}
-        <FormControl variant="outlined" style={{ width: '100%' }} margin="normal">
-          <InputLabel>Category</InputLabel>
-          <Select
-            labelId="select-category"
-            id="category"
-            value={propertyData.categoryId}
-            onChange={handlePropertyValueChange}
-            label="Choose Category"
-            name="categoryId"
-            required
-          >
-            {categoriesData?.data?.formCategories.map(category => (
-              <MenuItem key={category.id} value={category.id}>
-                {category.fieldName}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <div style={{ marginTop: 20 }}>
-          <SwitchInput
-            name="required"
-            label={t('form_fields.required_field')}
-            value={propertyData.required}
-            handleChange={handleRadioChange}
-            className="form-property-required-field-switch-btn"
-          />
-          <SwitchInput
-            name="adminUse"
-            label={t('form_fields.admins_only')}
-            value={propertyData.adminUse}
-            handleChange={handleRadioChange}
-          />
-          <TextField
-            label={t('form_fields.order_number')}
-            id="outlined-size-small"
-            value={propertyData.order}
-            onChange={handlePropertyValueChange}
-            variant="outlined"
-            size="small"
-            name="order"
-            style={{ marginLeft: 20 }}
-          />
-        </div>
-        <br />
-        <CenteredContent>
-          <Button
-            variant="outlined"
-            type="submit"
-            color="primary"
-            data-testid="form_property_action_btn"
-            disabled={isLoading}
-            startIcon={isLoading && <Spinner />}
-          >
-            {!propertyId ? t('actions.add_form_property') : t('actions.update_property')}
-          </Button>
-        </CenteredContent>
+        <Grid container spacing={2} alignItems="center" justifyContent="center">
+          <Grid item md={12} xs={12}>
+            <TextField
+              id="standard-basic"
+              label={t('form_fields.field_name')}
+              variant="outlined"
+              value={propertyData.fieldName}
+              onChange={handlePropertyValueChange}
+              name="fieldName"
+              style={{ width: '100%' }}
+              className="form-property-field-name-txt-input"
+              inputProps={{ 'data-testid': 'field_name' }}
+              margin="normal"
+              autoFocus={process.env.NODE_ENV !== 'test'}
+              required
+            />
+          </Grid>
+          <Grid item md={6} xs={12}>
+            <FormPropertySelector
+              label={t('form_fields.field_type')}
+              name="fieldType"
+              value={propertyData.fieldType}
+              handleChange={evt => setProperty({ ...propertyData, fieldType: evt.target.value })}
+              options={fieldTypes}
+            />
+          </Grid>
+          <Grid item md={6} xs={12} style={{ marginTop: '-8px' }}>
+            <FormControl variant="outlined" style={{ width: '100%' }} margin="normal">
+              <InputLabel>{t('misc.category')}</InputLabel>
+              <Select
+                labelId="select-category"
+                id="category"
+                value={propertyData.categoryId}
+                onChange={handlePropertyValueChange}
+                label={t('misc.choose_category')}
+                name="categoryId"
+                required
+              >
+                {categoriesData?.data?.formCategories.map(category => (
+                  <MenuItem key={category.id} value={category.id}>
+                    {category.fieldName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          {/* TODO: Refactor this to be more scalable */}
+          {showValueInput && (
+            <Grid item md={12} xs={12}>
+              <TextField
+                id="standard-short_desc"
+                label={
+                  propertyData.fieldType === 'payment'
+                    ? t('form_fields.amount_to_pay')
+                    : t('form_fields.calendly_link')
+                }
+                variant="outlined"
+                value={propertyData.shortDesc}
+                onChange={handlePropertyValueChange}
+                name="shortDesc"
+                type={propertyData.fieldType === 'payment' ? 'number' : 'url'}
+                style={{ width: '100%' }}
+                className="form-property-field-name-txt-input"
+                inputProps={{ 'data-testid': 'short_desc' }}
+                required={showValueInput}
+                margin="normal"
+              />
+            </Grid>
+          )}
+          <Grid item md={12} xs={12}>
+            <TextField
+              id="standard-short_desc"
+              label={t('form_fields.description')}
+              variant="outlined"
+              value={propertyData.longDesc}
+              onChange={handlePropertyValueChange}
+              name="longDesc"
+              style={{ width: '100%' }}
+              className="form-property-field-name-txt-input"
+              inputProps={{ 'data-testid': 'long_desc' }}
+              required={propertyData.fieldType === 'invitation'}
+              margin="normal"
+              multiline
+            />
+          </Grid>
+          <Grid item md={12} xs={12}>
+            {(propertyData.fieldType === 'radio' ||
+              propertyData.fieldType === 'dropdown' ||
+              propertyData.fieldType === 'checkbox') && (
+              <FormOptionInput label="Option" options={options} setOptions={setOptions} />
+            )}
+          </Grid>
+          <Grid item md={4} xs={6}>
+            <SwitchInput
+              name="required"
+              label={<Typography variant="caption">{t('form_fields.required_field')}</Typography>}
+              value={propertyData.required}
+              handleChange={handleRadioChange}
+              className="form-property-required-field-switch-btn"
+              labelPlacement="end"
+            />
+          </Grid>
+          <Grid item md={4} xs={6}>
+            <SwitchInput
+              name="adminUse"
+              label={<Typography variant="caption">{t('form_fields.admins_only')}</Typography>}
+              value={propertyData.adminUse}
+              handleChange={handleRadioChange}
+              labelPlacement="end"
+            />
+          </Grid>
+          <Grid item md={4} xs={12}>
+            <TextField
+              label={t('form_fields.order_number')}
+              id="outlined-size-small"
+              value={propertyData.order}
+              onChange={handlePropertyValueChange}
+              variant="outlined"
+              size="small"
+              name="order"
+              style={{ marginLeft: 20 }}
+            />
+          </Grid>
+          <Grid item md={12} xs={12} style={matches ? { textAlign: 'center' } : {}}>
+            <Button
+              variant="outlined"
+              type="submit"
+              color="primary"
+              data-testid="form_property_action_btn"
+              disabled={isLoading}
+              startIcon={isLoading && <Spinner />}
+            >
+              {!propertyId ? t('actions.add_form_property') : t('actions.update_property')}
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     </>
   );
@@ -243,7 +304,8 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
 
 FormPropertyCreateForm.defaultProps = {
   propertyId: null,
-  close: () => {}
+  close: () => {},
+  formDetailRefetch: () => {}
 };
 
 FormPropertyCreateForm.propTypes = {
@@ -251,5 +313,15 @@ FormPropertyCreateForm.propTypes = {
   formId: PropTypes.string.isRequired,
   categoryId: PropTypes.string.isRequired,
   propertyId: PropTypes.string,
-  close: PropTypes.func
+  close: PropTypes.func,
+  formDetailRefetch: PropTypes.func
 };
+
+const useStyles = makeStyles(() => ({
+  container: {
+    background: '#F5F5F4',
+    borderRadius: '10px',
+    padding: '20px',
+    marginTop: '20px'
+  }
+}));

@@ -3,17 +3,19 @@ import { BrowserRouter } from 'react-router-dom/';
 import { render } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { SideList } from '../components/SideList';
-import '@testing-library/jest-dom/extend-expect';
+
 
 describe('Sidelist component', () => {
   const sideProps = {
     toggleDrawer: jest.fn(),
     user: {
-      name: 'Jetro'
+      name: 'Jetro',
+      phoneNumber: "0812311321321"
     },
     authState: {
       user: {
-        userType: 'admin'
+        userType: 'admin',
+        id: 'Someer20384203',
       }
     }
   };
@@ -38,11 +40,14 @@ describe('Sidelist component', () => {
     const moreProps = {
       toggleDrawer: jest.fn(),
       user: {
-        name: 'Jetro'
+        name: 'Jetro',
+         phoneNumber: "0812311321321"
       },
       authState: {
         user: {
-          userType: 'client'
+          userType: 'client',
+          id: 'Someer20384203',
+          phoneNumber: "0812311321321"
         }
       }
     };
@@ -62,11 +67,14 @@ describe('Sidelist component', () => {
     const props = {
       toggleDrawer: jest.fn(),
       user: {
-        name: 'Jetro'
+        name: 'Jetro',
+         phoneNumber: "0812311321321"
       },
       authState: {
         user: {
-          userType: 'resident'
+          userType: 'resident',
+          id: 'Someer20384203',
+          phoneNumber: "0812311321321"
         }
       }
     };

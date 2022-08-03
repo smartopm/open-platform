@@ -4,9 +4,25 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Timesheet::ManageShift do
   describe 'track user time shift' do
+    let!(:store_custodian_role) { create(:role, name: 'custodian') }
+    let!(:permission) do
+      create(:permission, module: 'timesheet',
+                          role: store_custodian_role,
+                          permissions: %w[can_manage_shift])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:custodian) do
+      create(:admin_user, community_id: user.community_id,
+                          role: store_custodian_role, user_type: 'custodian')
+    end
+
     let!(:user) { create(:contractor) }
     let!(:community) { user.community }
-    let!(:custodian) { create(:store_custodian, community_id: community.id) }
+    let!(:custodian) do
+      create(:store_custodian, community_id: community.id, user_type: 'custodian',
+                               role: store_custodian_role)
+    end
 
     let(:query) do
       <<~GQL

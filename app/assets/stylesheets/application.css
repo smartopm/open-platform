@@ -14,8 +14,20 @@
  *= require_self
  */
 
-/* Spinner for page loading */
+ 
+ html, body {
+   height: 100%;
+  }
+  
+  #root {
+    height: 100%;
+  }
 
+  .profiler-results {
+    display: none;
+  }
+  
+  /* Spinner for page loading */
 .lds-ripple {
   display: inline-block;
   position: relative;
@@ -284,11 +296,24 @@ body {
   background-size: 20px 20px;
 }
 
+.mentions-input__input:focus {
+  outline: none !important;
+}
+
 @media print {
   html, body {
-    height:100vh; 
-    margin: 0 !important; 
+    height:100vh;
+    margin: 0 !important;
     padding: 0 !important;
     overflow: hidden;
   }
+}
+
+div.drawer {
+  background: rgba(77, 77, 77, 0.7)
+}
+
+input[type="tel"],
+input[type="search"] {
+  font-size: 16px !important;
 }

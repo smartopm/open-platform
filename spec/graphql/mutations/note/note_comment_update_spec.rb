@@ -4,10 +4,29 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Note::NoteCommentUpdate do
   describe 'update for note comment' do
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:custodian_role) { create(:role, name: 'custodian') }
+    let!(:site_worker_role) { create(:role, name: 'site_worker') }
+    let!(:permission) do
+      create(:permission, module: 'note',
+                          role: custodian_role,
+                          permissions: %w[can_update_note_comment])
+    end
+    let!(:site_worker_permission) do
+      create(:permission, module: 'note',
+                          role: site_worker_role,
+                          permissions: %w[can_update_note_comment])
+    end
+
     let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:another_user) { create(:store_custodian, community_id: user.community_id) }
-    let!(:site_worker) { create(:site_worker, community_id: user.community_id) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
+    let!(:another_user) { create(:store_custodian, role: custodian_role) }
+    let!(:site_worker) do
+      create(:site_worker, community_id: another_user.community_id,
+                           role: site_worker_role)
+    end
+
     let!(:note) do
       admin.notes.create!(
         body: 'Note body',
@@ -16,15 +35,22 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
         author_id: admin.id,
       )
     end
+    let!(:blob) do
+      ActiveStorage::Blob.create(filename: 'tagged_doc.pdf', content_type: 'application/pdf',
+                                 byte_size: 2123, checksum: '9JiwSyvzZeqDSV')
+    end
+    let!(:attachment) { note.documents.create(blob_id: blob.id) }
     let(:note_comment) { create(:note_comment, note: note, user: user, status: 'active') }
 
     let(:query) do
       <<~GQL
-        mutation noteCommentUpdate($id: ID!, $body: String!) {
-          noteCommentUpdate(id: $id, body: $body){
+        mutation noteCommentUpdate($id: ID!, $body: String!, $taggedDocuments: [ID]) {
+          noteCommentUpdate(id: $id, body: $body, taggedDocuments: $taggedDocuments){
             noteComment {
               id
               body
+              taggedDocuments
+              taggedAttachments
             }
           }
         }
@@ -35,13 +61,23 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       variables = {
         id: note_comment.id,
         body: 'Updated body',
+        taggedDocuments: [attachment.id],
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: another_user,
+                                                site_community: user.community,
                                               }).as_json
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'id')).not_to be_nil
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'body')).to eql 'Updated body'
+      expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'taggedDocuments', 0)).to eql(
+        attachment.id,
+      )
+      expect(
+        result.dig('data', 'noteCommentUpdate', 'noteComment', 'taggedAttachments', 0, 'id'),
+      ).to eql(
+        attachment.id,
+      )
       expect(result['errors']).to be_nil
     end
 
@@ -49,10 +85,12 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       variables = {
         id: note_comment.id,
         body: 'Updated commment by site worker',
+        taggedDocuments: [],
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: site_worker,
+                                                site_community: user.community,
                                               }).as_json
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'id')).not_to be_nil
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'body'))
@@ -64,9 +102,11 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       variables = {
         id: note_comment.id,
         body: 'Updated body',
+        taggedDocuments: [],
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
+                                                site_community: user.community,
                                               }).as_json
       expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
       expect(result['errors']).not_to be_nil

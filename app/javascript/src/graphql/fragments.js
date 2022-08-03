@@ -18,6 +18,7 @@ export const UserFragment = {
       subStatus
       address
       extRefId
+      status
       accounts {
         id
         updatedAt
@@ -47,6 +48,7 @@ export const UserFragment = {
         id
         status
         createdAt
+        userId
         form {
           id
           name
@@ -99,14 +101,26 @@ export const EntryRequestFragment = {
       endsAt
       startsAt
       isGuest
+      status
       grantor {
+        id
         name
       }
+      user {
+        id
+        name
+      }
+      videoUrl
+      imageUrls
     }
   `
 }
 
 
+// TODO: Don't use this fragment
+/**
+ * @deprecated
+ */
 export const NotesFragment = {
   note: gql`
     fragment NoteFields on Note {
@@ -117,6 +131,9 @@ export const NotesFragment = {
       category
       description
       dueDate
+      progress
+      subTasksCount
+      attachments
       user {
         id
         name
@@ -125,16 +142,60 @@ export const NotesFragment = {
       author {
         id
         name
+        imageUrl
+        avatarUrl
       }
       assignees {
         id
         name
         imageUrl
+        avatarUrl
       }
       assigneeNotes{
+        id
         userId
         reminderTime
       }
+      parentNote {
+        id
+      }
+      formUserId
+    }
+  `
+}
+export const TasksFragment = {
+  task: gql`
+    fragment TaskFields on Note {
+      id
+      body
+      dueDate
+      progress
+      subTasksCount
+      taskCommentsCount
+      taskCommentReply
+      order
+      completed
+      status
+      attachments
+      formUserId
+      submittedBy {
+        id
+        name
+      }
+      assignees {
+        id
+        name
+        imageUrl
+        avatarUrl
+      }
+      message {
+        id
+        sender {
+            id
+            name
+        }
+      }
+      authorId
     }
   `
 }

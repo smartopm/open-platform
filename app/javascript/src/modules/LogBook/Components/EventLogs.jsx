@@ -10,7 +10,6 @@ export default ({ history }) => {
   const authState = useContext(AuthStateContext);
   return AllEventLogs(history, authState);
 };
-
 // Todo: Find the total number of allEventLogs
 const limit = 30;
 const AllEventLogs = (history, authState) => {
@@ -19,9 +18,9 @@ const AllEventLogs = (history, authState) => {
     variables: { subject: null, refId: null, refType: null, offset, limit },
     fetchPolicy: "cache-and-network"
   });
+  const { token } = authState;
   if (loading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
-
   function handleNextPage() {
     setOffset(offset + limit);
   }
@@ -30,8 +29,6 @@ const AllEventLogs = (history, authState) => {
       return;
     }
     setOffset(offset - limit);
-
-
   }
   return (
     <>
@@ -41,10 +38,8 @@ const AllEventLogs = (history, authState) => {
         offset={offset}
         nextPage={handleNextPage}
         router={history}
-        userToken={authState.token}
+        userToken={token}
       />
     </>
   );
 };
-
-

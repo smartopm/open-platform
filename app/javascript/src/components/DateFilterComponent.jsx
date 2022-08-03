@@ -7,10 +7,14 @@ import {
   Grid,
   FormControl,
   InputLabel
-} from '@material-ui/core'
+} from '@mui/material'
+import { useTranslation } from 'react-i18next';
 import { filterUserByLoggedin } from '../utils/constants'
 import DatePicker from "./DatePickerDialog"
 
+/**
+ * @deprecated 
+ */
 export default function DateFilterComponent({
   handleFilterInputChange,
   classes,
@@ -23,6 +27,7 @@ export default function DateFilterComponent({
   selectDateOn,
   resetFilter
 }) {
+  const { t } = useTranslation('common');
   return (
     <Grid item xs={'auto'}>
       <FormControl className={classes.formControl}>
@@ -41,16 +46,16 @@ export default function DateFilterComponent({
         </Select>
         {filterType === 'log_from' && (
           <Fragment>
-            <DatePicker handleDateChange={handleDateChangeFrom} selectedDate={selectDateFrom} label="from:"/>
+            <DatePicker handleDateChange={handleDateChangeFrom} selectedDate={selectDateFrom} label="from:" t={t} />
           </Fragment>)}
           {filterType === "log_to" && (
             <Fragment>
-              <DatePicker handleDateChange={handleDateChangeTo} selectedDate={selectDateTo} label="to:"/>
+              <DatePicker handleDateChange={handleDateChangeTo} selectedDate={selectDateTo} label="to:" t={t}/>
             </Fragment>
           )}
           {filterType === "log_on" && (
             <Fragment>
-              <DatePicker handleDateChange={handleDateChangeOn} selectedDate={selectDateOn} label="on:"/>
+              <DatePicker handleDateChange={handleDateChangeOn} selectedDate={selectDateOn} label="on:" t={t}/>
             </Fragment>
           )}
 

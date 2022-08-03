@@ -17,7 +17,7 @@ module Mutations
 
         return { label_delete: label } if label.update(status: 'deleted')
 
-        raise GraphQL::ExecutionError, label.errors.full_message
+        raise GraphQL::ExecutionError, label.errors.full_messages&.join(', ')
       end
 
       def check_label(id)
@@ -26,7 +26,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(module: :label, permission: :can_delete_label)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

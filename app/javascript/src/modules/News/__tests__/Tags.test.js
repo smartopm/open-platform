@@ -1,11 +1,12 @@
 import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { act, render, fireEvent, waitFor } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 import Tag from '../Components/Tag'
 import TagPosts from '../Components/TagPosts'
 import { PostTagUser } from '../../../graphql/queries'
 import  { useFetch }  from '../../../utils/customHooks'
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar'
 
 jest.mock('../../../utils/customHooks')
 const mck = jest.fn()
@@ -63,7 +64,7 @@ describe('TagPosts', () => {
         {
           ID: '123',
           title: 'Post on Architecture',
-          featured_image: '',
+          featured_image: 'https://image.irl',
           modified: new Date(),
           excerpt: ''
         }
@@ -79,7 +80,9 @@ describe('TagPosts', () => {
           mocks={mocks}
           addTypename={false}
         >
-          <TagPosts {...props} />
+          <MockedSnackbarProvider>
+            <TagPosts {...props} />
+          </MockedSnackbarProvider>
         </MockedProvider>
       )
     })

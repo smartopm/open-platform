@@ -19,47 +19,41 @@ module Authorizable
     request.host
   end
 
-  # rubocop:disable Metrics/MethodLength
   def current_community
-    community_list = { 'app.doublegdp.com' => 'Nkwashi',
-                       'double-gdp-staging.herokuapp.com' => 'Nkwashi',
-                       'demo.doublegdp.com' => 'DoubleGDP',
-                       'demo-staging.doublegdp.com' => 'DoubleGDP',
-                       'morazancity.doublegdp.com' => 'Ciudad Morazán',
-                       'morazancity-staging.doublegdp.com' => 'Ciudad Morazán',
-                       'dev.dgdp.site' => 'DoubleGDP',
-                       'double-gdp-dev.herokuapp.com' => 'DAST' }
-
-    if ['dgdp.site', 'rails'].include?(request.domain) && request.subdomain != 'dev'
-      @site_community = Community.find_by(name: 'Nkwashi')
-    else
-      dom = "#{request.subdomain}.#{request.domain}"
-      @site_community = Community.find_by(name: community_list[dom])
-    end
-    @site_community
+    domains = ['dgdp.site', 'rails']
+    @current_community ||= if domains.include?(request.domain) && request.subdomain != 'dev'
+                             Community.find_by(name: 'DoubleGDP')
+                           else
+                             dom = "#{request.subdomain}.#{request.domain}"
+                             Community.where('? = ANY(domains)', dom).first
+                           end
   end
-  # rubocop:enable Metrics/MethodLength
 
   # For now we can assume that each user is just a member of one community
   def authenticate_member!
     authenticate_user!
     # Keep out any user that not a member of a community
-    current_user.assign_default_community(@site_community)
+    current_user.assign_default_community(@current_community)
     redirect_to '/hold' unless current_user.community
   end
 
   def auth_context(request)
     token = bearer_token(request)
-    return { site_community: @site_community } unless token
+    return { site_community: @current_community } unless token
 
-    user = @site_community.users.find_via_auth_token(token, @site_community)
+    user = @current_community.users.find_via_auth_token(token, @current_community)
 
+    check_user_role(user)
     log_active_user(user)
     {
       current_user: user,
-      site_community: @site_community,
+      site_community: @current_community,
       site_hostname: current_hostname,
     }
+  end
+
+  def current_user
+    auth_context(request)[:current_user]
   end
 
   private
@@ -81,5 +75,12 @@ module Authorizable
 
   def log_cache_key(user)
     "us-#{user.id}"
+  end
+
+  def check_user_role(user)
+    return if Role.exists?(name: user.role.name,
+                           community_id: [nil, @current_community.id])
+
+    redirect_to '/hold'
   end
 end

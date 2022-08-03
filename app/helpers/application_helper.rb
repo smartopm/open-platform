@@ -53,4 +53,8 @@ module ApplicationHelper # rubocop:disable Style/Documentation
 
     path_info.last
   end
+
+  def flutterwave_keys(community_name)
+    JSON.parse(ENV["#{community_name.parameterize.underscore.upcase}_FLUTTERWAVE"])
+  end
 end

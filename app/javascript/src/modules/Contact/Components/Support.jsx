@@ -24,7 +24,6 @@ export default function Support() {
 
   return (
     <>
-      <br />
       <SupportCard handleSendMessage={handleSendMessage} user={authState.user} />
     </>
   )

@@ -9,9 +9,7 @@ module Mutations
       field :comment_delete, GraphQL::Types::Boolean, null: false
 
       def resolve(id:)
-        comment = Comments::NoteComment.find(id)
-        raise_comment_not_found_error(comment)
-
+        comment = Comments::NoteComment.find_by(id: id)
         updates_hash = { status: [comment.status, 'deleted'] }
         if comment.update(status: 'deleted')
           comment.record_note_history(context[:current_user], updates_hash)
@@ -22,8 +20,11 @@ module Mutations
       end
 
       # Verifies if current user is admin or not.
-      def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+      def authorized?(vals)
+        comment = Comments::NoteComment.find_by(id: vals[:id])
+        raise_comment_not_found_error(comment)
+        return true if permitted?(module: :note, permission: :can_delete_note_comment) ||
+                       comment.user_id.eql?(context[:current_user]&.id)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

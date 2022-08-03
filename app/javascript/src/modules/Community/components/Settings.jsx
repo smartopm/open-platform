@@ -1,21 +1,27 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect, useState } from 'react';
-import Typography from '@material-ui/core/Typography';
-import { Button, TextField, MenuItem, Container, Grid, IconButton, FormControlLabel, Checkbox } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { DeleteOutline } from '@material-ui/icons';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import React, { useEffect, useState, useContext } from 'react';
+import Typography from '@mui/material/Typography';
+import { Button, TextField, MenuItem, Grid, IconButton, Checkbox } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { DeleteOutline } from '@mui/icons-material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
 import { useMutation, useApolloClient, useQuery } from 'react-apollo';
 import { CommunityUpdateMutation } from '../graphql/community_mutations';
 import DynamicContactFields from './DynamicContactFields';
-import MessageAlert from '../../../components/MessageAlert';
-import { useFileUpload } from '../../../graphql/useFileUpload';
-import ImageCropper from './ImageCropper';
-import { currencies, locales, languages, CommunityFeaturesWhiteList } from '../../../utils/constants';
+import useFileUpload from '../../../graphql/useFileUpload';
+import {
+  currencies,
+  locales,
+  languages,
+  CommunityFeaturesWhiteList
+} from '../../../utils/constants';
 import ImageAuth from '../../../shared/ImageAuth';
 import { formatError, objectAccessor } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading';
@@ -24,8 +30,10 @@ import { validateThemeColor } from '../helpers';
 import { AdminUsersQuery } from '../../Users/graphql/user_query';
 import MultiSelect from '../../../shared/MultiSelect';
 import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
+import PageWrapper from '../../../shared/PageWrapper';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
-export default function CommunitySettings({ data, token, refetch }) {
+export default function CommunitySettings({ data, refetch }) {
   const numbers = {
     phone_number: '',
     category: ''
@@ -42,6 +50,11 @@ export default function CommunitySettings({ data, token, refetch }) {
   const socialLinks = {
     social_link: '',
     category: ''
+  };
+
+  const leadMonthlyTargets = {
+    division: '',
+    target: ''
   };
 
   const menuItems = {
@@ -69,10 +82,10 @@ export default function CommunitySettings({ data, token, refetch }) {
     taxIdNo: data.bankingDetails?.taxIdNo || ''
   };
 
-  const features = data?.features || {}
+  const features = data?.features || {};
 
   const quickLinksDisplayOptions = ['Dashboard', 'Menu'];
-  const roleOptions = ['admin', 'client', 'resident'];
+  const roleOptions = ['admin', 'client', 'resident', 'developer', 'consultant', 'marketing_admin', 'lead'];
 
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
   const [numberOptions, setNumberOptions] = useState([numbers]);
@@ -80,33 +93,39 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
   const [socialLinkOptions, setSocialLinkOptions] = useState([socialLinks]);
   const [menuItemOptions, setMenuItemOptions] = useState([menuItems]);
-  const [paymentReminderTemplate, setPaymentReminderTemplate] = useState(data?.templates?.payment_reminder_template_behind);
+  const [divisionTargetsOptions, setDivisionTargetsOptions] = useState([leadMonthlyTargets]);
+  const [behindTemplate, setBehindTemplate] = useState(
+    data?.templates?.payment_reminder_template_behind || ''
+  );
+  const [upcomingTemplate, setUpcomingTemplate] = useState(
+    data?.templates?.payment_reminder_template_upcoming || ''
+  );
   const [templateOptions, setTemplateOptions] = useState(data?.templates || {});
   const [themeColors, setThemeColor] = useState(theme);
   const [bankingDetails, setBankingDetails] = useState(banking);
-  const [message, setMessage] = useState({ isError: false, detail: '' });
-  const [alertOpen, setAlertOpen] = useState(false);
   const [mutationLoading, setCallMutation] = useState(false);
-  const [blob, setBlob] = useState(null);
-  const [inputImg, setInputImg] = useState('');
-  const [fileName, setFileName] = useState('');
   const [currency, setCurrency] = useState('');
   const [tagline, setTagline] = useState(data?.tagline || '');
   const [logoUrl, setLogoUrl] = useState(data?.logoUrl || '');
   const [wpLink, setWpLink] = useState(data?.wpLink || '');
+  const [analyticsId, setAnalyticsId] = useState(data?.gaId || '');
   const [securityManager, setSecurityManager] = useState(data?.securityManager || '');
   const [subAdministratorId, setSubAdministrator] = useState(data?.subAdministrator?.id || '');
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
-  const [showCropper, setShowCropper] = useState(false);
   const [hasQuickLinksSettingChanged, setHasQuickLinksSettingChanged] = useState(false);
+  const [divisionTargetChanged, setDivisionTargetChanged] = useState(false);
   const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(',') || '');
   const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '');
-  const [communityFeatures, setCommunityFeatures] = useState(features)
+  const [communityFeatures, setCommunityFeatures] = useState(features);
+  const [logoDimension, setLogoDimension] = useState([]);
+  const [imageSrc, setImageSrc] = useState(null);
   const { t } = useTranslation(['community', 'common']);
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const { data: adminUsersData } = useQuery(AdminUsersQuery, {
     fetchPolicy: 'cache-and-network',
@@ -117,19 +136,11 @@ export default function CommunitySettings({ data, token, refetch }) {
     errorPolicy: 'all'
   });
 
-  const classes = useStyles();
+  const classes = useStyles({ heightValue: logoDimension[1], widthValue: logoDimension[0] });
 
   function handleAddNumberOption() {
     setNumberOptions([...numberOptions, numbers]);
   }
-
-  function getBlob(blobb) {
-    setBlob(blobb);
-  }
-
-  // function handleQuicklyDisplay(event) {
-  //   setQuickLinkOptions(event.target.value)
-  // }
 
   function handleAddEmailOption() {
     setEmailOptions([...emailOptions, emails]);
@@ -147,6 +158,10 @@ export default function CommunitySettings({ data, token, refetch }) {
     setMenuItemOptions([...menuItemOptions, menuItems]);
   }
 
+  function handleAddDivisionTargetsOptions() {
+    setDivisionTargetsOptions([...divisionTargetsOptions, leadMonthlyTargets]);
+  }
+
   function updateOptions(index, newValue, options, type) {
     if (type === 'email') {
       handleSetOptions(setEmailOptions, index, newValue, options);
@@ -156,6 +171,8 @@ export default function CommunitySettings({ data, token, refetch }) {
       handleSetOptions(setSocialLinkOptions, index, newValue, options);
     } else if (type === 'menu_link') {
       handleSetOptions(setMenuItemOptions, index, newValue, options);
+    } else if (type === 'division') {
+      handleSetOptions(setDivisionTargetsOptions, index, newValue, options);
     } else {
       handleSetOptions(setNumberOptions, index, newValue, options);
     }
@@ -178,8 +195,18 @@ export default function CommunitySettings({ data, token, refetch }) {
   }
 
   function handleMenuItemChange(event, index) {
-    setHasQuickLinksSettingChanged(true)
+    setHasQuickLinksSettingChanged(true);
     updateOptions(index, { [event.target.name]: event.target.value }, menuItemOptions, 'menu_link');
+  }
+
+  function handleDivisionTargetChange(event, index) {
+    setDivisionTargetChanged(true);
+    updateOptions(
+      index,
+      { [event.target.name]: event.target.value },
+      divisionTargetsOptions,
+      'division'
+    );
   }
 
   function handleSocialLinkChange(event, index) {
@@ -234,31 +261,60 @@ export default function CommunitySettings({ data, token, refetch }) {
     setMenuItemOptions([...values]);
   }
 
-  function handleDenyAccessButtonChange(e, moduleName){
-    const subFeatures = objectAccessor(communityFeatures, moduleName)?.features
-    if(!subFeatures) return;
+  function handleDivisionTargetRemoveRow(id) {
+    const values = divisionTargetsOptions;
+    if (values.length === 1) {
+      setDivisionTargetsOptions([leadMonthlyTargets]);
+      return;
+    }
 
-    if(e.target.checked) {
-      if(!subFeatures.includes(CommunityFeaturesWhiteList.denyGateAccessButton)) {
-        communityFeatures[String(moduleName)].features.push(CommunityFeaturesWhiteList.denyGateAccessButton)
-        setCommunityFeatures({ ...communityFeatures })
+    values.splice(id, 1);
+    setDivisionTargetsOptions([...values]);
+  }
+
+  function handleModuleFeatures(e, moduleName, feature) {
+    const subFeatures = objectAccessor(communityFeatures, moduleName)?.features;
+    if (!subFeatures) return;
+
+    if (e.target.checked) {
+      if (!subFeatures.includes(objectAccessor(CommunityFeaturesWhiteList, feature))) {
+        objectAccessor(communityFeatures, String(moduleName)).features.push(
+          objectAccessor(CommunityFeaturesWhiteList, feature)
+        );
+        setCommunityFeatures({ ...communityFeatures });
       }
-    } else if(subFeatures.includes(CommunityFeaturesWhiteList.denyGateAccessButton)) {
-        const updatedSubFeatures = objectAccessor(communityFeatures, moduleName).features.filter(v => v !== CommunityFeaturesWhiteList.denyGateAccessButton)
-        communityFeatures[String(moduleName)].features = updatedSubFeatures
-        setCommunityFeatures({ ...communityFeatures })
-      }
+    } else if (subFeatures.includes(objectAccessor(CommunityFeaturesWhiteList, feature))) {
+      const updatedSubFeatures = objectAccessor(communityFeatures, moduleName).features.filter(
+        v => v !== objectAccessor(CommunityFeaturesWhiteList, feature)
+      );
+      objectAccessor(communityFeatures, String(moduleName)).features = updatedSubFeatures;
+      setCommunityFeatures({ ...communityFeatures });
+    }
   }
 
   function onInputChange(file) {
-    setFileName(file.name);
     // convert image file to base64 string
     const reader = new FileReader();
 
     reader.addEventListener(
       'load',
       () => {
-        setInputImg(reader.result);
+        const image = new Image();
+        image.src = reader.result;
+        image.addEventListener(
+          'load',
+          // eslint-disable-next-line consistent-return
+          () => {
+            if (image.height > 160 || image.width > 600) {
+              showSnackbar({ type: messageType.error, message: t('community.upload_error') });
+              return false;
+            }
+            setLogoDimension([image.width, image.height]);
+            setImageSrc(reader.result);
+            uploadLogo(file);
+          },
+          false
+        );
       },
       false
     );
@@ -278,37 +334,36 @@ export default function CommunitySettings({ data, token, refetch }) {
   }
 
   function uploadLogo(img) {
-    onChange(img);
-    setShowCropper(false);
-    setMessage({ isError: false, detail: t('community.logo_updated') });
-    setAlertOpen(true);
-  }
-
-  function selectLogoOnchange(img) {
-    onInputChange(img);
-    setShowCropper(true);
+    onChange(img, false);
+    showSnackbar({ type: messageType.success, message: t('community.logo_updated') });
   }
 
   function setLanguageInLocalStorage(selectedLanguage) {
     localStorage.setItem('default-language', selectedLanguage);
   }
 
-  function handleTemplates(event){
-    setPaymentReminderTemplate(event.target.value);
-    setTemplateOptions({...templateOptions, payment_reminder_template_behind: event.target.value});
+  function handleTemplates(event) {
+    if (event.target.name === 'behindTemplate') {
+      setBehindTemplate(event.target.value);
+      setTemplateOptions({
+        ...templateOptions,
+        payment_reminder_template_behind: event.target.value
+      });
+    } else {
+      setUpcomingTemplate(event.target.value);
+      setTemplateOptions({
+        ...templateOptions,
+        payment_reminder_template_upcoming: event.target.value
+      });
+    }
   }
 
   function updateCommunity() {
     if (!validateThemeColor(themeColors)) {
-      setAlertOpen(true);
-      setMessage({
-        isError: true,
-        detail: t('common:errors.invalid_color_code')
-      });
+      showSnackbar({ type: messageType.error, message: t('common:errors.invalid_color_code') });
       return;
     }
     setCallMutation(true);
-
     communityUpdate({
       variables: {
         supportNumber: numberOptions,
@@ -316,8 +371,11 @@ export default function CommunitySettings({ data, token, refetch }) {
         supportWhatsapp: whatsappOptions,
         socialLinks: socialLinkOptions,
         menuItems: menuItemOptions,
+        leadMonthlyTargets: divisionTargetsOptions,
         imageBlobId: signedBlobId,
+        // eslint-disable-next-line max-lines
         templates: templateOptions,
+        gaId: analyticsId,
         currency,
         locale,
         language,
@@ -334,22 +392,21 @@ export default function CommunitySettings({ data, token, refetch }) {
       }
     })
       .then(() => {
-        setMessage({
-          isError: false,
-          detail: t('community.community_updated')
-        });
+        showSnackbar({ type: messageType.success, message: t('community.community_updated') });
         setLanguageInLocalStorage(language);
-        setAlertOpen(true);
         setCallMutation(false);
-        // only reload if the primary color has changed
-        if ((themeColors.primaryColor !== data.themeColors?.primaryColor) || (hasQuickLinksSettingChanged)) {
+        // reload if the primary color, quick links or division targets have changed
+        if (
+          themeColors.primaryColor !== data.themeColors?.primaryColor ||
+          hasQuickLinksSettingChanged ||
+          divisionTargetChanged
+        ) {
           window.location.reload();
         }
         refetch();
       })
       .catch(error => {
-        setMessage({ isError: true, detail: formatError(error.message) });
-        setAlertOpen(true);
+        showSnackbar({ type: messageType.error, message: formatError(error.message) });
         setCallMutation(false);
       });
   }
@@ -359,30 +416,35 @@ export default function CommunitySettings({ data, token, refetch }) {
     setWhatsappOptions(data.supportWhatsapp || [whatsapps]);
     setSocialLinkOptions(data.socialLinks || [socialLinks]);
     setMenuItemOptions(data.menuItems || [menuItems]);
+    setDivisionTargetsOptions(data.leadMonthlyTargets || [leadMonthlyTargets]);
     setTemplateOptions(data.templates || templateOptions);
     setCurrency(data.currency);
     setLocale(data.locale);
     setLanguage(data.language);
+    updateLogoDimension(data.imageUrl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
+  function updateLogoDimension(url) {
+    const img = new Image();
+    img.addEventListener('load', function() {
+      setLogoDimension([img.width, img.height]);
+    });
+    img.src = url;
+  }
+
   return (
-    <Container>
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={alertOpen}
-        handleClose={() => setAlertOpen(false)}
-      />
+    <PageWrapper oneCol pageTitle={t('community.community_settings')}>
       <Typography variant="h6">{t('community.community_logo')}</Typography>
       <Typography variant="caption">{t('community.change_community_logo')}</Typography>
       <div className={classes.avatar}>
-        <ImageAuth
-          imageLink={data.imageUrl}
-          token={token}
-          className="img-responsive img-thumbnail"
-          style={{ height: '70px', width: '70px' }}
-        />
+        <>
+          {imageSrc ? (
+            <img src={imageSrc} className={classes.preview} alt="community logo" />
+          ) : (
+            <ImageAuth imageLink={data.imageUrl} className={`${classes.preview} img-responsive`} />
+          )}
+        </>
         <div className={classes.upload}>
           <Typography variant="caption" style={{ fontWeight: 'bold', marginLeft: '10px' }}>
             {t('community.upload_logo')}
@@ -393,23 +455,14 @@ export default function CommunitySettings({ data, token, refetch }) {
               <input
                 type="file"
                 hidden
-                onChange={event => selectLogoOnchange(event.target.files[0])}
+                onChange={event => onInputChange(event.target.files[0])}
                 accept="image/*"
+                data-testid="logo-input"
               />
             </Button>
           </div>
         </div>
       </div>
-      <div style={{ position: 'relative' }}>
-        {showCropper && inputImg && (
-          <ImageCropper getBlob={getBlob} inputImg={inputImg} fileName={fileName} />
-        )}
-      </div>
-      {showCropper && blob && (
-        <Button variant="contained" style={{ margin: '10px' }} onClick={() => uploadLogo(blob)}>
-          Upload
-        </Button>
-      )}
       <div className={classes.information} style={{ marginTop: '40px' }}>
         <Typography variant="h6">{t('community.support_contact')}</Typography>
         <Typography variant="caption">{t('community.make_changes_support_contact')}</Typography>
@@ -531,7 +584,9 @@ export default function CommunitySettings({ data, token, refetch }) {
                   options={roleOptions}
                   type="chip"
                   handleOnChange={event => handleMenuItemChange(event, i)}
-                  selectedOptions={objectAccessor(objectAccessor(menuItemOptions, i), 'roles')}
+                  selectedOptions={
+                    objectAccessor(objectAccessor(menuItemOptions, i), 'roles') || []
+                  }
                 />
                 <span className={classes.menuItemRight}>
                   <MultiSelect
@@ -539,7 +594,9 @@ export default function CommunitySettings({ data, token, refetch }) {
                     fieldName="display_on"
                     options={quickLinksDisplayOptions}
                     handleOnChange={event => handleMenuItemChange(event, i)}
-                    selectedOptions={objectAccessor(objectAccessor(menuItemOptions, i), 'display_on')}
+                    selectedOptions={
+                      objectAccessor(objectAccessor(menuItemOptions, i), 'display_on') || []
+                    }
                   />
                 </span>
               </div>
@@ -549,6 +606,7 @@ export default function CommunitySettings({ data, token, refetch }) {
                 style={{ marginTop: 13 }}
                 onClick={() => handleMenuItemRemoveRow(i)}
                 aria-label="remove"
+                size="large"
               >
                 <DeleteOutline />
               </IconButton>
@@ -579,22 +637,24 @@ export default function CommunitySettings({ data, token, refetch }) {
         style={{ width: '100%' }}
         required
       />
-      <TextField
-        style={{ width: '300px' }}
-        label={t('community.set_sub_administrator')}
-        value={subAdministratorId}
-        onChange={event => setSubAdministrator(event.target.value)}
-        name="subAdministrator"
-        margin="normal"
-        inputProps={{ 'data-testid': 'subAdministrator' }}
-        select
-      >
-        {adminUsersData?.adminUsers?.map(admin => (
-          <MenuItem key={admin.id} value={admin.id}>
-            {admin.name}
-          </MenuItem>
-        ))}
-      </TextField>
+      {!!adminUsersData?.adminUsers?.length && (
+        <TextField
+          style={{ width: '300px' }}
+          label={t('community.set_sub_administrator')}
+          value={subAdministratorId}
+          onChange={event => setSubAdministrator(event.target.value)}
+          name="subAdministrator"
+          margin="normal"
+          inputProps={{ 'data-testid': 'subAdministrator' }}
+          select
+        >
+          {adminUsersData?.adminUsers?.map(admin => (
+            <MenuItem key={admin.id} value={admin.id}>
+              {admin.name}
+            </MenuItem>
+          ))}
+        </TextField>
+      )}
       <br />
       <br />
 
@@ -643,6 +703,14 @@ export default function CommunitySettings({ data, token, refetch }) {
           name="wp_link"
           margin="normal"
           inputProps={{ 'data-testid': 'wp_link' }}
+        />
+        <TextField
+          label={t('community.google_analytics_id')}
+          value={analyticsId}
+          onChange={event => setAnalyticsId(event.target.value)}
+          name="google_analytics_id"
+          margin="normal"
+          inputProps={{ 'data-testid': 'google_analytics_id' }}
         />
       </div>
 
@@ -789,16 +857,49 @@ export default function CommunitySettings({ data, token, refetch }) {
           <Typography>{t('community.hide_deny_gate_access_button')}</Typography>
         </Grid>
         <Grid item xs={12} sm={9}>
-          <FormControlLabel
-            control={(
-              <Checkbox
-                checked={objectAccessor(communityFeatures, 'LogBook')?.features.includes(CommunityFeaturesWhiteList.denyGateAccessButton)}
-                onChange={(e) => handleDenyAccessButtonChange(e, 'LogBook')}
-                name="disable-deny-gate-access"
-                data-testid="disable_deny_gate_access"
-                color="primary"
-              />
-          )}
+          <Checkbox
+            checked={objectAccessor(communityFeatures, String('LogBook'))?.features.includes(
+              CommunityFeaturesWhiteList.denyGateAccessButton
+            )}
+            onChange={e => handleModuleFeatures(e, 'LogBook', 'denyGateAccessButton')}
+            name="disable-deny-gate-access"
+            data-testid="disable_deny_gate_access"
+            color="primary"
+          />
+        </Grid>
+      </Grid>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={3} className={classes.checkBox}>
+          <Typography>{t('community.guest_verification')}</Typography>
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          <Checkbox
+            checked={objectAccessor(communityFeatures, String('LogBook'))?.features.includes(
+              CommunityFeaturesWhiteList.guestVerification
+            )}
+            onChange={e => handleModuleFeatures(e, 'LogBook', 'guestVerification')}
+            name="disable-deny-gate-access"
+            data-testid="guest_verification"
+            color="primary"
+          />
+        </Grid>
+      </Grid>
+      <br />
+
+      <Typography variant="h6">{t('community.tasks_settings')}</Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={3} className={classes.checkBox}>
+          <Typography>{t('community.enable_auomated_reminders')}</Typography>
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          <Checkbox
+            checked={objectAccessor(communityFeatures, String('Tasks'))?.features.includes(
+              CommunityFeaturesWhiteList.automatedTaskReminders
+            )}
+            onChange={e => handleModuleFeatures(e, 'Tasks', 'automatedTaskReminders')}
+            name="enable_automated_task_reminders"
+            data-testid="enable_automated_task_reminders"
+            color="primary"
           />
         </Grid>
       </Grid>
@@ -856,33 +957,125 @@ export default function CommunitySettings({ data, token, refetch }) {
             aria-label="behind"
             value={t('community.behind')}
             name="duration"
-            style={{ width: '200px'}}
+            style={{ width: '200px' }}
             InputProps={{
-              disableUnderline: true,
-              'data-testid': 'plan_status'
+              'data-testid': 'plan_status_behind'
             }}
             disabled
           />
+          {!!emailTemplatesData?.emailTemplates?.length && (
+            <TextField
+              margin="normal"
+              id="payment-reminder-behind"
+              aria-label="payment reminder behind"
+              label={t('community.select_template')}
+              value={behindTemplate}
+              onChange={handleTemplates}
+              name="behindTemplate"
+              data-testid='payment_reminder_template_behind'
+              style={{ width: '200px', marginLeft: '40px' }}
+              select
+            >
+              {emailTemplatesData?.emailTemplates?.map(template => (
+                <MenuItem key={template.id} value={template?.id}>
+                  {template?.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'row', margin: '10px 0' }}>
           <TextField
             margin="normal"
-            id="payment-reminder"
-            aria-label="payment reminder"
-            label={t('community.select_template')}
-            value={paymentReminderTemplate}
-            onChange={handleTemplates}
-            name="template"
-            inputProps={{
-                'data-testid': 'payment_reminder_template'
+            id="upcoming"
+            label={t('community.status')}
+            aria-label="upcoming"
+            value={t('community.upcoming')}
+            name="duration"
+            style={{ width: '200px' }}
+            InputProps={{
+              'data-testid': 'plan_status_upcoming'
             }}
-            style={{ width: '200px', marginLeft: '40px' }}
-            select
-          >
-            {emailTemplatesData?.emailTemplates?.map((template) => (
-              <MenuItem key={template.id} value={template?.id}>
-                {template?.name}
-              </MenuItem>
-            ))}
-          </TextField>
+            disabled
+          />
+          {!!emailTemplatesData?.emailTemplates?.length && (
+            <TextField
+              margin="normal"
+              id="payment-reminder-upcoming"
+              aria-label="payment reminder upcoming"
+              label={t('community.select_template')}
+              value={upcomingTemplate}
+              onChange={handleTemplates}
+              name="upcomingTemplate"
+              data-testid='payment_reminder_template_upcoming'
+              style={{ width: '200px', marginLeft: '40px' }}
+              select
+            >
+              {emailTemplatesData?.emailTemplates?.map(template => (
+                <MenuItem key={template.id} value={template?.id}>
+                  {template?.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+        </div>
+      </div>
+      {/* Division targets */}
+      <div className={classes.information} style={{ marginTop: '40px' }}>
+        <Typography variant="h6">{t('community.lead_management')}</Typography>
+        <Typography variant="subtitle1">{t('community.subtitle')}</Typography>
+        <Typography variant="caption">{t('community.division_description')}</Typography>
+        <Typography variant="caption">{t('community.minimum_divisions')}</Typography>
+        {divisionTargetsOptions.map((_menu, i) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div style={{ display: 'flex', flexDirection: 'row', margin: '10px 0' }} key={i}>
+            <div>
+              <div style={{ display: 'flex', flexDirection: 'row', margin: '10px 0' }}>
+                <TextField
+                  id={`${i}-division-input`}
+                  style={{ width: '300px' }}
+                  label={t('common:form_fields.division')}
+                  onChange={event => handleDivisionTargetChange(event, i)}
+                  value={objectAccessor(objectAccessor(divisionTargetsOptions, i), 'division')}
+                  name="division"
+                  data-testid="division-input"
+                />
+                <TextField
+                  id={`${i}-target-input`}
+                  style={{ width: '200px' }}
+                  className={classes.menuItemRight}
+                  label={t('common:form_fields.target')}
+                  onChange={event => handleDivisionTargetChange(event, i)}
+                  value={objectAccessor(objectAccessor(divisionTargetsOptions, i), 'target')}
+                  name="target"
+                  data-testid="target-input"
+                />
+              </div>
+            </div>
+            <div style={{ paddingTop: '20px' }}>
+              <IconButton
+                style={{ marginTop: -5 }}
+                onClick={() => handleDivisionTargetRemoveRow(i)}
+                aria-label="remove-division-target"
+                size="large"
+              >
+                <DeleteOutline />
+              </IconButton>
+            </div>
+          </div>
+        ))}
+        <div
+          className={classes.addIcon}
+          role="button"
+          onClick={handleAddDivisionTargetsOptions}
+          data-testid="division_target_click"
+        >
+          <AddCircleOutlineIcon />
+          <div style={{ marginLeft: '10px', color: 'secondary' }}>
+            <Typography align="center" variant="caption">
+              {t('common:form_fields.add_division')}
+            </Typography>
+          </div>
         </div>
       </div>
 
@@ -898,7 +1091,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           {mutationLoading ? <Spinner /> : t('community.update_community')}
         </Button>
       </div>
-    </Container>
+    </PageWrapper>
   );
 }
 
@@ -910,8 +1103,10 @@ CommunitySettings.propTypes = {
     supportWhatsapp: PropTypes.arrayOf(PropTypes.object),
     socialLinks: PropTypes.arrayOf(PropTypes.object),
     menuItems: PropTypes.arrayOf(PropTypes.object),
+    leadMonthlyTargets: PropTypes.arrayOf(PropTypes.object),
     templates: PropTypes.shape({
-      payment_reminder_template_behind: PropTypes.string
+      payment_reminder_template_behind: PropTypes.string,
+      payment_reminder_template_upcoming: PropTypes.string
     }),
     imageUrl: PropTypes.string,
     currency: PropTypes.string,
@@ -919,6 +1114,7 @@ CommunitySettings.propTypes = {
     language: PropTypes.string,
     tagline: PropTypes.string,
     wpLink: PropTypes.string,
+    gaId: PropTypes.string,
     securityManager: PropTypes.string,
     subAdministrator: PropTypes.shape({
       id: PropTypes.string,
@@ -945,7 +1141,6 @@ CommunitySettings.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     features: PropTypes.object
   }).isRequired,
-  token: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired
 };
 
@@ -980,5 +1175,11 @@ const useStyles = makeStyles(theme => ({
   },
   menuItemRight: {
     marginLeft: '2.5em'
+  },
+  preview: {
+    marginTop: '10px',
+    padding: '0.25rem',
+    height: ({ heightValue }) => `${heightValue + 6}px`,
+    width: ({ widthValue }) => `${widthValue + 7}px`
   }
 }));

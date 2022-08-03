@@ -6,17 +6,16 @@ module Mutations
     class NoteCommentUpdate < BaseMutation
       argument :id, ID, required: true
       argument :body, String, required: true
+      argument :tagged_documents, [ID, { null: true }], required: false
 
       field :note_comment, Types::NoteCommentType, null: true
 
-      def resolve(id:, body:)
-        comment = Comments::NoteComment.find(id)
-        raise_comment_not_found_error(comment)
-
+      def resolve(id:, body:, tagged_documents:)
+        comment = Comments::NoteComment.find_by(id: id)
         return { note_comment: comment } if comment.body.eql?(body)
 
         updates_hash = { body: [comment.body, body] }
-        if comment.update(body: body)
+        if comment.update(body: body, tagged_documents: tagged_documents)
           comment.record_note_history(context[:current_user], updates_hash)
           return { note_comment: comment }
         end
@@ -25,13 +24,11 @@ module Mutations
       end
 
       # Verifies if current user is present or not.
-      def authorized?(_vals)
-        return true if context[:current_user]&.site_manager? ||
-                       ::Policy::Note::NotePolicy.new(
-                         context[:current_user], nil
-                       ).permission?(
-                         :can_update_note_comment,
-                       )
+      def authorized?(vals)
+        comment = Comments::NoteComment.find_by(id: vals[:id])
+        raise_comment_not_found_error(comment)
+        return true if permitted?(module: :note, permission: :can_update_note_comment) ||
+                       comment.user_id.eql?(context[:current_user]&.id)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

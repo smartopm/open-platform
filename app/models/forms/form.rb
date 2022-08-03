@@ -7,6 +7,9 @@ module Forms
 
     belongs_to :community
 
+    # rubocop:disable Rails/HasManyOrHasOneDependent
+    has_one :process, class_name: 'Processes::Process'
+    # rubocop:enable Rails/HasManyOrHasOneDependent
     has_many :form_properties, dependent: :destroy
     has_many :form_users, dependent: :destroy
     has_many :categories, dependent: :destroy
@@ -50,7 +53,30 @@ module Forms
     end
 
     def report_an_issue?
-      ['Report an Issue', 'Informar de un problema'].include?(name)
+      name.match?(/^Report an Issue/i) || name.match?(/^Informar de un problema/i)
+    end
+
+    # TODO: handle versioning and slowly replace this method
+    def drc_form?
+      form_name = 'DRC Project Review Process'
+      return false unless name.match?(/^#{form_name}/i)
+
+      first_version = community.forms.find_by(name: form_name)
+
+      return false if first_version.blank?
+
+      latest_version = community.forms.where('name ILIKE ?', "#{form_name}%")
+                                .order(version_number: :desc).first
+
+      first_version.id == latest_version.grouping_id
+    end
+
+    def associated_process?
+      process.present? && process&.note_list.present?
+    end
+
+    def process_type
+      process&.process_type
     end
 
     private

@@ -1,13 +1,14 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button, Grid } from '@material-ui/core';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import WhatsAppIcon from '@material-ui/icons/WhatsApp';
-import PhoneIcon from '@material-ui/icons/Phone';
+import makeStyles from '@mui/styles/makeStyles';
+import { Typography, Button, Grid } from '@mui/material';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import PhoneIcon from '@mui/icons-material/Phone';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { objectAccessor } from '../../../utils/helpers';
+import PageWrapper from '../../../shared/PageWrapper';
 
 const icons = {
   mail: <MailOutlineIcon />,
@@ -24,7 +25,9 @@ export function SupportContact({ classes, support }) {
   const number = support.contact.replace(/\s/g, '');
   const whatsappLink = `https://api.whatsapp.com/send?phone=${number}`;
   const link = `${
-    support.type === 'whatsapp' ? whatsappLink : `${objectAccessor(linkType, support.type)}:${number}`
+    support.type === 'whatsapp'
+      ? whatsappLink
+      : `${objectAccessor(linkType, support.type)}:${number}`
   }`;
 
   return (
@@ -44,7 +47,7 @@ export default function SupportCard({ handleSendMessage, user }) {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
   const history = useHistory();
-  const { t } = useTranslation('support_contact');
+  const { t } = useTranslation(['support_contact', 'common']);
 
   function supports() {
     let result = handlePopulateSupports([], [], 'supportNumber', 'phone');
@@ -86,17 +89,17 @@ export default function SupportCard({ handleSendMessage, user }) {
   }
 
   return (
-    <>
-      <div className="justify-content-center align-items-center container">
+    <PageWrapper pageTitle={t('common:right_menu.contact_info')}>
+      <div>
         <Typography paragraph variant="body1" color="textSecondary" data-testid="new">
-          {`${user?.community?.name} ${t('partnership.about_app_partnership')} ${t('partnership.about_app_gate_access')} ${
+          {`${user?.community?.name} ${t('partnership.about_app_partnership')} ${t(
+            'partnership.about_app_gate_access'
+          )} ${
             user?.community?.name === 'Nkwashi'
               ? t('partnership.registration_kiosk')
               : t('partnership.incident_management')
           }  ${t('partnership.about_app_support_desk')}${
-            user?.community?.name === 'Nkwashi'
-              ? ''
-              : t('partnership.adding_more_features')
+            user?.community?.name === 'Nkwashi' ? '' : t('partnership.adding_more_features')
           }.`}
         </Typography>
 
@@ -104,7 +107,7 @@ export default function SupportCard({ handleSendMessage, user }) {
           {t('partnership.feedback_and_contact')}
         </Typography>
       </div>
-      <div className="justify-content-center align-items-center container">
+      <div>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <Typography variant="h6" align="center" gutterBottom color="textSecondary">
@@ -137,18 +140,20 @@ export default function SupportCard({ handleSendMessage, user }) {
           </Grid>
         </Grid>
 
-        <Grid container direction="row" className={classes.root}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSendMessage}
-            className={classes.chatButton}
-          >
-            {t('buttons.support_chat')}
-          </Button>
-        </Grid>
+        {user?.community?.name !== 'Tilisi' && (
+          <Grid container direction="row" className={classes.root}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSendMessage}
+              className={classes.chatButton}
+            >
+              {t('buttons.support_chat')}
+            </Button>
+          </Grid>
+        )}
 
-        {user.community && user.community.name && user.community.name !== 'Ciudad Morazán' && (
+        {user.community && user.community.name && user.community.name === 'Nkwashi' && (
           <Grid container direction="row" className={classes.root}>
             <Button
               data-testid="pwmm"
@@ -194,9 +199,10 @@ export default function SupportCard({ handleSendMessage, user }) {
             color="primary"
             onClick={() =>
               window.open(
-                'https://docs.google.com/document/d/1u740OKrB8jpK5pMZt-dVS3Xh4iMc9paAAVhZNldi3CQ/edit?ts=5fdd2107',
+                'https://handbook.doublegdp.com/product/05-platform-policies/#terms-of-use',
                 '_blank'
-              )}
+              )
+            }
             style={{ fontSize: 14 }}
             className={classes.chatButton}
           >
@@ -204,7 +210,7 @@ export default function SupportCard({ handleSendMessage, user }) {
           </Button>
         </Grid>
       </div>
-    </>
+    </PageWrapper>
   );
 }
 
@@ -213,7 +219,8 @@ SupportContact.propTypes = {
     contact: PropTypes.string,
     type: PropTypes.string
   }).isRequired,
-  classes: PropTypes.objectOf(PropTypes.object).isRequired
+  // eslint-disable-next-line react/forbid-prop-types
+  classes: PropTypes.object.isRequired
 };
 SupportCard.propTypes = {
   user: PropTypes.shape({

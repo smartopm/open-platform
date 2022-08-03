@@ -3,12 +3,13 @@ import React, { useState, useContext } from 'react';
 import { useMutation } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
-import { Button, Grid } from '@material-ui/core';
+import { Button, Grid } from '@mui/material';
 import { ImportCreate } from '../../../graphql/mutations';
 import CenteredContent from '../../../components/CenteredContent';
 import Loading from '../../../shared/Loading';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import MessageAlert from '../../../components/MessageAlert';
+import PageWrapper from '../../../shared/PageWrapper'
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate);
@@ -18,37 +19,29 @@ export default function UsersImport() {
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const { token } = useContext(Context);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   function createImport() {
     setIsLoading(true);
     importCreate({
-      variables: { csvString, csvFileName }
+      variables: { csvString, csvFileName, importType: 'user' }
     })
       .then(() => {
         setIsLoading(false);
-        setMessageAlert(
-          "Your import is currently being processed. You'll receive a mail when it's done."
-        );
-        setIsSuccessAlert(true);
+        showSnackbar({
+          type: messageType.success,
+          message: "Your import is currently being processed. You'll receive a mail when it's done."
+        });
       })
       .catch(err => {
         setIsLoading(false);
-        setMessageAlert(err.message);
-        setIsSuccessAlert(false);
+        showSnackbar({type: messageType.error, message: err.message });
       });
   }
 
   function onCancel() {
     return history.push('/users');
-  }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
   }
 
   function processCsv(evt) {
@@ -71,13 +64,7 @@ export default function UsersImport() {
   const hasErrors = errorMessage;
 
   return (
-    <>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
+    <PageWrapper>
       <Grid container style={{ margin: '5px auto', width: '95%' }}>
         <Grid item md={6}>
           You can upload a .csv file with users. The following are the expected fields with
@@ -95,57 +82,56 @@ export default function UsersImport() {
             <li> Notes on client: i.e Here&apos;s a new note </li>
           </ol>
           You can click
-          {' '}
-          <a href={`/csv_import_sample/download?token=${token}`}>here</a>
-          {' '}
-          to download
-          a sample csv file.
+          {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
+          <a href={`/csv_import_sample/download?token=${token}`}>here</a> to download a sample csv
+          file.
         </Grid>
         <Grid item md={6} style={{ margin: '5px auto' }}>
           {isLoading ? (
             <Loading />
-          ) : (
-            <div>
-              <Grid container justify="center" style={{ marginTop: '200px' }}>
-                <input
-                  accept=".csv"
-                  className={css(styles.inputField)}
-                  id="contained-button-file"
-                  data-testid="csv-input"
-                  type="file"
-                  onChange={processCsv}
-                />
-              </Grid>
-              <br />
-              {csvString.length > 0 && !hasErrors && (
-                <CenteredContent>
-                  <Button
-                    variant="contained"
-                    aria-label="business_cancel"
-                    color="secondary"
-                    className={css(styles.cancelBtn)}
-                    onClick={onCancel}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    aria-label="business_submit"
-                    color="primary"
-                    onClick={createImport}
-                    className={css(styles.importBtn)}
-                  >
-                    Import
-                  </Button>
-                </CenteredContent>
-              )}
-            </div>
-          )}
+        ) : (
+          <div>
+            <Grid container justifyContent="center" style={{ marginTop: '200px' }}>
+              <input
+                accept=".csv"
+                className={css(styles.inputField)}
+                id="contained-button-file"
+                data-testid="csv-input"
+                type="file"
+                onChange={processCsv}
+              />
+            </Grid>
+            <br />
+            {csvString.length > 0 && !hasErrors && (
+              <CenteredContent>
+                <Button
+                  variant="contained"
+                  aria-label="business_cancel"
+                  color="secondary"
+                  className={css(styles.cancelBtn)}
+                  onClick={onCancel}
+                  data-testid="cancel-btn"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  aria-label="business_submit"
+                  color="primary"
+                  onClick={createImport}
+                  className={css(styles.importBtn)}
+                >
+                  Import
+                </Button>
+              </CenteredContent>
+            )}
+          </div>
+        )}
         </Grid>
       </Grid>
-    </>
-  );
+    </PageWrapper>
+);
 }
 
 const styles = StyleSheet.create({

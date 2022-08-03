@@ -29,7 +29,11 @@ module Logs
         { key: '%message%', value: message },
         { key: '%app_url%', value: "#{HostEnv.base_url(community)}/" },
       ]
-      EmailMsg.send_mail_from_db(user.email, template, template_data)
+      EmailMsg.send_mail_from_db(
+        email: user.email,
+        template: template,
+        template_data: template_data,
+      )
     end
     # rubocop:enable Metrics/MethodLength
 

@@ -6,10 +6,12 @@ import { UserFragment } from '../fragments';
 export const UpdateUserMutation = gql`
   mutation UpdateUserMutation(
     $id: ID!
-    $name: String
+    $name: String!
     $email: String
+    $linkedinUrl: String
+    $title: String
     $phoneNumber: String
-    $userType: String!
+    $userType: String
     $requestReason: String
     $vehicle: String
     $state: String
@@ -20,11 +22,50 @@ export const UpdateUserMutation = gql`
     $address: String
     $secondaryInfo: [JSON!]
     $extRefId: String
+    $followupAt: String
+    $lastContactDate: String
+    $firstContactDate: String
+    $createdBy: String
+    $modifiedBy: String
+    $nextSteps: String
+    $leadOwner: String
+    $leadType: String
+    $clientCategory: String
+    $companyContacted: String
+    $leadStatus: String
+    $leadSource: String
+    $leadTemperature: String
+    $levelOfInternationalization: String
+    $companyAnnualRevenue: String
+    $companyEmployees: String
+    $industryBusinessActivity: String
+    $industrySubSector: String
+    $industry: String
+    $relevantLink: String
+    $companyWebsite: String
+    $companyLinkedin: String
+    $companyDescription: String
+    $country: String
+    $region: String
+    $division: String
+    $companyName: String
+    $contactDetails: JSON
+    $africanPresence: String
+    $capexAmount: String
+    $kickOffDate: String
+    $jobsCreated: String
+    $jobsTimeline: String
+    $investmentSize: String
+    $investmentTimeline: String
+    $decisionTimeline: String
+    $status: String
   ) {
     result: userUpdate(
       id: $id
       name: $name
       email: $email
+      linkedinUrl: $linkedinUrl
+      title: $title
       phoneNumber: $phoneNumber
       userType: $userType
       requestReason: $requestReason
@@ -37,6 +78,43 @@ export const UpdateUserMutation = gql`
       address: $address
       secondaryInfo: $secondaryInfo
       extRefId: $extRefId
+      followupAt: $followupAt
+      lastContactDate: $lastContactDate
+      firstContactDate: $firstContactDate
+      createdBy: $createdBy
+      modifiedBy: $modifiedBy
+      nextSteps: $nextSteps
+      leadOwner: $leadOwner
+      leadType: $leadType
+      clientCategory: $clientCategory
+      companyContacted: $companyContacted
+      leadSource: $leadSource
+      leadStatus: $leadStatus
+      leadTemperature: $leadTemperature
+      levelOfInternationalization: $levelOfInternationalization
+      companyAnnualRevenue: $companyAnnualRevenue
+      companyEmployees: $companyEmployees
+      industryBusinessActivity: $industryBusinessActivity
+      industry: $industry
+      industrySubSector: $industrySubSector
+      relevantLink: $relevantLink
+      companyWebsite: $companyWebsite
+      companyLinkedin: $companyLinkedin
+      companyDescription: $companyDescription
+      country: $country
+      region: $region
+      division: $division
+      companyName: $companyName
+      contactDetails: $contactDetails
+      africanPresence: $africanPresence
+      capexAmount: $capexAmount
+      kickOffDate: $kickOffDate
+      jobsCreated: $jobsCreated
+      jobsTimeline: $jobsTimeline
+      investmentSize: $investmentSize
+      investmentTimeline: $investmentTimeline
+      decisionTimeline: $decisionTimeline
+      status: $status
     ) {
       user {
         ...UserFields
@@ -44,4 +122,4 @@ export const UpdateUserMutation = gql`
     }
   }
   ${UserFragment.publicFields}
-`
+`;

@@ -4,28 +4,29 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Payment do
   describe 'Payment queries' do
-    let!(:user) { create(:user_with_community, user_type: 'admin') }
-    let!(:another_user) { create(:user_with_community) }
-    let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
+    let!(:user) { create(:admin_user) }
+    let!(:community) { user.community }
+    let!(:another_user) { create(:user, community: community) }
+    let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0)
     end
     let!(:invoice_one) do
-      create(:invoice, community_id: user.community_id, land_parcel: land_parcel,
+      create(:invoice, community_id: community.id, land_parcel: land_parcel,
                        payment_plan: payment_plan, user_id: user.id, status: 'in_progress',
                        created_by: user)
     end
     let!(:payment_one) do
       user.payments.create(amount: 100, payment_type: 'cash',
                            invoice_id: invoice_one.id,
-                           community_id: user.community_id)
+                           community_id: community.id)
     end
 
     let!(:payment_two) do
       user.payments.create(amount: 200, payment_type: 'cash',
                            invoice_id: invoice_one.id,
-                           community_id: user.community_id)
+                           community_id: community.id)
     end
 
     let!(:wallet_transaction) do
@@ -80,7 +81,7 @@ RSpec.describe Types::Queries::Payment do
     it 'should retrieve list of payments' do
       result = DoubleGdpSchema.execute(payments_query, context: {
                                          current_user: user,
-                                         site_community: user.community,
+                                         site_community: community,
                                        }).as_json
       expect(result.dig('errors', 0, 'message')).to be_nil
       expect(result.dig('data', 'payments').length).to eql 2
@@ -90,7 +91,7 @@ RSpec.describe Types::Queries::Payment do
     it 'should not retrieve list of payments if user is not admin' do
       result = DoubleGdpSchema.execute(payments_query, context: {
                                          current_user: another_user,
-                                         site_community: another_user.community,
+                                         site_community: community,
                                        }).as_json
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
@@ -98,7 +99,7 @@ RSpec.describe Types::Queries::Payment do
     it 'should retrieve payment by id' do
       result = DoubleGdpSchema.execute(payment_query, context: {
                                          current_user: user,
-                                         site_community: user.community,
+                                         site_community: community,
                                        }).as_json
       expect(result.dig('data', 'payment', 'id')).to eql payment_one.id
       expect(result.dig('data', 'payment', 'amount')).to eql 100.0
@@ -108,7 +109,7 @@ RSpec.describe Types::Queries::Payment do
     it 'should raise unauthorized error if current-user is nil' do
       result = DoubleGdpSchema.execute(payment_query, context: {
                                          current_user: nil,
-                                         site_community: user.community,
+                                         site_community: community,
                                        }).as_json
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
@@ -116,7 +117,7 @@ RSpec.describe Types::Queries::Payment do
     it 'should raise unauthorized error if current-user is not an admin' do
       result = DoubleGdpSchema.execute(payment_query, context: {
                                          current_user: another_user,
-                                         site_community: user.community,
+                                         site_community: community,
                                        }).as_json
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
@@ -126,7 +127,7 @@ RSpec.describe Types::Queries::Payment do
                                        variables: { userId: user.id },
                                        context: {
                                          current_user: user,
-                                         site_community: user.community,
+                                         site_community: community,
                                        }).as_json
       expect(result.dig('data', 'userPayments')).to be_empty
       expect(result.dig('errors', 0, 'message')).to be_nil
@@ -137,7 +138,7 @@ RSpec.describe Types::Queries::Payment do
                                        variables: { userId: user.id },
                                        context: {
                                          current_user: nil,
-                                         site_community: user.community,
+                                         site_community: community,
                                        }).as_json
 
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
@@ -148,7 +149,7 @@ RSpec.describe Types::Queries::Payment do
                                        variables: { userId: user.id },
                                        context: {
                                          current_user: another_user,
-                                         site_community: user.community,
+                                         site_community: community,
                                        }).as_json
 
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
@@ -167,7 +168,7 @@ RSpec.describe Types::Queries::Payment do
                                            variables: { txnId: wallet_transaction.id },
                                            context: {
                                              current_user: another_user,
-                                             site_community: user.community,
+                                             site_community: community,
                                            }).as_json
           expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
         end
@@ -180,7 +181,7 @@ RSpec.describe Types::Queries::Payment do
                                              variables: { txnId: wallet_transaction.id },
                                              context: {
                                                current_user: user,
-                                               site_community: user.community,
+                                               site_community: community,
                                              }).as_json
             expect(result.dig('data', 'paymentsByTxnId', 0, 'id')).to eql payment_one.id
             expect(result.dig('data', 'paymentsByTxnId', 0, 'amount')).to eql 100.0
@@ -194,7 +195,7 @@ RSpec.describe Types::Queries::Payment do
                                              variables: { txnId: 'abcd' },
                                              context: {
                                                current_user: user,
-                                               site_community: user.community,
+                                               site_community: community,
                                              }).as_json
             expect(result.dig('data', 'paymentsByTxnId')).to be_empty
             expect(result.dig('errors', 0, 'message')).to be_nil

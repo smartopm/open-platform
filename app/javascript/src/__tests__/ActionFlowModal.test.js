@@ -6,7 +6,7 @@ import ActionFlowModal from '../containers/ActionFlows/ActionFlowModal';
 import { Events, Actions, ActionFields, RuleFields , UsersLiteQuery } from '../graphql/queries';
 import { EmailTemplatesQuery } from '../modules/Emails/graphql/email_queries';
 
-import '@testing-library/jest-dom/extend-expect';
+
 import MockedThemeProvider from '../modules/__mocks__/mock_theme';
 import { Context } from '../containers/Provider/AuthStateProvider';
 import userMock from '../__mocks__/userMock';
@@ -174,9 +174,13 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
         data: {
           emailTemplates: [
             {
-              id: '1234',
+              id: '02932',
               name: 'My Template',
-              variableNames: ['url']
+              variableNames: ['url'],
+              createdAt: "2021-01-01",
+              subject: null,
+              data: null,
+              tag: null
             }
           ]
         }
@@ -200,8 +204,9 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
   ];
 
   it('should display element to customize action flow', async () => {
+    let container;
     await act(async () => {
-      render(
+      container = render(
         <Context.Provider value={userMock}>
           <MockedProvider mocks={mocks} addTypename={false}>
             <MockedThemeProvider>
@@ -211,6 +216,12 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
         </Context.Provider>
       );
     });
+
+    expect(container.queryByTestId('select-event-type')).toBeInTheDocument();
+    expect(container.queryByTestId('select-event-type').textContent).toContain('On Task Update')
+    expect(container.queryByTestId('select-action-type')).toBeInTheDocument();
+    expect(container.queryByTestId('select-action-type').textContent).toContain('Send Notification')
+    expect(container.queryByTestId('select-label-action-field')).toBeInTheDocument();
   });
 
   it('should render email templates options', async () => {

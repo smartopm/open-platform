@@ -1,11 +1,12 @@
 import React from 'react';
 import EmailEditor from 'react-email-editor';
-import { fireEvent, render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import EmailBuilderDialog from '../components/EmailBuilderDialog';
 import EmailTemplatesMutation, { EmailUpdateMutation } from '../graphql/email_mutations';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 // this does not help much
 jest.mock('react-email-editor')
@@ -56,11 +57,13 @@ describe('Email Builder Component', () => {
       }
     };
 
-  it('should render properly', () => {
+  it('should render properly', async () => {
     const container = render(
       <MockedProvider mocks={[updateRequestMock, createRequestMock]}>
         <BrowserRouter>
-          <EmailBuilderDialog  />
+          <MockedSnackbarProvider>
+            <EmailBuilderDialog  />
+          </MockedSnackbarProvider>
         </BrowserRouter>
       </MockedProvider>
     );
@@ -70,8 +73,11 @@ describe('Email Builder Component', () => {
 
     fireEvent.click(container.queryByTestId('submit_btn'));
 
-    expect(container.queryByTestId('close_btn')).toBeInTheDocument()
-    expect(container.queryByTestId('fullscreen_dialog')).toBeInTheDocument()
-    fireEvent.click(container.queryByTestId('close_btn'))
+    await waitFor(() => {
+      expect(container.queryByTestId('close_btn')).toBeInTheDocument()
+      expect(container.queryByTestId('fullscreen_dialog')).toBeInTheDocument()
+      fireEvent.click(container.queryByTestId('close_btn'))
+    }, 20)
+
   });
 });

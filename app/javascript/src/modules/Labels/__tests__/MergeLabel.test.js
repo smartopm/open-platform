@@ -1,32 +1,19 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import MergeLabel from '../Components/MergeLabel'
-import '@testing-library/jest-dom/extend-expect'
+
 
 describe('Merge Label Component', () => {
-  const handleClose = jest.fn
+  const handleClose = jest.fn()
+  const refetch = jest.fn()
   const open = true
   const mergeData = {
     id: 'jwhekw'
   }
 
-  it('render without error', () => {
-    render(
-      <MockedProvider>
-        <BrowserRouter>
-          <MergeLabel
-            mergeData={mergeData}
-            open={open}
-            handleClose={handleClose}
-          />
-        </BrowserRouter>
-      </MockedProvider>
-    )
-  })
-
-  it('test if modal is rendered', () => {
+  it('test if modal is rendered', async () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -34,12 +21,15 @@ describe('Merge Label Component', () => {
             mergeData={mergeData}
             open={open}
             handleClose={handleClose}
+            refetch={refetch}
           />
         </BrowserRouter>
       </MockedProvider>
     )
 
-    expect(container.queryByText('label.merge_dialog_title')).toBeInTheDocument()
-    expect(container.queryByText('label.merge_text')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(container.queryByText('label.merge_dialog_title')).toBeInTheDocument()
+      expect(container.queryByText('label.merge_text')).toBeInTheDocument()
+    })
   })
 })

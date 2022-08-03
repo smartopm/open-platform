@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { MenuItem, TextField, Switch } from '@material-ui/core';
+import { MenuItem, TextField, Switch } from '@mui/material';
 import { CustomizedDialogs } from '../../../components/Dialog';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { subscriptionPlanType } from '../../../utils/constants';
@@ -22,8 +22,8 @@ export default function SubscriptionPlanModal({
   open,
   handleModalClose,
   subscriptionPlansRefetch,
-  setMessage,
-  openAlertMessage,
+  showSnackbar,
+  messageType,
   subscriptionData
 }) {
   const { t } = useTranslation(['payment', 'common']);
@@ -94,14 +94,12 @@ export default function SubscriptionPlanModal({
       .then(() => {
         handleModalClose();
         subscriptionPlansRefetch();
-        setMessage({ isError: false, detail: t('misc.subscription_plan_updated') });
-        openAlertMessage();
+        showSnackbar({ type: messageType.success, message: t('misc.subscription_plan_updated') });
         setInputValues(initialPlanState);
         setMutationloading(false);
       })
       .catch(err => {
-        setMessage({ isError: true, detail: formatError(err.message) });
-        openAlertMessage();
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setMutationloading(false);
       });
   }
@@ -120,14 +118,12 @@ export default function SubscriptionPlanModal({
       .then(() => {
         handleModalClose();
         subscriptionPlansRefetch();
-        setMessage({ isError: false, detail: t('misc.subscription_plan_created') });
-        openAlertMessage();
+        showSnackbar({ type: messageType.success, message: t('misc.subscription_plan_created') });
         setInputValues(initialPlanState);
         setMutationloading(false);
       })
       .catch(err => {
-        setMessage({ isError: true, detail: formatError(err.message) });
-        openAlertMessage();
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
         setMutationloading(false);
       });
   }
@@ -180,12 +176,14 @@ export default function SubscriptionPlanModal({
           }
           label={t('common:table_headers.start_date')}
           required
+          t={t}
         />
         <DatePickerDialog
           selectedDate={inputValue.endDate}
           handleDateChange={date => handleInputChange({ target: { name: 'endDate', value: date } })}
           label={t('table_headers.end_date')}
           required
+          t={t}
         />
         <TextField
           id="amount"
@@ -236,8 +234,11 @@ SubscriptionPlanModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   subscriptionPlansRefetch: PropTypes.func.isRequired,
-  setMessage: PropTypes.func.isRequired,
-  openAlertMessage: PropTypes.func.isRequired,
+  showSnackbar: PropTypes.func.isRequired,
+  messageType: PropTypes.shape({
+    success: PropTypes.string,
+    error: PropTypes.string,
+  }).isRequired,
   subscriptionData: PropTypes.shape({
     id: PropTypes.string,
     status: PropTypes.string,

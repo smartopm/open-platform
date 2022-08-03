@@ -10,14 +10,20 @@
     "log_entry": "Manual",
     "scan": "Scan",
     "view_customer_journey": "View Customer Journey",
+    "start_post": "Start a Post",
     "your_customer_journey": "Your Customer Journey",
     "need_help_to_next_journey": "I need help in moving to the next stage",
     "make_new_payment": "Record New Payment",
+    "whats_happening": "What's happening nearby?",
+    "add_photo": "Add a Photo",
+    "created_post": "Post successfully created",
+    "who_can_see_post": "Who can see this post?",
+    "updated_post": "Post successfully updated",
     "payment": {
-      "today": "Total amount in payment today",
-      "oneWeek": "Total amount in payment this week",
-      "oneMonth": "Total amount in payment this month",
-      "overOneMonth": "Total amount in payment this year"
+      "today": "Total amount paid today",
+      "oneWeek": "Total amount paid in the past 7 days",
+      "oneMonth": "Total amount paid in the past 30 days",
+      "overOneMonth": "Total amount paid in this year"
     },
     "invoice": {
       "today": "Total invoices due today",
@@ -40,6 +46,10 @@
     "plot_plural": "Plots",
     "quick_links": "Quick Links",
     "no_plots_available": "No Plot Available",
-    "plots_appear_here": "Your plots will appear here"
+    "plots_appear_here": "Your plots will appear here",
+    "see_more_reminders": "See More Reminders",
+    "edit_post": "Edit Post",
+    "my_qr_code": "My QR Code",
+    "dashboard": "Dashboard"
   }
 }

@@ -4,8 +4,23 @@ require 'rails_helper'
 
 RSpec.describe Mutations::ActivityLog::UpdateLog do
   describe 'update activity log' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'activity_log',
+                          role: admin_role,
+                          permissions: %w[
+                            can_update_activity_log
+                          ])
+    end
+    let!(:user) do
+      create(:user_with_community, user_type: 'resident',
+                                   role: resident_role)
+    end
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id,
+                          user_type: 'admin', role: admin_role)
+    end
     let!(:entry_request) { user.entry_requests.create(name: 'Benje', reason: 'Passing through') }
     # since we no longer create an event after creating an entry, we can only check after grant!
     let!(:grant) { admin.grant!(entry_request.id) }
@@ -27,6 +42,7 @@ RSpec.describe Mutations::ActivityLog::UpdateLog do
       result = DoubleGdpSchema.execute(query,
                                        context: {
                                          current_user: admin,
+                                         user_role: admin.role,
                                        }).as_json
 
       expect(result.dig('data', 'activityLogUpdateLog', 'eventLog', 'refId'))
@@ -41,6 +57,7 @@ RSpec.describe Mutations::ActivityLog::UpdateLog do
       result = DoubleGdpSchema.execute(query,
                                        context: {
                                          current_user: user,
+                                         user_role: user.role,
                                        }).as_json
 
       expect(result['errors']).not_to be_nil

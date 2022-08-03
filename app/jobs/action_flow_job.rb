@@ -8,7 +8,7 @@ class ActionFlowJob < ApplicationJob
   # rubocop:disable Metrics/MethodLength
   def perform(event_log)
     # include (status: 'active') once the active/inactive functionality is implemented
-    action_flows = ActionFlows::ActionFlow.where(event_type: event_log.subject).map do |f|
+    action_flows = event_log.community.action_flows.where(event_type: event_log.subject).map do |f|
       ActionFlows::WebFlow.new(f.description, f.event_type,
                                f.event_condition, f.event_action)
     end
@@ -21,7 +21,11 @@ class ActionFlowJob < ApplicationJob
       event = af.event_object.new
       event.preload_data(event_log)
       cond = event.event_condition
-      af.action.execute_action(event.data_set, af.action_fields) if cond.run_condition(af.condition)
+      next unless cond.run_condition(af.condition)
+
+      af.action.execute_action(event.data_set,
+                               af.action_fields,
+                               event_log)
     end
   end
   # rubocop:enable Metrics/MethodLength

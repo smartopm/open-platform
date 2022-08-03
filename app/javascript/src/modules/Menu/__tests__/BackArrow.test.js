@@ -1,30 +1,38 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { fireEvent, render } from '@testing-library/react';
+
 import { MockedProvider } from '@apollo/react-testing';
-import { BrowserRouter } from 'react-router-dom/';
+import routeData, { MemoryRouter } from 'react-router';
 import ArrowBack from '../component/BackArrow';
 
 describe('It should test the ArrowBack component', () => {
+  const mockHistory = {
+    goBack: jest.fn()
+  };
+  beforeEach(() => {
+    jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
+  });
   it('should render ArrowBack', () => {
     const container = render(
-      <BrowserRouter>
+      <MemoryRouter>
         <MockedProvider>
           <ArrowBack path="/path" />
         </MockedProvider>
-      </BrowserRouter>
+      </MemoryRouter>
     );
 
     expect(container.queryByTestId('arrow')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('arrow'))
+    expect(mockHistory.goBack).toBeCalled()
   });
 
   it('should not render ArrowBack', () => {
     const container = render(
-      <BrowserRouter>
+      <MemoryRouter>
         <MockedProvider>
           <ArrowBack path="/" />
         </MockedProvider>
-      </BrowserRouter>
+      </MemoryRouter>
     );
 
     expect(container.queryByTestId('arrow')).not.toBeInTheDocument();

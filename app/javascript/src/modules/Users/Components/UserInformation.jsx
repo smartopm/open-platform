@@ -1,32 +1,38 @@
+/* eslint-disable complexity */
 import React, { useEffect, useState } from 'react';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
-import PhoneIcon from '@material-ui/icons/Phone';
-import { Dialog, DialogTitle, DialogContent, Grid, TextField } from '@material-ui/core';
+import Button from '@mui/material/Button';
+import { useHistory } from 'react-router-dom';
+import PhoneIcon from '@mui/icons-material/Phone';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Dialog, DialogTitle, DialogContent, Container } from '@mui/material';
 import { css, StyleSheet } from 'aphrodite';
-import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { CreateNote } from '../../../graphql/mutations';
-import Avatar from '../../../components/Avatar';
+
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
-import CenteredContent from '../../../components/CenteredContent';
-import UserNotes from './UserNote';
-import UserDetail from './UserProfileDetail';
 import { TabPanel } from '../../../components/Tabs';
 import UserFilledForms from './UserFilledForms';
 import UserMessages from '../../../components/Messaging/UserMessages';
 import UserJourney from './UserJourney';
-import { useParamsQuery } from '../../../utils/helpers';
-import RightSideMenu from '../../Menu/component/RightSideMenu';
+import {
+  useParamsQuery,
+  objectAccessor,
+  checkAccessibilityForUserType as handler
+} from '../../../utils/helpers';
 import FeatureCheck from '../../Features';
 import PaymentPlans from '../../Payments/Components/UserTransactions/Plans';
 import ShiftButtons from '../../TimeCard/Components/ShiftButtons';
+import InviteHistoryList from '../../LogBook/GuestInvitation/Components/InviteHistoryList';
+import LeadManagementDetails from '../LeadManagement/Components/LeadManagementDetails';
+import UserNotes from './UserNotes';
+import UserInfo from './UserInfo';
+import CenteredContent from '../../../shared/CenteredContent';
+import PageWrapper from '../../../shared/PageWrapper';
+import { userTabList, selectOptions, createMenuContext } from '../utils';
+import SelectButton from '../../../shared/buttons/SelectButton';
+import UserLabelTitle from './UserLabelTitle';
+import UserLabels from './UserLabels';
 
 export default function UserInformation({
   data,
@@ -38,37 +44,119 @@ export default function UserInformation({
   accountData
 }) {
   const path = useParamsQuery();
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const history = useHistory();
+  const [isLabelOpen, setIsLabelOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const tab = path.get('tab');
   const subtab = path.get('subtab');
   const type = path.get('type');
-  const { t } = useTranslation('users');
+  const { t } = useTranslation(['users', 'common']);
   const [tabValue, setValue] = useState(tab || 'Contacts');
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const securityPersonnelList = ['security_guard', 'security_supervisor'];
+  const [selectedKey, setSelectKey] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const userType = authState.user.userType.toLowerCase();
+  const options = selectOptions(
+    setSelectKey,
+    checkModule,
+    checkCommunityFeatures,
+    history,
+    data,
+    authState,
+    handleMenuItemClick,
+    handleMergeUserItemClick,
+    checkRole,
+    t,
+    userId
+  );
 
-  const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote);
-  const { handleSubmit, register } = useForm();
+  const mainElement = (
+    <SelectButton
+      options={options}
+      open={open}
+      anchorEl={anchorEl}
+      handleClose={handleClose}
+      handleClick={handleSelectButtonClick}
+      selectedKey={selectedKey}
+      defaultButtonText={t('common:right_menu.contact_info')}
+      mobileIcon={<MoreVertIcon />}
+      testId="user_profile_option_menu"
+    />
+  );
 
-  const onSaveNote = ({ note }) => {
-    const form = document.getElementById('note-form');
-    noteCreate({
-      variables: { userId, body: note, flagged: false }
-    }).then(() => {
-      refetch();
-      form.reset();
-    });
+  function handleClose() {
+    setAnchorEl(null);
+    setOpen(false);
+  }
+
+  function handleSelectButtonClick(e) {
+    setOpen(!open);
+    setAnchorEl(e.currentTarget);
+  }
+
+  function checkOtherRoles(featureName, roles) {
+    const ctx = createMenuContext(featureName, data, userType, authState);
+    return handler({ userTypes: roles, ctx }).includes(userType);
+  }
+
+  function checkCommunityFeatures(featureName) {
+    return Object.keys(authState.user?.community.features || []).includes(featureName);
+  }
+
+  function checkModule(moduleName) {
+    const userPermissionsModule = authState.user?.permissions.find(
+      permissionObject => permissionObject.module === moduleName
+    );
+    return userPermissionsModule?.permissions.includes('can_see_menu_item') || false;
+  }
+
+  function handleMenuItemClick(key, val) {
+    setSelectKey(key);
+    history.push(`/user/${data.user.id}?tab=${val}`);
+    setOpen(false);
+  }
+
+  function handleMergeUserItemClick() {
+    history.push(`/user/${data.user.id}?type=MergeUser`);
+    setOpen(false);
+  }
+
+  function checkRole(roles, featureName) {
+    if (['Properties', 'Users', 'Payments', 'LogBook'].includes(featureName)) {
+      checkOtherRoles(featureName, roles);
+    }
+    return roles.includes(userType);
+  }
+
+  const rightPanelObj = [
+    {
+      mainElement: ['admin', 'marketing_admin'].includes(userType) ? (
+        <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
+      ) : (
+        undefined
+      ),
+      key: 1
+    },
+    {
+      mainElement,
+      key: 2
+    }
+  ];
+
+  const breadCrumbObj = {
+    extraBreadCrumb: userType === 'marketing_admin' ? t('common:misc.users') : undefined,
+    extraBreadCrumbLink: '/users',
+    linkText: tabValue !== 'Contacts' ? t('common:misc.user_detail') : undefined,
+    linkHref: tabValue !== 'Contacts' ? `/user/${data.user.id}` : undefined,
+    pageName: objectAccessor(userTabList(t), tabValue)
   };
 
   useEffect(() => {
     if (tab) {
       setValue(tab);
-    } else {
-      setValue('Contacts');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path, tab]);
+  }, [tab]);
 
   useEffect(() => {
     // open merge modal
@@ -79,208 +167,160 @@ export default function UserInformation({
     }
   }, [type]);
 
-  const userType = authState.user.userType.toLowerCase();
-
   function handleMergeDialog() {
     setDialogOpen(false);
     router.push(`/user/${userId}?tab=${tabValue}`);
   }
 
   return (
-    <div style={{ overflow: 'hidden' }}>
-      <>
-        <Dialog
-          open={isDialogOpen}
-          fullWidth
-          maxWidth="md"
-          scroll="paper"
-          onClose={handleMergeDialog}
-          aria-labelledby="user_merge"
-        >
-          <DialogTitle id="user_merge">
-            <CenteredContent>
-              <span>Merge Users</span>
-            </CenteredContent>
-          </DialogTitle>
-          <DialogContent>
-            <UserMerge close={handleMergeDialog} userId={userId} />
-          </DialogContent>
-        </Dialog>
-
-        <Grid container>
-          <Grid item xs={3}>
-            {' '}
-          </Grid>
-          <Grid item xs={6} style={{ textAlign: 'center' }}>
-            <Avatar
-              user={data.user}
-              // eslint-disable-next-line react/style-prop-object
-              style="big"
-            />
-          </Grid>
-
-          <Grid item xs={3}>
-            <>
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={() => setDrawerOpen(true)}
-                className='right-menu-drawer'
-                style={{
-                  float: 'right',
-                  marginRight: -23
-                }}
-              >
-                <DoubleArrowOutlinedIcon
-                  // this is hacky, it should be replaced with a proper icon
-                  style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
-                />
-              </IconButton>
-
-              <RightSideMenu
-                authState={authState}
-                handleDrawerToggle={() => setDrawerOpen(false)}
-                drawerOpen={isDrawerOpen}
+    <PageWrapper
+      breadCrumbObj={breadCrumbObj}
+      avatarObj={{ data }}
+      showAvatar
+      rightPanelObj={rightPanelObj}
+    >
+      <div style={{ overflow: 'hidden' }}>
+        <>
+          <Dialog
+            open={isDialogOpen}
+            fullWidth
+            maxWidth="md"
+            scroll="paper"
+            onClose={handleMergeDialog}
+            aria-labelledby="user_merge"
+          >
+            <DialogTitle id="user_merge">
+              <CenteredContent>
+                <span>{t('users.merge_user')}</span>
+              </CenteredContent>
+            </DialogTitle>
+            <DialogContent>
+              <UserMerge close={handleMergeDialog} userId={userId} />
+            </DialogContent>
+          </Dialog>
+          <br />
+          {isLabelOpen && (
+            <Container maxWidth="md">
+              <UserLabels
+                userId={data.user.id}
+                isLabelOpen={isLabelOpen}
+                setIsLabelOpen={setIsLabelOpen}
               />
+            </Container>
+          )}
+          <FeatureCheck features={authState.user.community.features} name="Time Card">
+            {authState.user.userType === 'custodian' &&
+              ['security_guard', 'contractor', 'security_supervisor', 'developer'].includes(
+                data.user.userType
+              ) &&
+              data.user.status === 'active' && <ShiftButtons userId={userId} />}
+          </FeatureCheck>
+
+          <TabPanel value={tabValue} index="Contacts">
+            <UserInfo user={data.user} userType={userType} />
+          </TabPanel>
+          {['admin', 'marketing_manager', 'marketing_admin'].includes(userType) && (
+            <>
+              <FeatureCheck features={authState.user.community.features} name="Messages">
+                <TabPanel value={tabValue} index="Communication">
+                  <UserMessages />
+                </TabPanel>
+              </FeatureCheck>
+              <TabPanel value={tabValue} index="LeadManagement">
+                <LeadManagementDetails tabValue={tabValue} userId={data.user?.id} />
+              </TabPanel>
             </>
-          </Grid>
-        </Grid>
-
-        <Grid container>
-          <Grid item xs={matches ? 3 : 1}>
-            {' '}
-          </Grid>
-          <Grid item xs={matches ? 6 : 10} style={{ textAlign: 'center', marginTop: '30px' }}>
-            <UserDetail data={data} userType={userType} />
-          </Grid>
-          <Grid item xs={matches ? 3 : 1}>
-            {' '}
-          </Grid>
-        </Grid>
-
-        <br />
-        <FeatureCheck features={authState.user.community.features} name="Time Card">
-          {authState.user.userType === 'custodian' &&
-            ['security_guard', 'contractor'].includes(data.user.userType) && (
-              <ShiftButtons userId={userId} />
-            )}
-        </FeatureCheck>
-
-        {['admin'].includes(userType) && (
-          <>
-            <FeatureCheck features={authState.user.community.features} name="Tasks">
-              <TabPanel value={tabValue} index="Notes">
-                <div className="container">
-                  <form id="note-form">
-                    <div className="form-group">
-                      {t('common:misc.notes')}
-                      <br />
-                      <TextField
-                        className="form-control"
-                        placeholder={t('common:form_placeholders.add_note')}
-                        id="notes"
-                        rows="4"
-                        inputRef={register({ required: true })}
-                        name="note"
-                        multiline
-                        required
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      style={{ float: 'right' }}
-                      onClick={handleSubmit(onSaveNote)}
-                      disabled={mutationLoading}
-                      color="primary"
-                      variant="outlined"
-                    >
-                      {mutationLoading
-                        ? t('common:form_actions.saving')
-                        : t('common:form_actions.save')}
-                    </Button>
-                  </form>
-                  <br />
-                  <br />
-                  <UserNotes tabValue={tabValue} userId={data.user.id} />
-                </div>
-              </TabPanel>
-            </FeatureCheck>
-            <FeatureCheck features={authState.user.community.features} name="Messages">
-              <TabPanel value={tabValue} index="Communication">
-                <UserMessages />
-              </TabPanel>
-            </FeatureCheck>
-          </>
-        )}
-        {!['security_guard', 'custodian'].includes(userType) && (
-          <>
-            <FeatureCheck features={authState.user.community.features} name="Properties">
-              <TabPanel value={tabValue} index="Plots">
-                <UserPlotInfo
-                  account={accountData?.user?.accounts || []}
-                  userId={data.user.id}
-                  userName={data.user.name}
-                  currentUserType={authState.user.userType}
-                />
-              </TabPanel>
-            </FeatureCheck>
-          </>
-        )}
-        <FeatureCheck features={authState.user.community.features} name="Forms">
-          <TabPanel value={tabValue} index="Forms">
-            <UserFilledForms userFormsFilled={data.user.formUsers} userId={data.user.id} />
-          </TabPanel>
-        </FeatureCheck>
-        <FeatureCheck features={authState.user.community.features} name="Payments">
-          <TabPanel value={tabValue} index="Plans">
-            <PaymentPlans
-              userId={userId}
-              user={authState.user}
-              userData={data.user}
-              subtab={subtab}
-            />
-          </TabPanel>
-        </FeatureCheck>
-        {['admin'].includes(userType) && (
-          <FeatureCheck features={authState.user.community.features} name="Customer Journey">
-            <TabPanel value={tabValue} index="CustomerJourney">
-              <UserJourney data={data} refetch={refetch} />
+          )}
+          {!['security_guard', 'custodian', 'security_supervisor'].includes(userType) && (
+            <>
+              <FeatureCheck features={authState.user.community.features} name="Properties">
+                <TabPanel value={tabValue} index="Plots">
+                  <UserPlotInfo
+                    account={accountData?.user?.accounts || []}
+                    userId={data.user.id}
+                    userName={data.user.name}
+                    currentUser={authState.user}
+                  />
+                </TabPanel>
+              </FeatureCheck>
+            </>
+          )}
+          <FeatureCheck features={authState.user.community.features} name="Forms">
+            <TabPanel value={tabValue} index="Forms">
+              <UserFilledForms
+                userId={data.user.id}
+                currentUser={authState.user.id}
+              />
             </TabPanel>
           </FeatureCheck>
-        )}
+          <FeatureCheck features={authState.user.community.features} name="Payments">
+            <TabPanel value={tabValue} index="Plans">
+              <PaymentPlans
+                userId={userId}
+                user={authState.user}
+                userData={data.user}
+                subtab={subtab}
+              />
+            </TabPanel>
+          </FeatureCheck>
+          {['admin'].includes(userType) && (
+            <FeatureCheck features={authState.user.community.features} name="Customer Journey">
+              <TabPanel value={tabValue} index="CustomerJourney">
+                <UserJourney data={data} refetch={refetch} />
+              </TabPanel>
+            </FeatureCheck>
+          )}
 
-        <div className="container d-flex justify-content-between">
-          {data.user.state === 'valid' && authState.user.userType === 'security_guard' ? (
-            <Button id="log-entry" className="log-entry-btn" color="primary" onClick={onLogEntry}>
-              {t('common:misc.log_entry')}
-            </Button>
-          ) : null}
+          <FeatureCheck features={authState.user.community.features} name="LogBook">
+            <TabPanel value={tabValue} index="Invitations">
+              <InviteHistoryList userId={userId} tab={tabValue} />
+            </TabPanel>
+          </FeatureCheck>
 
-          {authState.user.userType === 'security_guard' ? (
-            <Button
-              id="call_poniso"
-              startIcon={<PhoneIcon />}
-              className={`${css(styles.callButton)}`}
-              href={`tel:${authState.user.community.securityManager}`}
-              color="primary"
-            >
-              {t('common:misc.call_manager')}
-            </Button>
-          ) : null}
-        </div>
-      </>
-    </div>
+          <FeatureCheck features={authState.user.community.features} name="Tasks">
+            <TabPanel value={tabValue} index="Notes">
+              <Container maxWidth="md">
+                <UserNotes userId={userId} tabValue={tabValue} />
+              </Container>
+            </TabPanel>
+          </FeatureCheck>
+
+          <div className="container d-flex justify-content-between">
+            {data.user.status === 'active' &&
+            securityPersonnelList.includes(authState.user.userType) ? (
+              <Button id="log-entry" className="log-entry-btn" color="primary" onClick={onLogEntry}>
+                {t('common:misc.log_entry')}
+              </Button>
+            ) : null}
+
+            {securityPersonnelList.includes(authState.user.userType) ? (
+              <Button
+                id="call_poniso"
+                startIcon={<PhoneIcon />}
+                className={`${css(styles.callButton)}`}
+                href={`tel:${authState.user.community.securityManager}`}
+                color="primary"
+                data-testid="call_manager"
+              >
+                {t('common:misc.call_manager')}
+              </Button>
+            ) : null}
+          </div>
+        </>
+      </div>
+    </PageWrapper>
   );
 }
 
 const User = PropTypes.shape({
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
   name: PropTypes.string,
   userType: PropTypes.string,
   state: PropTypes.string,
+  status: PropTypes.string,
   accounts: PropTypes.arrayOf(PropTypes.object),
   formUsers: PropTypes.arrayOf(PropTypes.object),
+  permissions: PropTypes.arrayOf(PropTypes.object),
   community: PropTypes.shape({
     // eslint-disable-next-line react/forbid-prop-types
     features: PropTypes.object,
@@ -294,7 +334,15 @@ UserInformation.propTypes = {
   refetch: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   router: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  accountData: PropTypes.shape({ user: User }).isRequired
+  accountData: PropTypes.shape({ user: User })
+};
+
+UserInformation.defaultProps = {
+  accountData: {
+    user: {
+      accounts: []
+    }
+  }
 };
 
 const styles = StyleSheet.create({

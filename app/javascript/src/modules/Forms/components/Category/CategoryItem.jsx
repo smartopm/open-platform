@@ -1,14 +1,16 @@
-import React, { useContext } from 'react';
-import { Container, Grid, IconButton, Typography } from '@material-ui/core';
+import React, { useContext, useState } from 'react';
+import { Container, Grid, IconButton, Typography, useMediaQuery } from '@mui/material';
 import PropTypes from 'prop-types';
-import CreateIcon from '@material-ui/icons/Create';
-import AddIcon from '@material-ui/icons/Add';
-import CloseIcon from '@material-ui/icons/Close';
-import { makeStyles } from '@material-ui/styles';
-import { DeleteOutline } from '@material-ui/icons';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Tooltip from '@mui/material/Tooltip';
+import { useTranslation } from 'react-i18next';
+import CloseIcon from '@mui/icons-material/Close';
+import { makeStyles } from '@mui/styles';
 import { Spinner } from '../../../../shared/Loading';
-import { checkCondition , extractValidFormPropertyValue } from '../../utils';
+import { checkCondition, extractValidFormPropertyValue } from '../../utils';
 import { FormContext } from '../../Context';
+import MenuList from '../../../../shared/MenuList';
 
 export default function CategoryItem({
   category,
@@ -19,50 +21,112 @@ export default function CategoryItem({
   collapsed,
   editMode,
   loading,
-  currentId,
+  currentId
 }) {
   const classes = useStyles();
-  const { formProperties } = useContext(FormContext)
-  const properties = extractValidFormPropertyValue(formProperties)
-  
-  if(!checkCondition(category, properties, editMode)){
-    return null
+  const matches = useMediaQuery('(max-width:900px)');
+  const { formProperties } = useContext(FormContext);
+  const properties = extractValidFormPropertyValue(formProperties);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const { t } = useTranslation(['form', 'common']);
+  const anchorElOpen = Boolean(anchorEl);
+  const menuList = [
+    {
+      content: t('common:menu.edit'),
+      isAdmin: true,
+      color: '',
+      handleClick: e => {
+        handleEditCategory();
+        handleClose(e);
+      }
+    },
+    {
+      content: t('common:menu.delete'),
+      isAdmin: true,
+      color: '',
+      handleClick: e => {
+        handleDeleteCategory();
+        handleClose(e);
+      }
+    }
+  ];
+
+  function handleMenu(event) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose(event) {
+    event.stopPropagation();
+    setAnchorEl(null);
+  }
+
+  const menuData = {
+    menuList,
+    handleMenu,
+    anchorEl,
+    open: anchorElOpen,
+    handleClose
+  };
+
+  if (!checkCondition(category, properties, editMode)) {
+    return null;
   }
   return (
     <>
-      {(!category.headerVisible && !editMode) ? null : (
-        <Grid container className={classes.categorySection}>
-          <Grid item xs={6} sm={9}>
-            <Typography className={classes.categoryName}>{category.fieldName}</Typography>
-          </Grid>
-          <Grid item xs={2} sm={1}>
-            {editMode && (
-              <IconButton aria-label="delete this category" onClick={handleDeleteCategory}>
-                {loading && currentId === category.id ? (
-                  <Spinner />
-                ) : (
-                  <DeleteOutline color="primary" />
-                )}
-              </IconButton>
-            )}
-          </Grid>
-          <Grid item xs={2} sm={1}>
-            {editMode && (
-              <IconButton aria-label="edit this category" onClick={handleEditCategory}>
-                <CreateIcon color="primary" />
-              </IconButton>
-            )}
-          </Grid>
-          <Grid item xs={2} sm={1}>
-            {editMode && (
-              <IconButton aria-label="add questions to this category" onClick={handleAddField} className="form-category-add-field-btn">
-                {collapsed ? (
-                  <CloseIcon color="primary" />
-                ) : (
-                  <AddIcon color="primary" data-testid="add-icon" />
-                )}
-              </IconButton>
-            )}
+      {(!editMode && !category.headerVisible) ? null : (
+        <Grid style={!editMode && !matches ? { padding: '0 100px' } : {}}>
+          <Grid container className={classes.categorySection}>
+            <Grid item xs={8} sm={10}>
+              <Typography className={classes.categoryName}>{category.fieldName}</Typography>
+            </Grid>
+            <Grid item xs={2} sm={1} className={classes.align}>
+              {editMode && (
+                <IconButton
+                  aria-label="add questions to this category"
+                  onClick={handleAddField}
+                  className="form-category-add-field-btn"
+                  size="large"
+                  data-testid='add_property'
+                >
+                  {collapsed ? (
+                    <Tooltip title={t('actions.hide')}>
+                      <CloseIcon color="primary" />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title={t('actions.add_property')}>
+                      <AddCircleOutlineIcon color="primary" data-testid="add-icon" />
+                    </Tooltip>
+                  )}
+                </IconButton>
+              )}
+            </Grid>
+            <Grid item xs={2} sm={1} className={classes.align}>
+              {editMode && (
+                <>
+                  {loading && currentId === category.id ? (
+                    <Spinner />
+                  ) : (
+                    <>
+                      <IconButton
+                        aria-label="edit this category"
+                        size="large"
+                        onClick={event => menuData.handleMenu(event)}
+                        data-testid='category_option'
+                      >
+                        <MoreVertIcon color="primary" />
+                      </IconButton>
+                      <MenuList
+                        open={menuData.open}
+                        anchorEl={menuData.anchorEl}
+                        handleClose={menuData.handleClose}
+                        list={menuData.menuList}
+                      />
+                    </>
+                  )}
+                </>
+              )}
+            </Grid>
           </Grid>
         </Grid>
       )}
@@ -71,30 +135,41 @@ export default function CategoryItem({
   );
 }
 
+CategoryItem.defaultProps = {
+  handleAddField: () => {},
+  handleEditCategory: () => {},
+  handleDeleteCategory: () => {},
+  collapsed: undefined,
+  loading: undefined,
+  currentId: undefined
+}
+
 CategoryItem.propTypes = {
   category: PropTypes.shape({
     fieldName: PropTypes.string,
     headerVisible: PropTypes.bool,
     id: PropTypes.string
   }).isRequired,
-  handleAddField: PropTypes.func.isRequired,
-  handleEditCategory: PropTypes.func.isRequired,
-  handleDeleteCategory: PropTypes.func.isRequired,
+  handleAddField: PropTypes.func,
+  handleEditCategory: PropTypes.func,
+  handleDeleteCategory: PropTypes.func,
   children: PropTypes.node.isRequired,
-  collapsed: PropTypes.bool.isRequired,
+  collapsed: PropTypes.bool,
   editMode: PropTypes.bool.isRequired,
-  loading: PropTypes.bool.isRequired,
-  currentId: PropTypes.string.isRequired,
+  loading: PropTypes.bool,
+  currentId: PropTypes.string
 };
 
 const useStyles = makeStyles({
   categorySection: {
-    borderStyle: 'solid',
-    borderWidth: 'thin',
+    background: '#FAFAFA',
     borderRadius: 5,
     marginTop: 22
   },
   categoryName: {
     padding: 13
+  },
+  align: {
+    textAlign: 'right'
   }
 });

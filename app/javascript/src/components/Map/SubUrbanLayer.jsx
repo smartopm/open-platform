@@ -138,7 +138,7 @@ export default function SubUrbanLayer({ data }){
       />
       <SubUrbanLegendContent />
     </>
-    )
+  )
 }
 
 SubUrbanLayer.propTypes = {

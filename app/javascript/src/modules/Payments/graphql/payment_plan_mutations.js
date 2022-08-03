@@ -39,18 +39,40 @@ export const TransferPaymentPlanMutation = gql`
   }
 `;
 
-export const PaymentReminderMutation = gql`
-  mutation paymentReminderCreate(
-    $userId: ID!
+export const AllocateGeneralFunds = gql`
+  mutation AllocateGeneralFunds(
     $paymentPlanId: ID!
   ) {
+    allocateGeneralFunds(paymentPlanId: $paymentPlanId) {
+      success
+    }
+  }
+`;
+
+export const PaymentReminderMutation = gql`
+mutation paymentReminderCreate(
+  $paymentReminderFields: [PaymentReminderInput!]!
+) {
     paymentReminderCreate(
-      userId: $userId
-      paymentPlanId: $paymentPlanId
+      paymentReminderFields: $paymentReminderFields
     ) {
       message
     }
   }
 `;
+
+export const TransferPaymentMutation = gql`
+  mutation transferPlanPayment(
+    $paymentId: ID!
+    $destinationPlanId: ID!
+  ) {
+    transferPlanPayment(paymentId: $paymentId, destinationPlanId: $destinationPlanId) {
+      payment {
+        id
+      }
+    }
+  }
+`;
+
 
 export default PaymentPlanUpdateMutation;

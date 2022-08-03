@@ -1,58 +1,58 @@
-/* eslint-disable */
-import React from 'react'
-import { shallow, mount } from 'enzyme'
-import CaptureTemp from '../components/CaptureTemp'
-import { MockedProvider } from '@apollo/react-testing'
-import { TemperateRecord } from '../graphql/mutations'
+import React from 'react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
+import { MockedProvider } from '@apollo/react-testing';
+import CaptureTemp from '../components/CaptureTemp';
+import { TemperateRecord } from '../graphql/mutations';
 
 describe('temperature component', () => {
-
-    const screenProps = {
-        refId: "1",
-        refName: 'Test name'
-    }
-    const mock = [{
-        request: {
-            query: TemperateRecord,
-            variable: { refId: 1, temp: "36.5", refName: "Test Name", refType: 'Users::User' }
-
-        },
-        result: {
-            data: {
-                temperatureUpdate: {
-                    eventLog: {
-                        sentence: "Temperature for Dennis was recorded by Dennis Mubamba"
-                    }
-                }
-            }
+  const screenProps = {
+    refId: '123456asdfgh',
+    refType: 'Users::User',
+    refName: 'Test Name'
+  };
+  const mock = [
+    {
+      request: {
+        query: TemperateRecord,
+        variable: {
+          refId: '123456asdfgh',
+          temp: '36',
+          refName: 'Test Name',
+          refType: 'Users::User'
         }
-    }]
+      },
+      result: {
+        data: {
+          temperatureUpdate: {
+            eventLog: {
+              sentence: 'Temperature for Dennis was recorded by Dennis Mubamba'
+            }
+          }
+        }
+      }
+    }
+  ];
 
-    it('component is mounted', () => {
-        const wrapper = shallow(
-            <MockedProvider mock={[]} >
-                <CaptureTemp {...screenProps} />
-            </MockedProvider>
-        )
-        expect(wrapper.find('.button'))
-    })
-    const wrapper = shallow(
-        <MockedProvider mock={[]} addTypename={false}>
-            <CaptureTemp {...screenProps} />
-        </MockedProvider>)
-    it('It should get the temperature value', () => {
-        const { refId, refName } = wrapper.props()
-        expect(refId).toBe(refId)
-        expect(refName).toBe(refName)
+  it('component is mounted', () => {
+    const wrapper = render(
+      <MockedProvider mock={[]}>
+        <CaptureTemp {...screenProps} />
+      </MockedProvider>
+    );
+    expect(wrapper.queryByTestId('log-btn')).toBeInTheDocument();
+  });
 
-    })
-    it('it should run mutation', async () => {
-        const wrapper = mount(
-            <MockedProvider mock={mock} addTypename={false}>
-                <CaptureTemp {...screenProps} />
-            </MockedProvider>)
-            await wrapper.find('button').simulate('click')
-            expect(wrapper.find('tempvalue')).toMatchObject({})
-            wrapper.update()
-    });
+  it('runs mutation', async () => {
+    const componentWrapper = render(
+      <MockedProvider mock={mock}>
+        <CaptureTemp {...screenProps} />
+      </MockedProvider>
+    );
+
+    fireEvent.click(componentWrapper.queryByTestId('log-btn'));
+
+    await waitFor(() => {
+      expect(componentWrapper.queryByText('common:errors.empty_input')).toBeInTheDocument();
+    }, 10);
+  });
 });

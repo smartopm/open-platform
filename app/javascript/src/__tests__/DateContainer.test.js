@@ -1,35 +1,32 @@
 import React from 'react'
-import { mount } from 'enzyme'
+import { render } from '@testing-library/react';
 import DateContainer, { dateFormatter, dateTimeToString, dateToString, isDateValid, updateDateWithTime } from '../components/DateContainer'
 import DateUtils, { lastDayOfTheMonth, getMonthName, getWeekDay, differenceInHours } from '../utils/dateutil'
 
 describe('date container component', () => {
+  const t = jest.fn();
   it('renders a span element and has correct time', () => {
     // get today's date
     const date = new Date()
-    const time = dateTimeToString(date.toString())
-    const component = mount(<DateContainer date={date} />)
-    expect(component.find('span')).toHaveLength(1)
-    expect(component.find('span').text()).toContain(`Today at ${time}`)
-    expect(dateFormatter(date)).toContain(`Today at ${time}`)
+    const time = dateTimeToString(date)
+    const component = render(<DateContainer date={date} />)
+    expect(component.queryByText(`common:misc.today_at ${time}`)).toBeInTheDocument();
+    expect(dateFormatter(date, t)).toContain(time)
   })
   it('renders a span just yesterday time if date was from yesterday', () => {
     // get yesterday's date
     const date = new Date()
     const previousDate = date.setDate(date.getDate() - 1)
-    const component = mount(<DateContainer date={new Date(previousDate)} />)
-    expect(component.find('span').text()).toContain('Yesterday')
-    expect(dateFormatter(previousDate)).toContain('Yesterday')
+    const component = render(<DateContainer date={new Date(previousDate)} />)
+    expect(component.queryByText(`common:misc.yesterday_at ${dateTimeToString(previousDate)}`)).toBeInTheDocument();
   })
 
  it('renders date for older dates', () => {
    // get old date
    const date = new Date()
    const oldDate = date.setDate(date.getDate() - 2)
-   const component = mount(<DateContainer date={new Date(oldDate)} />)
-   expect(component.find('span').text()).toContain(
-     dateToString(oldDate)
-   )
+   const component = render(<DateContainer date={new Date(oldDate)} />)
+  expect(component.queryByText(dateToString(oldDate))).toBeInTheDocument();
  })
   it('should return the correct last day of the month', () => {
     expect(lastDayOfTheMonth.toString()).toContain('26') // 26 as last day of the month
@@ -58,7 +55,7 @@ describe('date container component', () => {
     expect(DateUtils.formatDate(date)).toContain('2020-06-11')
   })
   it('should return never when date is null', () => {
-    expect(DateUtils.formatDate()).toContain('Never')
+    expect(DateUtils.formatDate()).toContain('misc.never')
   })
   it('should append time to the date', () => {
     const date1 = new Date('2021-09-07T15:39:00.000Z')

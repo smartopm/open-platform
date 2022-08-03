@@ -1,6 +1,5 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
@@ -63,6 +62,6 @@ describe('Should render QRCodeConfirmation Component', () => {
 
     const emailInput = container.queryByTestId('guest-email-input');
     fireEvent.change(emailInput, { target: { value: 'someemail@gmail.com' } });
-    expect(emailInput.value).toBe('someemail@gmail.com');
+    expect(emailHandler.handleEmailChange).toBeCalled();
   });
 });

@@ -1,13 +1,13 @@
 
 import React, { useState } from 'react';
-import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
-import { Divider, Grid, Button, Menu, MenuItem } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import { Divider, Grid, Button, Menu, MenuItem } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import { dateToString } from '../../../../components/DateContainer';
 import { formatMoney, formatError, titleize , objectAccessor } from '../../../../utils/helpers';
@@ -23,8 +23,8 @@ export default function PlanDetail({
   currencyData,
   updatePaymentPlan,
   plansRefetch,
-  setMessageAlert,
-  setIsSuccessAlert
+  showSnackbar,
+  messageType
 }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)');
@@ -84,15 +84,13 @@ export default function PlanDetail({
           setMutationLoading(false);
           setEditing(false);
           handleModalClose();
-          setMessageAlert(t('misc.payment_plan_updated'));
-          setIsSuccessAlert(true);
+          showSnackbar({ type: messageType.success, message: t('misc.payment_plan_updated') });
           plansRefetch();
         })
         .catch(err => {
           setMutationLoading(false);
           setEditing(false);
-          setMessageAlert(formatError(err.message));
-          setIsSuccessAlert(false);
+          showSnackbar({ type: messageType.error, message: formatError(err.message) });
           handleModalClose();
         });
     }
@@ -204,7 +202,7 @@ export default function PlanDetail({
               <Grid item xs={6}>
                 <Typography className={classes.fieldTitle}>{t('table_headers.co_owners')}</Typography>
               </Grid>
-              <Grid item xs={6} className={classes.fieldContent}>
+              <Grid item xs={6} className={`${classes.fieldContent} plan-detail-co-owner`}>
                 {handleCoOwners() || '-'}
               </Grid>
             </Grid>
@@ -398,7 +396,10 @@ PlanDetail.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   plansRefetch: PropTypes.func.isRequired,
-  setMessageAlert: PropTypes.func.isRequired,
-  setIsSuccessAlert: PropTypes.func.isRequired,
+  showSnackbar: PropTypes.func.isRequired,
+  messageType: PropTypes.shape({
+    success: PropTypes.string,
+    error: PropTypes.string,
+  }).isRequired,
   updatePaymentPlan: PropTypes.func.isRequired
 };

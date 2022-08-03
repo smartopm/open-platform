@@ -42,5 +42,5 @@ export default function Todo() {
         currentUser={authState.user}
       />
     </>
-  )
+);
 }

@@ -13,12 +13,13 @@ module Mutations
         campaign&.deleted!
         return { campaign: campaign.reload } if campaign
 
-        raise GraphQL::ExecutionError, campaign.errors.full_message
+        raise GraphQL::ExecutionError, campaign.errors.full_messages&.join(', ')
       end
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(module: :campaign,
+                                  permission: :can_delete_campaign)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

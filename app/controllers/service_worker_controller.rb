@@ -17,12 +17,13 @@ class ServiceWorkerController < ApplicationController
 
   def manifest_by_community
     community_name = current_community.name
-
-    if community_name.eql?('Ciudad Morazán')
-      return manifest_file(community_name, '#0C1F85', 'ciudadmorazan/')
+    unless current_community.theme_colors.nil?
+      theme_color = current_community.theme_colors['primaryColor']
     end
+    path = community_name.gsub(' ', '').downcase
+    icon_path = "#{I18n.t("community_name.#{path}")}/"
 
-    manifest_file(community_name)
+    manifest_file(community_name, theme_color, icon_path)
   end
 
   # rubocop:disable Metrics/MethodLength

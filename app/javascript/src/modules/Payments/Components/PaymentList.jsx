@@ -2,17 +2,18 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable security/detect-object-injection */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSVLink } from 'react-csv';
-import { Button, Container, Grid, List, Typography, Hidden } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import Fab from '@material-ui/core/Fab';
+import { Button, Container, Grid, List, Typography } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Fab from '@mui/material/Fab';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery } from 'react-apollo';
-import { useTheme, makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useHistory } from 'react-router';
 import { PaymentStatsDetails } from '../../../graphql/queries';
 import DataList from '../../../shared/list/DataList';
@@ -46,8 +47,9 @@ import { PlansPaymentsQuery, SubscriptionPlansQuery } from '../graphql/payment_q
 import PaymentModal from './UserTransactions/PaymentModal';
 import { dateToString } from '../../../components/DateContainer';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
-import MessageAlert from '../../../components/MessageAlert';
 import { PlansList, SubscriptionPlans } from './PlansList';
+import PageWrapper from '../../../shared/PageWrapper';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 const csvHeaders = [
   { label: 'Receipt Number', key: 'receiptNumber' },
@@ -84,9 +86,9 @@ export default function PaymentList({ currencyData }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [tabValue, setTabValue] = useState(0);
-  const [message, setMessage] = useState({ isError: false, detail: '' });
-  const [alertOpen, setAlertOpen] = useState(false);
   const [displaySubscriptionPlans, setDisplaySubscriptionPlans] = useState(false);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const TAB_VALUES = {
     payments: 0,
@@ -158,7 +160,7 @@ export default function PaymentList({ currencyData }) {
   }
 
   function csvData(csv) {
-    return csv.map(val => ({ ...val, formattedDate: dateToString(val.createdAt, 'MM-DD-YYYY')}))
+    return csv.map(val => ({ ...val, formattedDate: dateToString(val.createdAt, 'MM-DD-YYYY') }));
   }
 
   function setGraphQuery(qu) {
@@ -240,7 +242,7 @@ export default function PaymentList({ currencyData }) {
   function handleTabValueChange(_event, newValue) {
     history.push(`?tab=${Object.keys(TAB_VALUES).find(key => TAB_VALUES[key] === newValue)}`);
     setTabValue(newValue);
-    if (newValue === 1){
+    if (newValue === 1) {
       loadSubscriptionPlans();
     }
   }
@@ -254,13 +256,7 @@ export default function PaymentList({ currencyData }) {
   }
 
   return (
-    <div>
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={alertOpen}
-        handleClose={() => setAlertOpen(false)}
-      />
+    <PageWrapper pageTitle={t('common:menu.payment_plural')}>
       <StyledTabs
         value={tabValue}
         onChange={handleTabValueChange}
@@ -309,7 +305,11 @@ export default function PaymentList({ currencyData }) {
                         </span>
                       ) : (
                         <CSVLink
-                          data={plansData?.paymentsList.length > 0 ? csvData(plansData?.paymentsList) : []}
+                          data={
+                            plansData?.paymentsList.length > 0
+                              ? csvData(plansData?.paymentsList)
+                              : []
+                          }
                           style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
                           headers={csvHeaders}
                           filename={`payment-data-${dateToString(new Date())}.csv`}
@@ -325,7 +325,7 @@ export default function PaymentList({ currencyData }) {
           </Container>
           <Grid
             container
-            justify="flex-end"
+            justifyContent="flex-end"
             style={{
               width: '100.5%',
               position: 'absolute',
@@ -410,8 +410,8 @@ export default function PaymentList({ currencyData }) {
         {displaySubscriptionPlans ? (
           <SubscriptionPlans
             matches={matches}
-            setMessage={setMessage}
-            setAlertOpen={setAlertOpen}
+            showSnackbar={showSnackbar}
+            messageType={messageType}
             currencyData={currencyData}
             subscriptionPlansLoading={subscriptionPlansLoading}
             subscriptionPlansData={subscriptionPlansData}
@@ -423,16 +423,16 @@ export default function PaymentList({ currencyData }) {
             matches={matches}
             currencyData={currencyData}
             setDisplaySubscriptionPlans={setDisplaySubscriptionPlans}
-            setMessage={setMessage}
-            setAlertOpen={setAlertOpen}
+            showSnackbar={showSnackbar}
+            messageType={messageType}
           />
         )}
       </TabPanel>
-    </div>
+    </PageWrapper>
   );
 }
 
-export function renderPayment(payment, currencyData, theme, matches) {
+export function renderPayment(payment, currencyData, theme, matches, mdDownHidden) {
   return [
     {
       [`${matches ? 'Client Info' : 'Client Name'}`]: (
@@ -445,14 +445,16 @@ export function renderPayment(payment, currencyData, theme, matches) {
               <Avatar src={payment.user.imageUrl} alt="avatar-image" />
               <Typography style={{ margin: '7px', fontSize: '12px' }}>
                 <Text color={matches ? 'primary' : 'inherit'} content={payment.user.name} />
-                <Hidden smDown>
-                  <br />
-                  <Text
-                    content={`${payment.paymentPlan?.landParcel.parcelType || ''} ${
-                      payment.paymentPlan?.landParcel?.parcelType ? ' - ' : ''
-                    } ${payment.paymentPlan?.landParcel.parcelNumber}`}
-                  />
-                </Hidden>
+                {!mdDownHidden && (
+                  <>
+                    <br />
+                    <Text
+                      content={`${payment.paymentPlan?.landParcel.parcelType || ''} ${
+                        payment.paymentPlan?.landParcel?.parcelType ? ' - ' : ''
+                      } ${payment.paymentPlan?.landParcel.parcelNumber}`}
+                    />
+                  </>
+                )}
               </Typography>
             </div>
           </Link>
@@ -515,11 +517,11 @@ export function renderPayment(payment, currencyData, theme, matches) {
   ];
 }
 
-
 export function TransactionItem({ transaction, currencyData }) {
   const { t } = useTranslation(['payment', 'common']);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const mdDownHidden = useMediaQuery(theme.breakpoints.down('md'));
   const paymentHeaders = [
     {
       title: `${matches ? 'Client Info' : 'Client Name'}`,
@@ -551,7 +553,7 @@ export function TransactionItem({ transaction, currencyData }) {
     <div style={{ padding: '0 20px' }}>
       <DataList
         keys={paymentHeaders}
-        data={renderPayment(transaction, currencyData, theme, matches)}
+        data={renderPayment(transaction, currencyData, theme, matches, mdDownHidden)}
         hasHeader={false}
       />
     </div>

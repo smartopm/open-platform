@@ -13,9 +13,10 @@ module Types
     field :long_desc, String, null: true
     field :required, Boolean, null: true
     field :admin_use, Boolean, null: true
-    field :form, Types::FormType, null: false
+    field :form, Types::FormType, null: false, resolve: Resolvers::BatchResolver.load(:form)
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :category, Types::CategoryType, null: false
+    field :category, Types::CategoryType, null: false,
+                                          resolve: Resolvers::BatchResolver.load(:category)
   end
 end

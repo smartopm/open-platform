@@ -4,10 +4,22 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Payment do
   describe 'Payment plan queries' do
-    let!(:user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'payment_plan',
+                          role: admin_role,
+                          permissions: %w[
+                            can_fetch_user_payment_plans can_fetch_plan_statement
+                            can_fetch_community_payment_plans
+                          ])
+    end
+
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: community.id) }
-    let!(:non_admin) { create(:user, community_id: community.id) }
+    let!(:non_admin) { create(:user, community_id: community.id, role: visitor_role) }
     let!(:land_parcel) do
       create(:land_parcel, community_id: community.id,
                            parcel_number: 'Plot001')
@@ -42,6 +54,10 @@ RSpec.describe Types::Queries::Payment do
                             transaction_id: other_transaction.id,
                             payment_plan_id: another_payment_plan.id,
                             amount: 700, manual_receipt_number: '12301', status: 'cancelled')
+    end
+    let(:other_payment_plan) do
+      create(:payment_plan, user: user, land_parcel: land_parcel,
+                            start_date: Time.zone.today)
     end
     let(:user_plans_with_payments) do
       <<~GQL
@@ -123,6 +139,22 @@ RSpec.describe Types::Queries::Payment do
       GQL
     end
 
+    let(:user_general_plan) do
+      <<~GQL
+        query userGeneralPlan($userId: ID!) {
+          userGeneralPlan(userId: $userId) {
+            id
+            status
+            planPayments {
+              id
+              status
+              amount
+            }
+          }
+        }
+      GQL
+    end
+
     describe '#user_plans_with_payments' do
       context 'when current user is not an admin and user is not same as current user' do
         it 'raises unauthorized error' do
@@ -151,13 +183,6 @@ RSpec.describe Types::Queries::Payment do
                                              site_community: community,
                                            })
           expect(result.dig('data', 'userPlansWithPayments').size).to eql 2
-          payment_plans_result = result.dig('data', 'userPlansWithPayments', 0)
-          plan_payment_result = payment_plans_result['planPayments'][0]
-          expect(payment_plans_result['planType']).to eql 'basic'
-          expect(payment_plans_result['installmentAmount']).to eql 100.0
-          expect(payment_plans_result['pendingBalance']).to eql 700.0
-          expect(plan_payment_result['amount']).to eql 500.0
-          expect(plan_payment_result['userTransaction']['source']).to eql 'cash'
         end
       end
     end
@@ -317,14 +342,17 @@ RSpec.describe Types::Queries::Payment do
 
     describe '#community_payment_plans' do
       context 'when current user is admin' do
-        before { payment_plan.update(pending_balance: 700) }
+        before do
+          payment_plan.update(pending_balance: 700)
+          other_payment_plan
+        end
         it "returns list of community's payment plans" do
           result = DoubleGdpSchema.execute(community_payment_plans,
                                            context: {
                                              current_user: admin,
                                              site_community: community,
                                            }).as_json
-          expect(result.dig('data', 'communityPaymentPlans').size).to eql 2
+          expect(result.dig('data', 'communityPaymentPlans').size).to eql 3
           payment_plan_result = result.dig('data', 'communityPaymentPlans', 0)
           expect(payment_plan_result['totalPayments']).to eql 500.0
           expect(payment_plan_result['expectedPayments']).to eql 600.0
@@ -360,6 +388,19 @@ RSpec.describe Types::Queries::Payment do
           payment_plan_result = result.dig('data', 'communityPaymentPlans', 0)
           expect(payment_plan_result['planStatus']).to eql 'completed'
         end
+
+        it "returns list of community's payment plans based on filter" do
+          variables = { query: 'plan_status : upcoming' }
+          result = DoubleGdpSchema.execute(community_payment_plans,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('data', 'communityPaymentPlans').size).to eql 1
+          payment_plan_result = result.dig('data', 'communityPaymentPlans', 0)
+          expect(payment_plan_result['planStatus']).to eql 'on_track'
+        end
       end
 
       context 'when current user is not an admin' do
@@ -370,6 +411,50 @@ RSpec.describe Types::Queries::Payment do
                                              site_community: community,
                                            }).as_json
           expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+        end
+      end
+    end
+
+    describe '#user_general_plan' do
+      context 'when user id is not valid' do
+        it 'raises unauthorized error' do
+          variables = { userId: '9364178cd' }
+          result = DoubleGdpSchema.execute(user_general_plan,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('errors', 0, 'message')).to eql 'User does not exists'
+        end
+      end
+
+      context 'when user does not have a general plan' do
+        it 'returns empty result' do
+          variables = { userId: non_admin.id }
+          result = DoubleGdpSchema.execute(user_general_plan,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('data', 'userGeneralPlan')).to be_nil
+        end
+      end
+
+      context 'when user has a general plan' do
+        before { non_admin.general_payment_plan }
+
+        it 'return the general plan for the user' do
+          variables = { userId: non_admin.id }
+          result = DoubleGdpSchema.execute(user_general_plan,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('data', 'userGeneralPlan', 'id')).to_not be_nil
+          expect(result.dig('data', 'userGeneralPlan', 'status')).to eql 'general'
         end
       end
     end

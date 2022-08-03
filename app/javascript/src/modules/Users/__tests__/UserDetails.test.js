@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
 import UserDetail from '../Components/UserProfileDetail'
@@ -32,7 +32,5 @@ describe('user detail component', () => {
       </MockedProvider>
     )
     expect(container.queryByText('User Name')).toBeInTheDocument()
-    expect(container.queryByText('user@dgdp.com')).toBeInTheDocument()
-    expect(container.queryByText('34342')).toBeInTheDocument()
   })
 })

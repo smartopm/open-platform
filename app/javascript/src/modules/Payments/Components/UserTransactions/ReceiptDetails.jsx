@@ -1,21 +1,21 @@
+/* eslint-disable complexity */
 import React, { useRef, useContext } from 'react';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Grid from '@material-ui/core/Grid';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import { StyleSheet } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import SignaturePad from '../../../Forms/components/FormProperties/SignaturePad';
-import { formatMoney , objectAccessor, capitalize } from '../../../../utils/helpers';
+import { formatMoney, objectAccessor, capitalize } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { paymentType } from '../../../../utils/constants';
-
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import CommunityName from '../../../../shared/CommunityName';
 
-export default function ReceiptDetail({ paymentData, currencyData, planDetail }) {
+export default function ReceiptDetail({ paymentData, currencyData }) {
   const signRef = useRef(null);
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)');
@@ -23,11 +23,11 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
   const { t } = useTranslation(['payment', 'common']);
 
   return (
-    <div className="print" style={matches ? {} : { margin: '80px 284px' }}>
+    <div className="print" style={matches ? {} : { margin: '0 284px' }}>
       <CommunityName authState={authState} logoStyles={logoStyles} />
       <Typography className={classes.receiptNumber}>
         {t('misc.receipt_#')}
-        {paymentData?.receiptNumber || planDetail?.receiptNumber}
+        {paymentData?.receiptNumber}
       </Typography>
       <div>
         <Grid container>
@@ -56,26 +56,31 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
                 {paymentData.createdAt && dateToString(paymentData.createdAt)}
               </Grid>
             </Grid>
-            <Grid container spacing={1}>
-              <Grid item xs={4} className={classes.title}>
-                {t('common:table_headers.payment_plan')}
+            {paymentData?.paymentPlan?.landParcel?.parcelNumber && (
+              <Grid container spacing={1}>
+                <Grid item xs={4} className={classes.title}>
+                  {t('common:table_headers.payment_plan')}
+                </Grid>
+                <Grid item xs={8} className={classes.title}>
+                  {capitalize(t('misc.lease'))}
+                </Grid>
               </Grid>
-              <Grid item xs={8} className={classes.title}>
-                {capitalize(t('misc.lease'))}
+            )}
+            {paymentData?.paymentPlan?.landParcel?.parcelNumber && (
+              <Grid container spacing={1}>
+                <Grid item xs={4} className={classes.title}>
+                  {t('common:table_headers.plot_number')}
+                </Grid>
+                <Grid item xs={8} className={classes.title}>
+                  {paymentData?.paymentPlan?.landParcel?.parcelType &&
+                  paymentData?.paymentPlan?.landParcel?.parcelType}
+                  {' '}
+                  {paymentData?.paymentPlan?.landParcel?.parcelNumber}
+                </Grid>
               </Grid>
-            </Grid>
-            <Grid container spacing={1}>
-              <Grid item xs={4} className={classes.title}>
-                {t('common:table_headers.plot_number')}
-              </Grid>
-              <Grid item xs={8} className={classes.title}>
-                {paymentData?.paymentPlan?.landParcel?.parcelType && paymentData?.paymentPlan?.landParcel?.parcelType}
-                {' '}
-                {paymentData?.paymentPlan?.landParcel?.parcelNumber}
-              </Grid>
-            </Grid>
+            )}
           </Grid>
-          <Grid item xs={6} style={{textAlign: 'right'}}>
+          <Grid item xs={6} style={{ textAlign: 'right' }}>
             <Grid container spacing={1}>
               <Grid item xs={12} className={classes.title} data-testid="account-name">
                 {paymentData?.community?.bankingDetails?.accountName || 'N/A'}
@@ -83,7 +88,7 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
             </Grid>
             <Grid container spacing={1}>
               <Grid item xs={12} className={classes.title} data-testid="tax-id-no">
-                TPIN:
+                TPIN: 
                 {' '}
                 {paymentData?.community?.bankingDetails?.taxIdNo || 'N/A'}
               </Grid>
@@ -108,8 +113,8 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
                 {t('common:form_fields.email')}
                 {': '}
                 {paymentData?.community?.supportEmail
-                      // eslint-disable-next-line react/prop-types
-                        ?.find(({ category }) => category === 'bank')?.email || 'N/A'}
+                  // eslint-disable-next-line react/prop-types
+                  ?.find(({ category }) => category === 'bank')?.email || 'N/A'}
               </Grid>
             </Grid>
             <Grid container spacing={1}>
@@ -117,8 +122,8 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
                 {t('common:misc.web')}
                 {' '}
                 {paymentData?.community?.socialLinks
-                       // eslint-disable-next-line react/prop-types
-                        ?.find(({ category }) => category === 'website')?.social_link || 'N/A'}
+                  // eslint-disable-next-line react/prop-types
+                  ?.find(({ category }) => category === 'website')?.social_link || 'N/A'}
               </Grid>
             </Grid>
             <Grid container spacing={1}>
@@ -126,8 +131,8 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
                 {t('common:misc.phone')}
                 {': '}
                 {paymentData?.community?.supportNumber
-                      // eslint-disable-next-line react/prop-types
-                        ?.find(({ category }) => category === 'bank')?.phone_number || 'N/A'}
+                  // eslint-disable-next-line react/prop-types
+                  ?.find(({ category }) => category === 'bank')?.phone_number || 'N/A'}
               </Grid>
             </Grid>
           </Grid>
@@ -159,14 +164,13 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
           <Divider className={classes.divider} />
           <Grid container spacing={1}>
             <Grid item xs={4} className={classes.title}>
-              {paymentData?.paymentPlan?.landParcel?.parcelNumber || planDetail?.paymentPlan?.landParcel?.parcelNumber}
+              {paymentData?.paymentPlan?.landParcel?.parcelNumber || 'General Plan'}
             </Grid>
             <Grid item xs={4} className={classes.title} style={{ textAlign: 'center' }}>
-              {objectAccessor(paymentType, paymentData.source) ||
-                      objectAccessor(paymentType, paymentData?.userTransaction?.source)}
+              {objectAccessor(paymentType, paymentData?.userTransaction?.source)}
             </Grid>
             <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
-              {formatMoney(currencyData, (planDetail?.amount || paymentData?.amount))}
+              {formatMoney(currencyData, paymentData?.amount)}
             </Grid>
           </Grid>
         </div>
@@ -179,37 +183,46 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
               </Grid>
               <Grid item xs={9} data-testid="cashier-name" style={{ fontWeight: 700 }}>
                 {paymentData?.depositor?.name ||
-                        paymentData?.userTransaction?.depositor?.name ||
-                        '-'}
+                  paymentData?.userTransaction?.depositor?.name ||
+                  '-'}
               </Grid>
             </Grid>
-
-            <Grid container spacing={1}>
-              <Grid item xs={12} style={{ color: '#9B9B9B' }}>
-                {t('common:misc.signature')}
+            {authState.user.userType === 'admin' && (
+              <Grid container spacing={1}>
+                <Grid item xs={12} style={{ color: '#9B9B9B' }}>
+                  {t('common:misc.signature')}
+                </Grid>
+                <Grid item xs={11}>
+                  <div style={{ borderStyle: 'solid', borderColor: '#ccc', height: '110px' }}>
+                    <SignaturePad
+                      key={paymentData.id}
+                      detail={{ type: 'signature', status: '' }}
+                      signRef={signRef}
+                      onEnd={() => {}}
+                      label=""
+                    />
+                  </div>
+                </Grid>
               </Grid>
-              <Grid item xs={11}>
-                <div style={{ borderStyle: 'solid', borderColor: '#ccc', height: '110px' }}>
-                  <SignaturePad
-                    key={paymentData.id}
-                    detail={{ type: 'signature', status: '' }}
-                    signRef={signRef}
-                    onEnd={() => {}}
-                    label=""
-                  />
-                </div>
-              </Grid>
-            </Grid>
+            )}
           </Grid>
           <Grid item xs={5}>
-            <Grid container spacing={1}>
-              <Grid item xs={8} className={classes.title}>
-                {t('misc.expected_monthly_payment')}
+            {paymentData?.paymentPlan?.landParcel?.parcelNumber && (
+              <Grid container spacing={1}>
+                <Grid item xs={8} className={classes.title}>
+                  {t('misc.expected_monthly_payment')}
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  data-testid="expected-monthly-amount"
+                  className={classes.title}
+                  style={{ textAlign: 'right' }}
+                >
+                  {formatMoney(currencyData, paymentData?.paymentPlan?.installmentAmount)}
+                </Grid>
               </Grid>
-              <Grid item xs={4} data-testid="expected-monthly-amount" className={classes.title} style={{ textAlign: 'right' }}>
-                {formatMoney(currencyData, (paymentData?.paymentPlan?.installmentAmount || planDetail?.paymentPlan?.installmentAmount))}
-              </Grid>
-            </Grid>
+            )}
             <Grid container spacing={1}>
               <Grid item xs={8} className={classes.title}>
                 {t('table_headers.total_paid')}
@@ -221,32 +234,34 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
                 className={classes.title}
                 style={{ textAlign: 'right' }}
               >
-                {formatMoney(currencyData, (planDetail?.amount || paymentData?.amount))}
+                {formatMoney(currencyData, paymentData?.amount)}
               </Grid>
             </Grid>
-            <Grid container spacing={1}>
-              <Grid item xs={8} className={classes.title}>
-                {t('misc.total_balance_remaining')}
+            {paymentData?.paymentPlan?.landParcel?.parcelNumber && (
+              <Grid container spacing={1}>
+                <Grid item xs={8} className={classes.title}>
+                  {t('misc.total_balance_remaining')}
+                </Grid>
+                <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
+                  {formatMoney(currencyData, paymentData.currentPlotPendingBalance || 0.0)}
+                </Grid>
               </Grid>
-              <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
-                {formatMoney(currencyData, (paymentData.currentPlotPendingBalance || planDetail?.currentPlotPendingBalance || 0.0))}
-              </Grid>
-            </Grid>
+            )}
             <Grid container spacing={1}>
               <Grid item xs={8} className={classes.title}>
                 {t('misc.currency')}
               </Grid>
               <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
                 {paymentData?.community?.currency === 'zambian_kwacha'
-                        ? 'ZMW (K)'
-                        : paymentData?.community?.currency}
+                  ? 'ZMW (K)'
+                  : paymentData?.community?.currency}
               </Grid>
             </Grid>
           </Grid>
         </Grid>
 
         <div style={{ marginTop: '60px' }}>
-          <b style={{ fontSize: '16px' }}>{t('misc.banking_details')}</b>
+          <b style={{ fontSize: '16px' }}>{t('misc.banking_details')}</b> 
           {' '}
           <br />
           <Grid container spacing={1}>
@@ -300,7 +315,7 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 const useStyles = makeStyles({
@@ -341,25 +356,10 @@ const logoStyles = StyleSheet.create({
 });
 
 ReceiptDetail.defaultProps = {
-  paymentData: {},
-  planDetail: {}
+  paymentData: {}
 };
 
 ReceiptDetail.propTypes = {
-  planDetail: PropTypes.shape({
-    id: PropTypes.string,
-    amount: PropTypes.number,
-    receiptNumber: PropTypes.string,
-    currentPlotPendingBalance: PropTypes.number,
-    paymentPlan: PropTypes.shape({
-      id: PropTypes.string,
-      installmentAmount: PropTypes.number,
-      landParcel: PropTypes.shape({
-        id: PropTypes.string,
-        parcelNumber: PropTypes.string
-      })
-    })
-  }),
   paymentData: PropTypes.shape({
     id: PropTypes.string,
     source: PropTypes.string,
@@ -390,23 +390,29 @@ ReceiptDetail.propTypes = {
         branch: PropTypes.string,
         swiftCode: PropTypes.string,
         sortCode: PropTypes.string,
-        address:PropTypes.string,
+        address: PropTypes.string,
         city: PropTypes.string,
         country: PropTypes.string,
-        taxIdNo: PropTypes.string,
+        taxIdNo: PropTypes.string
       }),
-      socialLinks: PropTypes.arrayOf(PropTypes.shape({
-        category: PropTypes.string,
-        social_link: PropTypes.string
-      })),
-      supportEmail: PropTypes.arrayOf(PropTypes.shape({
-        category: PropTypes.string,
-        email: PropTypes.string
-      })),
-      supportNumber: PropTypes.arrayOf(PropTypes.shape({
-        category: PropTypes.string,
-        phone_no: PropTypes.string
-      })),
+      socialLinks: PropTypes.arrayOf(
+        PropTypes.shape({
+          category: PropTypes.string,
+          social_link: PropTypes.string
+        })
+      ),
+      supportEmail: PropTypes.arrayOf(
+        PropTypes.shape({
+          category: PropTypes.string,
+          email: PropTypes.string
+        })
+      ),
+      supportNumber: PropTypes.arrayOf(
+        PropTypes.shape({
+          category: PropTypes.string,
+          phone_no: PropTypes.string
+        })
+      )
     }),
     user: PropTypes.shape({
       id: PropTypes.string,

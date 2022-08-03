@@ -1,12 +1,13 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
+
+
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import EventLogs from '../Components/EventLogs';
 
 describe('EventLogs Component', () => {
-  it('renders loader when loading record', () => {
+  it('renders loader when loading record', async () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -16,5 +17,6 @@ describe('EventLogs Component', () => {
     );
 
     expect(container.queryByTestId('loader')).toBeInTheDocument();
+    await waitForElementToBeRemoved(container.queryByTestId('loader'));
   });
 });

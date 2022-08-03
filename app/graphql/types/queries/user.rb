@@ -73,6 +73,27 @@ module Types::Queries::User
     field :admin_users, [Types::UserType], null: true do
       description 'Get a list of all admin users'
     end
+
+    field :search_guests, [Types::UserType], null: true do
+      argument :query, String, required: false
+      description 'Get a list of visitors to be invited'
+    end
+
+    field :my_guests, [Types::InviteType], null: true do
+      argument :query, String, required: false
+      description 'Get a list of visitors that I invited'
+    end
+
+    field :my_hosts, [Types::InviteType], null: true do
+      argument :user_id, GraphQL::Types::ID, required: true
+      description 'Get a list of hosts who invited me'
+    end
+
+    field :search_user_ids, [Types::UserType], null: true do
+      argument :query, String, required: false
+      argument :user_ids, [String], required: false
+      description 'Get searched users from userids'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -87,26 +108,33 @@ module Types::Queries::User
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def users(offset: 0, limit: 50, query: nil)
-    adm = context[:current_user]
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
+    unless permitted?(module: :user, permission: :can_get_users)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
-    if query.present? && query.include?('date_filter')
+    login_after_filter = query.to_s.include?('login_after_filter')
+    has_created_date_filter = query.to_s.include?('created_date_filter')
+
+    if query.present? && login_after_filter || has_created_date_filter
       Users::User.allowed_users(context[:current_user])
-                 .eager_load(:labels)
                  .heavy_search(query)
                  .order(name: :asc)
                  .limit(limit)
-                 .offset(offset).with_attached_avatar
+                 .offset(offset)
     else
       Users::User.allowed_users(context[:current_user])
-                 .eager_load(:labels)
-                 .search(query)
+                 .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
                  .order(name: :asc)
                  .limit(limit)
-                 .offset(offset).with_attached_avatar
+                 .offset(offset)
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def user_search(query: '', offset: 0, limit: 50)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
 
@@ -121,13 +149,24 @@ module Types::Queries::User
       search_method = 'search_by_contact_info'
       query = query.split(' ').last
     end
-    Users::User.allowed_users(context[:current_user])
-               .send(search_method, query)
-               .order(name: :asc)
-               .limit(limit)
-               .offset(offset).with_attached_avatar
+
+    if search_method == 'search'
+      Users::User.allowed_users(context[:current_user])
+                 .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
+                 .order(name: :asc)
+                 .limit(limit)
+                 .offset(offset)
+    else
+      Users::User.allowed_users(context[:current_user])
+                 .send(search_method, query)
+                 .order(name: :asc)
+                 .limit(limit)
+                 .offset(offset)
+    end
   end
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def current_user
     return context[:current_user] if context[:current_user]
@@ -145,22 +184,18 @@ module Types::Queries::User
                ).order(name: :asc)
   end
 
-  # rubocop:disable Metrics/MethodLength
   def users_lite(offset: 0, limit: 50, query: nil)
-    current = context[:current_user]
-    unless current.site_manager? || current.site_worker?
+    unless permitted?(module: :user, permission: :can_get_users_lite)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
 
     Users::User.allowed_users(context[:current_user])
-               .includes(:accounts)
-               .search_lite(query)
+               .search_lite(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
                .order(name: :asc)
                .limit(limit)
-               .offset(offset).with_attached_avatar
+               .offset(offset)
   end
-  # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
   def find_community_user(id)
@@ -180,19 +215,20 @@ module Types::Queries::User
   end
 
   def users_count(query: nil)
-    adm = context[:current_user]
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
+    unless user_permissions_check?('can_get_user_count')
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     allowed_users = Users::User.allowed_users(context[:current_user])
     if query.present? && query.include?('date_filter')
       allowed_users.heavy_search(query).size
     else
-      allowed_users.search(query).size
+      allowed_users.search(or: [{ query: (query || '') }, { name: { matches: query } }]).size
     end
   end
 
   def substatus_query
-    unless context[:current_user]&.admin?
+    unless permitted?(module: :user, permission: :can_get_substatus_count)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -202,7 +238,7 @@ module Types::Queries::User
   end
 
   def substatus_distribution_query
-    unless context[:current_user]&.admin?
+    unless permitted?(module: :user, permission: :can_get_substatus_distribution)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -216,11 +252,62 @@ module Types::Queries::User
   end
 
   def admin_users
-    unless context[:current_user]&.admin?
+    unless permitted?(module: :user, permission: :can_view_admin_users)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
     context[:site_community].users.where(user_type: 'admin', state: 'valid')
+  end
+
+  def search_guests(query: nil)
+    unless user_permissions_check?('can_search_guests')
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+    users = context[:site_community].users
+    users.where(user_type: 'visitor')
+         .search_guest(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
+         .limit(5)
+  end
+
+  def my_guests(query: nil)
+    unless user_permissions_check?('can_view_guests')
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
+
+    context[:current_user].invitees
+                          .search(or: [{ query: (query.presence || '.') },
+                                       { guest: { matches: query } }])
+                          .order(created_at: :desc)
+  end
+
+  def search_user_ids(query: nil, user_ids: [])
+    unless permitted?(module: :user, permission: :can_search_user_ids)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    Users::User.allowed_users(context[:current_user])
+               .where(id: user_ids)
+               .search_lite(or: [{ query: (query.presence || '.') },
+                                 { name: { matches: query } }])
+               .order(name: :asc)
+  end
+
+  def my_hosts(user_id:)
+    user = context[:site_community].users.find_by(id: user_id)
+
+    raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') if user.blank?
+
+    unless user_permissions_check?('can_view_hosts')
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
+
+    user.invites.order(created_at: :desc)
+  end
+
+  def user_permissions_check?(permission)
+    permitted?(module: :user, permission: permission.to_sym)
   end
 end
 # rubocop:enable Metrics/ModuleLength

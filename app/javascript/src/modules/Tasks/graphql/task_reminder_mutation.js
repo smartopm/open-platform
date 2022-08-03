@@ -10,3 +10,13 @@ mutation setNoteReminder($noteId: ID!, $hour: Int!) {
   }
 }
 `
+
+export const UnsetTaskReminderMutation = gql`
+mutation unsetNoteReminder($noteId: ID!) {
+  unsetNoteReminder(noteId: $noteId) {
+    note {
+      id
+    }
+  }
+}
+`

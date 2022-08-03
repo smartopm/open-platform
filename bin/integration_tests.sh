@@ -11,9 +11,8 @@ docker-compose -f docker-compose.ci.yml up -d
 echo "Preparing test DB..."
 docker-compose -f docker-compose.ci.yml run --rm rails rails db:create db:schema:load
 
-echo "Compiling assets..."
-docker-compose -f docker-compose.ci.yml run --rm rails rails webpacker:clobber
-docker-compose -f docker-compose.ci.yml run --rm rails rails webpacker:compile
+echo "Creating build..."
+[ ! -z $1 ] && docker-compose run --rm webpacker yarn build
 
 echo "Running Cypress tests..."
 docker-compose -f docker-compose.ci.yml -f cypress.yml up --exit-code-from cypress

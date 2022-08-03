@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import {
   Menu,
   MenuItem,
-} from '@material-ui/core'
+} from '@mui/material'
 import { StyleSheet, css } from 'aphrodite'
 import { useTranslation } from 'react-i18next';
 import colors from '../../../themes/nkwashi/colors'

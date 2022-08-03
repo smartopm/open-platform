@@ -1,8 +1,8 @@
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom/'
-import { act } from 'react-dom/test-utils'
-import { mount } from 'enzyme/'
-import CustodianLogs from '../Components/CustodianTimeSheetLog'
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom/';
+import { render } from '@testing-library/react';
+import CustodianLogs from '../Components/CustodianTimeSheetLog';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('time sheet logs component', () => {
   const data = {
@@ -17,24 +17,17 @@ describe('time sheet logs component', () => {
         userId: '999013ef'
       }
     ]
-  }
-  let wrapper
-  act(() => {
-    wrapper = mount(
-      <BrowserRouter>
+  };
+
+  const wrapper = render(
+    <BrowserRouter>
+      <MockedThemeProvider>
         <CustodianLogs data={data} />
-      </BrowserRouter>
-    )
-  })
+      </MockedThemeProvider>
+    </BrowserRouter>
+  );
   it('should render data with given props', () => {
-    expect(wrapper.find('.nz_user')).toHaveLength(1)
-    expect(wrapper.find('.nz_user').text()).toContain('JMM')
-    // nz_endshift
-    expect(wrapper.find('.nz_endshift').text()).toContain('In-Progress') // since the endedAt date is null
-    const {
-      children: { props }
-    } = wrapper.props()
-    expect(props.data.timeSheetLogs).toHaveLength(1)
-    expect(props.data.timeSheetLogs[0].userId).toBe('999013ef')
-  })
-})
+    expect(wrapper.queryByText('JMM')).toBeInTheDocument();
+    expect(wrapper.queryByText(/In-Progress/)).toBeInTheDocument();
+  });
+});

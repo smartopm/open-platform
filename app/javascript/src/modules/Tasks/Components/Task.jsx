@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Chip,
   TextField,
@@ -9,12 +9,12 @@ import {
   Button,
   Typography,
   Link as MuiLink
-} from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import EditIcon from '@material-ui/icons/Edit';
-import AlarmIcon from '@material-ui/icons/Alarm';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
+} from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import EditIcon from '@mui/icons-material/Edit';
+import AlarmIcon from '@mui/icons-material/Alarm';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { Link, useHistory } from 'react-router-dom';
 
 import { useMutation } from 'react-apollo';
@@ -24,7 +24,7 @@ import DateContainer, { dateToString, dateTimeToString } from '../../../componen
 import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import RemindMeLaterMenu from './RemindMeLaterMenu';
 import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
-import MessageAlert from '../../../components/MessageAlert';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 /**
  *
@@ -54,8 +54,8 @@ export default function Task({
 
   const [setReminder] = useMutation(TaskReminderMutation);
   const [reminderTime, setReminderTime] = useState(null);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const history = useHistory();
 
@@ -80,13 +80,6 @@ export default function Task({
     return `${dateToString(time)}, ${dateTimeToString(time)}`;
   }
 
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
-  }
-
   function setTaskReminder(hour) {
     setReminder({
       variables: { noteId: note.id, hour }
@@ -97,8 +90,7 @@ export default function Task({
         setReminderTime(timeFormat(timeScheduled));
       })
       .catch(err => {
-        setMessageAlert(err.message);
-        setIsSuccessAlert(false);
+        showSnackbar({ type: messageType.error, message: err.message });
       });
   }
 
@@ -122,22 +114,16 @@ export default function Task({
 
   return (
     <>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
-      <Grid container direction="column" justify="flex-start">
+      <Grid container direction="column" justifyContent="flex-start">
         <Grid item xs={12}>
           <Typography variant="subtitle1" gutterBottom>
             {/* eslint-disable-next-line react/no-danger */}
             <span
               style={{ whiteSpace: 'pre-line' }}
-              // eslint-disable-next-line react/no-danger
+            // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{
-                __html: sanitizeText(removeNewLines(note.body))
-              }}
+              __html: sanitizeText(removeNewLines(note.body))
+            }}
             />
           </Typography>
         </Grid>
@@ -168,68 +154,68 @@ export default function Task({
               size="medium"
               onDelete={() => handleDelete(user.id, note.id)}
             />
-          ))}
+        ))}
 
           {/* loader */}
           {loaded && id === note.id ? (
             <Spinner />
-          ) : (
-            <Chip
-              key={note.id}
-              variant="outlined"
-              label={autoCompleteOpen && id === note.id ? 'Close' : 'Add Assignee'}
-              size="medium"
-              icon={autoCompleteOpen && id === note.id ? <CancelIcon /> : <AddCircleIcon />}
-              onClick={event => handleOpenAutoComplete(event, note.id)}
-            />
-          )}
+        ) : (
+          <Chip
+            key={note.id}
+            variant="outlined"
+            label={autoCompleteOpen && id === note.id ? 'Close' : 'Add Assignee'}
+            size="medium"
+            icon={autoCompleteOpen && id === note.id ? <CancelIcon /> : <AddCircleIcon />}
+            onClick={event => handleOpenAutoComplete(event, note.id)}
+          />
+        )}
           {/* error message */}
           <br />
           {Boolean(message.length) && <span>{message}</span>}
           {/* autocomplete for assignees */}
           {// avoid opening autocomplete box for other notes
-          autoCompleteOpen && id === note.id && (
-            <Autocomplete
-              clearOnEscape
-              clearOnBlur
-              open={isAssignTaskOpen}
-              onOpen={handleOpenTaskAssign}
-              onClose={handleOpenTaskAssign}
-              loading={loading}
-              id={note.id}
-              options={users}
-              getOptionLabel={option => option.name}
-              style={{ width: 300 }}
-              onChange={(_evt, value) => {
-                // if nothing selected, ignore and move on
-                if (!value) {
-                  return;
-                }
-                // assign or unassign the user here
-                assignUnassignUser(note.id, value.id);
-              }}
-              renderInput={params => (
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                <TextField {...params} placeholder="Name of assignee" />
-              )}
-            />
-          )
+        autoCompleteOpen && id === note.id && (
+          <Autocomplete
+            clearOnEscape
+            clearOnBlur
+            open={isAssignTaskOpen}
+            onOpen={handleOpenTaskAssign}
+            onClose={handleOpenTaskAssign}
+            loading={loading}
+            id={note.id}
+            options={users}
+            getOptionLabel={option => option.name}
+            style={{ width: 300 }}
+            onChange={(_evt, value) => {
+              // if nothing selected, ignore and move on
+              if (!value) {
+                return;
+              }
+              // assign or unassign the user here
+              assignUnassignUser(note.id, value.id);
+            }}
+            renderInput={params => (
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              <TextField {...params} placeholder="Name of assignee" />
+            )}
+          />
+        )
 }
         </Grid>
         <Grid item>
           <div
             style={{
-              display: 'inline-flex',
-              margin: '5px 0 10px 0'
-            }}
+            display: 'inline-flex',
+            margin: '5px 0 10px 0'
+          }}
           >
             <EditIcon
               data-testid="edit_due_date_btn"
               style={{
-                cursor: 'pointer',
-                margin: '5px 4px 0 0',
-                fontSize: 18
-              }}
+              cursor: 'pointer',
+              margin: '5px 4px 0 0',
+              fontSize: 18
+            }}
               color="primary"
               onClick={() => handleModal(note.id)}
             />
@@ -241,9 +227,9 @@ export default function Task({
                 href="#"
                 data-testid="more_details_btn"
                 style={{
-                  cursor: 'pointer',
-                  marginLeft: '5px'
-                }}
+                cursor: 'pointer',
+                marginLeft: '5px'
+              }}
                 onClick={event => routeToAction(event, note.id)}
               >
                 More Details
@@ -254,31 +240,31 @@ export default function Task({
             color="primary"
             disabled={note.id && loadingMutation}
             style={{
-              float: 'right'
-            }}
+            float: 'right'
+          }}
             onClick={() => handleCompleteNote(note.id, note.completed)}
           >
             {note.completed ? 'Completed' : 'Mark as complete'}
           </Button>
           {isCurrentUserAnAssignee() && (
-            <Button
-              color="primary"
-              style={{
-                float: 'right'
-              }}
-              onClick={handleOpenMenu}
-            >
-              {currentActiveReminder() ? 'Change reminder' : 'Remind me later'}
-            </Button>
-          )}
+          <Button
+            color="primary"
+            style={{
+              float: 'right'
+            }}
+            onClick={handleOpenMenu}
+          >
+            {currentActiveReminder() ? 'Change reminder' : 'Remind me later'}
+          </Button>
+        )}
           {isCurrentUserAnAssignee() && currentActiveReminder() && (
-            <>
-              <Typography variant="subtitle1" style={{ margin: '5px 5px 10px 0', float: 'right' }}>
-                {currentActiveReminder()}
-              </Typography>
-              <AlarmIcon style={{ float: 'right', marginTop: '5px' }} />
-            </>
-          )}
+          <>
+            <Typography variant="subtitle1" style={{ margin: '5px 5px 10px 0', float: 'right' }}>
+              {currentActiveReminder()}
+            </Typography>
+            <AlarmIcon style={{ float: 'right', marginTop: '5px' }} />
+          </>
+        )}
         </Grid>
         <RemindMeLaterMenu
           taskId={id}
@@ -291,5 +277,5 @@ export default function Task({
       <Divider />
       <br />
     </>
-  );
+);
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import LinearScaleIcon from '@material-ui/icons/LinearScale';
+import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import UserStats from './Components/UserStats';
 
 export default {

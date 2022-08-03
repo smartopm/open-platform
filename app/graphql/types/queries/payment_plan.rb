@@ -29,6 +29,11 @@ module Types::Queries::PaymentPlan
       description 'returns all payment plans for community'
       argument :query, String, required: false
     end
+
+    field :user_general_plan, Types::PaymentPlanType, null: true do
+      description 'returns general plan for user'
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
   end
 
   # Returns list of user's all payment plans with payments
@@ -40,10 +45,10 @@ module Types::Queries::PaymentPlan
   # @return [Array<PaymentPlan>]
   def user_plans_with_payments(user_id: nil, offset: 0, limit: 10)
     user = verified_user(user_id)
-    Properties::PaymentPlan.left_joins(:plan_ownerships).includes(:plan_payments).where(
-      'payment_plans.user_id = ? or plan_ownerships.user_id = ?', user.id,
-      user.id
-    ).distinct.order(created_at: :desc).offset(offset).limit(limit)
+    Properties::PaymentPlan.left_joins(:plan_ownerships)
+                           .where('payment_plans.user_id = ? or plan_ownerships.user_id = ?',
+                                  user.id, user.id)
+                           .distinct.order(created_at: :desc).offset(offset).limit(limit)
   end
 
   # Statement details of payment plan
@@ -52,7 +57,7 @@ module Types::Queries::PaymentPlan
   #
   # @return [Hash]
   def payment_plan_statement(payment_plan_id:)
-    raise_unauthorized_error
+    raise_unauthorized_error_for_payment_plans(:can_fetch_plan_statement)
 
     payment_plan = Properties::PaymentPlan.find_by(id: payment_plan_id)
     raise_payment_plan_not_found_error(payment_plan)
@@ -71,23 +76,32 @@ module Types::Queries::PaymentPlan
   #
   # @return [Array<PaymentPlan>]
   def user_payment_plans(user_id: nil, offset: 0, limit: 10)
-    raise_unauthorized_error
+    raise_unauthorized_error_for_payment_plans(:can_fetch_user_payment_plans)
 
     user = context[:site_community].users.find_by(id: user_id)
-    user.payment_plans.includes(:land_parcel).where.not(pending_balance: 0).limit(limit)
-        .offset(offset)
+    user.payment_plans.where.not(pending_balance: 0).limit(limit).offset(offset)
   end
 
   # Returns list of all communiy's payment plans
   #
   # @return [Array<PaymentPlan>]
   def community_payment_plans(query: nil)
-    raise_unauthorized_error
+    raise_unauthorized_error_for_payment_plans(:can_fetch_community_payment_plans)
 
-    plans = Properties::PaymentPlan.includes(:land_parcel, :user).where(
-      land_parcels: { community_id: context[:site_community].id },
-    ).order(:status)
+    plans = Properties::PaymentPlan.excluding_general_plans
+                                   .joins(:land_parcel)
+                                   .where(land_parcels:
+                                      { community_id: context[:site_community].id })
+                                   .order(:status)
     filtered_plans(plans, query).sort_by { |plan| [(plan.owing_amount * -1), plan.status] }
+  end
+
+  # Returns user's general payment plan
+  #
+  # @return PaymentPlan
+  def user_general_plan(user_id: nil)
+    user = verified_user(user_id)
+    user.payment_plans.general.first
   end
 
   private
@@ -95,8 +109,8 @@ module Types::Queries::PaymentPlan
   # Raises GraphQL execution error if user is unauthorized.
   #
   # @return [GraphQL::ExecutionError]
-  def raise_unauthorized_error
-    return if context[:current_user]&.admin?
+  def raise_unauthorized_error_for_payment_plans(permission)
+    return true if permitted?(module: :payment_plan, permission: permission)
 
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
@@ -158,14 +172,36 @@ module Types::Queries::PaymentPlan
   def filtered_plans(plans, query)
     split_query = query&.split(' ')
     if query_for_filter?(split_query)
-      method, operator, value = split_query
-      value = value.gsub("'", '')
-      value = value.to_f unless method.eql?('plan_status')
-      plans.select { |plan| plan.public_send(method).public_send(get_operator(operator), value) }
+      selected_plans(plans, split_query)
     else
       plans.search(query)
     end
   end
+
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
+  # Returns selected plans by using the instance methods
+  #
+  # @return [Array<PaymentPlan>]
+  def selected_plans(plans, split_query)
+    method, operator, value = split_query
+    value = value.gsub("'", '')
+    value = value.to_f unless method.eql?('plan_status')
+
+    if method.eql?('plan_status') && value.eql?('upcoming')
+      plans.select do |plan|
+        plan.plan_status.eql?('on_track') &&
+          plan.upcoming_installment_due_date >= Time.zone.today &&
+          plan.upcoming_installment_due_date <= 30.days.from_now.to_date
+      end
+    else
+      plans.select { |plan| plan.public_send(method).public_send(get_operator(operator), value) }
+    end
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   # Returns true/false if query is for filter
   # * Checks if query is in the format: 'field operator value'

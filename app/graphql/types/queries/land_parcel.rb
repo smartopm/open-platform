@@ -41,23 +41,17 @@ module Types::Queries::LandParcel
       description 'Get all land parcel entries'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
-    end
-
-    field :house_geo_data, [Types::LandParcelGeoDataType], null: true do
-      description 'Get all House Geo Data'
+      argument :query, String, required: false
     end
   end
   # rubocop:enable Metrics/BlockLength
 
   def fetch_land_parcel(query: nil, offset: 0, limit: 100)
-    unless context[:current_user]&.admin?
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+    raise_unauthorized_error_for_land_parcels(:can_fetch_land_parcels)
 
     context[:site_community].land_parcels
+                            .excluding_general
                             .search(query)
-                            .includes(accounts: :user, payment_plans: %i[user plan_payments])
-                            .with_attached_images
                             .where(object_type: 'land')
                             .limit(limit).offset(offset)
   end
@@ -65,50 +59,44 @@ module Types::Queries::LandParcel
   def user_land_parcels(user_id:)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
-    context[:site_community].users.find_by(id: user_id).land_parcels.includes(:accounts)
+    user = verified_user(user_id)
+    user.land_parcels.excluding_general
   end
 
   def user_land_parcel_with_plan(user_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    raise_unauthorized_error_for_land_parcels(:can_fetch_land_parcels_with_plans)
 
     user = context[:site_community].users.find_by(id: user_id)
-    user.payment_plans.includes(:land_parcel).where.not(pending_balance: 0)
+    user.payment_plans.excluding_general_plans.where.not(pending_balance: 0)
   end
 
   def land_parcel(id:)
-    unless context[:current_user].admin?
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+    raise_unauthorized_error_for_land_parcels(:can_fetch_land_parcel)
 
-    parcel = context[:site_community].land_parcels
-                                     .includes(accounts: :user, payment_plans:
-                                      %i[user plan_payments])
-                                     .with_attached_images
-                                     .find_by(id: id)
+    parcel = context[:site_community].land_parcels.excluding_general.find_by(id: id)
     raise GraphQL::ExecutionError, 'Record not found' if parcel.nil?
 
     parcel
   end
 
+  # eager load cannot be removed as valuations and accounts are used in geo data
   def land_parcel_geo_data
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     properties = context[:site_community].land_parcels
-                                         .eager_load(:valuations, :accounts)
-                                         .with_attached_images
+                                         .excluding_general
+                                         .eager_load(:accounts, :valuations)
 
     properties.map { |p| geo_data(p, properties) }
   end
 
-  def fetch_house(offset: 0, limit: 100)
-    unless context[:current_user]&.admin?
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+  def fetch_house(query: nil, offset: 0, limit: 100)
+    raise_unauthorized_error_for_land_parcels(:can_fetch_house)
 
     context[:site_community].land_parcels
+                            .excluding_general
+                            .search(query)
                             .where(object_type: 'house')
-                            .includes(accounts: :user, payment_plans: %i[user plan_payments])
-                            .with_attached_images
                             .limit(limit).offset(offset)
   end
 
@@ -149,6 +137,12 @@ module Types::Queries::LandParcel
     end
 
     { geom: parcel[:geom], long_x: parcel[:long_x], lat_y: parcel[:lat_y] }
+  end
+
+  def raise_unauthorized_error_for_land_parcels(permission)
+    return if permitted?(module: :land_parcel, permission: permission)
+
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
 end
 # rubocop:enable Metrics/ModuleLength

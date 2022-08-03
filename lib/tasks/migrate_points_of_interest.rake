@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 # rubocop:disable Layout/LineLength
 namespace :import do
   desc 'Migrate Points of Interest'
@@ -32,7 +31,7 @@ namespace :import do
 
     ActiveRecord::Base.transaction do
       poi_id_list.each do |id|
-        poi = origin_community.land_parcels.find_by(parcel_number: id)
+        poi = origin_community.land_parcels.excluding_general.find_by(parcel_number: id)
 
         if poi.blank?
           puts "point of interest #{id} not found"
@@ -46,4 +45,3 @@ namespace :import do
   end
 end
 # rubocop:enable Layout/LineLength
-# rubocop:enable Metrics/BlockLength

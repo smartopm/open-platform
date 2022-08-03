@@ -1,10 +1,12 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { FormPropertyQuery } from '../graphql/forms_queries';
 import { FormPropertyDeleteMutation } from '../graphql/forms_mutation';
 import FormPropertyAction from '../components/FormPropertyAction';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('Form that creates other forms component', () => {
   // create a query mock
@@ -19,6 +21,9 @@ describe('Form that creates other forms component', () => {
           id: '5290d212-edf8-4c1e-a20b',
           fieldName: 'Last Name',
           fieldType: 'text',
+          groupingId: '6789-tyu4762',
+          shortDesc: '50',
+          longDesc: 'This is another description',
           fieldValue: [
             {
               value: '',
@@ -46,41 +51,73 @@ describe('Form that creates other forms component', () => {
             id: '5290d212-edf8-4c1e-a20b',
             __typename: 'FormProperties'
           },
+          newFormVersion: {
+            id: '542781-e6sf6',
+            __typename: 'Forms'
+          },
+          message: '',
           __typename: 'FormPropertiesDeletePayload'
         }
       }
     }
   };
 
-
   it('should delete a form property', async () => {
     const refetchMock = jest.fn();
     const container = render(
       <MockedProvider mocks={[mocks, deletePropertyMock]} addTypename>
-        <FormPropertyAction
-          propertyId={mocks.request.variables.formPropertyId}
-          formId={mocks.request.variables.formId}
-          refetch={refetchMock}
-          editMode
-        />
+        <MockedThemeProvider>
+          <MockedSnackbarProvider>
+            <FormPropertyAction
+              propertyId={mocks.request.variables.formPropertyId}
+              formId={mocks.request.variables.formId}
+              refetch={refetchMock}
+              categoryId=""
+              editMode
+              formDetailRefetch={jest.fn()}
+            />
+          </MockedSnackbarProvider>
+        </MockedThemeProvider>
       </MockedProvider>
     );
-    expect(container.queryByTestId('property_delete')).toBeInTheDocument();
-    expect(container.queryByTestId('property_edit')).toBeInTheDocument();
+    expect(container.queryByTestId('action_options')).toBeInTheDocument();
 
-
-
-    fireEvent.click(container.queryByTestId('property_edit'));
+    fireEvent.click(container.queryByTestId('action_options'));
     // here we expect the edit modal to be open with proper fields
-    expect(container.queryByText('form_fields.field_name')).toBeInTheDocument();
-    expect(container.queryByText('form_fields.required_field')).toBeInTheDocument();
-    expect(container.queryByText('form_fields.admins_only')).toBeInTheDocument();
-    expect(container.queryByText('actions.update_property')).toBeInTheDocument();
+    expect(container.queryByText('common:menu.delete')).toBeInTheDocument();
+    expect(container.queryByText('common:menu.edit')).toBeInTheDocument();
 
-    fireEvent.click(container.queryByTestId('property_delete'));
+    fireEvent.click(container.queryByText('common:menu.delete'));
     await waitFor(() => {
       expect(refetchMock).toBeCalled();
-      expect(container.queryByText('misc.deleted_form_property')).toBeInTheDocument();
     }, 50);
-  })
+  });
+
+  it('should edit a form property', async () => {
+    const refetchMock = jest.fn();
+    const container = render(
+      <MockedProvider mocks={[mocks, deletePropertyMock]} addTypename>
+        <MockedThemeProvider>
+          <MockedSnackbarProvider>
+            <FormPropertyAction
+              propertyId={mocks.request.variables.formPropertyId}
+              formId={mocks.request.variables.formId}
+              refetch={refetchMock}
+              categoryId=""
+              editMode
+              formDetailRefetch={jest.fn()}
+            />
+          </MockedSnackbarProvider>
+        </MockedThemeProvider>
+      </MockedProvider>
+    );
+
+    await waitFor(() => {
+      fireEvent.click(container.queryByTestId('action_options'));
+      expect(container.queryByText('common:menu.edit')).toBeInTheDocument();
+
+      fireEvent.click(container.queryByText('common:menu.edit'));
+      expect(container.queryByText('actions.update_form_property')).toBeInTheDocument();
+    });
+  });
 });

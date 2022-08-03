@@ -18,7 +18,7 @@ export default function ImageCropper({ getBlob, inputImg, fileName }){
 
   return(
     <>
-      <div style={{height: '150px', marginLeft: '140px'}}>
+      <div style={{height: '150px', marginLeft: '140px'}} data-testid='cropper'>
         <Cropper
           image={inputImg}
           crop={crop}

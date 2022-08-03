@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import { Button, Grid, Typography, TextField } from '@material-ui/core';
+import React, { useContext, useState } from 'react';
+import { Button, Grid, Typography, TextField } from '@mui/material';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete';
 import { useTranslation } from 'react-i18next';
 import { MergeUsersMutation } from '../../../graphql/mutations';
 import { ModalDialog } from '../../../components/Dialog';
 import useDebounce from '../../../utils/useDebounce';
 import { UsersLiteQuery } from '../../../graphql/queries';
-import MessageAlert from '../../../components/MessageAlert';
+import { SnackbarContext } from '../../../shared/snackbar/Context';
 
 export default function UserMerge({ userId, close }) {
   const [merge] = useMutation(MergeUsersMutation);
   const [loading, setLoading] = useState(false);
   const [open, setConfirmOpen] = useState(false);
-  const [message, setMessage] = useState("");
   const [searchedUser, setSearchUser] = useState('');
   const [duplicateUserId, setDuplicateUserId] = useState(null)
   const debouncedValue = useDebounce(searchedUser, 500);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const { t } = useTranslation(['common', 'users'])
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
     variables: { query: debouncedValue, limit: 10 },
@@ -34,46 +34,31 @@ export default function UserMerge({ userId, close }) {
       variables: { id: userId, duplicateId: duplicateUserId }
     })
       .then(() => {
-          setLoading(false);
-      setIsSuccessAlert(true)
-      setMessage(t('users:users.user_merged'));
-      // delay the closing of the modal to allow the success message to show
-      setTimeout(() => close(), 1000)
+        setLoading(false);
+        showSnackbar({type: messageType.success, message: t('users:users.user_merged') });
+        // delay the closing of the modal to allow the success message to show
+        setTimeout(() => close(), 1000)
       })
       .catch(err => {
-        setMessage(err.message);
+        showSnackbar({type: messageType.error, message: err.message });
         setLoading(false);
-        setIsSuccessAlert(false)
       });
-  }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessage("");
   }
 
   function handleConfirmMerge() {
     if (!duplicateUserId) {
-      setMessage(t('errors.no_user_selected'));
+      showSnackbar({type: messageType.error, message: t('errors.no_user_selected') });
       return;
     }
     setConfirmOpen(!open);
   }
   return (
     <>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={message}
-        open={!!message}
-        handleClose={handleMessageAlertClose}
-      />
       <ModalDialog
         open={open}
         handleClose={() => setConfirmOpen(!open)}
         handleConfirm={handleMerge}
-        action="proceed"
+        action={t('menu.proceed')}
       >
         <Typography variant="body1">
           {t('misc.user_merge_warning_text')}
@@ -85,7 +70,7 @@ export default function UserMerge({ userId, close }) {
         id="user_to_be_merged"
         options={data?.usersLite || []}
         getOptionLabel={option => option?.name}
-        getOptionSelected={(option, value) => option.name === value.name}
+        isOptionEqualToValue={(option, value) => option.name === value.name}
         onChange={(_event, user) => setDuplicateUserId(user.id)}
         renderInput={params => (
           <TextField
@@ -98,13 +83,13 @@ export default function UserMerge({ userId, close }) {
             placeholder={t('form_fields.user_name_merge')}
             helperText={t('misc.user_name_search_warning_text')}
           />
-        )}
+      )}
       />
       <br />
       <br />
       <br />
 
-      <Grid container direction="row-reverse" justify="space-around" alignItems="center">
+      <Grid container direction="row-reverse" justifyContent="space-around" alignItems="center">
         <Button variant="contained" aria-label="merge_cancel" color="secondary" onClick={close}>
           {t('form_actions.cancel')}
         </Button>
@@ -120,7 +105,7 @@ export default function UserMerge({ userId, close }) {
       </Grid>
       <br />
     </>
-  );
+);
 }
 UserMerge.propTypes = {
   userId: PropTypes.string.isRequired,

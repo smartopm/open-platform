@@ -1,11 +1,34 @@
+/* eslint-disable max-lines */
 import dompurify from 'dompurify';
 import { paymentFilterFields } from '../../utils/constants'
 
-import { sentencizeAction, titleize, pluralizeCount,
-capitalize, validateEmail, invertArray,findLinkAndReplace,
-forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText,
-getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange, checkAccessibilityForUserType
-} from '../../utils/helpers'
+import {
+  sentencizeAction,
+  titleize,
+  pluralizeCount,
+  capitalize,
+  validateEmail,
+  invertArray,
+  findLinkAndReplace,
+  forceLinkHttps,
+  titleCase,
+  truncateString,
+  removeNewLines,
+  checkForHtmlTags,
+  sanitizeText,
+  getJustLabels,
+  checkValidGeoJSON,
+  getHexColor,
+  getDrawPluginOptions,
+  handleQueryOnChange,
+  checkAccessibilityForUserType,
+  extractHostname,
+  getObjectKey,
+  decodeHtmlEntity,
+  replaceDocumentMentions,
+  validateRequiredField,
+  downloadAsImage,
+} from '../../utils/helpers';
 
 jest.mock('dompurify')
 describe('helper methods', () => {
@@ -60,6 +83,9 @@ describe('helper methods', () => {
       it('should return false for invalid email', () => {
         expect(validateEmail('invalid email')).toBe(false);
         expect(validateEmail('s1@example')).toBe(false);
+        expect(validateEmail('(s1@example.com)')).toBe(false);
+        expect(validateEmail('s1@example.da(2)213.co-2*i.23')).toBe(false);
+        expect(validateEmail('-(s{}1@example.da2213.co.2i.23')).toBe(false);
       });
        it('should return true for valid email', () => {
         expect(validateEmail('example@example.com')).toBe(true);
@@ -238,3 +264,111 @@ describe('handleQueryOnChange', () => {
     expect(result).toEqual("user : 'John Test'");
   });
 });
+
+describe('#extractHostname', () => {
+  it('extracts hostname from string URL', () => {
+    expect(extractHostname('https://demo-staging.doublegdp.com/user/019234-c36a-41a7-beeb-12784').hostname).toEqual('demo-staging.doublegdp.com');
+  });
+  it('extracts userid from string URL', () => {
+    expect(extractHostname('https://demo-staging.doublegdp.com/user/019234-c36a-41a7-beeb-12784').userId).toEqual('019234-c36a-41a7-beeb-12784');
+  });
+
+  it('does not explode if no arg is passed', () => {
+    expect(extractHostname()).toBeUndefined()
+  });
+});
+
+describe('#getObjectKey', () => {
+  it("should the key for an object's value if the key is found", () => {
+    const obj = { one: 'two', three: 'four' };
+    const response = getObjectKey(obj, 'two');
+
+    expect(response).toBeTruthy();
+    expect(response).toEqual('one');
+
+    expect(getObjectKey(obj, 'five')).toBe(undefined);
+  });
+});
+
+describe('#decodeHtmlEntity', () => {
+  it('decodes encoded HTML special characters and entity', () => {
+    expect(decodeHtmlEntity('This Year &#8211; WINNERS')).toEqual('This Year – WINNERS');
+    expect(decodeHtmlEntity('Copyright &#169; 2021 &#38; 2022')).toEqual('Copyright © 2021 & 2022');
+  });
+});
+
+describe('#replaceDocumentMentions', () => {
+  it('returns if no comment is passed', () => {
+    expect(replaceDocumentMentions(null, 'https://url.com')).toBeUndefined()
+  });
+
+  it('returns text if no onClick is passed', () => {
+    expect(replaceDocumentMentions({ body: 'Have you seen this doc ###__1234__doc-name__###' }, null)).toEqual('Have you seen this doc ###__1234__doc-name__###');
+  });
+
+  it('returns a React DIV with replaced mentions', () => {
+    const divChildren = replaceDocumentMentions({ body: 'Have you seen this doc ###__1234__doc-name__### ?' }, () => {}).props.children
+
+    expect(divChildren[0].props.children).toEqual('Have you seen this doc ')
+    expect(divChildren[1].props.children).toEqual('doc-name')
+    expect(divChildren[1].props.href).toEqual('#')
+    expect(divChildren[1].props.onClick).toBeDefined()
+    expect(divChildren[2].props.children).toEqual(' ?')
+  });
+});
+
+// describe('#savePdf', () => {
+
+//   const dom = document.createElement('div');
+//   dom.innerHTML = "<h1>Welcome to DoubleGDP</h1><p>This is your converted document.<p>";
+//   document.body.append(dom)
+
+//   window.getComputedStyle = () => jest.fn();
+//   window.scrollTo = jest.fn();
+
+//   it('convert the passed domElement to pdf', () => {
+    /*
+    * TODO this is expected to fail because mocking some needed global window method
+    * e.g. window.scrollTo, by html2canvas is not being effective
+    * we are yet to find a solution to mock window.scrollTo for html2canvas.
+    */
+//     const response = savePdf(dom);
+//     expect(savePdf(dom)).toBeUndefined();
+//   });
+// });
+// any tests can fall into this category
+
+describe('Anonymous', () => {
+  it('should return error and validation helper', () => {
+    const validation = validateRequiredField(
+      'name',
+      { isError: false },
+      ['name'],
+      { name: 'some value' },
+      jest.fn(() => 'no error')
+    );
+    expect(validation).toEqual({ error: false, helperText: 'no error' });
+    const validation1 = validateRequiredField(
+      'name',
+      { isError: true },
+      ['name'],
+      { name: '' },
+      jest.fn(() => 'error')
+    );
+    expect(validation1).toEqual({ error: true, helperText: 'error' });
+  });
+});
+  describe('#downloadAsImage', () => {
+    window.getComputedStyle = () => { };
+    jest.mock('../../utils/helpers', () => ({
+      downloadAsImage: jest.fn().mockReturnValue(Promise.resolve(true))
+    }));
+
+    it('convert html to image', () => {
+      const dom = document.createElement('div');
+      dom.innerHTML = "<h1>Welcome to DoubleGDP</h1><p>This is your converted document.<p>";
+      document.body.append(dom);
+      expect(downloadAsImage(dom, 'form')).toBeUndefined();
+    });
+
+})

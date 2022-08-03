@@ -16,7 +16,8 @@ module Properties
     VALID_OBJECT_TYPES = %w[land house poi].freeze
 
     validates :parcel_number, uniqueness: true
-    default_scope { where.not(status: %w[deleted general]).order(created_at: :desc) }
+    default_scope { where.not(status: :deleted).order(created_at: :desc) }
+    scope :excluding_general, -> { where.not(status: :general) }
     validates :object_type, inclusion: { in: VALID_OBJECT_TYPES, allow_nil: true }
 
     search_scope :search do

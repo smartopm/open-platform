@@ -4,8 +4,19 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Balance do
   describe 'create plan payment' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'plan_payment',
+                          role: admin_role,
+                          permissions: %w[can_create_plan_payment])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
+
     let!(:community) { user.community }
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:payment_plan) do

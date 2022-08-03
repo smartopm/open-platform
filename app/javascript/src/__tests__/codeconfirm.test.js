@@ -1,8 +1,10 @@
 import React from 'react'
-import { mount } from 'enzyme'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
+import { render, waitFor } from '@testing-library/react'
 import CodeScreen from '../components/AuthScreens/ConfirmCodeScreen'
+import currentCommunity from '../__mocks__/currentCommunity';
+
 
 describe('Code Confirmation Screen', () => {
   const params = {
@@ -10,21 +12,22 @@ describe('Code Confirmation Screen', () => {
       id: 343
     }
   }
-  const wrapper = mount(
+  const wrapper = render(
     <MemoryRouter>
-      <MockedProvider>
+      <MockedProvider mocks={[currentCommunity]} addTypename={false}>
         <CodeScreen match={params} />
       </MockedProvider>
     </MemoryRouter>
-  )
-  it('renders and has a paragraph element', () => {
-    expect(wrapper.find('p')).toHaveLength(1)
-  })
-  it('contains a button', () => {
-    expect(wrapper.find('button')).toHaveLength(1)
-    expect(wrapper.find('button').text()).toContain('login.login_button_text')
-  })
-  it('contains 7 input fields for each code', () => {
-    expect(wrapper.find('input')).toHaveLength(7)
-  })
+  );
+  it('renders the OTP verification page', async () => {
+    await waitFor(() => {
+      expect(wrapper.queryByTestId('arrow_back')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('community_logo')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('screen_title')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('otp_code_input')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('screen_title').textContent).toContain('login.otp_verification');
+      expect(wrapper.queryByTestId('submit_btn')).toBeInTheDocument()
+      expect(wrapper.queryByTestId('submit_btn')).toBeDisabled();
+    });
+  });
 })
