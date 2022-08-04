@@ -16,29 +16,30 @@ export default function PasswordRest({ openModal, setOpenModal, data }) {
     ResetUserPasswordUserMutation,
     reset,
     t('common:misc.reset_password_successful')
-  )
+  );
 
-  function reset(){
-    setOpenModal(false)
+  function reset() {
+    setOpenModal(false);
   }
 
   const username =
     data?.user?.username ||
-    data?.user?.name.replace(/\s/g, '').concat(
-      Math.random()
-        .toString(36)
-        .slice(2, 5)
-    );
+    data?.user?.name
+      .replace(/\s/g, '')
+      .toLowerCase()
+      .concat(
+        Math.random()
+          .toString(36)
+          .slice(2, 5)
+      );
 
   const password = QbUtils.uuid().slice(0, 17);
   function handlePasswordReset() {
     resetPassword({
-      variables: {
-        userId: data.user.id,
-        username,
-        password: String(password),
-      },
-    })
+      userId: data.user.id,
+      username,
+      password,
+    });
   }
 
   return (
