@@ -13,15 +13,14 @@ module Mutations
       def resolve(vals)
         validate_authorization(:user, :can_reset_user_password)
         user = Users::User.find(vals[:user_id])
-        unless user.update(username: vals[:username], password: vals[:password])
+        unless user.update(username: vals[:username], password: vals[:password],
+                           has_reset_password: false)
           raise GraphQL::ExecutionError, user.errors.full_messages&.join(', ')
         end
 
         eventlog = context[:current_user].generate_events('password_reset', user)
         ActionFlowJob.perform_later(eventlog, { password: vals[:password] })
-        {
-          success: true,
-        }
+        { success: true }
       end
     end
   end
