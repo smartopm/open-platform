@@ -21,13 +21,12 @@ export default function PasswordRest({ openModal, setOpenModal, data }) {
   const { t } = useTranslation(['users', 'common']);
 
   const username =
-    data?.user?.username !== null
-      ? data?.user?.username
-      : data?.user?.name.replace(' ', '').concat(
-          Math.random()
-            .toString(36)
-            .slice(2, 5)
-        );
+    data?.user?.username ||
+    data?.user?.name.replace(/\s/g, '').concat(
+      Math.random()
+        .toString(36)
+        .slice(2, 5)
+    );
   const password = QbUtils.uuid().slice(0, 17);
   function handlePasswordReset() {
     setOpenModal(false);
@@ -86,28 +85,16 @@ export default function PasswordRest({ openModal, setOpenModal, data }) {
           <Typography gutterBottom>{t('common:misc.reset_disclaimer')}</Typography>
           <Typography gutterBottom>{t('common:misc.copy_credentials')}</Typography>
           <br />
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            <div style={{ width: mobile ? '80%' : '50%' }}>
-              <Typography variant="subtitle2" gutterBottom>
-                {t('users.username', { username })}
-              </Typography>
-            </div>
-            <div style={{ width: mobile ? '80%' : '50%' }}>
-              <Typography variant="subtitle2" gutterBottom>
-                {t('users.password', { password })}
-              </Typography>
-            </div>
-          </div>
+
+          <Typography variant="subtitle2" gutterBottom>
+            {t('users.username', { username })}
+          </Typography>
+          <Typography variant="subtitle2" gutterBottom>
+            {t('users.password', { password })}
+          </Typography>
         </DialogContent>
 
-        <Box textAlign="center">
+        <Box style={{ textAlign: 'center', marginBottom: 16 }}>
           <Button
             disableElevation
             onClick={handlePasswordReset}
