@@ -3,8 +3,8 @@ import { render } from '@testing-library/react';
 
 import { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
-import WelcomePage from '../components/AuthScreens/WelcomePage';
-import currentCommunity from '../__mocks__/currentCommunity';
+import WelcomePage from '../../components/AuthScreens/WelcomePage';
+import currentCommunity from '../../__mocks__/currentCommunity';
 
 describe('component that centers divs', () => {
   const Welcome = () => (

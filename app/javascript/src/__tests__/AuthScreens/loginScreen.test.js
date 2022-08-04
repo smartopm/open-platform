@@ -3,10 +3,10 @@ import { BrowserRouter } from 'react-router-dom'
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 
 import { MockedProvider } from '@apollo/react-testing';
-import LoginScreen from '../components/AuthScreens/LoginScreen'
-import { loginEmailMutation, loginPhoneMutation } from '../graphql/mutations'
-import { CurrentCommunityQuery } from '../modules/Community/graphql/community_query';
-import { AUTH_FORWARD_URL_KEY } from '../utils/apollo';
+import LoginScreen from '../../components/AuthScreens/LoginScreen'
+import { loginEmailMutation, loginPhoneMutation } from '../../graphql/mutations'
+import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query';
+import { AUTH_FORWARD_URL_KEY } from '../../utils/apollo';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 jest.mock('react-router', () => ({
@@ -179,11 +179,11 @@ describe('Login Screen', () => {
     await waitFor(async () => {
       const loginTextField = screen.getByPlaceholderText('login.login_email')
       expect(loginTextField).toBeInTheDocument();
-      
+
       fireEvent.change(loginTextField, {
         target: { value: 'admin@example.com' }
       });
-      
+
       const loginBtn = screen.queryByTestId('login-btn')
       expect(loginBtn).toBeInTheDocument();
       fireEvent.click(loginBtn)
@@ -203,7 +203,7 @@ describe('Login Screen', () => {
       const googleLoginUrl = '/login_oauth'
       const googleLoginBtn = screen.queryByTestId('login-with-google-btn')
       expect(googleLoginBtn).toBeInTheDocument();
-      
+
       fireEvent.click(googleLoginBtn)
 
       expect(window.sessionStorage.getItem(AUTH_FORWARD_URL_KEY)).toEqual('/tasks')
@@ -224,7 +224,7 @@ describe('Login Screen', () => {
       const fbLoginUrl = '/fb_oauth'
       const fbLoginBtn = screen.queryByTestId('login-with-facebook-btn')
       expect(fbLoginBtn).toBeInTheDocument();
-      
+
       fireEvent.click(fbLoginBtn)
 
       expect(window.sessionStorage.getItem(AUTH_FORWARD_URL_KEY)).toEqual('/tasks')

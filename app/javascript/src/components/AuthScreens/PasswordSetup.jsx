@@ -8,7 +8,6 @@ import PasswordCheck from '../../shared/PasswordCheck';
 import { passwordChecks } from '../../utils/helpers';
 import { ResetPasswordAfterLoginMutation } from '../../graphql/mutations/user';
 import useMutationWrapper from '../../shared/hooks/useMutationWrapper';
-import { Spinner } from '../../shared/Loading';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 
 export default function PasswordSetup() {
@@ -28,8 +27,10 @@ export default function PasswordSetup() {
     resetPasswordAfterLogin,
     passwordResetLoading,
   ] = useMutationWrapper(ResetPasswordAfterLoginMutation, data => handleRouting(data));
+
   const authState = useContext(AuthStateContext);
   const { id } = useParams();
+
   function handleResetPassword() {
     resetPasswordAfterLogin({
       userId: id,
@@ -44,13 +45,11 @@ export default function PasswordSetup() {
     });
   }
 
-  if (passwordResetLoading) return <Spinner />;
-
   return (
     <CodeScreenWrapper
       title={t('login.setup_password')}
-      isDisabled={!verified}
-      loading={false}
+      isDisabled={!verified || passwordResetLoading}
+      loading={passwordResetLoading}
       handleConfirm={handleResetPassword}
     >
       <Container maxWidth="sm">

@@ -14,10 +14,12 @@ export default function PasswordInput({ label, passwordValue, type, setPasswordV
         type={passwordValue.showPassword ? 'text' : 'password'}
         value={objectAccessor(passwordValue, type)}
         onChange={event => setPasswordValue({ ...passwordValue, [type]: event.target.value })}
+        inputProps={{ "data-testid":"password_input" }}
         endAdornment={(
           <InputAdornment position="end">
             <IconButton
               aria-label="toggle password visibility"
+              data-testid="toggle_password"
               onClick={() =>
                 setPasswordValue({
                   ...passwordValue,
