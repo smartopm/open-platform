@@ -7,7 +7,7 @@ import { objectAccessor } from '../utils/helpers';
 
 /**
  * @param {object} checks - List of rules and definitions that should be matched
- * 
+ *
  */
 export default function PasswordCheck({ checks }) {
   const { rules, definitions } = checks;
@@ -16,10 +16,12 @@ export default function PasswordCheck({ checks }) {
     const { message, valid } = objectAccessor(definitions, rule);
     return (
       <Stack direction="row" alignItems="center" gap={1} key={rule}>
-        {valid ? <CheckIcon /> : <CloseIcon />}
-        <Typography>
-          <Box sx={{ color: valid ? 'primary.main' : 'error.main' }}>{message}</Box>
-        </Typography>
+        {valid ? <CheckIcon data-testid="valid_icon" /> : <CloseIcon data-testid="invalid_icon" />}
+        <Box sx={{ color: valid ? 'primary.main' : 'error.main' }}>
+          <Typography>
+            {message}
+          </Typography>
+        </Box>
       </Stack>
     );
   });
