@@ -19,7 +19,7 @@ import {
   requiredFields,
   userState,
   userSubStatus,
-  userStatus
+  userStatus,
 } from '../../../utils/constants';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
@@ -50,7 +50,7 @@ const initialValues = {
   contactInfos: [],
   extRefId: '',
   avatarUrl: '',
-  status: ''
+  status: '',
 };
 
 export function formatContactType(value, type) {
@@ -79,10 +79,10 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
     updateMutation: useMutation(
       isAdminOrMarketingAdmin ? UpdateUserMutation : NonAdminUpdateMutation
     ),
-    createMutation: useMutation(CreateUserMutation)
+    createMutation: useMutation(CreateUserMutation),
   });
   const { onChange, status, signedBlobId } = useFileUpload({
-    client: useApolloClient()
+    client: useApolloClient(),
   });
   const [userImage, setUserImage] = React.useState(null);
 
@@ -106,7 +106,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
     const secondaryInfo = {
       phone: phoneNumbers,
       email: emails,
-      address
+      address,
     };
     // if editing then restructure the phoneNumbers and emails
     const phones = phoneNumbers.map(value => formatContactType(value, 'phone'));
@@ -124,7 +124,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
       address: data.primaryAddress,
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null,
-      secondaryInfo: isEditing ? vals : JSON.stringify(secondaryInfo)
+      secondaryInfo: isEditing ? vals : JSON.stringify(secondaryInfo),
     };
 
     if (isFromRef) {
@@ -159,7 +159,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
       setData({
         ...result,
         primaryAddress: result.address,
-        dataLoaded: true
+        dataLoaded: true,
       });
       handleDateChange(result.expiresAt);
     }
@@ -176,7 +176,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
   function handleModalConfirm() {
     createOrUpdate({
       id: result.id,
-      state: modalAction === 'grant' ? 'valid' : 'banned'
+      state: modalAction === 'grant' ? 'valid' : 'banned',
     })
       .then(() => {
         setDenyModal(!isModalOpen);
@@ -195,7 +195,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
     newValue[Number(index)].info = value;
     setData({
       ...data,
-      contactInfos: [...newValue, ...rest]
+      contactInfos: [...newValue, ...rest],
     });
   }
 
@@ -205,7 +205,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
     if (type === 'phone') {
       changeOptionAndUpdate(index, value, phoneContactInfos, [
         ...emailContactInfos,
-        ...addressContactInfos
+        ...addressContactInfos,
       ]);
       return;
     }
@@ -213,7 +213,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
     if (type === 'email') {
       changeOptionAndUpdate(index, value, emailContactInfos, [
         ...phoneContactInfos,
-        ...addressContactInfos
+        ...addressContactInfos,
       ]);
       return;
     }
@@ -221,7 +221,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
     if (type === 'address') {
       changeOptionAndUpdate(index, value, addressContactInfos, [
         ...phoneContactInfos,
-        ...emailContactInfos
+        ...emailContactInfos,
       ]);
     }
   }
@@ -230,7 +230,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
     optionsToUpdate.splice(index, 1);
     setData({
       ...data,
-      contactInfos: [...optionsToUpdate, ...rest]
+      contactInfos: [...optionsToUpdate, ...rest],
     });
   }
 
@@ -238,7 +238,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
     if (type === 'phone') {
       removeOptionAndUpdate(index, phoneContactInfos, [
         ...emailContactInfos,
-        ...addressContactInfos
+        ...addressContactInfos,
       ]);
       return;
     }
@@ -246,7 +246,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
     if (type === 'email') {
       removeOptionAndUpdate(index, emailContactInfos, [
         ...phoneContactInfos,
-        ...addressContactInfos
+        ...addressContactInfos,
       ]);
       return;
     }
@@ -254,7 +254,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
     if (type === 'address') {
       removeOptionAndUpdate(index, addressContactInfos, [
         ...phoneContactInfos,
-        ...emailContactInfos
+        ...emailContactInfos,
       ]);
     }
   }
@@ -264,7 +264,10 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
   }
 
   return (
-    <PageWrapper oneCol={isFromRef} pageTitle={isFromRef ? t('common:misc.referrals') : t('menu.user_edit')}>
+    <PageWrapper
+      oneCol={isFromRef}
+      pageTitle={isFromRef ? t('common:misc.referrals') : t('menu.user_edit')}
+    >
       <ModalDialog
         handleClose={handleModal}
         handleConfirm={handleModalConfirm}
@@ -295,7 +298,6 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
               </Typography>
             </div>
             <div>
-
               <label htmlFor="file" className={`${css(styles.photoUpload)}`}>
                 <span>
                   <PhotoCameraIcon className={css(styles.uploadIcon)} />
@@ -315,21 +317,19 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
           </div>
         )}
 
-        {
-          isFromRef && (
-            <Typography
-              variant="body2"
-              style={{ marginBottom: 15 }}
-              data-testid="referralText"
-            >
-              {t('common:misc.referral_text', { communityName: authState.user?.community.name })}
-            </Typography>
-          )
-        }
+        {isFromRef && (
+          <Typography variant="body2" style={{ marginBottom: 15 }} data-testid="referralText">
+            {t('common:misc.referral_text', { communityName: authState.user?.community.name })}
+          </Typography>
+        )}
         <div className="form-group">
           <TextField
             fullWidth
-            label={isFromRef ? t('common:form_fields.friends_full_name') : t('common:form_fields.full_name')}
+            label={
+              isFromRef
+                ? t('common:form_fields.friends_full_name')
+                : t('common:form_fields.full_name')
+            }
             type="text"
             onChange={event => setData({ ...data, name: event.target.value })}
             value={data.name || ''}
@@ -340,7 +340,9 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
         </div>
         <div className="form-group">
           <label className="MuiFormLabel-root MuiInputLabel-shrink MuiInputLabel-root">
-            {isFromRef ? t('common:form_fields.phone_number') : t('common:form_fields.primary_number')}
+            {isFromRef
+              ? t('common:form_fields.phone_number')
+              : t('common:form_fields.primary_number')}
             <span
               aria-hidden="true"
               className="MuiFormLabel-asterisk
@@ -356,7 +358,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
             inputProps={{
               name: 'phoneNumber',
               required: true,
-              'data-testid': 'primary_phone'
+              'data-testid': 'primary_phone',
             }}
             country={extractCountry(authState?.user?.community?.locale)}
             placeholder={t('common:form_placeholders.phone_number')}
@@ -367,7 +369,11 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
         <div className="form-group">
           <TextField
             fullWidth
-            label={isFromRef ? t('common:form_fields.email_address') : t('common:form_fields.primary_email')}
+            label={
+              isFromRef
+                ? t('common:form_fields.email_address')
+                : t('common:form_fields.primary_email')
+            }
             name="email"
             type="email"
             onChange={event => setData({ ...data, email: event.target.value })}
@@ -402,7 +408,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
                   options={phoneContactInfos}
                   actions={{
                     handleRemoveOption: i => handleRemoveOption(i, 'phone'),
-                    handleOptionChange: (event, index) => handleOptionChange(event, index, 'phone')
+                    handleOptionChange: (event, index) => handleOptionChange(event, index, 'phone'),
                   }}
                 />
               </div>
@@ -422,7 +428,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
                   options={emailContactInfos}
                   actions={{
                     handleRemoveOption: i => handleRemoveOption(i, 'email'),
-                    handleOptionChange: (event, index) => handleOptionChange(event, index, 'email')
+                    handleOptionChange: (event, index) => handleOptionChange(event, index, 'email'),
                   }}
                 />
               </div>
@@ -456,7 +462,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
                   actions={{
                     handleRemoveOption: i => handleRemoveOption(i, 'address'),
                     handleOptionChange: (event, index) =>
-                      handleOptionChange(event, index, 'address')
+                      handleOptionChange(event, index, 'address'),
                   }}
                 />
               </div>
@@ -642,10 +648,10 @@ const styles = StyleSheet.create({
     boxShadow: 'none',
     marginTop: 50,
     alignItems: 'center',
-    color: '#FFFFFF'
+    color: '#FFFFFF',
   },
   selectInput: {
-    width: '100%'
+    width: '100%',
   },
   photoUpload: {
     padding: '20px',
@@ -657,7 +663,7 @@ const styles = StyleSheet.create({
     color: '#bdbdbd',
     outline: 'none',
     transition: 'border .24s ease-in-out',
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   fileInput: {
     width: '40%',
@@ -665,20 +671,20 @@ const styles = StyleSheet.create({
     opacity: 0,
     overflow: 'hidden',
     position: 'absolute',
-    zIndex: -1
+    zIndex: -1,
   },
   uploadedImage: {
     width: '35%',
-    borderRadius: 8
+    borderRadius: 8,
   },
   uploadIcon: {
     marginTop: 3,
-    marginLeft: '40%'
-  }
+    marginLeft: '40%',
+  },
 });
 
 UserForm.propTypes = {
   isEditing: PropTypes.bool.isRequired,
   isFromRef: PropTypes.bool.isRequired,
-  isAdminOrMarketingAdmin: PropTypes.bool.isRequired
+  isAdminOrMarketingAdmin: PropTypes.bool.isRequired,
 };

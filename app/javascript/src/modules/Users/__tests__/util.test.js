@@ -11,6 +11,7 @@ describe('Test the selectOptions for menus', () => {
     const handleMenuItemClick = jest.fn();
     const handleMergeUserItemClick = jest.fn();
     const checkRole = jest.fn();
+    const handleResetPasswordItemClick = jest.fn();
     const t = jest.fn();
 
     const options = selectOptions(
@@ -23,6 +24,7 @@ describe('Test the selectOptions for menus', () => {
       handleMenuItemClick,
       handleMergeUserItemClick,
       checkRole,
+      handleResetPasswordItemClick,
       t
     );
 
@@ -30,9 +32,8 @@ describe('Test the selectOptions for menus', () => {
     expect(options).toHaveLength(10);
     expect(options[0].key).toBe('user_settings');
     expect(options[0].subMenu).toBeInstanceOf(Array);
-    expect(options[0].subMenu).toHaveLength(4);
+    expect(options[0].subMenu).toHaveLength(5); // added reset password
     expect(options[1].key).toBe('communication');
-    expect(options[0].subMenu).toHaveLength(4);
     expect(options[2].key).toBe('payments');
     expect(options[3].key).toBe('plots');
     expect(options[4].key).toBe('lead_management');
@@ -45,23 +46,22 @@ describe('Test the selectOptions for menus', () => {
 
 describe('Test colNumber for scorecard', () => {
   it('shoud return correct colNumber', () => {
-    expect(colNumber('Q1', {1: "1"}, 1, 10)).toBe('1/10');
-    expect(colNumber('Q1', {2: "2"}, 2, 10)).toBe('2/10');
-    expect(colNumber('Q1', {3: "3"}, 3, 10)).toBe('3/10');
-    
-    expect(colNumber('Q2', {4: "1"}, 1, 10)).toBe('1/10');
-    expect(colNumber('Q2', {5: "2"}, 2, 10)).toBe('2/10');
-    expect(colNumber('Q2', {6: "3"}, 3, 10)).toBe('3/10');
+    expect(colNumber('Q1', { 1: '1' }, 1, 10)).toBe('1/10');
+    expect(colNumber('Q1', { 2: '2' }, 2, 10)).toBe('2/10');
+    expect(colNumber('Q1', { 3: '3' }, 3, 10)).toBe('3/10');
 
-    expect(colNumber('Q3', {7: "1"}, 1, 10)).toBe('1/10');
-    expect(colNumber('Q3', {8: "2"}, 2, 10)).toBe('2/10');
-    expect(colNumber('Q3', {9: "3"}, 3, 10)).toBe('3/10');
+    expect(colNumber('Q2', { 4: '1' }, 1, 10)).toBe('1/10');
+    expect(colNumber('Q2', { 5: '2' }, 2, 10)).toBe('2/10');
+    expect(colNumber('Q2', { 6: '3' }, 3, 10)).toBe('3/10');
 
-    expect(colNumber('Q4', {10: "1"}, 1, 10)).toBe('1/10');
-    expect(colNumber('Q4', {11: "2"}, 2, 10)).toBe('2/10');
-    expect(colNumber('Q4', {12: "3"}, 3, 10)).toBe('3/10');
+    expect(colNumber('Q3', { 7: '1' }, 1, 10)).toBe('1/10');
+    expect(colNumber('Q3', { 8: '2' }, 2, 10)).toBe('2/10');
+    expect(colNumber('Q3', { 9: '3' }, 3, 10)).toBe('3/10');
 
-    expect(colNumber('QA', {12: "3"}, 3, 10)).toBe(true);
+    expect(colNumber('Q4', { 10: '1' }, 1, 10)).toBe('1/10');
+    expect(colNumber('Q4', { 11: '2' }, 2, 10)).toBe('2/10');
+    expect(colNumber('Q4', { 12: '3' }, 3, 10)).toBe('3/10');
+
+    expect(colNumber('QA', { 12: '3' }, 3, 10)).toBe(true);
   });
 });
-

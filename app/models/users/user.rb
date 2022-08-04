@@ -157,11 +157,11 @@ module Users
     has_many :posts, class_name: 'Discussions::Post', dependent: :destroy
 
     before_validation :add_default_state_type_and_role
-    after_create :log_user_create_event
     after_create :add_notification_preference
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
     after_update :update_associated_request_details, if: -> { user_details_updated? }
     after_save :associate_lead_labels, if: -> { user_type.eql?('lead') }
+    after_commit :auto_generate_username_password, on: :create
 
     # Track changes to the User
     has_paper_trail
@@ -194,8 +194,10 @@ module Users
     }
     validate :phone_number_valid?
     validate :public_user?
+    validates :username, uniqueness: { scope: :community_id, allow_nil: true }
 
-    devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
+    devise :omniauthable, :database_authenticatable, :recoverable,
+           omniauth_providers: %i[google_oauth2 facebook]
 
     PHONE_TOKEN_LEN = 6
     PHONE_TOKEN_EXPIRATION_MINUTES = 2880 # Valid for 48 hours
@@ -270,6 +272,31 @@ module Users
 
     def self.lookup_by_id_card_token(token)
       find_by(id: token)
+    end
+
+    # the authenticate method from devise documentation
+    def self.authenticate(username, password)
+      user = User.find_for_authentication(username: username)
+      user&.valid_password?(password) ? user : nil
+    end
+
+    def auto_generate_username_password
+      password = SecureRandom.alphanumeric
+      username = name.split.join << SecureRandom.uuid.slice(0, 3)
+      # will trigger the action flow job manually to avoid leaking user password to
+      # the user create event log
+      return unless update(password: password, username: username)
+
+      eventlog = generate_events('user_create', self)
+      # trigger sending email with username and password
+      ActionFlowJob.perform_later(eventlog, { password: password })
+    end
+
+    def reset_password_on_first_login(username, new_password)
+      return nil if self.class.authenticate(username, new_password)
+
+      update(password: new_password, has_reset_password: true)
+      self
     end
 
     def site_manager?
@@ -348,10 +375,6 @@ module Users
     def revoke!(entry_request_object)
       entry_request_object.revoke!(self)
       entry_request_object
-    end
-
-    def log_user_create_event
-      generate_events('user_create', self)
     end
 
     def generate_events(event_tag, target_obj, data = {})

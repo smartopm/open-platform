@@ -123,3 +123,11 @@ export const UpdateUserMutation = gql`
   }
   ${UserFragment.publicFields}
 `;
+
+export const ResetUserPasswordUserMutation = gql`
+  mutation resetPassword($userId: ID!, $username: String!, $password: String!) {
+    resetPassword(userId: $userId, username: $username, password: $password) {
+      success
+    }
+  }
+`;

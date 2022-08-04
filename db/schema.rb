@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_18_125556) do
+ActiveRecord::Schema.define(version: 2022_07_26_063601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -325,9 +325,9 @@ ActiveRecord::Schema.define(version: 2022_07_18_125556) do
     t.boolean "is_guest", default: false
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
+    t.uuid "guest_id"
     t.datetime "revoked_at"
     t.integer "status", default: 0
-    t.uuid "guest_id"
     t.datetime "exited_at"
   end
 
@@ -967,11 +967,17 @@ ActiveRecord::Schema.define(version: 2022_07_18_125556) do
     t.string "decision_timeline"
     t.integer "status", default: 0
     t.string "division"
+    t.string "username"
+    t.string "encrypted_password"
+    t.boolean "has_reset_password", default: false, null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
     t.index ["role_id"], name: "index_users_on_role_id"
     t.index ["sub_status"], name: "index_users_on_sub_status"
     t.index ["uid", "provider", "community_id"], name: "index_users_on_uid_and_provider_and_community_id", unique: true
+    t.index ["username", "community_id"], name: "index_users_on_username_and_community_id", unique: true
   end
 
   create_table "valuations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable max-lines */
 import CSVFileValidator from 'csv-file-validator';
 import PropTypes from 'prop-types';
@@ -12,7 +13,7 @@ import {
   industryCategoryOptions,
   industryBusinessActivityOptions,
   regionOptions,
-  countries
+  countries,
 } from '../../utils/constants';
 
 export const initialLeadFormData = {
@@ -50,8 +51,8 @@ export const initialLeadFormData = {
       {
         id: '',
         info: '',
-        contactType: ''
-      }
+        contactType: '',
+      },
     ],
     industrySubSector: '',
     africanPresence: '',
@@ -81,7 +82,7 @@ export const initialLeadFormData = {
         secondaryEmail: '',
         primaryPhoneNumber: '',
         secondaryPhoneNumber: '',
-        linkedinUrl: ''
+        linkedinUrl: '',
       },
       secondaryContact2: {
         name: '',
@@ -90,10 +91,10 @@ export const initialLeadFormData = {
         secondaryEmail: '',
         primaryPhoneNumber: '',
         secondaryPhoneNumber: '',
-        linkedinUrl: ''
-      }
-    }
-  }
+        linkedinUrl: '',
+      },
+    },
+  },
 };
 
 export const userProps = PropTypes.shape({
@@ -141,7 +142,7 @@ export const userProps = PropTypes.shape({
   secondaryEmail: PropTypes.string,
   primaryPhoneNumber: PropTypes.string,
   secondaryPhoneNumber: PropTypes.string,
-  linkedinUrl: PropTypes.string
+  linkedinUrl: PropTypes.string,
 }).isRequired;
 
 export const secondaryInfoUserObject = PropTypes.shape({
@@ -154,7 +155,7 @@ export const secondaryInfoUserObject = PropTypes.shape({
       secondaryEmail: PropTypes.string,
       primaryPhoneNumber: PropTypes.string,
       secondaryPhoneNumber: PropTypes.string,
-      linkedinUrl: PropTypes.string
+      linkedinUrl: PropTypes.string,
     }),
     secondaryContact1: PropTypes.shape({
       name: PropTypes.string,
@@ -163,7 +164,7 @@ export const secondaryInfoUserObject = PropTypes.shape({
       secondaryEmail: PropTypes.string,
       primaryPhoneNumber: PropTypes.string,
       secondaryPhoneNumber: PropTypes.string,
-      linkedinUrl: PropTypes.string
+      linkedinUrl: PropTypes.string,
     }),
     secondaryContact2: PropTypes.shape({
       name: PropTypes.string,
@@ -172,9 +173,9 @@ export const secondaryInfoUserObject = PropTypes.shape({
       secondaryEmail: PropTypes.string,
       primaryPhoneNumber: PropTypes.string,
       secondaryPhoneNumber: PropTypes.string,
-      linkedinUrl: PropTypes.string
-    })
-  })
+      linkedinUrl: PropTypes.string,
+    }),
+  }),
 }).isRequired;
 
 const ITEM_HEIGHT = 50;
@@ -182,9 +183,9 @@ const ITEM_PADDING_TOP = 8;
 export const MenuProps = {
   PaperProps: {
     style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+    },
+  },
 };
 const ordinalSuffix = ['st', 'nd', 'rd'];
 const addSuffix = n => n + (ordinalSuffix[(n - 1) % 10] || 'th');
@@ -215,136 +216,136 @@ const configObject = {
       unique: true, // ensures column values are unique
       requiredError,
       uniqueError,
-      validateError
+      validateError,
     },
 
     {
       name: 'Title',
       inputName: 'title',
-      validateError
+      validateError,
     },
     {
       name: 'Email',
       inputName: 'email',
-      validateError
+      validateError,
     },
     {
       name: 'Secondary Email',
       inputName: 'secondaryEmail',
-      validateError
+      validateError,
     },
     {
       name: 'Primary Phone',
       inputName: 'primaryPhone',
-      validateError
+      validateError,
     },
     {
       name: 'Secondary Phone',
       inputName: 'secondaryPhone',
-      validateError
+      validateError,
     },
     {
       name: 'LinkedIn',
       inputName: 'linkedIn',
-      validateError
+      validateError,
     },
     {
       name: 'Contact 1 Name',
       inputName: 'contact1Name',
-      validateError
+      validateError,
     },
     {
       name: 'Contact 1 Title',
       inputName: 'contact1Title',
-      validateError
+      validateError,
     },
     {
       name: 'Contact 1 Primary Email',
       inputName: 'contact1PrimaryEmail',
-      validateError
+      validateError,
     },
     {
       name: 'Contact 1 Secondary Email',
       inputName: 'contact1SecondaryEmail',
-      validateError
+      validateError,
     },
     {
       name: 'Contact 1 Primary Phone',
       inputName: 'contact1PrimaryPhone',
-      validateError
+      validateError,
     },
     {
       name: 'Contact 1 Secondary Phone',
       inputName: 'contact1SecondaryPhone',
-      validateError
+      validateError,
     },
 
     {
       name: 'Contact 1 LinkedIn',
       inputName: 'contact1LinkedIn',
-      validateError
+      validateError,
     },
 
     {
       name: 'Contact 2 Name',
       inputName: 'contact2Name',
-      validateError
+      validateError,
     },
     {
       name: 'Contact 2 Title',
       inputName: 'contact2Title',
-      validateError
+      validateError,
     },
     {
       name: 'Contact 2 Primary Email',
       inputName: 'contact2PrimaryEmail',
-      validateError
+      validateError,
     },
     {
       name: 'Contact 2 Secondary Email',
       inputName: 'contact2SecondaryEmail',
-      validateError
+      validateError,
     },
     {
       name: 'Contact 2 Primary Phone',
       inputName: 'contact2PrimaryPhone',
-      validateError
+      validateError,
     },
     {
       name: 'Contact 2 Secondary Phone',
       inputName: 'contact2SecondaryPhone',
-      validateError
+      validateError,
     },
     {
       name: 'Contact 2 LinkedIn',
       inputName: 'contact2LinkedIn',
-      validateError
+      validateError,
     },
     {
       name: 'Company Name',
       inputName: 'companyName',
-      validateError
+      validateError,
     },
     {
       name: 'Company Description',
       inputName: 'companyDescription',
-      validateError
+      validateError,
     },
     {
       name: 'Company LinkedIn',
       inputName: 'companyLinkedIn',
-      validateError
+      validateError,
     },
 
     {
       name: 'Company Website',
       inputName: 'companyWebsite',
-      validateError
+      validateError,
     },
     {
       name: 'Relevant Links',
       inputName: 'relevantLinks',
-      validateError
+      validateError,
     },
     {
       name: 'Country',
@@ -359,7 +360,7 @@ const configObject = {
         return ` <div>${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
         )} row ${numberToOrdinal(columnNumber)} column.  </div>`;
-      }
+      },
     },
     {
       name: 'Region',
@@ -374,7 +375,7 @@ const configObject = {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
         )} row ${numberToOrdinal(columnNumber)} column.  </div>`;
-      }
+      },
     },
     {
       name: 'Industry Sector',
@@ -389,7 +390,7 @@ const configObject = {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
         )} row ${numberToOrdinal(columnNumber)} column.  </div>`;
-      }
+      },
     },
     {
       name: 'Industry Sub Sector',
@@ -404,7 +405,7 @@ const configObject = {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
         )} row ${numberToOrdinal(columnNumber)} column. </div>`;
-      }
+      },
     },
     {
       name: 'Industry Business Activity',
@@ -421,7 +422,7 @@ const configObject = {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
         )} row ${numberToOrdinal(columnNumber)} column.  </div>`;
-      }
+      },
     },
     {
       name: 'Level of Internationalization',
@@ -438,22 +439,22 @@ const configObject = {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
         )} row ${numberToOrdinal(columnNumber)} column.  </div>`;
-      }
+      },
     },
     {
       name: 'Number of Employees',
       inputName: 'NumberOfEmployees',
-      validateError
+      validateError,
     },
     {
       name: 'Annual Revenue',
       inputName: 'annualRevenue',
-      validateError
+      validateError,
     },
     {
       name: 'African Presences',
       inputName: 'AafricanPresences',
-      validateError
+      validateError,
     },
 
     {
@@ -469,7 +470,7 @@ const configObject = {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
         )} row  ${numberToOrdinal(columnNumber)} column.  </div>`;
-      }
+      },
     },
     {
       name: 'Lead Status',
@@ -484,7 +485,7 @@ const configObject = {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
         )} row ${numberToOrdinal(columnNumber)} column.  </div>`;
-      }
+      },
     },
 
     {
@@ -500,7 +501,7 @@ const configObject = {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
         )} row / ${numberToOrdinal(columnNumber)} column.  </div>`;
-      }
+      },
     },
 
     {
@@ -516,7 +517,7 @@ const configObject = {
         return `<div>${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
         )} row ${numberToOrdinal(columnNumber)} column. </div>`;
-      }
+      },
     },
     {
       name: 'Client Category',
@@ -531,89 +532,89 @@ const configObject = {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
         )} row ${numberToOrdinal(columnNumber)} column.  </div>`;
-      }
+      },
     },
     {
       name: 'Company Contacted',
       inputName: 'companyContacted',
-      validateError
+      validateError,
     },
 
     {
       name: 'Next Steps',
       inputName: 'nextSteps',
-      validateError
+      validateError,
     },
 
     {
       name: 'Lead Owner',
       inputName: 'leadOwner',
-      validateError
+      validateError,
     },
     {
       name: 'Created By',
       inputName: 'createdBy',
-      validateError
+      validateError,
     },
     {
       name: 'Modified By',
       inputName: 'modifiedBy',
-      validateError
+      validateError,
     },
 
     {
       name: 'First Contact Date',
       inputName: 'firstContactDate',
-      validateError
+      validateError,
     },
 
     {
       name: 'Last Contact Date',
       inputName: 'lastContactDate',
-      validateError
+      validateError,
     },
     {
       name: 'Date Follow Up',
       inputName: 'dateFollowUp',
-      validateError
+      validateError,
     },
 
     {
       name: 'Kick Off Date',
       inputName: 'kickOffDate',
-      validateError
+      validateError,
     },
     {
       name: 'Capex Amount',
       inputName: 'capexAmount',
-      validateError
+      validateError,
     },
     {
       name: 'Jobs',
       inputName: 'jobsCreated',
-      validateError
+      validateError,
     },
     {
       name: 'Jobs Timeline',
       inputName: 'jobsTimeline',
-      validateError
+      validateError,
     },
     {
       name: 'Investment Size',
       inputName: 'investmentSize',
-      validateError
+      validateError,
     },
     {
       name: 'Investment Timeline',
       inputName: 'investmentTimeline',
-      validateError
+      validateError,
     },
     {
       name: 'Decision Timeline',
       inputName: 'decisionTimeline',
-      validateError
-    }
-  ]
+      validateError,
+    },
+  ],
 };
 
 /**
@@ -629,6 +630,7 @@ const configObject = {
  * @param {Function} t
  * @returns
  */
+
 export function selectOptions(
   setSelectKey,
   checkModule,
@@ -639,6 +641,7 @@ export function selectOptions(
   handleMenuItemClick,
   handleMergeUserItemClick,
   checkRole,
+  handleResetPasswordItemClick,
   t,
   userId
 ) {
@@ -659,7 +662,7 @@ export function selectOptions(
           handleMenuItemClick: () => history.push(`/user/${data.user.id}/edit`),
           show:
             (checkCommunityFeatures('Users') && checkModule('user')) ||
-            (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin')
+            (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin'),
         },
         {
           key: 'print_id',
@@ -668,7 +671,7 @@ export function selectOptions(
           handleMenuItemClick: () => history.push(`/print/${data.user.id}`),
           show:
             (checkCommunityFeatures('Users') && checkModule('user')) ||
-            (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin')
+            (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin'),
         },
         {
           key: 'merge_user',
@@ -677,16 +680,25 @@ export function selectOptions(
           handleMenuItemClick: () => handleMergeUserItemClick(),
           show:
             (checkCommunityFeatures('Users') && checkModule('user')) ||
-            (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin')
+            (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin'),
         },
         {
           key: 'user_logs',
           value: 'User Logs',
           name: t('common:menu.user_logs'),
           handleMenuItemClick: () => history.push(`/user/${data.user.id}/logs`),
-          show: checkCommunityFeatures('LogBook') && checkModule('entry_request')
-        }
-      ]
+          show: checkCommunityFeatures('LogBook') && checkModule('entry_request'),
+        },
+        {
+          key: 'reset_password',
+          value: 'Reset Password',
+          name: t('common:menu.reset_password'),
+          handleMenuItemClick: () => handleResetPasswordItemClick(),
+          show:
+            (checkCommunityFeatures('Users') && checkModule('user')) ||
+            (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin'),
+        },
+      ],
     },
     {
       key: 'communication',
@@ -700,37 +712,37 @@ export function selectOptions(
           value: 'Communication',
           name: t('common:right_menu.communications'),
           handleMenuItemClick,
-          show: checkCommunityFeatures('Messages') && checkModule('communication')
+          show: checkCommunityFeatures('Messages') && checkModule('communication'),
         },
         {
           key: 'contact',
           value: 'Contacts',
           name: t('common:right_menu.contact_info'),
           handleMenuItemClick,
-          show: true
+          show: true,
         },
         {
           key: 'send_sms',
           value: 'Send SMS',
           name: t('common:menu.send_sms'),
           handleMenuItemClick: () => history.push(`/message/${data.user.id}`),
-          show: checkCommunityFeatures('Messages') && checkRole(['admin'], 'Messages')
+          show: checkCommunityFeatures('Messages') && checkRole(['admin'], 'Messages'),
         },
         {
           key: 'send_otp',
           value: 'Send OTP',
           name: t('common:menu.send_otp'),
           handleMenuItemClick: () => history.push(`/user/${data.user.id}/otp`),
-          show: checkCommunityFeatures('Messages') && checkModule('user')
+          show: checkCommunityFeatures('Messages') && checkModule('user'),
         },
         {
           key: 'message_support',
           value: 'Message Support',
           name: t('common:menu.message_support'),
           handleMenuItemClick: () => history.push(`/message/${data.user.id}`),
-          show: checkCommunityFeatures('Messages')
-        }
-      ]
+          show: checkCommunityFeatures('Messages'),
+        },
+      ],
     },
     {
       key: 'payments',
@@ -738,7 +750,8 @@ export function selectOptions(
       name: t('common:table_headers.payment_plan_plural'),
       handleMenuItemClick,
       show:
-        checkCommunityFeatures('Payments') && checkRole(['admin', 'client', 'resident', 'lead'], 'Payments')
+        checkCommunityFeatures('Payments') &&
+        checkRole(['admin', 'client', 'resident', 'lead'], 'Payments'),
     },
     {
       key: 'plots',
@@ -747,7 +760,7 @@ export function selectOptions(
       handleMenuItemClick,
       show:
         checkCommunityFeatures('Properties') &&
-        checkRole(['admin', 'client', 'resident'], 'Properties')
+        checkRole(['admin', 'client', 'resident'], 'Properties'),
     },
     {
       key: 'lead_management',
@@ -756,43 +769,43 @@ export function selectOptions(
       handleMenuItemClick,
       show:
         (checkCommunityFeatures('Users') && checkModule('user')) ||
-        (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin')
+        (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin'),
     },
     {
       key: 'invitations',
       value: 'Invitations',
       name: t('common:menu.invitations'),
       handleMenuItemClick,
-      show: checkCommunityFeatures('LogBook') && checkModule('entry_request')
+      show: checkCommunityFeatures('LogBook') && checkModule('entry_request'),
     },
     {
       key: 'notes',
       value: 'Notes',
       name: t('common:misc.notes'),
       handleMenuItemClick,
-      show: checkCommunityFeatures('Tasks') && checkModule('note') && checkRole(['admin'], 'Notes')
+      show: checkCommunityFeatures('Tasks') && checkModule('note') && checkRole(['admin'], 'Notes'),
     },
     {
       key: 'forms',
       value: 'Forms',
       name: t('common:misc.forms'),
       handleMenuItemClick,
-      show: checkCommunityFeatures('Forms') && checkModule('forms')
+      show: checkCommunityFeatures('Forms') && checkModule('forms'),
     },
     {
       key: 'customer_journey',
       value: 'CustomerJourney',
       name: t('common:menu.customer_journey'),
       handleMenuItemClick,
-      show: checkCommunityFeatures('Customer Journey') && checkRole(['admin'], 'Customer Journey')
+      show: checkCommunityFeatures('Customer Journey') && checkRole(['admin'], 'Customer Journey'),
     },
     {
       key: 'transaction_logs',
       value: 'Transactions',
       name: t('common:table_headers.payment_history'),
       handleMenuItemClick: () => history.push(`/transaction_logs?userId=${userId}`),
-      show: checkCommunityFeatures('Transactions') && checkModule('transaction')
-    }
+      show: checkCommunityFeatures('Transactions') && checkModule('transaction'),
+    },
   ];
 }
 
@@ -801,7 +814,7 @@ export function createMenuContext(type, data, userType, authState) {
     return {
       userId: data.user.id,
       userType,
-      loggedInUserId: authState.user.id
+      loggedInUserId: authState.user.id,
     };
   }
 
@@ -809,7 +822,7 @@ export function createMenuContext(type, data, userType, authState) {
     return {
       userType,
       paymentCheck: true,
-      loggedInUserPaymentPlan: authState.user?.paymentPlan
+      loggedInUserPaymentPlan: authState.user?.paymentPlan,
     };
   }
 
@@ -841,7 +854,7 @@ export function userTabList(t) {
     Invitations: t('common:menu.invitations'),
     Forms: t('common:misc.forms'),
     CustomerJourney: t('common:menu.customer_journey'),
-    Notes: t('common:misc.notes')
+    Notes: t('common:misc.notes'),
   };
 }
 
@@ -872,13 +885,13 @@ export function colNumber(quater, value, num, total) {
 function divisionStat(obj, quarter, monthlyTarget) {
   const allResult = [];
   Object.entries(obj).forEach(([key, value]) => {
-    const result = {}
+    const result = {};
     result.col1 = key;
     result.col2 = colNumber(quarter, value, 1, monthlyTarget(key));
     result.col3 = colNumber(quarter, value, 2, monthlyTarget(key));
     result.col4 = colNumber(quarter, value, 3, monthlyTarget(key));
 
-    allResult.push(result)
+    allResult.push(result);
   });
 
   return allResult;
@@ -887,17 +900,29 @@ function divisionStat(obj, quarter, monthlyTarget) {
 export function buildScoreCardData(obj, monthlyTarget) {
   return [
     {
-      score: [{ col1: 'Q1', col2: 'Jan', col3: 'Feb', col4: 'Mar' }, ...divisionStat(obj, 'Q1', monthlyTarget)]
+      score: [
+        { col1: 'Q1', col2: 'Jan', col3: 'Feb', col4: 'Mar' },
+        ...divisionStat(obj, 'Q1', monthlyTarget),
+      ],
     },
     {
-      score: [{ col1: 'Q2', col2: 'Apr', col3: 'May', col4: 'Jun' }, ...divisionStat(obj, 'Q2', monthlyTarget)]
+      score: [
+        { col1: 'Q2', col2: 'Apr', col3: 'May', col4: 'Jun' },
+        ...divisionStat(obj, 'Q2', monthlyTarget),
+      ],
     },
     {
-      score: [{ col1: 'Q3', col2: 'Jul', col3: 'Aug', col4: 'Sep' }, ...divisionStat(obj, 'Q3', monthlyTarget)]
+      score: [
+        { col1: 'Q3', col2: 'Jul', col3: 'Aug', col4: 'Sep' },
+        ...divisionStat(obj, 'Q3', monthlyTarget),
+      ],
     },
     {
-      score: [{ col1: 'Q4', col2: 'Oct', col3: 'Nov', col4: 'Dec' }, ...divisionStat(obj, 'Q4', monthlyTarget)]
-    }
+      score: [
+        { col1: 'Q4', col2: 'Oct', col3: 'Nov', col4: 'Dec' },
+        ...divisionStat(obj, 'Q4', monthlyTarget),
+      ],
+    },
   ];
 }
 
@@ -908,28 +933,28 @@ export function buildStatusCard(BS) {
         { col1: 'Q1', col2: BS('Ql', '1'), col3: BS('Ql', '2'), col4: BS('Ql', '3') },
         { col1: 'Q2', col2: BS('Ql', '4'), col3: BS('Ql', '5'), col4: BS('Ql', '6') },
         { col1: 'Q3', col2: BS('Ql', '7'), col3: BS('Ql', '8'), col4: BS('Ql', '9') },
-        { col1: 'Q4', col2: BS('Ql', '10'), col3: BS('Ql', '11'), col4: BS('Ql', '12') }
+        { col1: 'Q4', col2: BS('Ql', '10'), col3: BS('Ql', '11'), col4: BS('Ql', '12') },
       ],
-      name: 'qualified_lead'
+      name: 'qualified_lead',
     },
     {
       score: [
         { col1: 'Q1', col2: BS('Sm', '1'), col3: BS('Sm', '2'), col4: BS('Sm', '3') },
         { col1: 'Q2', col2: BS('Sm', '4'), col3: BS('Sm', '5'), col4: BS('Sm', '6') },
         { col1: 'Q3', col2: BS('Sm', '7'), col3: BS('Sm', '8'), col4: BS('Sm', '9') },
-        { col1: 'Q4', col2: BS('Sm', '10'), col3: BS('Sm', '11'), col4: BS('Sm', '12') }
+        { col1: 'Q4', col2: BS('Sm', '10'), col3: BS('Sm', '11'), col4: BS('Sm', '12') },
       ],
-      name: 'signed_mou'
+      name: 'signed_mou',
     },
     {
       score: [
         { col1: 'Q1', col2: BS('Sl', '1'), col3: BS('Sl', '2'), col4: BS('Sl', '3') },
         { col1: 'Q2', col2: BS('Sl', '4'), col3: BS('Sl', '5'), col4: BS('Sl', '6') },
         { col1: 'Q3', col2: BS('Sl', '7'), col3: BS('Sl', '8'), col4: BS('Sl', '9') },
-        { col1: 'Q4', col2: BS('Sl', '10'), col3: BS('Sl', '11'), col4: BS('Sl', '12') }
+        { col1: 'Q4', col2: BS('Sl', '10'), col3: BS('Sl', '11'), col4: BS('Sl', '12') },
       ],
-      name: 'signed_lease'
-    }
+      name: 'signed_lease',
+    },
   ];
 }
 
@@ -944,8 +969,8 @@ export function buildCurrentStatusCard(SL) {
         { col1: 'Stakeholder Meetings', col2: SL('St') },
         { col1: 'Site Visit', col2: SL('Sv') },
         { col1: 'Signed MOU', col2: SL('Sm') },
-        { col1: 'Signed Lease', col2: SL('Sl') }
-      ]
-    }
+        { col1: 'Signed Lease', col2: SL('Sl') },
+      ],
+    },
   ];
 }

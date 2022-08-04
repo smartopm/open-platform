@@ -1,5 +1,5 @@
 /* eslint-disable */
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 export const UserFragment = {
   publicFields: gql`
@@ -19,6 +19,7 @@ export const UserFragment = {
       address
       extRefId
       status
+      username
       accounts {
         id
         updatedAt
@@ -40,7 +41,7 @@ export const UserFragment = {
         completed
         createdAt
       }
-      labels{
+      labels {
         id
         shortDesc
       }
@@ -59,7 +60,7 @@ export const UserFragment = {
         info
         contactType
       }
-      substatusLogs{
+      substatusLogs {
         id
         userId
         startDate
@@ -73,8 +74,8 @@ export const UserFragment = {
         }
       }
     }
-  `
-}
+  `,
+};
 
 export const EntryRequestFragment = {
   publicFields: gql`
@@ -113,9 +114,8 @@ export const EntryRequestFragment = {
       videoUrl
       imageUrls
     }
-  `
-}
-
+  `,
+};
 
 // TODO: Don't use this fragment
 /**
@@ -151,7 +151,7 @@ export const NotesFragment = {
         imageUrl
         avatarUrl
       }
-      assigneeNotes{
+      assigneeNotes {
         id
         userId
         reminderTime
@@ -161,8 +161,8 @@ export const NotesFragment = {
       }
       formUserId
     }
-  `
-}
+  `,
+};
 export const TasksFragment = {
   task: gql`
     fragment TaskFields on Note {
@@ -191,14 +191,14 @@ export const TasksFragment = {
       message {
         id
         sender {
-            id
-            name
+          id
+          name
         }
       }
       authorId
     }
-  `
-}
+  `,
+};
 
 export const SubstatusDistributionReportFragment = {
   publicFields: gql`
@@ -210,42 +210,42 @@ export const SubstatusDistributionReportFragment = {
         between51to150Days
         over151Days
       }
-      eligibleToStartConstruction{
+      eligibleToStartConstruction {
         between0to10Days
         between11to30Days
         between31to50Days
         between51to150Days
         over151Days
       }
-      floorPlanPurchased{
+      floorPlanPurchased {
         between0to10Days
         between11to30Days
         between31to50Days
         between51to150Days
         over151Days
       }
-      buildingPermitApproved{
+      buildingPermitApproved {
         between0to10Days
         between11to30Days
         between31to50Days
         between51to150Days
         over151Days
       }
-      constructionInProgress{
+      constructionInProgress {
         between0to10Days
         between11to30Days
         between31to50Days
         between51to150Days
         over151Days
       }
-      constructionCompleted{
+      constructionCompleted {
         between0to10Days
         between11to30Days
         between31to50Days
         between51to150Days
         over151Days
       }
-      constructionInProgressSelfBuild{
+      constructionInProgressSelfBuild {
         between0to10Days
         between11to30Days
         between31to50Days
@@ -253,5 +253,5 @@ export const SubstatusDistributionReportFragment = {
         over151Days
       }
     }
-  `
-}
+  `,
+};

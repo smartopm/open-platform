@@ -774,6 +774,7 @@ DoubleGDP:
         - can_get_substatus_distribution
         - can_create_users_via_csv
         - can_see_menu_item
+        - can_reset_user_password
     profile:
       permissions:
         - can_see_menu_item
@@ -960,6 +961,7 @@ Enyimba:
         - can_get_substatus_distribution
         - can_create_users_via_csv
         - can_see_menu_item
+        - can_reset_user_password
     profile:
       permissions:
         - can_see_menu_item

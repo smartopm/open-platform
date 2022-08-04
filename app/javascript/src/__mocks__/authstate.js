@@ -39,6 +39,7 @@ const authState = {
     id: '11cdad78',
     imageUrl: 'image.jpg',
     name: 'John Doctor',
+    username: 'JohnDoctor123',
     phoneNumber: '260971500000',
     userType: 'admin',
     permissions: [
@@ -56,8 +57,8 @@ const authState = {
           'can_mark_task_as_complete',
           'can_access_project_steps',
           'can_create_task_lists',
-          'can_delete_note'
-        ]
+          'can_delete_note',
+        ],
       },
       {
         module: 'process',
@@ -98,7 +99,15 @@ const authState = {
         ],
       },
       { module: 'campaign', permissions: ['can_see_menu_item'] },
-      { module: 'entry_request', permissions: ['can_grant_entry', 'can_update_entry_request', 'can_invite_guest', 'can_add_entry_request_note'] },
+      {
+        module: 'entry_request',
+        permissions: [
+          'can_grant_entry',
+          'can_update_entry_request',
+          'can_invite_guest',
+          'can_add_entry_request_note',
+        ],
+      },
       { module: 'payment_records', permissions: ['can_fetch_user_transactions'] },
       {
         module: 'payment_plan',
