@@ -2,7 +2,7 @@
   "buttons": {
     "add_photo": "Añadir Foto",
     "edit_coordinates": "Editar Coordenadas",
-    "merge_and_save": "Unir y Guardar",
+    "merge_and_save": "Fusionar y Guardar",
     "new_owner": "Nuevo Propietario",
     "new_point_of_interest": "Nuevo punto de interés",
     "new_property": "Nueva Propiedad"
@@ -53,9 +53,9 @@
     "sold": "Vendido"
   },
   "messages": {
-    "image_uploaded": "Imagen cargada correctamente",
+    "image_uploaded": "Imagen subida correctamente",
     "merge_properties": "¡Estás a punto de fusionar estas dos propiedades!",
-    "merge_successful": "Union exitosa",
+    "merge_successful": "Fusión exitosa",
     "no_owner_yet": "Sin dueño todavía",
     "parcel_number_exists": "El número de parcela ya existe. ¿Quieres fusionar estas parcelas?",
     "poi_added": "'Punto de interés agregado correctamente'",
@@ -63,7 +63,7 @@
     "poi_removed": "Punto de interés eliminado con éxito",
     "poi_updated": "Punto de interés actualizado con éxito",
     "property_added": "Propiedad agregada correctamente",
-    "property_updated": "Propiedad actualizada correctamente"
+    "property_updated": "Segmento Actualizada Correctamente"
   },
   "misc": {
     "accounts": "Cuentas?:",
