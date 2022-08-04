@@ -167,6 +167,10 @@ export function postsToDisplay(posts, number) {
   return data;
 }
 
+NewsFeed.defaultProps = {
+  wordpressEndpoint: undefined
+}
+
 NewsFeed.propTypes = {
-  wordpressEndpoint: PropTypes.string.isRequired
+  wordpressEndpoint: PropTypes.string
 };

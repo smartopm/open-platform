@@ -1,6 +1,8 @@
 /* eslint-disable */
 import { isWeekend, isSaturday, isSunday } from 'date-fns'
 import { useTranslation } from 'react-i18next';
+import momentTimezone from "moment-timezone";
+
 const date = new Date()
 export const lastDayOfTheMonth = new Date(date.getFullYear(), date.getMonth(), 26)
 
@@ -153,4 +155,19 @@ export default {
 function pad(padStr, str) {
   str = str.toString(10)
   return padStr.substring(0, padStr.length - str.length) + str
+}
+
+/**
+ *
+ * @param {Date} date
+ * @param {String} timezone
+ * @description formats date with the passed timezone
+ * @returns {String} Date || HR || Min
+ */
+export function formatTimeZone(date, timezone) {
+  if (!date) return null
+  if (date && timezone) {
+    return momentTimezone(date).tz(timezone).format('YYYY-MM-DD HH:mm')
+  }
+  return date
 }
