@@ -109,6 +109,7 @@ export default function AmenityList() {
                     translate={t}
                     handleEditAmenity={handleEditAmenity}
                     hasAccessToMenu={hasMenuAccess}
+                    matches={matches}
                   />
                 </Grid>
               ))
