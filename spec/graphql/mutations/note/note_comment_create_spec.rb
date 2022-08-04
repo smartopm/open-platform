@@ -80,9 +80,9 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
                                                 current_user: another_user,
                                                 site_community: another_user.community,
                                               }).as_json
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'id')).not_to be_nil
       expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'body')).to eql 'Comment body'
-      expect(result['errors']).to be_nil
     end
 
     it 'creates a reply-required comment under note' do

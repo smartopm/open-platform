@@ -5,11 +5,8 @@ class TwilioController < ApplicationController
   include ApplicationHelper
   protect_from_forgery except: :webhook
 
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def webhook
-    twilio_response = Twilio::TwiML::MessagingResponse.new
-    twilio_response.message(body: "Hi #{params['ProfileName']}, Thank you for your message!!")
     user = current_community.users.find_by(phone_number: params['WaId'])
     return if user.nil?
 
@@ -22,13 +19,10 @@ class TwilioController < ApplicationController
       # If there is no task then go ahead and create the task
       create_task(params, user)
     end
-    # Respond to the user who sent the message
-    render xml: twilio_response
   rescue StandardError => e
     Rollbar.error(e)
     head :ok
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
   private

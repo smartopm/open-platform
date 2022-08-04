@@ -16,10 +16,9 @@ class Sms
     yield config
   end
 
-  # rubocop:disable Lint/SuppressedException
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
-  def self.send(to, message, community)
+  def self.send(to, message, community, type = 'sms')
     raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
 
     return if Rails.env.test?
@@ -37,19 +36,19 @@ class Sms
       # TODO: We need to allow alphanumeric codes to be sent to US numers
       # This is an urgent fix and this will be resolved properly
       # client.sms.send(from: 'DoubleGDP', to: to, text: message)
-      client.sms.send(from: config[:from], to: to, text: message)
+      client.sms.send(from: config[:from], to: to, text: message) unless type.eql?('whatsapp')
       twilio_client.messages.create(
         to: "whatsapp:+#{to}",
         from: "whatsapp:+#{from(community)}",
         body: message,
       )
-    rescue StandardError
+    rescue StandardError => e
+      Rollbar.error(e)
     end
   end
+
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Lint/SuppressedException
-
   def self.send_from(to, from, message)
     raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
 
