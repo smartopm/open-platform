@@ -804,8 +804,25 @@ RSpec.describe Users::User, type: :model do
     end
   end
 
+  describe '#password username generation on create' do
+    before { allow(SecureRandom).to receive(:uuid).and_return('12abcd1234') }
+    let(:lead_role) { create(:role, name: 'lead') }
+    let!(:user) do
+      create(:user_with_community,
+             user_type: 'lead',
+             lead_status: 'Signed MOU',
+             role: lead_role)
+    end
+
+    it 'username is autogeneration successful' do
+      expect(user.username).to eql 'MarkTest12a'
+    end
+  end
+
   describe '#password reset on first time login' do
     context 'when new password does not match old one' do
+      before { allow(SecureRandom).to receive(:alphanumeric).and_return('12abcd1234') }
+      before { allow(SecureRandom).to receive(:uuid).and_return('12abcd1234') }
       let(:lead_role) { create(:role, name: 'lead') }
       let!(:user) do
         create(:user_with_community,
@@ -815,12 +832,14 @@ RSpec.describe Users::User, type: :model do
       end
 
       it 'reset is successful' do
-        expect(user.reset_password_on_first_time_login('Blah1234-password')).to_not be nil
+        expect(user.reset_password_on_first_login('MarkTest12a', 'Bl12-password'))
+          .to_not be nil
       end
     end
 
     context 'when new password matches old one' do
       before { allow(SecureRandom).to receive(:alphanumeric).and_return('12abcd1234') }
+      before { allow(SecureRandom).to receive(:uuid).and_return('12abcd1234') }
       let(:lead_role) { create(:role, name: 'lead') }
       let!(:user) do
         create(:user_with_community,
@@ -830,7 +849,7 @@ RSpec.describe Users::User, type: :model do
       end
 
       it 'reset is not successful' do
-        expect(user.reset_password_on_first_time_login('12abcd1234')).to be nil
+        expect(user.reset_password_on_first_login('MarkTest12a', '12abcd1234')).to be nil
       end
     end
   end

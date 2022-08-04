@@ -285,16 +285,17 @@ module Users
       username = name.split.join << SecureRandom.uuid.slice(0, 3)
       # will trigger the action flow job manually to avoid leaking user password to
       # the user create event log
-      update!(password: password, username: username)
+      return unless update(password: password, username: username)
+
       eventlog = generate_events('user_create', self)
       # trigger sending email with username and password
       ActionFlowJob.perform_later(eventlog, { password: password })
     end
 
-    def reset_password_on_first_time_login(new_password)
+    def reset_password_on_first_login(username, new_password)
       return nil if self.class.authenticate(username, new_password)
 
-      update!(password: new_password)
+      update(password: new_password, has_reset_password: true)
       self
     end
 
