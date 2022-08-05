@@ -8,7 +8,9 @@
     "entry_logs": "Libro de Registros",
     "explore": "Explorar",
     "finance": "Finanzas",
+    "guard_post": "Caseta de Seguridad",
     "identity": "Identificación\n",
+    "invitations": "Invitaciones",
     "invoice": {
       "oneMonth": "Total de facturas con vencimiento mayor a 30 días",
       "oneWeek": "Total de facturas vencidas 1 semana",
@@ -16,7 +18,9 @@
       "today": "Total de facturas vencidas hoy"
     },
     "log_entry": "Registro Manual",
+    "logs": "Historial de Registros",
     "make_new_payment": "Realizar un nuevo pago",
+    "manual_entry": "Registro Manual",
     "my_account": "Mi cuenta",
     "my_id_card": "Mi código",
     "my_messages": "Mis mensajes",

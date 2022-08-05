@@ -15,6 +15,7 @@
     "and": "y {{date}}",
     "between": "Entre",
     "change": "estado cambiado",
+    "confirm_reset_password": "¿Restablecer la Contraseña?",
     "copy_id_message": "Listas de ID copiadas correctamente",
     "create_report": "Crear reporte",
     "download_csv": "Descargar CSV",
@@ -27,6 +28,7 @@
     "merge_user": "Fusionar Usuarios",
     "merging": "Uniendo ...",
     "message_campaign": "Vas a crear una campaña para más de 2000 usuarios. Recomendamos utilizar una lista más pequeña. ¿Aún quieres continuar?",
+    "password": "Contraseña: {{password}}",
     "personal_details": "Editar datos personales",
     "personal_details_subtext": "Realice cambios en los detalles de su cuenta",
     "preferences": "Preferencias",
@@ -45,6 +47,7 @@
     "user_merged": "Usuarios fusionados exitosamente",
     "user_stats": "Estadísticas de usuario",
     "user_step": "Editar inicio para este paso",
-    "user_success": "Actualizado exitosamente"
+    "user_success": "Actualizado exitosamente",
+    "username": "Nombre de Usuario: {{username}}"
   }
 }
