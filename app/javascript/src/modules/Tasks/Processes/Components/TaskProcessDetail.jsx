@@ -35,7 +35,7 @@ import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function TaskProcessDetail() {
   const limit = 20;
-  const { t } = useTranslation(['task', 'common']);
+  const { t } = useTranslation(['task', 'common', 'processes']);
   const { processId, id: taskId } = useParams();
   const history = useHistory();
   const path = useParamsQuery();
@@ -150,8 +150,16 @@ export default function TaskProcessDetail() {
     return <CenteredContent>{formatError(projectDataError.message)}</CenteredContent>;
   }
 
+  const breadCrumbObj = {
+    extraBreadCrumb: t('processes.processes'),
+    extraBreadCrumbLink: '/processes',
+    linkText: projectItemLoading ? '...': projectItem?.project?.body,
+    linkHref: `/processes/${processId}/projects?process_name=${projectItem?.project?.body}`,
+    pageName: t('common:misc.process_detail_page'),
+  };
+
   return (
-    <PageWrapper pageTitle={t('common:misc.process_detail_page')}>
+    <PageWrapper pageTitle={t('common:misc.process_detail_page')} breadCrumbObj={breadCrumbObj}>
       <TaskContextProvider>
         <Grid
           container
