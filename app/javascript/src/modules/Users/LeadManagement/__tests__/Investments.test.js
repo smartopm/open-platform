@@ -128,7 +128,7 @@ describe('LeadEvents Page', () => {
           <BrowserRouter>
             <MockedThemeProvider>
               <MockedSnackbarProvider>
-                <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
+                <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" handleEditClick={() => {}} />
               </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
@@ -169,7 +169,7 @@ describe('LeadEvents Page', () => {
           <BrowserRouter>
             <MockedThemeProvider>
               <MockedSnackbarProvider>
-                <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
+                <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" handleEditClick={() => {}} />
               </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>

@@ -2,9 +2,11 @@ const path = require('path');
 const webpack = require('webpack');
 
 const mode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
+const devtool = process.env.NODE_ENV === 'development' ? 'eval' : 'source-map';
 
 module.exports = {
   mode,
+  devtool,
   optimization: {
     moduleIds: 'deterministic'
   },
@@ -13,7 +15,6 @@ module.exports = {
   },
   output: {
     filename: '[name].js',
-    sourceMapFilename: '[name].js.map',
     path: path.resolve(__dirname, 'app/assets/builds')
   },
   module: {
