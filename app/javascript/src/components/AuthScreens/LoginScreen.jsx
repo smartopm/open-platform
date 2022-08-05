@@ -196,7 +196,7 @@ export default function LoginScreen() {
                 value={userLogin.phone}
                 containerStyle={{ width: '100%' }}
                 inputClass="phone-login-input"
-                inputStyle={{ width: '100%', height: '4em' }}
+                inputStyle={{ width: '100%', height: '3.5em' }}
                 country={extractCountry(communityData?.currentCommunity?.locale)}
                 enableSearch
                 placeholder={t('common:form_placeholders.phone_number')}
@@ -249,13 +249,13 @@ export default function LoginScreen() {
               onClick={() => handleOAuthLogin('/login_oauth')}
               data-testid="login-with-google-btn"
               variant="outlined"
-              startIcon={(
+              startIcon={
                 <img
                   src={GoogleIcon}
                   alt="google-icon"
                   className={`${css(styles.socialLoginButtonIcons)}`}
                 />
-              )}
+              }
               className={`${css(styles.googleOAuthButton)} google-sign-in-btn`}
               size="large"
               fullWidth
