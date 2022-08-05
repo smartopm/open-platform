@@ -105,5 +105,6 @@ RSpec.describe Comments::NoteComment, type: :model do
     it { is_expected.to belong_to(:note).class_name('Notes::Note') }
     it { is_expected.to belong_to(:user).class_name('Users::User') }
     it { is_expected.to belong_to(:reply_from).class_name('Users::User').optional }
+    it { is_expected.to have_many(:notifications).class_name('Notifications::Notification') }
   end
 end

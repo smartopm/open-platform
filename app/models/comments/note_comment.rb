@@ -29,6 +29,8 @@ module Comments
     # rubocop:enable Layout/LineLength
 
     belongs_to :note_entity, polymorphic: true, optional: true
+    has_many :notifications,
+             class_name: 'Notifications::Notification', as: :notifable, dependent: :destroy
 
     class << self
       def status_stats(current_user)
@@ -47,6 +49,15 @@ module Comments
       return replace_document_mentions if process_comment? && tagged_documents?
 
       body.truncate_words(5)
+    end
+
+    def comment_url
+      return if note.nil?
+
+      process = note&.note_list&.process
+      return "/processes/#{process.id}/projects/#{note_id}?tab=processes" if process.present?
+
+      "/tasks?taskId=#{note_id}"
     end
 
     private

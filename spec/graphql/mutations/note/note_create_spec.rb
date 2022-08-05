@@ -201,6 +201,7 @@ RSpec.describe Mutations::Note::NoteCreate do
         expect(result['errors']).to be_nil
         expect(user.notifications.count).to eql 1
         expect(user.notifications.first.description).to eql 'Feedback task is assigned to you.'
+        expect(user.notifications.first.url).to eql "/tasks?taskId=#{user_note.id}"
       end
     end
 

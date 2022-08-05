@@ -32,6 +32,7 @@ module Mutations
 
           send_email_notification(comment) if vals[:reply_required]
           send_reply_to_whatsapp(vals[:note_id], vals[:body])
+          notify(vals[:reply_required], comment)
 
           comment.record_note_history(context[:current_user])
           { note_comment: comment }
@@ -92,6 +93,43 @@ module Mutations
       # rubocop:enable Layout/LineLength
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/AbcSize
+
+      def notify(reply_required, comment)
+        return notify_when_reply_requested(comment) if reply_required
+
+        notify_assignees(comment)
+      end
+
+      def notify_when_reply_requested(comment)
+        NotificationCreateJob.perform_now(community_id: context[:site_community].id,
+                                          notifable_id: comment.id,
+                                          notifable_type: comment.class.name,
+                                          description: I18n.t('notification_description'\
+                                                              '.reply_requested',
+                                                              user: context[:current_user].name),
+                                          category: :reply_requested,
+                                          user_id: comment.reply_from_id,
+                                          url: comment.comment_url)
+      end
+
+      def notify_assignees(comment)
+        comment.note.assignees.each do |assigned_to|
+          next if comment.user_id.eql?(assigned_to.id)
+
+          notify_when_commented(comment, assigned_to.id)
+        end
+      end
+
+      def notify_when_commented(comment, user_id)
+        NotificationCreateJob.perform_now(community_id: context[:site_community].id,
+                                          notifable_id: comment.id,
+                                          notifable_type: comment.class.name,
+                                          description: I18n.t('notification_description.comment',
+                                                              user: comment.user.name),
+                                          category: :comment,
+                                          user_id: user_id,
+                                          url: comment.comment_url)
+      end
 
       def authorized?(_vals)
         return true if permitted?(module: :note, permission: :can_create_note_comment)

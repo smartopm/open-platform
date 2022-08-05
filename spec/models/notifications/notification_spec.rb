@@ -12,6 +12,7 @@ RSpec.describe Notifications::Notification, type: :model do
     it { is_expected.to have_db_column(:created_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:updated_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:community_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:url).of_type(:string) }
   end
   describe 'Associations' do
     it { is_expected.to belong_to(:notifable) }

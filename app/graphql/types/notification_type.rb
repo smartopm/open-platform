@@ -12,6 +12,7 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: true
     field :seen_at, GraphQL::Types::ISO8601DateTime, null: true
     field :header, String, null: true
+    field :url, String, null: true
 
     def header
       batch_load(object, :notifable).then do |notifable|
