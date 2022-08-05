@@ -394,8 +394,7 @@ es:
     form_property:
       not_found: Formulario de Propiedad no encontrado
     form:
-      draft_exist: Envíe el formulario de borrador existente para hacer un nuevo envío
-        de borrador
+      draft_exist: Hay una versión de este formulario en modo borrador disponible en su perfil, envíe para hacer un nuevo borrador
       not_found: Formulario no encontrado
     general:
       model_not_found: "%{model} no encontrado"
