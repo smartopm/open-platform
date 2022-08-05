@@ -15,7 +15,7 @@ export default function PasswordInput({ label, passwordValue, type, setPasswordV
         value={objectAccessor(passwordValue, type)}
         onChange={event => setPasswordValue({ ...passwordValue, [type]: event.target.value })}
         inputProps={{ 'data-testid': 'password_input' }}
-        endAdornment={
+        endAdornment={(
           <InputAdornment position="end">
             <IconButton
               aria-label="toggle password visibility"
@@ -31,7 +31,7 @@ export default function PasswordInput({ label, passwordValue, type, setPasswordV
               {passwordValue.showPassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </InputAdornment>
-        }
+        )}
         label={label}
         fullWidth
       />
