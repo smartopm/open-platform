@@ -58,7 +58,6 @@ describe('Custom Forms', () => {
 
     cy.get('[data-testid=submit]').click();
     cy.wait(2000);
-    cy.get('[data-testid=cancel]').click();
 
     // The 'No Forms' text should disappear
     cy.get('[data-testid=no-form-available]').should('not.exist');
