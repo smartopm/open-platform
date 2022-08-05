@@ -109,7 +109,7 @@ const AdminRoutes = props => {
 
 const Logout = () => {
   localStorage.removeItem(AUTH_TOKEN_KEY);
-  sessionStorage.removeItem(AUTH_FORWARD_URL_KEY)
+  localStorage.removeItem(AUTH_FORWARD_URL_KEY)
   const authState = useContext(AuthStateContext);
   authState.setToken({ action: 'delete' });
   return <Redirect to="/login" />;

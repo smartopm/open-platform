@@ -16,7 +16,7 @@ export default function MainAuthCallback({ match }) {
     return <Redirect push to="/logout" />;
   }
   
-  const nextUrlAfterAuthLogin = sessionStorage.getItem(AUTH_FORWARD_URL_KEY);
+  const nextUrlAfterAuthLogin = localStorage.getItem(AUTH_FORWARD_URL_KEY);
   if(nextUrlAfterAuthLogin){
     return <Redirect push to={`${nextUrlAfterAuthLogin}`}/>;
   }
