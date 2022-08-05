@@ -7,6 +7,10 @@ import PasswordSetup from '../../components/AuthScreens/PasswordSetup';
 import { ResetPasswordAfterLoginMutation } from '../../graphql/mutations/user';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useLocation: () => ({ state: { firstTimeLogin: true } }),
+}));
 describe('PasswordSetup page', () => {
   const mocks = [
     {
