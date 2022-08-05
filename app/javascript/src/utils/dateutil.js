@@ -164,8 +164,8 @@ function pad(padStr, str) {
  * @returns {String} Date || HR || Min
  */
 export function formatTimeZone(date, timezone) {
-  const formatDate = new Date(date);
   if (!date) return null;
+  const formatDate = new Date(date);
   if (date && timezone) {
     return momentTimezone(formatDate)
       .tz(timezone)
