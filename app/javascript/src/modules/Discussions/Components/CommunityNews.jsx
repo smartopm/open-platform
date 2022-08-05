@@ -159,7 +159,7 @@ export default function CommunityNews({
       >
         <Grid container>
           <Grid item xs={12} style={{ marginBottom: 10 }}>
-            {userType !== 'security_guard' && (
+            {userType === 'admin' && (
               <PostCreate
                 translate={dashboardTranslation}
                 currentUserImage={userImage}

@@ -35,7 +35,7 @@ export default function LanguageToggle() {
           onChange={saveLocale}
           variant="filled"
           input={<BootstrapInput />}
-          IconComponent={() => <ArrowDropDownIcon style={{ marginLeft: -34 }} />}
+          IconComponent={() => <ArrowDropDownIcon size='small' style={{ marginLeft: -34 }} />}
           inputProps={{ 'data-testid': 'language_toggle' }}
         >
           {Object.entries(languageOptions).map(([key, val]) => (
