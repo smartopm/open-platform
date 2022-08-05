@@ -16,6 +16,7 @@ import thebeLogoUrl from '../../../../assets/images/thebe-logo.png';
 import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 
+// TODO: We should redesign this page or deprecate it
 export default function WelcomePage() {
   const authState = useContext(AuthStateContext);
   const { data: communityData, loading } = useQuery(CurrentCommunityQuery);

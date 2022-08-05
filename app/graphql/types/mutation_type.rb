@@ -13,6 +13,7 @@ module Types
     field :create_upload, mutation: Mutations::Upload::CreateAttachment
     field :users_import, mutation: Mutations::User::Import
     field :reset_password, mutation: Mutations::User::ResetPassword
+    field :reset_password_after_login, mutation: Mutations::User::ResetPasswordAfterLogin
 
     # Entry Requests
     field :entry_request_create, mutation: Mutations::EntryRequest::EntryRequestCreate
@@ -32,6 +33,7 @@ module Types
     field :login_switch_user, mutation: Mutations::Login::LoginSwitchUser
     field :login_email, mutation: Mutations::Login::LoginEmail
     field :login_public_user, mutation: Mutations::Login::LoginPublicUser
+    field :login_username_password, mutation: Mutations::Login::LoginUsernamePassword
 
     # Notes
     field :note_create, mutation: Mutations::Note::NoteCreate

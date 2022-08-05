@@ -7,7 +7,6 @@ import { jsPDF as JsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { toPng } from 'html-to-image';
 
-
 // keep string methods [helpers]
 
 /**
@@ -17,7 +16,7 @@ import { toPng } from 'html-to-image';
  * @description receives a url and returns a purified url
  */
 export function sanitizeText(text) {
-  return dompurify.sanitize(text)
+  return dompurify.sanitize(text);
 }
 
 /**
@@ -26,8 +25,8 @@ export function sanitizeText(text) {
  * @returns a string without the Graphql part
  * @description receives an error message and returns a a message without the graphql part
  */
-export function formatError(errMsg="") {
-  return errMsg.split(":").pop()
+export function formatError(errMsg = '') {
+  return errMsg.split(':').pop();
 }
 
 /**
@@ -37,15 +36,15 @@ export function formatError(errMsg="") {
  * @description find email addresses and urls in a message and replace them with links
  */
 export function findLinkAndReplace(msg) {
-  if (!msg) return
-  const urlRegex = /(https?:\/\/[^\s]+)|([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g
-  const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g
-  return msg.replace(urlRegex, function (url) {
+  if (!msg) return;
+  const urlRegex = /(https?:\/\/[^\s]+)|([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g;
+  const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g;
+  return msg.replace(urlRegex, function(url) {
     if (emailRegex.test(url)) {
-      return `<a href="mailto:${url}">${url}</a>`
+      return `<a href="mailto:${url}">${url}</a>`;
     }
-    return `<a href="${url}" >${url}</a>`
-  })
+    return `<a href="${url}" >${url}</a>`;
+  });
 }
 
 /**
@@ -55,9 +54,9 @@ export function findLinkAndReplace(msg) {
  * @description check if a string contains html tags and return a boolean
  */
 export function checkForHtmlTags(str) {
-  if (!str) return
-  const result = /<\/?[a-z][\s\S]*>/i.test(str)
-  return result
+  if (!str) return;
+  const result = /<\/?[a-z][\s\S]*>/i.test(str);
+  return result;
 }
 
 /**
@@ -67,9 +66,9 @@ export function checkForHtmlTags(str) {
  * @description removes new lines and line break from a string
  */
 export function removeNewLines(str) {
-  if (!str) return
-  const result = str.replace(/(\r\n|\n|\r)/gm, "")
-  return result
+  if (!str) return;
+  const result = str.replace(/(\r\n|\n|\r)/gm, '');
+  return result;
 }
 
 /**
@@ -79,9 +78,9 @@ export function removeNewLines(str) {
  * @description returns a substring of the given message after the character count passed to the function
  */
 export function truncateString(message, count) {
-  if (!message) return
-  if (message.length <= count) return message
-  return `${message.substring(0, count)}...`
+  if (!message) return;
+  if (message.length <= count) return message;
+  return `${message.substring(0, count)}...`;
 }
 
 /**
@@ -96,8 +95,8 @@ const cleanedFields = {
   userType: 'User Type',
   phoneNumber: 'Phone Number',
   name: 'name',
-  email: 'email'
-}
+  email: 'email',
+};
 
 /**
  *
@@ -108,37 +107,38 @@ const cleanedFields = {
  *
  */
 export function saniteError(requiredFields, errorMessage) {
-
   if (!errorMessage.length) return;
-  const errArr = errorMessage.replace(/\$/, '').split(" ");
+  const errArr = errorMessage.replace(/\$/, '').split(' ');
   const foundFields = requiredFields.filter(field => errArr.includes(field));
-  const cleanFields = foundFields.map(field => cleanedFields[field])
+  const cleanFields = foundFields.map(field => cleanedFields[field]);
   // If required field(s) is missing
-  if(foundFields.length > 0){
-    return `${cleanFields.join(" or ")} value is required`;
+  if (foundFields.length > 0) {
+    return `${cleanFields.join(' or ')} value is required`;
   }
   // if we don't know the error
-  if (!errorMessage.includes("GraphQL error")) {
-    return "Unexpected error happened, Please try again";
+  if (!errorMessage.includes('GraphQL error')) {
+    return 'Unexpected error happened, Please try again';
   }
 
-  return `${errorMessage.replace(/GraphQL error:/, "")}`;
+  return `${errorMessage.replace(/GraphQL error:/, '')}`;
 }
 
 export function delimitorFormator(params) {
-  return params.split('\n').join(',').split(',')
+  return params
+    .split('\n')
+    .join(',')
+    .split(',');
 }
 
 /**
-* @param {String} text
-* @returns copied text in the clipboard
-*/
+ * @param {String} text
+ * @returns copied text in the clipboard
+ */
 export function copyText(text) {
-    if (text) return navigator.clipboard.writeText(text)
-  }
+  if (text) return navigator.clipboard.writeText(text);
+}
 
-
-  /**
+/**
  *
  * @param {Array} cords
  * @param {Number} initial  index to move from
@@ -148,13 +148,13 @@ export function copyText(text) {
  * @returns {[Number]}
  */
 export function invertArray(cords, initial, final) {
-  if (!Array.isArray(cords) || typeof initial !== 'number' || typeof final !== 'number' ) {
-    throw new Error('You must provide proper values')
+  if (!Array.isArray(cords) || typeof initial !== 'number' || typeof final !== 'number') {
+    throw new Error('You must provide proper values');
   }
-  const initialElement = cords[initial]
-  cords.splice(initial, 1)
-  cords.splice(final, 0, initialElement)
-  return cords
+  const initialElement = cords[initial];
+  cords.splice(initial, 1);
+  cords.splice(final, 0, initialElement);
+  return cords;
 }
 
 /**
@@ -164,10 +164,10 @@ export function invertArray(cords, initial, final) {
  * @returns {string} link
  */
 export function forceLinkHttps(imageLink) {
-  if(!imageLink) return
-  const lkReg = /^https:\/\//i
-  const link = !lkReg.test(imageLink) ? imageLink.replace('http', 'https') : imageLink
-  return link
+  if (!imageLink) return;
+  const lkReg = /^https:\/\//i;
+  const link = !lkReg.test(imageLink) ? imageLink.replace('http', 'https') : imageLink;
+  return link;
 }
 
 /**
@@ -177,19 +177,19 @@ export function forceLinkHttps(imageLink) {
  * @returns [string]
  */
 export function getJustLabels(labels) {
-  if(!labels.length) return []
-  let str = []
+  if (!labels.length) return [];
+  let str = [];
   for (let index = 0; index < labels.length; index++) {
-    const element = labels[index]
+    const element = labels[index];
     if (typeof element === 'object') {
-      str.push(element.shortDesc)
+      str.push(element.shortDesc);
     }
-    str.push(element)
+    str.push(element);
   }
-  return str.filter(el => typeof el === 'string')
+  return str.filter(el => typeof el === 'string');
 }
 
- /**
+/**
  * @param {string} email
  * @description check if email is valid
  * @returns {boolean} true or false
@@ -198,7 +198,6 @@ export function validateEmail(email) {
   const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return re.test(String(email).toLowerCase());
 }
-
 
 /**
  *
@@ -210,7 +209,7 @@ export function capitalize(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
- /**
+/**
  * @param {Number} count
  * @param {String} noun
  * @param {String} [suffix=s]
@@ -218,20 +217,22 @@ export function capitalize(word) {
  * @returns {String}
  */
 export function pluralizeCount(count, noun, suffix = 's') {
-  return `${noun}${count > 1 ? suffix : ''}`
+  return `${noun}${count > 1 ? suffix : ''}`;
 }
 
- /**
+/**
  * @param {String} string
  * @description just like Ruby titleize
  * @returns {String}
  */
 export function titleize(string) {
-  if (!string) return
-  var words = string.split(/-|_/)
-  return words.map(function(word) {
-    return word.charAt(0).toUpperCase() + word.substring(1).toLowerCase()
-  }).join(' ')
+  if (!string) return;
+  var words = string.split(/-|_/);
+  return words
+    .map(function(word) {
+      return word.charAt(0).toUpperCase() + word.substring(1).toLowerCase();
+    })
+    .join(' ');
 }
 
 /**
@@ -239,21 +240,20 @@ export function titleize(string) {
  * @description return the sentence form for ActionFlow actions
  * @returns {String}
  */
-export function sentencizeAction(action){
+export function sentencizeAction(action) {
   if (action === 'Task') {
-    return `Create ${action}`
+    return `Create ${action}`;
   }
 
-  return  `Send ${action}`
+  return `Send ${action}`;
 }
 
-
-export async function convertBase64ToFile(data){
-  const res = await fetch(data)
-  const blob = await res.blob()
+export async function convertBase64ToFile(data) {
+  const res = await fetch(data);
+  const blob = await res.blob();
   // will pass in file name
-  const file = new File([blob], "File name", { type: "image/png" })
-  return file
+  const file = new File([blob], 'File name', { type: 'image/png' });
+  return file;
 }
 
 /**
@@ -262,23 +262,25 @@ export async function convertBase64ToFile(data){
  * @param {Object} field2
  * @returns order
  */
-export function sortPropertyOrder(field1, field2){
-  if(!field1 || !field2) return
-  if(field1.formProperty) {
+export function sortPropertyOrder(field1, field2) {
+  if (!field1 || !field2) return;
+  if (field1.formProperty) {
     if (field1.formProperty.order === field2.formProperty.order) {
-      if (field1.formProperty.id > field2.formProperty.id) return -1; else return 1;
+      if (field1.formProperty.id > field2.formProperty.id) return -1;
+      else return 1;
     }
-    return Number(field1.formProperty.order) - Number(field2.formProperty.order)
+    return Number(field1.formProperty.order) - Number(field2.formProperty.order);
   }
 
   if (field1.order === field2.order) {
-    if (field1.id > field2.id) return -1; else return 1;
+    if (field1.id > field2.id) return -1;
+    else return 1;
   }
-  return Number(field1.order) - Number(field2.order)
+  return Number(field1.order) - Number(field2.order);
 }
 
 export function useParamsQuery() {
-  return new URLSearchParams(useLocation().search)
+  return new URLSearchParams(useLocation().search);
 }
 
 export const InvoiceStatusColor = {
@@ -288,20 +290,20 @@ export const InvoiceStatusColor = {
   cancelled: '#E74540',
   in_progress: '#3493FB',
   active: '#00A98B',
-  in_active: '#E74540'
-}
+  in_active: '#E74540',
+};
 
 export const InvoiceType = {
   cash: 'Cash',
-  'cheque/cashier_cheque': 'Cheque/CashierCheque'
-}
+  'cheque/cashier_cheque': 'Cheque/CashierCheque',
+};
 
 export function generateId() {
   if (!window.crypto) {
-    return ['233b1634', 'bf08', '4ece', 'a213', 'b3f120a', '1e008', 'sdfsdfsdfsdfwerfwe', 1, 23, 4]
+    return ['233b1634', 'bf08', '4ece', 'a213', 'b3f120a', '1e008', 'sdfsdfsdfsdfwerfwe', 1, 23, 4];
   }
-  const array = new Uint32Array(10)
-  return window.crypto.getRandomValues(array)
+  const array = new Uint32Array(10);
+  return window.crypto.getRandomValues(array);
 }
 
 /**
@@ -310,20 +312,20 @@ export function generateId() {
  * @returns true if string is valid json || false
  * @description check if a string is a valid json || geoJSON
  */
-export function checkValidGeoJSON(str){
+export function checkValidGeoJSON(str) {
   try {
-    const o = JSON.parse(str)
+    const o = JSON.parse(str);
     // Handle non-exception-throwing cases:
     // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
     // but... JSON.parse(null) returns null, and typeof null === "object",
     // so we must check for that, too. Thankfully, null is falsey, so this suffices:
-    if (o && typeof o === "object") {
+    if (o && typeof o === 'object') {
       return true;
     }
-    } catch (e) {
-      return false;
-    }
+  } catch (e) {
+    return false;
   }
+}
 
 /**
  *
@@ -332,8 +334,8 @@ export function checkValidGeoJSON(str){
  * @description gets a value out of an object or an array purposely to reduce the "Code Injection" vulnerabilities
  */
 export function objectAccessor(object, key) {
-  if (!object) return
-  return object[key]
+  if (!object) return;
+  return object[key];
 }
 
 /**
@@ -344,8 +346,8 @@ export function objectAccessor(object, key) {
  * @description set a value in object or an array purposely to reduce the "Code Injection" vulnerabilities
  */
 export function setObjectValue(object, key, value) {
-	object[key] = value
-	return object
+  object[key] = value;
+  return object;
 }
 
 /**
@@ -357,7 +359,7 @@ export function setObjectValue(object, key, value) {
  * it applies this to all instances
  * @example snake_name ==> snakeName
  */
-export function toCamelCase(str){
+export function toCamelCase(str) {
   return str.replace(/([-_]\w)/g, word => word[1].toUpperCase());
 }
 
@@ -371,7 +373,10 @@ export function toCamelCase(str){
 export function toTitleCase(str) {
   if (str === null || str === undefined) return;
 
-  return str.replace(/_/g, ' ').toLowerCase().replace(/\b(\w)|'/g, s => s.toUpperCase());
+  return str
+    .replace(/_/g, ' ')
+    .toLowerCase()
+    .replace(/\b(\w)|'/g, s => s.toUpperCase());
 }
 /**
  *
@@ -380,8 +385,8 @@ export function toTitleCase(str) {
  * @description Converts a number range to HEX color used for map map legend
  */
 /* eslint-disable no-nested-ternary */
-export function getHexColor (range) {
-  return (range > 320
+export function getHexColor(range) {
+  return range > 320
     ? '#E8E8E8'
     : range > 270
     ? '#E8E8E8'
@@ -395,8 +400,7 @@ export function getHexColor (range) {
     ? '#F8F0E3'
     : range > 10
     ? '#F8F0E3'
-    : '#F8F0E3'
-  )
+    : '#F8F0E3';
 }
 
 /**
@@ -406,64 +410,64 @@ export function getHexColor (range) {
  * @returns {String} formatted amount in user's locale
  */
 
- export function formatMoney(currencyData, amount) {
-  if (process.env.NODE_ENV === "test") return `K ${amount}`;
+export function formatMoney(currencyData, amount) {
+  if (process.env.NODE_ENV === 'test') return `K ${amount}`;
 
   const formatted = new Intl.NumberFormat(currencyData?.locale || 'en-ZM', {
     style: 'currency',
     currency: currencyData?.currency,
   })?.format(amount);
   return formatted;
-  return 10
- }
+  return 10;
+}
 
- /**
-  *
-  * @param {object} currencyData currency and locale
-  * @description it gets the currency from the locale, so instead of USD or ZMW, it gives $ or K
-  */
- export function extractCurrency(currencyData) {
-  if(process.env.NODE_ENV !== "test"){
+/**
+ *
+ * @param {object} currencyData currency and locale
+ * @description it gets the currency from the locale, so instead of USD or ZMW, it gives $ or K
+ */
+export function extractCurrency(currencyData) {
+  if (process.env.NODE_ENV !== 'test') {
     const parts = new Intl.NumberFormat(currencyData?.locale || 'en-ZM', {
       style: 'currency',
-      currency: currencyData?.currency
+      currency: currencyData?.currency,
     })?.formatToParts();
     return parts[0]?.value;
   }
- }
+}
 
- /**
+/**
  *
  * @param {object} featureGroup leaflet map layer
  * @return {object} plugin config
  * @description Creates a plugin config for leaflet draw control
  */
-export function getDrawPluginOptions (featureGroup) {
-  return ({
-      position: 'topright',
-      draw: {
-        polygon: {
-          allowIntersection: false,
-          drawError: {
-            color: '#e1e100',
-            message: '<strong>Oh snap!<strong> you can\'t draw that!'
-          },
-          shapeOptions: {
-            color: '#97009c'
-          }
+export function getDrawPluginOptions(featureGroup) {
+  return {
+    position: 'topright',
+    draw: {
+      polygon: {
+        allowIntersection: false,
+        drawError: {
+          color: '#e1e100',
+          message: "<strong>Oh snap!<strong> you can't draw that!",
         },
-        // disable toolbar item by setting it to false
-        polyline: false,
-        circle: false,
-        rectangle: false,
-        marker: false,
-        circlemarker: false,
+        shapeOptions: {
+          color: '#97009c',
         },
-      edit: {
-        featureGroup,
-        remove: true
-      }
-    })
+      },
+      // disable toolbar item by setting it to false
+      polyline: false,
+      circle: false,
+      rectangle: false,
+      marker: false,
+      circlemarker: false,
+    },
+    edit: {
+      featureGroup,
+      remove: true,
+    },
+  };
 }
 
 /**
@@ -475,38 +479,36 @@ export function getDrawPluginOptions (featureGroup) {
 
 export function handleQueryOnChange(selectedOptions, filterFields) {
   if (selectedOptions) {
-    const andConjugate = selectedOptions.logic?.and
-    const orConjugate = selectedOptions.logic?.or
-    const availableConjugate = andConjugate || orConjugate
-    const dateFields = [
-      'created_at',
-      'due_date',
-      'ends_at',
-      'visit_end_date'
-    ];
+    const andConjugate = selectedOptions.logic?.and;
+    const orConjugate = selectedOptions.logic?.or;
+    const availableConjugate = andConjugate || orConjugate;
+    const dateFields = ['created_at', 'due_date', 'ends_at', 'visit_end_date'];
     if (availableConjugate) {
-      const conjugate = andConjugate ? 'AND' : 'OR'
+      const conjugate = andConjugate ? 'AND' : 'OR';
       const query = availableConjugate
         .map(option => {
-          let operator = Object.keys(option)[0]
-          const property = operator === '<=' ? filterFields[option[operator][1].var] : filterFields[option[operator][0].var];
-          let value = objectAccessor(option, operator)[1]
+          let operator = Object.keys(option)[0];
+          const property =
+            operator === '<='
+              ? filterFields[option[operator][1].var]
+              : filterFields[option[operator][0].var];
+          let value = objectAccessor(option, operator)[1];
 
-          if(dateFields.includes(property) && operator === '<=') {
-            const start_date = formatDateFields(property, objectAccessor(option, operator)[0])
-            const end_date = formatDateFields(property, objectAccessor(option, operator)[2])
+          if (dateFields.includes(property) && operator === '<=') {
+            const start_date = formatDateFields(property, objectAccessor(option, operator)[0]);
+            const end_date = formatDateFields(property, objectAccessor(option, operator)[2]);
 
-            return `${property} >= "${start_date}" AND ${property} <= "${end_date}"`
+            return `${property} >= "${start_date}" AND ${property} <= "${end_date}"`;
           }
-          if (operator === '==') operator = ':'
+          if (operator === '==') operator = ':';
           if (dateFields.includes(property)) {
             value = formatDateFields(property, value);
           }
 
-          return `${property} ${operator} '${value}'`
+          return `${property} ${operator} '${value}'`;
         })
-        .join(` ${conjugate} `)
-      return query
+        .join(` ${conjugate} `);
+      return query;
     }
   }
 }
@@ -518,7 +520,7 @@ export function formatDateFields(property, value) {
     value = dateToString(value);
   }
   return value;
-};
+}
 
 /**
  *
@@ -527,12 +529,12 @@ export function formatDateFields(property, value) {
  * @returns Boolean
  * @description checks if a module is in accepted features of a community
  */
-export function checkAllowedCommunityFeatures(features, module){
-  if(!features || !module) return false
-  const featureList = Object.keys(features)
+export function checkAllowedCommunityFeatures(features, module) {
+  if (!features || !module) return false;
+  const featureList = Object.keys(features);
 
-  if (!featureList.length) return false
-  return new Set(featureList).has(module)
+  if (!featureList.length) return false;
+  return new Set(featureList).has(module);
 }
 
 /**
@@ -542,34 +544,34 @@ export function checkAllowedCommunityFeatures(features, module){
  * @description include or exclude user type from menu accessibility list
  * @default {array} original user types when context is undefined
  */
- export function checkAccessibilityForUserType({ userTypes, ctx }){
-   // prefer original accessibility when no ctx
-   if(!ctx){
+export function checkAccessibilityForUserType({ userTypes, ctx }) {
+  // prefer original accessibility when no ctx
+  if (!ctx) {
     return userTypes;
-   }
+  }
 
-   // allow accessibility for admin
-  if(ctx.userType && ctx.userType.includes('admin')){
+  // allow accessibility for admin
+  if (ctx.userType && ctx.userType.includes('admin')) {
     return userTypes;
   }
 
   // on payment check, allow accessibility for user type
-  if(ctx.paymentCheck && ctx.userType){
+  if (ctx.paymentCheck && ctx.userType) {
     // deny accessibility without payment plan
-    if(!ctx.loggedInUserPaymentPlan){
-      return (userTypes.filter(t => t !== ctx.userType));
+    if (!ctx.loggedInUserPaymentPlan) {
+      return userTypes.filter(t => t !== ctx.userType);
     }
 
     return userTypes;
   }
 
   // allow accessibility for self
-  if(ctx.userId && ctx.loggedInUserId && ctx.userId === ctx.loggedInUserId) {
+  if (ctx.userId && ctx.loggedInUserId && ctx.userId === ctx.loggedInUserId) {
     return userTypes;
   }
 
   // deny accessibility for user type
-  return (userTypes.filter(t => t !== ctx.userType));
+  return userTypes.filter(t => t !== ctx.userType);
 }
 
 /**
@@ -577,24 +579,26 @@ export function checkAllowedCommunityFeatures(features, module){
  * @param {String} locale of format en-Uk
  * @returns small letter country abreviation like uk, us, ng
  */
-export function extractCountry(locale){
+export function extractCountry(locale) {
   // if the locale is wrongly formatted then return the default locale
-  if(!locale || !locale.includes('-')) return 'zm'
-  return locale.split('-')[1].toLowerCase()
+  if (!locale || !locale.includes('-')) return 'zm';
+  return locale.split('-')[1].toLowerCase();
 }
 
-
-export function ifNotTest(){
-  return process.env.NODE_ENV !== 'test'
+export function ifNotTest() {
+  return process.env.NODE_ENV !== 'test';
 }
-
 
 export function secureFileDownload(path) {
   const link = document.createElement('a');
   link.setAttribute('href', path);
   link.setAttribute('download', '');
   link.setAttribute('target', '_blank');
-  link.onclick = function(e) { e.preventDefault(); window.open(path, '_blank'); link.click(); };
+  link.onclick = function(e) {
+    e.preventDefault();
+    window.open(path, '_blank');
+    link.click();
+  };
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -605,24 +609,22 @@ export function secureFileDownload(path) {
  * @param {String} camelCase word
  * @returns split words
  */
- export function splitCamelCase(word){
+export function splitCamelCase(word) {
   return word.replace(/([a-z])([A-Z])/g, '$1 $2');
 }
 
-export function sortTaskOrder(taskItem1, taskItem2){
-  if(!taskItem1 || !taskItem2) return;
+export function sortTaskOrder(taskItem1, taskItem2) {
+  if (!taskItem1 || !taskItem2) return;
 
-  return (
-    Number(taskItem1.order) - Number(taskItem2.order)
-  );
+  return Number(taskItem1.order) - Number(taskItem2.order);
 }
 
 export function extractHostname(urlString) {
   if (!urlString) return;
   return {
     hostname: urlString.split('/')[2],
-    userId: urlString.split('/')[4]
-  }
+    userId: urlString.split('/')[4],
+  };
 }
 
 /**
@@ -644,7 +646,7 @@ export function decodeHtmlEntity(str) {
   return str.replace(/&#(\d+);/g, function(match, dec) {
     return String.fromCharCode(dec);
   });
-};
+}
 
 export function replaceDocumentMentions(comment, onDocClick) {
   const text = comment?.body;
@@ -678,28 +680,32 @@ export function replaceDocumentMentions(comment, onDocClick) {
  * @param {String} docName what to name the pdf document
  */
 export function savePdf(domElement, docName = 'download') {
-  html2canvas(domElement).then(canvas => {
-    const img = canvas.toDataURL('image/jpeg');
-    const pdf = new JsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4'
-    });
-    const imgWidth = 190; //a4 has 210mm, we used 190mm so as to leave space to left/right
-    const pageHeight = 270; // a4 has 297mm height, we used 270mm to leave space on top of page-1
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    let heightLeft = imgHeight;
-    let position = 0;
-    pdf.addImage(img, 'JPEG', 10, 15, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-    while (heightLeft >= 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(img, 'JPEG', 10, position + 10, imgWidth, imgHeight);
+  html2canvas(domElement)
+    .then(canvas => {
+      const img = canvas.toDataURL('image/jpeg');
+      const pdf = new JsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+      const imgWidth = 190; //a4 has 210mm, we used 190mm so as to leave space to left/right
+      const pageHeight = 270; // a4 has 297mm height, we used 270mm to leave space on top of page-1
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+      pdf.addImage(img, 'JPEG', 10, 15, imgWidth, imgHeight);
       heightLeft -= pageHeight;
-    }
-    pdf.save(`${docName}.pdf`);
-  }).catch((error) => { return error });
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(img, 'JPEG', 10, position + 10, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      pdf.save(`${docName}.pdf`);
+    })
+    .catch(error => {
+      return error;
+    });
 }
 
 /**
@@ -709,7 +715,13 @@ export function savePdf(domElement, docName = 'download') {
  * @param {[String]} requiredFields
  * @returns {{ error: Boolean, helperText: String }}
  */
-export function validateRequiredField(fieldName, inputValidationMsg={}, requiredFields=[], inputData={}, t) {
+export function validateRequiredField(
+  fieldName,
+  inputValidationMsg = {},
+  requiredFields = [],
+  inputData = {},
+  t
+) {
   const validationError =
     inputValidationMsg.isError &&
     requiredFields.includes(fieldName) &&
@@ -718,7 +730,7 @@ export function validateRequiredField(fieldName, inputValidationMsg={}, required
     error: validationError,
     helperText: validationError
       ? t('form:errors.required_field', { fieldName })
-      : t(`amenity:helper_text.${fieldName}`)
+      : t(`amenity:helper_text.${fieldName}`),
   };
 }
 
@@ -735,7 +747,8 @@ export function downloadAsImage(currentRef, name) {
       link.href = dataUrl;
       link.click();
     })
-    .catch(() => { return { error: true };
+    .catch(() => {
+      return { error: true };
     });
 }
 
@@ -749,4 +762,51 @@ export function downloadCommentFile(comment, fileId) {
  */
 export function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/**
+ * check the validity of the password and return appropriate message
+ * @param {string} value
+ * @param {string} value2
+ * @returns
+ */
+export function passwordChecks(value, value2, translate) {
+  const minLength = 10;
+  const definitions = {
+    minLength: {
+      valid: value.length >= minLength,
+      message: translate('password_checks.ten_characters'),
+    },
+    specialChar: {
+      valid: /[-+_!@#$%^&*.,?]/g.test(value),
+      message: translate('password_checks.no_special_character'),
+    },
+    number: {
+      valid: /\d/g.test(value),
+      message: translate('password_checks.contains_number'),
+    },
+    lowercase: {
+      valid: /(?=.*[a-z])/g.test(value),
+      message: translate('password_checks.contains_lowercase'),
+    },
+    uppercase: {
+      valid: /(?=.*[A-Z])/g.test(value),
+      message: translate('password_checks.contains_uppercase'),
+    },
+    match: {
+      valid: value.length > 1 && value === value2,
+      message: translate('password_checks.password_match'),
+    },
+    noSpaces: {
+      valid: /^[^ ]+$/.test(value),
+      message: translate('password_checks.contains_no_spaces'),
+    },
+  };
+  const rules = Object.keys(definitions);
+  const allRulesChecked = rules.every(rule => objectAccessor(definitions, rule).valid);
+  return {
+    rules,
+    definitions,
+    verified: allRulesChecked,
+  };
 }

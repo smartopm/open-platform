@@ -282,7 +282,7 @@ module Users
 
     def auto_generate_username_password
       password = SecureRandom.alphanumeric
-      username = name.split.join << SecureRandom.uuid.slice(0, 3)
+      username = name.split.join.downcase << SecureRandom.uuid.slice(0, 3)
       # will trigger the action flow job manually to avoid leaking user password to
       # the user create event log
       return unless update(password: password, username: username)

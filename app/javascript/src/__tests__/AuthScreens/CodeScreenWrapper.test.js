@@ -2,17 +2,15 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import currentCommunity from '../__mocks__/currentCommunity';
-import CodeScreenWrapper from '../components/AuthScreens/CodeScreenWrapper';
+import currentCommunity from '../../__mocks__/currentCommunity';
+import CodeScreenWrapper from '../../components/AuthScreens/CodeScreenWrapper';
 
 describe('Code Confirmation Screen', () => {
   const mocks = {
     title: "HOC component",
-    isOtpScreen: false,
+    isDisabled: true,
     loading: true,
-    handleResend: jest.fn(),
     handleConfirm: jest.fn(),
-    code: '12345',
   }
 
   it('renders some part of the screen with loading component', async () => {
@@ -25,19 +23,20 @@ describe('Code Confirmation Screen', () => {
         </MockedProvider>
       </MemoryRouter>
     );
+    expect(wrapper.queryByTestId('arrow_back')).toBeInTheDocument();
+    expect(wrapper.queryByTestId('loader')).toBeInTheDocument();
     await waitFor(() => {
-      expect(wrapper.queryByTestId('arrow_back')).toBeInTheDocument();
-      expect(wrapper.queryByTestId('loader')).toBeInTheDocument();
 
       const title = wrapper.queryByTestId('screen_title');
       expect(title).toBeInTheDocument();
       expect(title.textContent).toContain('HOC component');
       expect(wrapper.queryByTestId('submit_btn')).toBeDisabled();
-    });
+      expect(wrapper.queryByAltText('community logo')).toBeInTheDocument()
+    }, 10);
   });
 
   it('renders code confirmation wrapper', async () => {
-    const customMocks = {...mocks, loading: false, isOtpScreen: true, code: '123456'};
+    const customMocks = {...mocks, loading: false, isDisabled: false};
     const wrapper = render(
       <MemoryRouter>
         <MockedProvider mocks={[currentCommunity]} addTypename={false}>
@@ -47,9 +46,11 @@ describe('Code Confirmation Screen', () => {
         </MockedProvider>
       </MemoryRouter>
     );
+    expect(wrapper.queryByTestId('submit_btn')).not.toBeDisabled();
     await waitFor(() => {
       expect(wrapper.queryByTestId('loader')).not.toBeInTheDocument();
-      expect(wrapper.queryByTestId('submit_btn')).not.toBeDisabled();
+      expect(wrapper.queryByText('login.continue_button_text')).toBeInTheDocument()
+
 
       fireEvent.click(wrapper.getByTestId('submit_btn'));
       expect(customMocks.handleConfirm).toHaveBeenCalled();

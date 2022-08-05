@@ -76,6 +76,7 @@ import LanguagePage from '../src/modules/LogBook/Kiosk/components/LanguagePage';
 import Page404 from '../src/shared/404';
 import { RenderCommunityForms } from '../src/modules/Forms/ManageForms';
 import SnackbarProvider from '../src/shared/snackbar/Context';
+import PasswordSetup from '../src/components/AuthScreens/PasswordSetup';
 // The routes defined here are carefully arranged, be mindful when changing them
 
 const LoggedInOnly = props => {
@@ -178,6 +179,7 @@ const App = () => {
                         <Route path="/welcome" component={WelcomePage} />
                         <Route path="/login/:next?" component={LoginScreen} />
                         <Route path="/code/:id" component={ConfirmCodeScreen} />
+                        <Route path="/password_setup/:id" component={PasswordSetup} />
                         <Route
                           path="/l/:id/:code/:type?/:requestId?"
                           component={OneTimeLoginCode}
