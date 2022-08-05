@@ -2,8 +2,8 @@ import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
 import { render, waitFor } from '@testing-library/react'
-import CodeScreen from '../components/AuthScreens/ConfirmCodeScreen'
-import currentCommunity from '../__mocks__/currentCommunity';
+import CodeScreen from '../../components/AuthScreens/ConfirmCodeScreen'
+import currentCommunity from '../../__mocks__/currentCommunity';
 
 
 describe('Code Confirmation Screen', () => {
