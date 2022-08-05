@@ -8,12 +8,13 @@ import { ImportCreate } from '../../../graphql/mutations';
 import CenteredContent from '../../../components/CenteredContent';
 import Loading from '../../../shared/Loading';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import PageWrapper from '../../../shared/PageWrapper'
+import PageWrapper from '../../../shared/PageWrapper';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
+import useStateIfMounted from '../../../shared/hooks/useStateIfMounted';
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate);
-  const [csvString, setCsvString] = useState('');
+  const [csvString, setCsvString] = useStateIfMounted('');
   const [csvFileName, setCsvFileName] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,18 +26,19 @@ export default function UsersImport() {
   function createImport() {
     setIsLoading(true);
     importCreate({
-      variables: { csvString, csvFileName, importType: 'user' }
+      variables: { csvString, csvFileName, importType: 'user' },
     })
       .then(() => {
         setIsLoading(false);
         showSnackbar({
           type: messageType.success,
-          message: "Your import is currently being processed. You'll receive a mail when it's done."
+          message:
+            "Your import is currently being processed. You'll receive a mail when it's done.",
         });
       })
       .catch(err => {
         setIsLoading(false);
-        showSnackbar({type: messageType.error, message: err.message });
+        showSnackbar({ type: messageType.error, message: err.message });
       });
   }
 
@@ -89,49 +91,49 @@ export default function UsersImport() {
         <Grid item md={6} style={{ margin: '5px auto' }}>
           {isLoading ? (
             <Loading />
-        ) : (
-          <div>
-            <Grid container justifyContent="center" style={{ marginTop: '200px' }}>
-              <input
-                accept=".csv"
-                className={css(styles.inputField)}
-                id="contained-button-file"
-                data-testid="csv-input"
-                type="file"
-                onChange={processCsv}
-              />
-            </Grid>
-            <br />
-            {csvString.length > 0 && !hasErrors && (
-              <CenteredContent>
-                <Button
-                  variant="contained"
-                  aria-label="business_cancel"
-                  color="secondary"
-                  className={css(styles.cancelBtn)}
-                  onClick={onCancel}
-                  data-testid="cancel-btn"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  aria-label="business_submit"
-                  color="primary"
-                  onClick={createImport}
-                  className={css(styles.importBtn)}
-                >
-                  Import
-                </Button>
-              </CenteredContent>
-            )}
-          </div>
-        )}
+          ) : (
+            <div>
+              <Grid container justifyContent="center" style={{ marginTop: '200px' }}>
+                <input
+                  accept=".csv"
+                  className={css(styles.inputField)}
+                  id="contained-button-file"
+                  data-testid="csv-input"
+                  type="file"
+                  onChange={processCsv}
+                />
+              </Grid>
+              <br />
+              {csvString.length > 0 && !hasErrors && (
+                <CenteredContent>
+                  <Button
+                    variant="contained"
+                    aria-label="business_cancel"
+                    color="secondary"
+                    className={css(styles.cancelBtn)}
+                    onClick={onCancel}
+                    data-testid="cancel-btn"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    aria-label="business_submit"
+                    color="primary"
+                    onClick={createImport}
+                    className={css(styles.importBtn)}
+                  >
+                    Import
+                  </Button>
+                </CenteredContent>
+              )}
+            </div>
+          )}
         </Grid>
       </Grid>
     </PageWrapper>
-);
+  );
 }
 
 const styles = StyleSheet.create({
@@ -139,17 +141,17 @@ const styles = StyleSheet.create({
     width: '20%',
     marginRight: '8vw',
     height: 45,
-    marginTop: 50
+    marginTop: 50,
   },
 
   importBtn: {
     width: '20%',
     height: 45,
-    marginTop: 50
+    marginTop: 50,
   },
 
   inputField: {
     width: '201px',
-    overflow: 'hidden'
-  }
+    overflow: 'hidden',
+  },
 });
