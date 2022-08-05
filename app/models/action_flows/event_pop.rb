@@ -11,6 +11,8 @@ module ActionFlows
         'user_type' => 'User Type',
         'email' => 'Email',
         'phone_number' => 'Phone',
+        'username' => 'User name',
+        'password' => 'User Password',
       },
       'Message' => {
         'message' => 'Message',

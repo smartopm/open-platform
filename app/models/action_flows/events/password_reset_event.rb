@@ -3,9 +3,9 @@
 module ActionFlows
   module Events
     # User Create Event to handle related action
-    class UserCreateEvent < ActionFlows::EventPop
-      EVENT_TYPE = 'user_create'
-      EVENT_DESC = 'User Create'
+    class PasswordResetEvent < ActionFlows::EventPop
+      EVENT_TYPE = 'password_reset'
+      EVENT_DESC = 'Reset User Password'
 
       def self.event_metadata
         {
@@ -23,13 +23,10 @@ module ActionFlows
 
       def preload_data(event_log, extra_data = {})
         user = event_log.ref_type.constantize.find_by(id: event_log.ref_id)
-        # removing the lead condition as going forward they will be
-        # created as qualified leads and they should be able to login
-        return if user.blank? || user&.user_type.eql?('lead')
+        return if user.blank?
 
-        load_data({ 'User' => user },
-                  'password' => extra_data[:password],
-                  'username' => user.username)
+        load_data({ 'User' => user }, 'password' => extra_data[:password],
+                                      'username' => user.username)
       end
     end
   end

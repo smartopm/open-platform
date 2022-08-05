@@ -23,7 +23,7 @@ describe('LeadEvents Page', () => {
     {
       request: {
         query: DealDetailsQuery,
-        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99', logType: 'deal_details' }
+        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99', logType: 'deal_details' },
       },
       result: {
         data: {
@@ -35,17 +35,17 @@ describe('LeadEvents Page', () => {
               investmentTarget: '$20000',
               createdAt: new Date(),
               actingUser: {
-                name: 'Daniel Mutuba'
-              }
-            }
-          ]
-        }
-      }
+                name: 'Daniel Mutuba',
+              },
+            },
+          ],
+        },
+      },
     },
     {
       request: {
         query: LeadInvestmentsQuery,
-        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99', logType: 'investment' }
+        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99', logType: 'investment' },
       },
       result: {
         data: {
@@ -56,29 +56,29 @@ describe('LeadEvents Page', () => {
               amount: '$4000',
               createdAt: new Date(),
               actingUser: {
-                name: 'Daniel Mutuba'
-              }
-            }
-          ]
-        }
-      }
+                name: 'Daniel Mutuba',
+              },
+            },
+          ],
+        },
+      },
     },
     {
       request: {
         query: InvestmentStatsQuery,
-        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99' }
+        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99' },
       },
       result: {
         data: {
           investmentStats: [
             {
               percentage_of_target_used: '0.000454',
-              total_spent: '$1500'
-            }
-          ]
-        }
-      }
-    }
+              total_spent: '$1500',
+            },
+          ],
+        },
+      },
+    },
   ];
 
   const eventRequestDataMock = [
@@ -90,16 +90,16 @@ describe('LeadEvents Page', () => {
           userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
           dealSize: 45000000,
           investmentTarget: 105000,
-          logType: 'deal_details'
-        }
+          logType: 'deal_details',
+        },
       },
       result: {
         data: {
           leadLogCreate: {
-            success: true
-          }
-        }
-      }
+            success: true,
+          },
+        },
+      },
     },
     {
       request: {
@@ -108,17 +108,17 @@ describe('LeadEvents Page', () => {
           userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
           name: 'Flight to Paris',
           amount: 85000,
-          logType: 'investment'
-        }
+          logType: 'investment',
+        },
       },
       result: {
         data: {
           leadLogCreate: {
-            success: true
-          }
-        }
-      }
-    }
+            success: true,
+          },
+        },
+      },
+    },
   ];
 
   it('Creates an investment entry', async () => {
@@ -128,7 +128,7 @@ describe('LeadEvents Page', () => {
           <BrowserRouter>
             <MockedThemeProvider>
               <MockedSnackbarProvider>
-                <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
+                <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" handleEditClick={() => {}} />
               </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
@@ -143,13 +143,13 @@ describe('LeadEvents Page', () => {
       const dealSizeTextField = screen.getByLabelText('lead_management.deal_size');
 
       ReactTestUtils.Simulate.change(dealSizeTextField, {
-        target: { value: '45000000' }
+        target: { value: '45000000' },
       });
 
       const investmentTargetTextField = screen.getByLabelText('lead_management.investment_target');
 
       ReactTestUtils.Simulate.change(investmentTargetTextField, {
-        target: { value: '25000' }
+        target: { value: '25000' },
       });
 
       const saveButton = screen.queryByTestId('add-investment-button');
@@ -169,7 +169,7 @@ describe('LeadEvents Page', () => {
           <BrowserRouter>
             <MockedThemeProvider>
               <MockedSnackbarProvider>
-                <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
+                <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" handleEditClick={() => {}} />
               </MockedSnackbarProvider>
             </MockedThemeProvider>
           </BrowserRouter>
@@ -181,13 +181,13 @@ describe('LeadEvents Page', () => {
       const descriptionTextField = screen.getByLabelText('lead_management.description');
 
       ReactTestUtils.Simulate.change(descriptionTextField, {
-        target: { value: 'Flight to Paris' }
+        target: { value: 'Flight to Paris' },
       });
 
       const investmentTargetTextField = screen.getByLabelText('lead_management.amount');
 
       ReactTestUtils.Simulate.change(investmentTargetTextField, {
-        target: { value: '85000' }
+        target: { value: '85000' },
       });
 
       const saveButton = screen.queryByTestId('add-investment-size-button');

@@ -53,6 +53,7 @@ describe('UserPrint Detail component', () => {
           user: {
             id: matchProps.params.id,
             name: 'some user',
+            username: "someuser24efe44",
             __typename: 'User',
             contactInfos: null,
             substatusLogs: null,

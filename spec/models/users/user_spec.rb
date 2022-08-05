@@ -4,6 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Users::User, type: :model do
   describe 'schema' do
+    let!(:role) { create(:role) }
+    let!(:user) { create(:user_with_community, role: role) }
     it { is_expected.to have_db_column(:name).of_type(:string) }
     it { is_expected.to have_db_column(:email).of_type(:string) }
     it { is_expected.to have_db_column(:provider).of_type(:string) }
@@ -74,6 +76,9 @@ RSpec.describe Users::User, type: :model do
     it { is_expected.to have_db_column(:investment_size).of_type(:string) }
     it { is_expected.to have_db_column(:investment_timeline).of_type(:string) }
     it { is_expected.to have_db_column(:decision_timeline).of_type(:string) }
+    it { is_expected.to have_db_column(:username).of_type(:string) }
+    it { is_expected.to have_db_column(:has_reset_password).of_type(:boolean) }
+    it { should validate_uniqueness_of(:username).scoped_to(:community_id) }
   end
 
   describe 'associations' do
@@ -796,6 +801,56 @@ RSpec.describe Users::User, type: :model do
     it 'returns a whatsapp task' do
       expect(user.whatsapp_task.body).to eql 'This is another note'
       expect(another_user.whatsapp_task).to be_nil
+    end
+  end
+
+  describe '#password username generation on create' do
+    before { allow(SecureRandom).to receive(:uuid).and_return('12abcd1234') }
+    let(:lead_role) { create(:role, name: 'lead') }
+    let!(:user) do
+      create(:user_with_community,
+             user_type: 'lead',
+             lead_status: 'Signed MOU',
+             role: lead_role)
+    end
+
+    it 'username is autogeneration successful' do
+      expect(user.username).to eql 'MarkTest12a'
+    end
+  end
+
+  describe '#password reset on first time login' do
+    context 'when new password does not match old one' do
+      before { allow(SecureRandom).to receive(:alphanumeric).and_return('12abcd1234') }
+      before { allow(SecureRandom).to receive(:uuid).and_return('12abcd1234') }
+      let(:lead_role) { create(:role, name: 'lead') }
+      let!(:user) do
+        create(:user_with_community,
+               user_type: 'lead',
+               lead_status: 'Signed MOU',
+               role: lead_role)
+      end
+
+      it 'reset is successful' do
+        expect(user.reset_password_on_first_login('MarkTest12a', 'Bl12-password'))
+          .to_not be nil
+      end
+    end
+
+    context 'when new password matches old one' do
+      before { allow(SecureRandom).to receive(:alphanumeric).and_return('12abcd1234') }
+      before { allow(SecureRandom).to receive(:uuid).and_return('12abcd1234') }
+      let(:lead_role) { create(:role, name: 'lead') }
+      let!(:user) do
+        create(:user_with_community,
+               user_type: 'lead',
+               lead_status: 'Signed MOU',
+               role: lead_role)
+      end
+
+      it 'reset is not successful' do
+        expect(user.reset_password_on_first_login('MarkTest12a', '12abcd1234')).to be nil
+      end
     end
   end
 end

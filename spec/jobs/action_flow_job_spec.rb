@@ -36,5 +36,11 @@ RSpec.describe ActionFlowJob, type: :job do
       expect(ActionFlows::WebFlow).to receive(:new)
       perform_enqueued_jobs { described_class.perform_later(event_log) }
     end
+
+    it 'enqueues the job when extra data is passed' do
+      expect do
+        described_class.perform_later(event_log, { 'password': 'sd334451' })
+      end.to have_enqueued_job
+    end
   end
 end

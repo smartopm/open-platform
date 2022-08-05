@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-statements */
 /* eslint-disable complexity */
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +20,7 @@ import UserJourney from './UserJourney';
 import {
   useParamsQuery,
   objectAccessor,
-  checkAccessibilityForUserType as handler
+  checkAccessibilityForUserType as handler,
 } from '../../../utils/helpers';
 import FeatureCheck from '../../Features';
 import PaymentPlans from '../../Payments/Components/UserTransactions/Plans';
@@ -33,6 +35,7 @@ import { userTabList, selectOptions, createMenuContext } from '../utils';
 import SelectButton from '../../../shared/buttons/SelectButton';
 import UserLabelTitle from './UserLabelTitle';
 import UserLabels from './UserLabels';
+import PasswordRest from './PasswordReset';
 
 export default function UserInformation({
   data,
@@ -41,7 +44,7 @@ export default function UserInformation({
   refetch,
   userId,
   router,
-  accountData
+  accountData,
 }) {
   const path = useParamsQuery();
   const history = useHistory();
@@ -57,6 +60,7 @@ export default function UserInformation({
   const [selectedKey, setSelectKey] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const userType = authState.user.userType.toLowerCase();
+  const [openModal, setOpenModal] = useState(false);
   const options = selectOptions(
     setSelectKey,
     checkModule,
@@ -67,6 +71,7 @@ export default function UserInformation({
     handleMenuItemClick,
     handleMergeUserItemClick,
     checkRole,
+    handleResetPasswordItemClick,
     t,
     userId
   );
@@ -122,6 +127,10 @@ export default function UserInformation({
     setOpen(false);
   }
 
+  function handleResetPasswordItemClick() {
+    setOpen(false);
+    setOpenModal(true);
+  }
   function checkRole(roles, featureName) {
     if (['Properties', 'Users', 'Payments', 'LogBook'].includes(featureName)) {
       checkOtherRoles(featureName, roles);
@@ -136,12 +145,12 @@ export default function UserInformation({
       ) : (
         undefined
       ),
-      key: 1
+      key: 1,
     },
     {
       mainElement,
-      key: 2
-    }
+      key: 2,
+    },
   ];
 
   const breadCrumbObj = {
@@ -149,7 +158,7 @@ export default function UserInformation({
     extraBreadCrumbLink: '/users',
     linkText: tabValue !== 'Contacts' ? t('common:misc.user_detail') : undefined,
     linkHref: tabValue !== 'Contacts' ? `/user/${data.user.id}` : undefined,
-    pageName: objectAccessor(userTabList(t), tabValue)
+    pageName: objectAccessor(userTabList(t), tabValue),
   };
 
   useEffect(() => {
@@ -198,7 +207,9 @@ export default function UserInformation({
               <UserMerge close={handleMergeDialog} userId={userId} />
             </DialogContent>
           </Dialog>
-          <br />
+
+          <PasswordRest openModal={openModal} setOpenModal={setOpenModal} data={data} />
+
           {isLabelOpen && (
             <Container maxWidth="md">
               <UserLabels
@@ -247,10 +258,7 @@ export default function UserInformation({
           )}
           <FeatureCheck features={authState.user.community.features} name="Forms">
             <TabPanel value={tabValue} index="Forms">
-              <UserFilledForms
-                userId={data.user.id}
-                currentUser={authState.user.id}
-              />
+              <UserFilledForms userId={data.user.id} currentUser={authState.user.id} />
             </TabPanel>
           </FeatureCheck>
           <FeatureCheck features={authState.user.community.features} name="Payments">
@@ -315,6 +323,7 @@ export default function UserInformation({
 const User = PropTypes.shape({
   id: PropTypes.string,
   name: PropTypes.string,
+  username: PropTypes.string,
   userType: PropTypes.string,
   state: PropTypes.string,
   status: PropTypes.string,
@@ -324,8 +333,8 @@ const User = PropTypes.shape({
   community: PropTypes.shape({
     // eslint-disable-next-line react/forbid-prop-types
     features: PropTypes.object,
-    securityManager: PropTypes.string
-  })
+    securityManager: PropTypes.string,
+  }),
 });
 UserInformation.propTypes = {
   data: PropTypes.shape({ user: User }).isRequired,
@@ -334,20 +343,20 @@ UserInformation.propTypes = {
   refetch: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   router: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  accountData: PropTypes.shape({ user: User })
+  accountData: PropTypes.shape({ user: User }),
 };
 
 UserInformation.defaultProps = {
   accountData: {
     user: {
-      accounts: []
-    }
-  }
+      accounts: [],
+    },
+  },
 };
 
 const styles = StyleSheet.create({
   linkItem: {
     color: '#000000',
-    textDecoration: 'none'
-  }
+    textDecoration: 'none',
+  },
 });
