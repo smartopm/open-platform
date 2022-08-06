@@ -7,6 +7,9 @@ import {
   Divider,
   Grid,
   Container,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
 } from '@mui/material';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -14,7 +17,6 @@ import { useTranslation } from 'react-i18next';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import EmailIcon from '@mui/icons-material/Email';
-import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import PhoneInput from 'react-phone-input-2';
 import PropTypes from 'prop-types'
@@ -149,7 +151,7 @@ export default function LoginScreen({ currentCommunity }) {
       <Container maxWidth="sm">
         <CenteredContent>
           <ImageAuth
-            imageLink={currentCommunity?.imageUrl}
+            imageLink={currentCommunity?.imageUrl || ""}
             className={css(styles.logo)}
             alt="community logo"
             style={{ marginTop: 25, marginBottom: -17 }}
@@ -172,7 +174,7 @@ export default function LoginScreen({ currentCommunity }) {
         <Grid container className="justify-content-center">
           <Grid item xs={12}>
             <Typography color="textSecondary" variant="body2">
-              {t('login.login_text')}
+              {t('common:form_fields.phone_number')}
             </Typography>
             <div className={`${css(styles.phoneNumberInput)}`}>
               <PhoneInput
@@ -189,7 +191,11 @@ export default function LoginScreen({ currentCommunity }) {
             </div>
           </Grid>
           <Grid item xs={12}>
-            <Divider style={{ marginTop: 16, marginBottom: 10 }}>{t('common:misc:or')}</Divider>
+            <Divider style={{ marginTop: 16, marginBottom: 10 }}>
+              <Typography color="textSecondary" variant="caption">
+                {t('common:misc:or')}
+              </Typography>
+            </Divider>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -216,7 +222,11 @@ export default function LoginScreen({ currentCommunity }) {
           </Grid>
           <br />
           <Grid item xs={12}>
-            <Divider style={{ marginTop: 10, marginBottom: 16 }}>{t('common:misc:or')}</Divider>
+            <Divider style={{ marginTop: 10, marginBottom: 16 }}>
+              <Typography color="textSecondary" variant="caption">
+                {t('common:misc:or')}
+              </Typography>
+            </Divider>
           </Grid>
           <Grid item xs={12}>
             <Button
@@ -224,7 +234,7 @@ export default function LoginScreen({ currentCommunity }) {
               variant="outlined"
               data-testid="login-with-facebook-btn"
               startIcon={<FacebookIcon className={`${css(styles.socialLoginButtonIcons)}`} />}
-              size="small"
+              size="medium"
               fullWidth
               className={`${css(styles.facebookOAuthButton)}`}
             >
@@ -242,12 +252,12 @@ export default function LoginScreen({ currentCommunity }) {
                 />
               )}
               className={`${css(styles.googleOAuthButton)} google-sign-in-btn`}
-              size="small"
+              size="medium"
               fullWidth
             >
               {t('login.login_google')}
             </Button>
-            <TextField
+            {/* <TextField
               value={userLogin.email}
               variant="outlined"
               fullWidth
@@ -258,7 +268,7 @@ export default function LoginScreen({ currentCommunity }) {
               placeholder={t('login.login_email')}
               label={t('login.login_email')}
               onChange={event => setUserLogin({ email: event.target.value, phone: '' })}
-              size="small"
+              size="medium"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -268,7 +278,22 @@ export default function LoginScreen({ currentCommunity }) {
                   </InputAdornment>
                 ),
               }}
-            />
+            /> */}
+
+            <FormControl fullWidth margin='dense' size="small" style={{ marginTop: 16 }}>
+              <InputLabel htmlFor="outlined-adornment-amount">{t('login.login_email')}</InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-amount"
+                value={userLogin.email}
+                onChange={event => setUserLogin({ email: event.target.value, phone: '' })}
+                startAdornment={<InputAdornment position="start"><EmailIcon /></InputAdornment>}
+                placeholder={t('login.login_email')}
+                label={t('login.login_email')}
+                data-testid="email_text_input"
+                type="email"
+                name="email_login"
+              />
+            </FormControl>
           </Grid>
         </Grid>
         <CenteredContent>
@@ -276,18 +301,12 @@ export default function LoginScreen({ currentCommunity }) {
             data-testid="login-btn"
             variant="contained"
             color="primary"
-            endIcon={<ArrowForwardIcon />}
+            endIcon={isLoggingIn ? <CircularProgress size={23} /> : <ArrowForwardIcon />}
             className={`${css(styles.getStartedButton)} enz-lg-btn next-btn`}
             onClick={event => handleUserLogin(event, 'btnClick')}
             disabled={isLoginBtnDisabled}
           >
-            {isLoggingIn ? (
-              <CircularProgress size={25} color="primary" />
-            ) : (
-              <span>
-                {emailLoginSent ? t('login.email_otp_text') : t('login.continue_button_text')}
-              </span>
-            )}
+            {emailLoginSent ? t('login.email_otp_text') : t('login.continue_button_text')}
           </Button>
         </CenteredContent>
         <br />
@@ -310,12 +329,15 @@ export default function LoginScreen({ currentCommunity }) {
   );
 }
 
+LoginScreen.defaultProps = {
+  currentCommunity: {}
+}
 LoginScreen.propTypes = {
   currentCommunity: PropTypes.shape({
     name: PropTypes.string,
     imageUrl: PropTypes.string,
     locale: PropTypes.string,
-  }).isRequired
+  })
 }
 
 const styles = StyleSheet.create({
@@ -332,14 +354,12 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
   facebookOAuthButton: {
-    backgroundColor: 'white',
     textTransform: 'none',
     color: '#3b5998',
     display: 'flex',
     justifyContent: 'left',
   },
   googleOAuthButton: {
-    backgroundColor: 'white',
     textTransform: 'none',
     marginTop: '0.5em',
     display: 'flex',
