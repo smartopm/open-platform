@@ -5,9 +5,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PropTypes from 'prop-types';
 import { objectAccessor } from '../utils/helpers';
 
-export default function PasswordInput({ label, passwordValue, type, setPasswordValue }) {
+export default function PasswordInput({ label, passwordValue, type, setPasswordValue, ...props }) {
   return (
-    <FormControl variant="outlined" fullWidth>
+    <FormControl variant="outlined" fullWidth {...props}>
       <InputLabel htmlFor="outlined-adornment-password">{label}</InputLabel>
       <OutlinedInput
         id="outlined-adornment-password"

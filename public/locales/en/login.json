@@ -1,6 +1,6 @@
 {
   "login": {
-    "welcome": "Welcome to {{appName}} app",
+    "welcome": "Log in to {{appName}} app",
     "login_text": "Log in with Phone",
     "login_button_text": "login",
     "login_google": "Log in with Google",

@@ -177,7 +177,7 @@ const App = () => {
                       {/* onboarding */}
                       <Switch>
                         <Route path="/welcome" component={WelcomePage} />
-                        <Route path="/login/:next?" component={LoginScreen} />
+                        <Route path="/login/:next?" render={(props) => <LoginScreen {...props} currentCommunity={community} />} />
                         <Route path="/code/:id" component={ConfirmCodeScreen} />
                         <Route path="/password_setup/:id" component={PasswordSetup} />
                         <Route
