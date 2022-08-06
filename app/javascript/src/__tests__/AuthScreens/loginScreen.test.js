@@ -121,8 +121,6 @@ describe('Login Screen', () => {
       </MockedProvider>
     );
 
-    expect(loginWrapper.queryByText('login.login_text')).toBeInTheDocument();
-    expect(loginWrapper.queryByTestId('tagline')).toBeInTheDocument();
     expect(
       loginWrapper.getByPlaceholderText('common:form_placeholders.phone_number')
     ).toBeInTheDocument();
@@ -130,7 +128,7 @@ describe('Login Screen', () => {
     expect(loginWrapper.queryAllByText('common:misc:or').length).toBeGreaterThan(0);
     expect(loginWrapper.queryByText('login.login_google')).toBeInTheDocument();
     expect(loginWrapper.queryByText('login.login_facebook')).toBeInTheDocument();
-    expect(loginWrapper.queryByText('login.login_button_text')).toBeInTheDocument();
+    expect(loginWrapper.queryByText('login.continue_button_text')).toBeInTheDocument();
     expect(loginWrapper.queryByTestId('login-btn')).toBeInTheDocument();
     expect(loginWrapper.queryByTestId('trouble-logging-in-btn')).toBeInTheDocument();
     expect(loginWrapper.queryByText('login.request_account')).toBeInTheDocument();
@@ -153,7 +151,7 @@ describe('Login Screen', () => {
 
     expect(loginWrapper.getByText('common:form_fields.full_name')).toBeInTheDocument();
     expect(loginWrapper.getByText('common:form_fields.email')).toBeInTheDocument();
-    expect(loginWrapper.getByText('common:form_fields.phone_number')).toBeInTheDocument();
+    expect(loginWrapper.getAllByText('common:form_fields.phone_number')[0]).toBeInTheDocument();
     expect(loginWrapper.queryByTestId('interest')).toBeInTheDocument();
     expect(loginWrapper.queryByTestId('impact')).toBeInTheDocument();
     expect(loginWrapper.getByText('common:form_actions.send_email')).toBeInTheDocument();

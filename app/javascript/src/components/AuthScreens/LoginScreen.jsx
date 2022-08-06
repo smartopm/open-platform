@@ -154,7 +154,7 @@ export default function LoginScreen({ currentCommunity }) {
             imageLink={currentCommunity?.imageUrl || ""}
             className={css(styles.logo)}
             alt="community logo"
-            style={{ marginTop: 25, marginBottom: -17 }}
+            style={{ marginTop: 32, marginBottom: -17 }}
           />
         </CenteredContent>
         <br />
@@ -257,29 +257,6 @@ export default function LoginScreen({ currentCommunity }) {
             >
               {t('login.login_google')}
             </Button>
-            {/* <TextField
-              value={userLogin.email}
-              variant="outlined"
-              fullWidth
-              type="email"
-              name="email_login"
-              data-testid="email_text_input"
-              className={`${css(styles.emailLoginTextField)}`}
-              placeholder={t('login.login_email')}
-              label={t('login.login_email')}
-              onChange={event => setUserLogin({ email: event.target.value, phone: '' })}
-              size="medium"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <IconButton size="small">
-                      <EmailIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            /> */}
-
             <FormControl fullWidth margin='dense' size="small" style={{ marginTop: 16 }}>
               <InputLabel htmlFor="outlined-adornment-amount">{t('login.login_email')}</InputLabel>
               <OutlinedInput
