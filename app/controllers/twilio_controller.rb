@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 # Twilio controller
 class TwilioController < ApplicationController
   include ApplicationHelper
@@ -19,6 +21,7 @@ class TwilioController < ApplicationController
       # If there is no task then go ahead and create the task
       create_task(params, user)
     end
+    send_qr_code(params, user)
   rescue StandardError => e
     Rollbar.error(e)
     head :ok
@@ -45,5 +48,16 @@ class TwilioController < ApplicationController
       user_id: task.user.id,
       status: 'active',
     )
+  end
+
+  def send_qr_code(params, user)
+    request = user.invites&.first&.entry_request
+    base_url = HostEnv.base_url(current_community)
+    qrcode_url = "https://api.qrserver.com/v1/create-qr-code/?data=#{CGI.escape("https://#{base_url}/request/#{request.id}?type=scan")}&size=256x256"
+    # Here we check if a user replied to our message to request for the QR Code
+    if params['Body'] == I18n.t('general.accept_qrcode')
+      # send whatsapp message here
+      Sms.send_whatsapp_message(params['WaId'], current_community, qrcode_url)
+    end
   end
 end

@@ -12,6 +12,7 @@ module Logs
     belongs_to :entry_request
 
     enum status: { active: 0, cancelled: 1 }
+    default_scope { order(created_at: :desc) }
 
     # rubocop:disable Style/RedundantInterpolation
     search_scope :search do

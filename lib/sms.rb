@@ -71,4 +71,21 @@ class Sms
       data['whatsapp'] if data['category'].eql?('communication')
     end&.first
   end
+
+  def self.send_whatsapp_message(to, community, media_url, message = '')
+    twilio_client = Twilio::REST::Client.new(
+      Rails.application.credentials.twilio_account_sid,
+      Rails.application.credentials.twilio_token,
+    )
+    begin
+      twilio_client.messages.create(
+        to: "whatsapp:+#{to}",
+        from: "whatsapp:+#{from(community)}",
+        body: message,
+        media_url: media_url,
+      )
+    rescue StandardError => e
+      Rollbar.error(e)
+    end
+  end
 end
