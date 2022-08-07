@@ -161,48 +161,35 @@ module Logs
     end
 
     def log_entry_start(action)
-      Logs::EventLog.create(
-        acting_user: user, community: user.community,
-        subject: 'visitor_entry',
-        ref_id: self[:id], ref_type: 'Logs::EntryRequest',
-        data: {
-          action: action,
-          ref_name: self[:name],
-          type: user.user_type,
-        }
-      )
+      data = {
+        action: action,
+        ref_name: self[:name],
+        type: user.user_type,
+      }
+      user.generate_events('visitor_entry', self, data)
       # send this to the host
       Sms.send(user.phone_number,
-              I18n.t('general.visitor_granted_access',
-              visitor_name: self[:name],
-              action: action
-              ), user.community, 'whatsapp')
+               I18n.t('general.visitor_granted_access',
+                      visitor_name: self[:name],
+                      action: action), user.community, 'whatsapp')
     end
 
     def log_guest_entry_revoke(action)
-      Logs::EventLog.create(
-        acting_user: user, community: user.community,
-        subject: 'revoke_guest_entry',
-        ref_id: self[:id], ref_type: 'Logs::EntryRequest',
-        data: {
-          action: action,
-          ref_name: self[:name],
-          type: user.user_type,
-        }
-      )
+      data = {
+        action: action,
+        ref_name: self[:name],
+        type: user.user_type,
+      }
+      user.generate_events('revoke_guest_entry', self, data)
     end
 
     def log_showroom_entry
-      Logs::EventLog.create(
-        acting_user: user, community: user.community,
-        subject: 'showroom_entry',
-        ref_id: self[:id], ref_type: 'Logs::EntryRequest',
-        data: {
-          action: 'created',
-          ref_name: self[:name],
-          type: 'showroom',
-        }
-      )
+      data = {
+        action: 'created',
+        ref_name: self[:name],
+        type: 'showroom',
+      }
+      user.generate_events('showroom_entry', self, data)
     end
 
     def find_closest_entry(for_time)
