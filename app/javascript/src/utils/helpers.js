@@ -779,7 +779,7 @@ export function passwordChecks(value, value2, translate) {
     },
     specialChar: {
       valid: /[-+_!@#$%^&*.,?]/g.test(value),
-      message: translate('password_checks.no_special_character'),
+      message: translate('password_checks.contains_special_character'),
     },
     number: {
       valid: /\d/g.test(value),

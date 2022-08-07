@@ -331,7 +331,8 @@
     "process_detail_page": "Project Detail",
     "copy_credentials": "The details below will be the login credentials for this account if you confirm, you may want to copy them as you will not be able to see them again one you close the modal.",
     "reset_disclaimer": "You are about to reset the password for the current account. This is an irreversable action.",
-    "need_or_forgot_password": "Need a password or forgot one?"
+    "need_or_forgot_password": "Need a password or forgot one?",
+    "required": "Required"
   },
   "menu": {
     "invoice": "Invoice",
