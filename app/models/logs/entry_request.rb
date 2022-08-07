@@ -62,7 +62,7 @@ module Logs
         granted_at: Time.zone.now,
         exited_at: nil,
       )
-      log_entry_start('granted') if type == 'event'
+      log_entry_start(I18n.t('general.granted')) if type == 'event'
     end
 
     def deny!(grantor)
@@ -71,7 +71,7 @@ module Logs
         granted_state: 2,
         granted_at: Time.zone.now,
       )
-      log_entry_start('denied')
+      log_entry_start(I18n.t('general.denied'))
     end
 
     def revoke!(revoker)
@@ -171,6 +171,12 @@ module Logs
           type: user.user_type,
         }
       )
+      # send this to the host
+      Sms.send(user.phone_number,
+              I18n.t('general.visitor_granted_access',
+              visitor_name: self[:name],
+              action: action
+              ), user.community, 'whatsapp')
     end
 
     def log_guest_entry_revoke(action)
