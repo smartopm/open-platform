@@ -423,6 +423,9 @@ en:
     thanks_for_using_our_app: Thank you for using our app, kindly use this link to give us feedback %{feedback_link}
     task_reminder: REMINDER, Please complete your task before/by the due date (%{due_date}). Check out your task on %{task_link}. Thanks, %{community_name}
     guest_invite_message: Please use the invite link %{invite_link} to access the platform. Thanks, %{community_name}
+    guest_invite_qrcode_message: You just got invited to visit %{community_name}, This is your invitation link %{invite_link}. Would you like us to send you a QR Code?
+    accept_qrcode: Yes, Send QR Code.
+    reject_qrcode: No.
   response:
     failed: failed
     success: success
