@@ -51,13 +51,16 @@ class TwilioController < ApplicationController
   end
 
   def send_qr_code(params, user)
+    # Attempt to get the most recent invitation for this user
     request = user.invites&.first&.entry_request
     base_url = HostEnv.base_url(current_community)
+    # rubocop:disable Layout/LineLength
     qrcode_url = "https://api.qrserver.com/v1/create-qr-code/?data=#{CGI.escape("https://#{base_url}/request/#{request.id}?type=scan")}&size=256x256"
+    # rubocop:enable Layout/LineLength
     # Here we check if a user replied to our message to request for the QR Code
-    if params['Body'] == I18n.t('general.accept_qrcode')
-      # send whatsapp message here
-      Sms.send_whatsapp_message(params['WaId'], current_community, qrcode_url)
-    end
+    # send whatsapp message here
+    return unless params['Body'] == I18n.t('general.accept_qrcode')
+
+    Sms.send_whatsapp_message(params['WaId'], current_community, qrcode_url)
   end
 end
