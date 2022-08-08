@@ -63,7 +63,7 @@ export default function TaskForm({
         body: title,
         description,
         due: selectedDate ? selectedDate.toISOString() : null,
-        category: taskType,
+        category: taskType || 'to_do',
         order: Number(orderNumber) || 1,
         flagged: true,
         userId: userData.userId,
