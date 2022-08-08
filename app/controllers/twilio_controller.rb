@@ -7,9 +7,11 @@ class TwilioController < ApplicationController
   include ApplicationHelper
   protect_from_forgery except: :webhook
 
+  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def webhook
     user = current_community.users.find_by(phone_number: params['WaId'])
+    base_url = HostEnv.base_url(current_community)
     return if user.nil?
 
     # Check if there is a whatsapp task created by this user that's not resolved yet
@@ -21,12 +23,13 @@ class TwilioController < ApplicationController
       # If there is no task then go ahead and create the task
       create_task(params, user)
     end
-    send_qr_code(params, user)
+    send_qr_code(params, user, base_url)
   rescue StandardError => e
     Rollbar.error(e)
     head :ok
   end
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   private
 
@@ -50,15 +53,14 @@ class TwilioController < ApplicationController
     )
   end
 
-  def send_qr_code(params, user)
+  def send_qr_code(params, user, base_url)
     # Attempt to get the most recent invitation for this user
     request = user.invites&.first&.entry_request
-    base_url = HostEnv.base_url(current_community)
     # rubocop:disable Layout/LineLength
-    qrcode_url = "https://api.qrserver.com/v1/create-qr-code/?data=#{CGI.escape("https://#{base_url}/request/#{request.id}?type=scan")}&size=256x256"
+    qrcode_url = "https://api.qrserver.com/v1/create-qr-code/?data=#{CGI.escape("https://#{base_url}/request/#{request&.id}?type=scan")}&size=256x256"
     # rubocop:enable Layout/LineLength
     # Here we check if a user replied to our message to request for the QR Code
-    # send whatsapp message here
+    # The message has to match what's on the button even translated to avoid wrong messages.
     return unless params['Body'] == I18n.t('general.accept_qrcode')
 
     Sms.send_whatsapp_message(params['WaId'], current_community, qrcode_url)

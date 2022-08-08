@@ -19,6 +19,7 @@ class Sms
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def self.send(to, message, community, type = 'sms')
+    sender = from(community)
     raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
 
     return if Rails.env.test?
@@ -37,17 +38,22 @@ class Sms
       # This is an urgent fix and this will be resolved properly
       # client.sms.send(from: 'DoubleGDP', to: to, text: message)
       client.sms.send(from: config[:from], to: to, text: message) unless type.eql?('whatsapp')
-      twilio_client.messages.create(
-        to: "whatsapp:+#{to}",
-        from: "whatsapp:+#{from(community)}",
-        body: message,
-      )
+      unless sender.nil?
+        twilio_client.messages.create(
+          to: "whatsapp:+#{to}",
+          from: "whatsapp:+#{from(community)}",
+          body: message,
+        )
+      end
     rescue StandardError => e
       Rollbar.error(e)
     end
   end
 
   def self.send_whatsapp_message(to, community, media_url, message = '')
+    sender = from(community)
+    return if sender.nil?
+
     twilio_client = Twilio::REST::Client.new(
       Rails.application.credentials.twilio_account_sid,
       Rails.application.credentials.twilio_token,
