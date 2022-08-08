@@ -14,7 +14,8 @@ jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 const props = {
   task: taskMock,
   processId: '123-3456',
-  refetch: () => {}
+  refetch: () => { },
+  processName: 'Process Name',
 };
 
 describe('Process Item', () => {
