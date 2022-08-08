@@ -107,7 +107,9 @@ export default function TaskProcessDetail() {
 
   function handleTabValueChange(_event, newValue) {
     history.push(
-      `?tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`
+      `?tab=${Object.keys(TAB_VALUES).find(
+        key => objectAccessor(TAB_VALUES, key) === newValue
+      )}&processName=${processName}`
     );
     setTabValue(Number(newValue));
   }
@@ -154,7 +156,7 @@ export default function TaskProcessDetail() {
     extraBreadCrumb: t('processes.processes'),
     extraBreadCrumbLink: '/processes',
     linkText: `${processName}`,
-    linkHref: `/processes/${processId}/projects?process_name=${processName}`,
+    linkHref: `/processes/${processId}/projects?processName=${processName}`,
     pageName: t('common:misc.process_detail_page'),
   };
 
