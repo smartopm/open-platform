@@ -167,7 +167,12 @@ export default function ProjectsList() {
           <div style={{marginTop: '30px'}}>
             {data.projects.map(task => (
               <div key={task.id}>
-                <ProjectItem processId={processId} task={task} refetch={refetch} />
+                <ProjectItem
+                  processId={processId}
+                  task={task}
+                  refetch={refetch}
+                  processName={processName}
+                />
               </div>
             ))}
           </div>
