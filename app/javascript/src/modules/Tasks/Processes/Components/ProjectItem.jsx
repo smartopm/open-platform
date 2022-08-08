@@ -81,7 +81,7 @@ export default function ProjectItem({ task, taskId, processId, refetch, clientVi
 
   function redirectToOverviewPage(id, tab = 'processes', detailTab) {
     history.push(
-      `/processes/${processId}/projects/${id}?tab=${tab}&detailTab=${detailTab}&processName=${processName}`
+      `/processes/${processId}/projects/${id}?tab=${tab}&detailTab=${detailTab}&process_name=${processName}`
     );
   }
 

@@ -40,7 +40,7 @@ export default function TaskProcessDetail() {
   const path = useParamsQuery();
   const tab = path.get('tab');
   const detailTabValue = path.get('detailTab');
-  const processName = path.get('processName');
+  const processName = path.get('process_name');
   const replyingDiscussion = path.get('replying_discussion');
   const [tabValue, setTabValue] = useState(0);
   const [searchText, setSearchText] = useState('');
@@ -109,7 +109,7 @@ export default function TaskProcessDetail() {
     history.push(
       `?tab=${Object.keys(TAB_VALUES).find(
         key => objectAccessor(TAB_VALUES, key) === newValue
-      )}&processName=${processName}`
+      )}&process_name=${processName}`
     );
     setTabValue(Number(newValue));
   }
@@ -156,7 +156,7 @@ export default function TaskProcessDetail() {
     extraBreadCrumb: t('processes.processes'),
     extraBreadCrumbLink: '/processes',
     linkText: `${processName}`,
-    linkHref: `/processes/${processId}/projects?processName=${processName}`,
+    linkHref: `/processes/${processId}/projects?process_name=${processName}`,
     pageName: t('common:misc.process_detail_page'),
   };
 
