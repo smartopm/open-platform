@@ -13,7 +13,6 @@ import { objectAccessor, sortTaskOrder } from '../../../../utils/helpers';
 export default function ProjectSteps({
   data,
   setSelectedStep,
-  updateStatus,
   handleStepCompletion,
   handleProjectStepClick,
   redirect
@@ -78,7 +77,6 @@ export default function ProjectSteps({
               styles={{backgroundColor: '#F5F5F4', cursor: canAccessProjectSteps ? 'pointer' : 'not-allowed'}}
               openSubSteps={objectAccessor(stepsOpen, firstLevelStep.id)}
               handleOpenSubStepsClick={(e) => handleOpenSubStepsClick(e, firstLevelStep)}
-              updateStatus={updateStatus}
               handleStepCompletion={handleStepComplete}
             />
           </div>
@@ -93,7 +91,6 @@ export default function ProjectSteps({
                       styles={{backgroundColor: '#ECECEA', cursor: canAccessProjectSteps ? 'pointer' : 'not-allowed'}}
                       clickable={canAccessProjectSteps}
                       handleClick={(e) => handleStepItemClick(e, secondLevelStep)}
-                      updateStatus={updateStatus}
                       handleStepCompletion={handleStepComplete}
                     />
                   </div>
@@ -128,7 +125,6 @@ const Step = {
     redirect: false,
     setSelectedStep: ()=> {},
     data: [],
-    updateStatus: {},
   };
 
   ProjectSteps.propTypes = {
@@ -137,10 +133,6 @@ const Step = {
   handleProjectStepClick: PropTypes.func.isRequired,
   handleStepCompletion: PropTypes.func.isRequired,
   redirect: PropTypes.bool,
-  updateStatus: PropTypes.shape({
-    message: PropTypes.string,
-    success: PropTypes.bool,
-  })
 };
 
 const useStyles = makeStyles(() => ({

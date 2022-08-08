@@ -14,6 +14,7 @@ import { Context as AuthStateContext } from '../../../../containers/Provider/Aut
 import Card from '../../../../shared/Card';
 import { objectAccessor, removeNewLines, sanitizeText } from '../../../../utils/helpers';
 import CustomProgressBar from '../../../../shared/CustomProgressBar';
+import { TaskContext } from '../../Context';
 
 export default function StepItem({
   step,
@@ -22,10 +23,10 @@ export default function StepItem({
   styles,
   openSubSteps,
   handleOpenSubStepsClick,
-  updateStatus,
   handleStepCompletion
 }) {
   const authState = React.useContext(AuthStateContext);
+  const { updateStatus } = React.useContext(TaskContext)
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
 
@@ -139,7 +140,6 @@ StepItem.defaultProps = {
   styles: {},
   openSubSteps: false,
   handleOpenSubStepsClick: null,
-  updateStatus: {}
 }
 StepItem.propTypes = {
   step: PropTypes.shape(Step).isRequired,
@@ -149,11 +149,7 @@ StepItem.propTypes = {
   styles: PropTypes.object,
   openSubSteps: PropTypes.bool,
   handleOpenSubStepsClick: PropTypes.func,
-  handleStepCompletion: PropTypes.func.isRequired,
-  updateStatus: PropTypes.shape({
-    message: PropTypes.string,
-    success: PropTypes.bool,
-  })
+  handleStepCompletion: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({
