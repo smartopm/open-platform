@@ -131,3 +131,11 @@ export const ResetUserPasswordUserMutation = gql`
     }
   }
 `;
+
+export const ResetPasswordAfterLoginMutation = gql`
+  mutation resetPasswordAfterLogin($userId: ID!, $password: String!) {
+    resetPasswordAfterLogin(userId: $userId, password: $password) {
+      authToken
+    }
+  }
+`;

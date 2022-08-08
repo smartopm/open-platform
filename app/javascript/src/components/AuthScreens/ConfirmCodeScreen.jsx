@@ -1,49 +1,49 @@
-import React, {
-  useState,
-  useContext,
-} from 'react'
-import { Box, TextField } from '@mui/material'
-import { useLocation } from 'react-router-dom'
-import { useMutation } from 'react-apollo'
-import { useTranslation } from 'react-i18next'
+import React, { useState, useContext } from 'react';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import { useLocation } from 'react-router-dom';
+import { useMutation } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
-import { loginPhoneConfirmCode, loginPhoneMutation } from '../../graphql/mutations'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
+import { loginPhoneConfirmCode, loginPhoneMutation } from '../../graphql/mutations';
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 import { ifNotTest } from '../../utils/helpers';
-import CodeScreenWrapper from './CodeScreenWrapper'
-import CenteredContent from '../../shared/CenteredContent'
+import CodeScreenWrapper from './CodeScreenWrapper';
+import CenteredContent from '../../shared/CenteredContent';
+import useTimer from '../../utils/customHooks';
 
 export default function ConfirmCodeScreen({ match }) {
-  const authState = useContext(AuthStateContext)
-  const { id } = match.params
-  const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode)
-  const [resendCodeToPhone] = useMutation(loginPhoneMutation)
-  const [error, setError] = useState(null)
-  const [msg, setMsg] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const { state } = useLocation()
-  const { t } = useTranslation(['login', 'common'])
-  const [otpCode, setOtpCode] = useState('')
+  const authState = useContext(AuthStateContext);
+  const { id } = match.params;
+  const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
+  const [resendCodeToPhone] = useMutation(loginPhoneMutation);
+  const [error, setError] = useState(null);
+  const [msg, setMsg] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { state } = useLocation();
+  const { t } = useTranslation(['login', 'common']);
+  const [otpCode, setOtpCode] = useState('');
+  const timer = useTimer(10, 1000);
   const classes = useStyles();
 
   function resendCode() {
-    setIsLoading(true)
+    setIsLoading(true);
     resendCodeToPhone({
-      variables: { phoneNumber: (state && state.phoneNumber) || '' }
+      variables: { phoneNumber: (state && state.phoneNumber) || '' },
     })
       .then(() => {
-        setIsLoading(false)
-        setMsg(`We have resent the code to +${state.phoneNumber}`)
+        setIsLoading(false);
+        setError(null);
+        setMsg(`We have resent the code to +${state.phoneNumber}`);
       })
       .catch(err => {
-        setError(err.message)
-        setIsLoading(false)
-      })
+        setError(err.message);
+        setIsLoading(false);
+      });
   }
 
   function handleConfirmCode() {
-    setIsLoading(true)
+    setIsLoading(true);
 
     loginPhoneComplete({
       variables: { id, token: otpCode },
@@ -58,6 +58,7 @@ export default function ConfirmCodeScreen({ match }) {
       })
       .catch(err => {
         setError(err.message.replace(/GraphQL error:/, ''));
+        setMsg(null)
         setIsLoading(false);
       });
   }
@@ -65,11 +66,9 @@ export default function ConfirmCodeScreen({ match }) {
   return (
     <CodeScreenWrapper
       title={t('login.otp_verification')}
-      isOtpScreen
+      isDisabled={isLoading || otpCode?.length < 6}
       loading={isLoading}
-      handleResend={resendCode}
       handleConfirm={handleConfirmCode}
-      code={otpCode}
     >
       <CenteredContent>
         <Box sx={{ width: '400px', mx: 2, mt: '30px' }}>
@@ -85,26 +84,45 @@ export default function ConfirmCodeScreen({ match }) {
             type="number"
             fullWidth
             FormHelperTextProps={{
-                className: classes.helperText,
-              }}
+              className: classes.helperText,
+            }}
           />
         </Box>
-
-        <div style={{ marginTop: '30px' }}>
-          {error && <p className="text-center text-danger">{error}</p>}
-          {msg && <p className="text-center text-primary">{msg}</p>}
+      </CenteredContent>
+      <CenteredContent>
+        <div style={{ marginTop: 30, marginBottom: 24 }}>
+          <Typography color="textSecondary">
+            <Box sx={{ color: 'error.main' }}>
+              {error}
+            </Box>
+          </Typography>
+          <Typography>
+            <Box sx={{ color: 'primary.main' }}>
+              {msg}
+            </Box>
+          </Typography>
         </div>
       </CenteredContent>
+      {timer === 0 && (
+        <CenteredContent>
+          <Button onClick={resendCode} disabled={isLoading}>
+            {isLoading ? `${t('common:misc.loading')} ...` : t('login.resend_code')}
+          </Button>
+        </CenteredContent>
+      )}
     </CodeScreenWrapper>
   );
 }
 
 ConfirmCodeScreen.propTypes = {
   match: PropTypes.shape(PropTypes.Object).isRequired,
-}
+};
 
 const useStyles = makeStyles(() => ({
   helperText: {
     textAlign: 'center',
+  },
+  linksSection: {
+    marginTop: 20,
   },
 }));

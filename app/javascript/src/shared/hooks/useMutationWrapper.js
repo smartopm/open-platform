@@ -23,10 +23,11 @@ export default function useMutationWrapper(mutation, reset, message) {
    */
   function handleAction(variables) {
     createOrUpdate({ variables: { ...variables } })
-      .then(() => {
-        // Find a better generic message that can work for all actions
-        showSnackbar({ type: messageType.success, message });
-        reset();
+      .then(({ data }) => {
+        if(message) {
+          showSnackbar({ type: messageType.success, message });
+        }
+        reset(data);
       })
       .catch(err => {
         showSnackbar({ type: messageType.error, message: formatError(err.message) });

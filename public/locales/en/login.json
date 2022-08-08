@@ -1,6 +1,6 @@
 {
   "login": {
-    "welcome": "Welcome to {{appName}} app",
+    "welcome": "Log in to {{appName}} app",
     "login_text": "Log in with Phone",
     "login_button_text": "login",
     "login_google": "Log in with Google",
@@ -13,6 +13,16 @@
     "otp_verification": "OTP Verification",
     "enter_code": "Enter Verification Code",
     "verification_code_helper": "The verification code has been sent to your phone.",
-    "continue_button_text": "Continue"
+    "continue_button_text": "Continue",
+    "setup_password": "Set Password"
+  },
+  "password_checks": {
+    "ten_characters": "Must be 10 characters long",
+    "contains_number": "Must contain a number",
+    "contains_lowercase": "Must contain one lowercase",
+    "contains_uppercase": "Must contain one uppercase",
+    "contains_special_character": "Must contain special characters",
+    "password_match": "Passwords must match",
+    "contains_no_spaces": "Must not contain spaces"
   }
 }

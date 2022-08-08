@@ -64,6 +64,7 @@ describe('Form that creates other forms component', () => {
 
   it('should delete a form property', async () => {
     const refetchMock = jest.fn();
+    const detailRefetchMock = jest.fn();
     const container = render(
       <MockedProvider mocks={[mocks, deletePropertyMock]} addTypename>
         <MockedThemeProvider>
@@ -74,7 +75,7 @@ describe('Form that creates other forms component', () => {
               refetch={refetchMock}
               categoryId=""
               editMode
-              formDetailRefetch={jest.fn()}
+              formDetailRefetch={detailRefetchMock}
             />
           </MockedSnackbarProvider>
         </MockedThemeProvider>
@@ -89,7 +90,7 @@ describe('Form that creates other forms component', () => {
 
     fireEvent.click(container.queryByText('common:menu.delete'));
     await waitFor(() => {
-      expect(refetchMock).toBeCalled();
+      expect(detailRefetchMock).toBeCalled();
     }, 50);
   });
 
