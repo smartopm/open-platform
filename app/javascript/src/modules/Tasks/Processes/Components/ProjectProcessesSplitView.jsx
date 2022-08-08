@@ -11,7 +11,7 @@ export default function ProjectProcessesSplitView({
   refetch,
   commentsRefetch
 }) {
-  const { projectId, selectedStep, handleStepCompletion, updateStatus } = useContext(TaskContext);
+  const { projectId, selectedStep, handleStepCompletion } = useContext(TaskContext);
 
   return (
     <>
