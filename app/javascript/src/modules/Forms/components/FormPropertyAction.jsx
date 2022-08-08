@@ -86,9 +86,7 @@ export default function FormPropertyAction({
         if (formPropResponse.message === 'New version created') {
           history.push(`/edit_form/${formPropResponse.newFormVersion.id}`);
         }
-
         showSnackbar({ type: messageType.success, message: t('misc.deleted_form_property') });
-        refetch();
         formDetailRefetch();
       })
       .catch(err => {
