@@ -124,7 +124,7 @@ const Step = {
   ProjectSteps.defaultProps = {
     redirect: false,
     setSelectedStep: ()=> {},
-    data: [],
+    data: []
   };
 
   ProjectSteps.propTypes = {
