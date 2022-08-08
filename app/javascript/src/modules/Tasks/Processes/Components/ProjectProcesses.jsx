@@ -18,7 +18,7 @@ export default function ProjectProcesses({
   commentsFetchMore
  }){
   const classes = useStyles();
-  const { setSelectedStep, handleStepCompletion } = useContext(TaskContext);
+  const { setSelectedStep, handleStepCompletion, updateStatus } = useContext(TaskContext);
   const { t } = useTranslation('task');
 
   return (
@@ -47,6 +47,7 @@ export default function ProjectProcesses({
           data={data}
           setSelectedStep={setSelectedStep}
           handleProjectStepClick={handleProjectStepClick}
+          updateStatus={updateStatus}
           handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
         />
       </Grid>

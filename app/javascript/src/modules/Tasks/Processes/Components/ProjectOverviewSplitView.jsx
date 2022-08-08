@@ -10,7 +10,7 @@ import ProjectSteps from './Steps';
 export default function ProjectOverviewSplitView({ data, refetch, handleProjectStepClick }) {
   const { t } = useTranslation('task');
   const matches = useMediaQuery('(max-width:600px)');
-  const { setSelectedStep, handleStepCompletion } = useContext(TaskContext);
+  const { setSelectedStep, handleStepCompletion, updateStatus } = useContext(TaskContext);
 
   return (
     <>
@@ -30,6 +30,7 @@ export default function ProjectOverviewSplitView({ data, refetch, handleProjectS
             data={data}
             setSelectedStep={setSelectedStep}
             handleProjectStepClick={handleProjectStepClick}
+            updateStatus={updateStatus}
             handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
             redirect
           />

@@ -22,7 +22,7 @@ export default function ClientPilotViewItem({ project, refetch }) {
   const limit = 3;
   const classes = useStyles();
   const { t } = useTranslation('task');
-  const { handleStepCompletion } = useContext(TaskContext);
+  const { handleStepCompletion, updateStatus } = useContext(TaskContext);
 
   const {
     data: comments,
@@ -99,6 +99,7 @@ export default function ClientPilotViewItem({ project, refetch }) {
               <ProjectSteps
                 data={stepsData?.taskSubTasks}
                 handleProjectStepClick={handleProjectStepClick}
+                updateStatus={updateStatus}
                 handleStepCompletion={
                 (id, completed) => handleStepCompletion(id, completed, refetchSubTasks)
               }
