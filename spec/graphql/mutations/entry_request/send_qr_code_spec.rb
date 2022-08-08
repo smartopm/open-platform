@@ -25,7 +25,7 @@ RSpec.describe Mutations::EntryRequest::SendQrCode do
           variables = { id: entry_request.id, guestEmail: 'email@gmail.com' }
           expect(GuestQrCodeJob).to receive(:perform_now).with(
             community: user.community,
-            request_data: [{request: entry_request, user: admin}],
+            request_data: [{ request: entry_request, user: admin }],
             type: 'scan',
           )
           result = DoubleGdpSchema.execute(send_qr_code_mutation,
