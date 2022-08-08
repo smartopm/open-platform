@@ -12,8 +12,19 @@
     "request_account": "¿No tienes una cuenta?",
     "request_login": "Para solicitar su información de inicio de sesión, envíe un correo electrónico: {{communityEmail}}",
     "resend_code": "Vuelva a enviar el código",
+    "setup_password": "Configurar Contraseña",
     "test_key": "Prueba",
     "verification_code_helper": "El código de verificación ha sido enviado a su teléfono.",
     "welcome": "Bienvenido a la aplicación {{appName}}"
+  },
+  "password_checks": {
+    "contains_lowercase": "Debe contener una minúscula",
+    "contains_no_spaces": "No debe contener espacios",
+    "contains_number": "Debe contener un número",
+    "contains_special_character": "Debe contener caracteres especiales",
+    "contains_uppercase": "Debe contener una letra mayúscula",
+    "no_special_character": "Debe contener caracteres especiales",
+    "password_match": "Las contraseñas deben coincidir",
+    "ten_characters": "Debe tener 10 caracteres"
   }
 }
