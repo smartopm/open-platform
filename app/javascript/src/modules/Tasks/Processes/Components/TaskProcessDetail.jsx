@@ -17,7 +17,6 @@ import {
   objectAccessor,
   useParamsQuery,
   removeNewLines,
-  sanitizeText,
   formatError,
 } from '../../../../utils/helpers';
 import ProjectProcesses from './ProjectProcesses';
@@ -41,6 +40,7 @@ export default function TaskProcessDetail() {
   const path = useParamsQuery();
   const tab = path.get('tab');
   const detailTabValue = path.get('detailTab');
+  const processName = path.get('processName');
   const replyingDiscussion = path.get('replying_discussion');
   const [tabValue, setTabValue] = useState(0);
   const [searchText, setSearchText] = useState('');
@@ -153,13 +153,16 @@ export default function TaskProcessDetail() {
   const breadCrumbObj = {
     extraBreadCrumb: t('processes.processes'),
     extraBreadCrumbLink: '/processes',
-    linkText: projectItemLoading ? '...': projectItem?.project?.body,
-    linkHref: `/processes/${processId}/projects?process_name=${projectItem?.project?.body}`,
+    linkText: `${processName}`,
+    linkHref: `/processes/${processId}/projects?process_name=${processName}`,
     pageName: t('common:misc.process_detail_page'),
   };
 
   return (
-    <PageWrapper pageTitle={t('common:misc.process_detail_page')} breadCrumbObj={breadCrumbObj}>
+    <PageWrapper
+      pageTitle={projectItemLoading ? <Spinner /> : removeNewLines(projectItem?.project?.body)}
+      breadCrumbObj={breadCrumbObj}
+    >
       <TaskContextProvider>
         <Grid
           container
@@ -167,22 +170,7 @@ export default function TaskProcessDetail() {
           style={!matches ? { padding: '0 56px' } : { padding: '0 20px' }}
         >
           <Grid item md={5} xs={12}>
-            <Grid container>
-              <Grid item md={12} xs={12} style={{ marginBottom: '10px' }}>
-                {projectItemLoading ? (
-                  <Spinner />
-                ) : (
-                  <Typography variant="h5" component="div">
-                    <span
-                      data-testid="task-title"
-                      // eslint-disable-next-line react/no-danger
-                      dangerouslySetInnerHTML={{
-                        __html: sanitizeText(removeNewLines(projectItem?.project?.body)),
-                      }}
-                    />
-                  </Typography>
-                )}
-              </Grid>
+            <Grid container style={{ marginBottom: '10px' }}>
               <Grid item md={11} xs={10} data-testid="project-title">
                 <StyledTabs
                   value={tabValue}
