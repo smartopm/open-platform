@@ -1,6 +1,6 @@
 {
   "login": {
-    "welcome": "Welcome to {{appName}} app",
+    "welcome": "Log in to {{appName}} app",
     "login_text": "Log in with Phone",
     "login_button_text": "login",
     "login_google": "Log in with Google",
@@ -21,7 +21,7 @@
     "contains_number": "Must contain a number",
     "contains_lowercase": "Must contain one lowercase",
     "contains_uppercase": "Must contain one uppercase",
-    "no_special_character": "Must contain special characters",
+    "contains_special_character": "Must contain special characters",
     "password_match": "Passwords must match",
     "contains_no_spaces": "Must not contain spaces"
   }

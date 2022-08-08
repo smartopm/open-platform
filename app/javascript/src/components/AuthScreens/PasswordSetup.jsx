@@ -1,4 +1,4 @@
-import { Container, Grid } from '@mui/material';
+import { Container, Grid, Typography } from '@mui/material';
 import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, useLocation, useParams } from 'react-router-dom';
@@ -45,7 +45,7 @@ export default function PasswordSetup() {
       token: data?.resetPasswordAfterLogin?.authToken,
     });
   }
-  if (!state.firstTimeLogin) {
+  if (!state?.firstTimeLogin) {
     return <Redirect to="/login" />;
   }
   return (
@@ -73,7 +73,7 @@ export default function PasswordSetup() {
           />
         </Grid>
         <br />
-        <br />
+        <Typography gutterBottom marginLeft="32px">{`${t('common:misc.required')}:`}</Typography>
         <PasswordCheck checks={{ rules, definitions }} />
       </Container>
     </CodeScreenWrapper>

@@ -7,17 +7,19 @@ import {
   Divider,
   Grid,
   Container,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
 } from '@mui/material';
 import { StyleSheet, css } from 'aphrodite';
-import { useHistory, useLocation, Link } from 'react-router-dom';
-import { useQuery } from 'react-apollo';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import EmailIcon from '@mui/icons-material/Email';
-import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import PhoneInput from 'react-phone-input-2';
+import PropTypes from 'prop-types'
 import { getAuthToken, AUTH_FORWARD_URL_KEY } from '../../utils/apollo';
 import GoogleIcon from '../../../../assets/images/google_icon.svg';
 import {
@@ -25,17 +27,15 @@ import {
   loginEmailMutation,
   loginUsernamePasswordMutation,
 } from '../../graphql/mutations';
-import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query';
-import { Spinner } from '../../shared/Loading';
 import { extractCountry } from '../../utils/helpers';
 import CenteredContent from '../../shared/CenteredContent';
 import SignupDialog from './SignupDialog';
 import PasswordInput from '../../shared/PasswordInput';
 import useMutationWrapper from '../../shared/hooks/useMutationWrapper';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
+import ImageAuth from '../../shared/ImageAuth';
 
-export default function LoginScreen() {
-  const { data: communityData, loading } = useQuery(CurrentCommunityQuery);
+export default function LoginScreen({ currentCommunity }) {
   const { state } = useLocation();
   const history = useHistory();
   const { t } = useTranslation(['login', 'common']);
@@ -48,7 +48,6 @@ export default function LoginScreen() {
     showPassword: false,
   });
 
-  const communityName = communityData?.currentCommunity?.name || 'DoubleGDP';
   const [
     loginWithUsernamePassword,
     passwordLoginLoading,
@@ -146,20 +145,19 @@ export default function LoginScreen() {
         open={open}
         setOpen={setOpen}
         handleModal={handleModal}
-        currentCommunity={communityData?.currentCommunity}
+        currentCommunity={currentCommunity}
       />
 
-      {communityName === 'Nkwashi' && (
-        <nav className={`${css(styles.navBar)} navbar`}>
-          <Link to="/welcome" color="primary">
-            <i className="material-icons" style={{ color: '#000000' }}>
-              arrow_back
-            </i>
-          </Link>
-        </nav>
-      )}
-
       <Container maxWidth="sm">
+        <CenteredContent>
+          <ImageAuth
+            imageLink={currentCommunity?.imageUrl || ""}
+            className={css(styles.logo)}
+            alt="community logo"
+            style={{ marginTop: 32, marginBottom: -17 }}
+          />
+        </CenteredContent>
+        <br />
         <Typography
           textAlign="center"
           component="div"
@@ -167,37 +165,24 @@ export default function LoginScreen() {
           marginTop="20px"
           variant="h6"
         >
-          {loading ? (
-            <Spinner />
-          ) : (
-            t('login.welcome', { appName: communityData?.currentCommunity?.name })
-          )}
+          {
+            t('login.welcome', { appName: currentCommunity?.name })
+          }
         </Typography>
-        <Typography
-          component="div"
-          color="textSecondary"
-          variant="body2"
-          data-testid="tagline"
-          id="tagline"
-          textAlign="center"
-        >
-          {communityData?.currentCommunity?.tagline}
-        </Typography>
-
         <br />
         <br />
         <Grid container className="justify-content-center">
           <Grid item xs={12}>
             <Typography color="textSecondary" variant="body2">
-              {t('login.login_text')}
+              {t('common:form_fields.phone_number')}
             </Typography>
             <div className={`${css(styles.phoneNumberInput)}`}>
               <PhoneInput
                 value={userLogin.phone}
                 containerStyle={{ width: '100%' }}
                 inputClass="phone-login-input"
-                inputStyle={{ width: '100%', height: '3.5em' }}
-                country={extractCountry(communityData?.currentCommunity?.locale)}
+                inputStyle={{ width: '100%', height: '2.5em' }}
+                country={extractCountry(currentCommunity?.locale)}
                 enableSearch
                 placeholder={t('common:form_placeholders.phone_number')}
                 onChange={value => setUserLogin({ phone: value, email: '' })}
@@ -206,7 +191,11 @@ export default function LoginScreen() {
             </div>
           </Grid>
           <Grid item xs={12}>
-            <Divider style={{ marginTop: 16, marginBottom: 10 }}>{t('common:misc:or')}</Divider>
+            <Divider style={{ marginTop: 16, marginBottom: 10 }}>
+              <Typography color="textSecondary" variant="caption">
+                {t('common:misc:or')}
+              </Typography>
+            </Divider>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -214,24 +203,30 @@ export default function LoginScreen() {
               id="username-field"
               name="username"
               label={t('common:form_fields.username')}
-              value={values?.username || ''}
+              value={values.username}
               onChange={event => setValues({ ...values, username: event.target.value })}
               style={{ marginBottom: 14 }}
               variant="outlined"
               margin="dense"
+              size='small'
               fullWidth
             />
             <PasswordInput
               data-testid="password-field"
               label={t('common:form_fields.password')}
               type="password"
+              size="small"
               passwordValue={values}
               setPasswordValue={setValues}
             />
           </Grid>
           <br />
           <Grid item xs={12}>
-            <Divider style={{ marginTop: 10, marginBottom: 16 }}>{t('common:misc:or')}</Divider>
+            <Divider style={{ marginTop: 10, marginBottom: 16 }}>
+              <Typography color="textSecondary" variant="caption">
+                {t('common:misc:or')}
+              </Typography>
+            </Divider>
           </Grid>
           <Grid item xs={12}>
             <Button
@@ -239,7 +234,7 @@ export default function LoginScreen() {
               variant="outlined"
               data-testid="login-with-facebook-btn"
               startIcon={<FacebookIcon className={`${css(styles.socialLoginButtonIcons)}`} />}
-              size="large"
+              size="medium"
               fullWidth
               className={`${css(styles.facebookOAuthButton)}`}
             >
@@ -257,32 +252,25 @@ export default function LoginScreen() {
                 />
               )}
               className={`${css(styles.googleOAuthButton)} google-sign-in-btn`}
-              size="large"
+              size="medium"
               fullWidth
             >
               {t('login.login_google')}
             </Button>
-            <TextField
-              value={userLogin.email}
-              variant="outlined"
-              fullWidth
-              type="email"
-              name="email_login"
-              data-testid="email_text_input"
-              className={`${css(styles.emailLoginTextField)}`}
-              placeholder={t('login.login_email')}
-              label={t('login.login_email')}
-              onChange={event => setUserLogin({ email: event.target.value, phone: '' })}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <IconButton size="large">
-                      <EmailIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
+            <FormControl fullWidth margin='dense' size="small" style={{ marginTop: 16 }}>
+              <InputLabel htmlFor="outlined-adornment-amount">{t('login.login_email')}</InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-amount"
+                value={userLogin.email}
+                onChange={event => setUserLogin({ email: event.target.value, phone: '' })}
+                startAdornment={<InputAdornment position="start"><EmailIcon /></InputAdornment>}
+                placeholder={t('login.login_email')}
+                label={t('login.login_email')}
+                data-testid="email_text_input"
+                type="email"
+                name="email_login"
+              />
+            </FormControl>
           </Grid>
         </Grid>
         <CenteredContent>
@@ -290,18 +278,12 @@ export default function LoginScreen() {
             data-testid="login-btn"
             variant="contained"
             color="primary"
-            endIcon={<ArrowForwardIcon />}
+            endIcon={isLoggingIn ? <CircularProgress size={23} /> : <ArrowForwardIcon />}
             className={`${css(styles.getStartedButton)} enz-lg-btn next-btn`}
             onClick={event => handleUserLogin(event, 'btnClick')}
             disabled={isLoginBtnDisabled}
           >
-            {isLoggingIn ? (
-              <CircularProgress size={25} color="primary" />
-            ) : (
-              <span>
-                {emailLoginSent ? t('login.email_otp_text') : t('login.login_button_text')}
-              </span>
-            )}
+            {emailLoginSent ? t('login.email_otp_text') : t('login.continue_button_text')}
           </Button>
         </CenteredContent>
         <br />
@@ -324,58 +306,39 @@ export default function LoginScreen() {
   );
 }
 
+LoginScreen.defaultProps = {
+  currentCommunity: {}
+}
+LoginScreen.propTypes = {
+  currentCommunity: PropTypes.shape({
+    name: PropTypes.string,
+    imageUrl: PropTypes.string,
+    locale: PropTypes.string,
+  })
+}
+
 const styles = StyleSheet.create({
   getStartedButton: {
     color: '#FFF',
     width: '55%',
-    height: 51,
     boxShadow: 'none',
-    marginTop: 30,
-  },
-  linksSection: {
     marginTop: 20,
-  },
-  navBar: {
-    boxShadow: 'none',
-    backgroundColor: '#fafafa',
-  },
-  welcomeText: {
-    marginTop: 33,
-    color: '#1f2026',
-  },
-  flag: {
-    display: 'inline-block',
-    marginTop: 7,
-  },
-  countryCode: {
-    display: 'inline-block',
-    marginTop: -2,
-    marginLeft: 6,
-  },
-  welcomeContainer: {
-    textAlign: 'center',
-    color: 'white',
   },
   phoneNumberInput: {
     marginTop: '0.5em',
   },
   emailLoginTextField: {
-    height: '4em',
     marginTop: 14,
   },
   facebookOAuthButton: {
-    backgroundColor: 'white',
     textTransform: 'none',
     color: '#3b5998',
-    height: '4em',
     display: 'flex',
     justifyContent: 'left',
   },
   googleOAuthButton: {
-    backgroundColor: 'white',
     textTransform: 'none',
     marginTop: '0.5em',
-    height: '4em',
     display: 'flex',
     justifyContent: 'left',
   },
@@ -385,5 +348,8 @@ const styles = StyleSheet.create({
   },
   "[type='number']": {
     fontSize: 30,
+  },
+  logo: {
+    height: 50,
   },
 });
