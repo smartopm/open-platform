@@ -4,6 +4,7 @@ import Avatar from '@mui/material/Avatar';
 import { useFetchMedia, useWindowDimensions } from '../utils/customHooks';
 import { Spinner } from './Loading';
 import { Context } from '../containers/Provider/AuthStateProvider';
+import CustomSkeleton from './CustomSkeleton';
 
 export default function ImageAuth({ imageLink, className, type, alt, style, auth }) {
   const authState = useContext(Context);
@@ -25,6 +26,26 @@ export default function ImageAuth({ imageLink, className, type, alt, style, auth
     isError = result.isError;
     loading = result.loading;
     response = result.response;
+
+    if (type === 'image' && loading)
+      return (
+        <CustomSkeleton
+          variant="rectangular"
+          width="100%"
+          height="150px"
+          style={{ marginBottom: '5px' }}
+        />
+      );
+    if (type === 'image' && (!imageLink || isError)) {
+      return (
+        <CustomSkeleton
+          variant="rectangular"
+          width="100%"
+          height="150px"
+          style={{ marginBottom: '5px' }}
+        />
+      );
+    }
 
     if (loading) return <Spinner />;
     if (!imageLink || isError) {
