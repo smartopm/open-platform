@@ -58,7 +58,7 @@ const Home = () => {
                   {t('dashboard.my_qr_code')}
                 </Button>
               </Grid>
-              <Grid item md={6} sm={6} xs={6}>
+              <Grid item md={6} sm={6} xs={6} style={{marginTop: '-25px'}}>
                 <LanguageToggle />
               </Grid>
             </Grid>
@@ -97,7 +97,7 @@ const Home = () => {
                   {t('dashboard.my_qr_code')}
                 </Button>
               </Grid>
-              <Grid item md={6} sm={6} xs={6}>
+              <Grid item md={6} sm={6} xs={6} style={{marginTop: '-25px'}}>
                 <LanguageToggle />
               </Grid>
             </Grid>

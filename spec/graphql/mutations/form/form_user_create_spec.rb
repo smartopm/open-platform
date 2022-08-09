@@ -131,7 +131,8 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                      current_user: another_user,
                                                      site_community: another_user.community,
                                                    }).as_json
-        error_message = 'Please submit the existing draft form to make a new draft submission'
+        error_message = 'There is a version of this form in draft mode available on your ' \
+                           'profile, please submit to make a new draft submission'
         expect(result['errors']).to_not be_nil
         expect(result.dig('errors', 0, 'message')).to eql error_message
       end
