@@ -253,7 +253,7 @@ export default function Homepage({ authState, quickLinks }) {
     <div>
       <div>
         <div>
-          {['resident', 'lead'].includes(authState.user.userType) && (
+          {['resident', 'lead', 'site_manager', 'site_worker'].includes(authState.user.userType) && (
             <QuickLinks menuItems={quickLinks} translate={t} />
           )}
         </div>
