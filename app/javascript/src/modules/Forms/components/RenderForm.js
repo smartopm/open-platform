@@ -179,6 +179,8 @@ export default function RenderForm({
           error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
         }}
         multiline
+        minRows={2}
+        maxRows={6}
       />
     ),
     date: (
