@@ -8,7 +8,7 @@ import { UpdateNote } from '../../../../graphql/mutations';
 import useFileUpload from '../../../../graphql/useFileUpload';
 import TodoItem from '../../Components/TodoItem';
 
-export default function ProjectItem({ task, taskId, processId, refetch, clientView }) {
+export default function ProjectItem({ task, taskId, processId, refetch, clientView, processName }) {
   const { t } = useTranslation('task');
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -80,7 +80,9 @@ export default function ProjectItem({ task, taskId, processId, refetch, clientVi
   }
 
   function redirectToOverviewPage(id, tab = 'processes', detailTab) {
-    history.push(`/processes/${processId}/projects/${id}?tab=${tab}&detailTab=${detailTab}`);
+    history.push(
+      `/processes/${processId}/projects/${id}?tab=${tab}&detailTab=${detailTab}&process_name=${processName}`
+    );
   }
 
   return (
@@ -104,12 +106,14 @@ export default function ProjectItem({ task, taskId, processId, refetch, clientVi
 ProjectItem.defaultProps = {
   clientView: false,
   taskId: null,
-  task: null
+  task: null,
+  processName: null,
 };
 ProjectItem.propTypes = {
   task: PropTypes.shape({ id: PropTypes.string }),
   processId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
   clientView: PropTypes.bool,
-  taskId: PropTypes.string
+  taskId: PropTypes.string,
+  processName: PropTypes.string,
 };
