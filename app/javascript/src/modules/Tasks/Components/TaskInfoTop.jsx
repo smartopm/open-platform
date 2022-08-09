@@ -426,7 +426,7 @@ export default function TaskInfoTop({
             <Grid
               item
               xs={7}
-              md={6}
+              md={8}
               onMouseOver={() => setEditingOrderNumber(true)}
               onMouseLeave={() => setEditingOrderNumber(false)}
               className={

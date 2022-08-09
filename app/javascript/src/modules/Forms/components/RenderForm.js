@@ -168,6 +168,21 @@ export default function RenderForm({
         }}
       />
     ),
+    multiline_text: (
+      <TextInput
+        id={formPropertiesData.id}
+        properties={formPropertiesData}
+        value={formProperties.fieldName}
+        handleValue={event => handleValueChange(event, formPropertiesData)}
+        editable={editable}
+        inputValidation={{
+          error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+        }}
+        multiline
+        minRows={2}
+        maxRows={6}
+      />
+    ),
     date: (
       <DatePickerDialog
         id={formPropertiesData.id}
