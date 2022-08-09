@@ -123,24 +123,10 @@ module Types::Queries::EntryRequest
 
   def community_people_statistics(duration: 'today')
     entry_requests = context[:site_community].entry_requests
-    is_all = duration == 'All'
-
     {
-      people_present: if is_all
-                        entry_requests.where('granted_at IS NOT NULL AND exited_at IS NULL').size
-                      else
-                        people_present(entry_requests, duration).size
-                      end,
-      people_entered: if is_all
-                        entry_requests.where.not(granted_at: nil).size
-                      else
-                        people_entered(entry_requests, duration).size
-                      end,
-      people_exited: if is_all
-                       entry_requests.where.not(exited_at: nil).size
-                     else
-                       people_exited(entry_requests, duration).size
-                     end,
+      people_present: people_present(entry_requests, duration).size,
+      people_entered: people_entered(entry_requests, duration).size,
+      people_exited: people_exited(entry_requests, duration).size,
     }
   end
 
@@ -200,19 +186,23 @@ module Types::Queries::EntryRequest
   end
 
   def people_entered(entry_requests, duration)
+    return entry_requests.where.not(granted_at: nil) if duration == 'All'
+
     start_time = duration_based_start_time(duration)
     entry_requests
       .where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
   end
 
   def people_exited(entry_requests, duration)
+    return entry_requests.where.not(exited_at: nil) if duration == 'All'
+
     start_time = duration_based_start_time(duration)
     entry_requests
       .where('exited_at IS NOT NULL AND exited_at >= ? AND exited_at <= ?', start_time, end_time)
   end
 
   def all_people(entry_requests, duration)
-    return entry_requests if duration.blank?
+    return entry_requests if duration.blank? || duration == 'All'
 
     start_time = duration_based_start_time(duration)
     entry_requests
