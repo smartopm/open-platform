@@ -89,7 +89,9 @@ const LoggedInOnly = props => {
       to={{
         pathname: '/login',
         state: { from: props.location },
-        search: `?next=${props.location.pathname}`
+        search: !props.location.pathname === '/' // Don't show next param when redirected from root / route
+          ? `?next=${props.location.pathname}`
+          : ''
       }}
     />
   );
@@ -109,7 +111,7 @@ const AdminRoutes = props => {
 
 const Logout = () => {
   localStorage.removeItem(AUTH_TOKEN_KEY);
-  sessionStorage.removeItem(AUTH_FORWARD_URL_KEY)
+  localStorage.removeItem(AUTH_FORWARD_URL_KEY)
   const authState = useContext(AuthStateContext);
   authState.setToken({ action: 'delete' });
   return <Redirect to="/login" />;

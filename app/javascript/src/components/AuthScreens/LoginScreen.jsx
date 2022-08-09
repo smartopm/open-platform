@@ -52,8 +52,9 @@ export default function LoginScreen({ currentCommunity }) {
     loginWithUsernamePassword,
     passwordLoginLoading,
   ] = useMutationWrapper(loginUsernamePasswordMutation, data => handleUserRouting(data));
-  const [loginWithEmail, emailLoginLoading] = useMutationWrapper(loginEmailMutation, () =>
-    setEmailLoginSet(true)
+  const [loginWithEmail, emailLoginLoading] = useMutationWrapper(
+    loginEmailMutation,
+    loginWithEmailCallback
   );
   const [loginWithPhone, phoneLoginLoading] = useMutationWrapper(
     loginPhoneMutation,
@@ -61,6 +62,8 @@ export default function LoginScreen({ currentCommunity }) {
   );
 
   const authState = useContext(AuthStateContext);
+  const nextUrl = decodeURIComponent(history.location.search).replace('?next=', '');
+  const redirectUrl = nextUrl.includes('/') ? nextUrl : `/${nextUrl}`
 
   function routeToConfirmCode(data) {
     history.push({
@@ -85,6 +88,13 @@ export default function LoginScreen({ currentCommunity }) {
         type: 'update',
         token: data?.loginUsernamePassword?.authToken,
       });
+    }
+  }
+
+  function loginWithEmailCallback(){
+    setEmailLoginSet(true)
+    if(shouldRedirectAfterLogin()) {
+      localStorage.setItem(AUTH_FORWARD_URL_KEY, redirectUrl)
     }
   }
 
@@ -123,9 +133,13 @@ export default function LoginScreen({ currentCommunity }) {
     return false;
   }
 
-  function handleOAuthLogin(url) {
-    if (history.location.search) {
-      sessionStorage.setItem(AUTH_FORWARD_URL_KEY, state.from.pathname);
+  function shouldRedirectAfterLogin() {
+    return (redirectUrl && history.location.search);
+  } 
+
+  function handleOAuthLogin(url){
+    if(shouldRedirectAfterLogin()) {
+      localStorage.setItem(AUTH_FORWARD_URL_KEY, redirectUrl);
     }
 
     window.location.assign(url);

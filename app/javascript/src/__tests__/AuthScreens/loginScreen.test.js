@@ -15,25 +15,25 @@ import { AUTH_FORWARD_URL_KEY } from '../../utils/apollo';
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useHistory: () => ({ location: { search: '?next=/tasks' } }),
+  useHistory: () => ({ push: jest.fn(), location: { search: '?next=/tasks' } }),
   useLocation: () => ({ state: { from: { pathname: '/tasks' } } }),
 }));
 
 describe('Login Screen', () => {
-  const { sessionStorage } = window;
+  const { localStorage } = window;
   const assignMock = jest.fn();
 
   beforeAll(() => {
-    delete window.sessionStorage;
+    delete window.localStorage;
     delete window.location;
-    window.sessionStorage = {
+    window.localStorage = {
       getItem: jest.fn(() => '/tasks'),
       setItem: jest.fn(),
     };
     window.location = { assign: assignMock };
   });
   afterAll(() => {
-    window.sessionStorage = sessionStorage;
+    window.localStorage = localStorage;
     assignMock.mockClear();
   });
   const mocks = [
@@ -245,7 +245,7 @@ describe('Login Screen', () => {
     }, 10);
   });
 
-  it('should trigger google oauth button and persist in sessionStorage', async () => {
+  it('should trigger google oauth button and persist in localStorage', async () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
@@ -261,12 +261,12 @@ describe('Login Screen', () => {
 
       fireEvent.click(googleLoginBtn);
 
-      expect(window.sessionStorage.getItem(AUTH_FORWARD_URL_KEY)).toEqual('/tasks');
-      expect(assignMock).toHaveBeenCalledWith(googleLoginUrl);
-    }, 10);
+      expect(window.localStorage.getItem(AUTH_FORWARD_URL_KEY)).toEqual('/tasks')
+      expect(assignMock).toHaveBeenCalledWith(googleLoginUrl)
+    }, 10)
   });
 
-  it('should trigger facebook oauth button and persist in sessionStorage', async () => {
+  it('should trigger facebook oauth button and persist in localStorage', async () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
@@ -282,8 +282,8 @@ describe('Login Screen', () => {
 
       fireEvent.click(fbLoginBtn);
 
-      expect(window.sessionStorage.getItem(AUTH_FORWARD_URL_KEY)).toEqual('/tasks');
-      expect(assignMock).toHaveBeenCalledWith(fbLoginUrl);
-    }, 10);
+      expect(window.localStorage.getItem(AUTH_FORWARD_URL_KEY)).toEqual('/tasks')
+      expect(assignMock).toHaveBeenCalledWith(fbLoginUrl)
+    }, 10)
   });
 });
