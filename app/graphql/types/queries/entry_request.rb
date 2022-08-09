@@ -123,10 +123,24 @@ module Types::Queries::EntryRequest
 
   def community_people_statistics(duration: 'today')
     entry_requests = context[:site_community].entry_requests
+    is_all = duration == 'All'
+
     {
-      people_present: people_present(entry_requests, duration).size,
-      people_entered: people_entered(entry_requests, duration).size,
-      people_exited: people_exited(entry_requests, duration).size,
+      people_present: if is_all
+                        entry_requests.where('granted_at IS NOT NULL AND exited_at IS NULL').size
+                      else
+                        people_present(entry_requests, duration).size
+                      end,
+      people_entered: if is_all
+                        entry_requests.where.not(granted_at: nil).size
+                      else
+                        people_entered(entry_requests, duration).size
+                      end,
+      people_exited: if is_all
+                       entry_requests.where.not(exited_at: nil).size
+                     else
+                       people_exited(entry_requests, duration).size
+                     end,
     }
   end
 
