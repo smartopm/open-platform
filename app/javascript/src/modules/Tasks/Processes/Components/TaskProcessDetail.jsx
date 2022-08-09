@@ -18,6 +18,7 @@ import {
   useParamsQuery,
   removeNewLines,
   formatError,
+  sanitizeText,
 } from '../../../../utils/helpers';
 import ProjectProcesses from './ProjectProcesses';
 import ProjectProcessesSplitView from './ProjectProcessesSplitView';
@@ -161,10 +162,7 @@ export default function TaskProcessDetail() {
   };
 
   return (
-    <PageWrapper
-      pageTitle={projectItemLoading ? <Spinner /> : removeNewLines(projectItem?.project?.body)}
-      breadCrumbObj={breadCrumbObj}
-    >
+    <PageWrapper pageTitle={t('common:misc.process_detail_page')} breadCrumbObj={breadCrumbObj}>
       <TaskContextProvider>
         <Grid
           container
@@ -172,7 +170,22 @@ export default function TaskProcessDetail() {
           style={!matches ? { padding: '0 56px' } : { padding: '0 20px' }}
         >
           <Grid item md={5} xs={12}>
-            <Grid container style={{ marginBottom: '10px' }}>
+            <Grid container>
+              <Grid item md={12} xs={12} style={{ marginBottom: '10px' }}>
+                {projectItemLoading ? (
+                  <Spinner />
+                ) : (
+                  <Typography variant="h5" component="div">
+                    <span
+                      data-testid="task-title"
+                      // eslint-disable-next-line react/no-danger
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizeText(removeNewLines(projectItem?.project?.body)),
+                      }}
+                    />
+                  </Typography>
+                )}
+              </Grid>
               <Grid item md={11} xs={10} data-testid="project-title">
                 <StyledTabs
                   value={tabValue}
