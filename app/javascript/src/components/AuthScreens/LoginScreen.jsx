@@ -162,7 +162,7 @@ export default function LoginScreen({ currentCommunity }) {
         currentCommunity={currentCommunity}
       />
 
-      <Container maxWidth="sm">
+      <Container maxWidth="xs">
         <CenteredContent>
           <ImageAuth
             imageLink={currentCommunity?.imageUrl || ""}

@@ -127,6 +127,10 @@ const authState = {
         module: 'my_forms',
         permissions: ['can_access_own_forms'],
       },
+      {
+        module: 'task_list',
+        permissions: ['can_view_task_lists'],
+      },
     ],
   },
 };

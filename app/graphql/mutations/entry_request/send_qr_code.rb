@@ -15,8 +15,8 @@ module Mutations
 
         GuestQrCodeJob.perform_now(
           community: context[:site_community],
-          contact_info: { email: vals[:guest_email] },
-          entry_request: entry_request,
+          request_data: [{ user: entry_request.user, request: entry_request }],
+          type: 'scan',
         )
 
         { message: 'success' }
