@@ -17,8 +17,8 @@ import {
   objectAccessor,
   useParamsQuery,
   removeNewLines,
-  sanitizeText,
   formatError,
+  sanitizeText,
 } from '../../../../utils/helpers';
 import ProjectProcesses from './ProjectProcesses';
 import ProjectProcessesSplitView from './ProjectProcessesSplitView';
@@ -35,12 +35,13 @@ import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function TaskProcessDetail() {
   const limit = 20;
-  const { t } = useTranslation(['task', 'common']);
+  const { t } = useTranslation(['task', 'common', 'processes']);
   const { processId, id: taskId } = useParams();
   const history = useHistory();
   const path = useParamsQuery();
   const tab = path.get('tab');
   const detailTabValue = path.get('detailTab');
+  const processName = path.get('process_name');
   const replyingDiscussion = path.get('replying_discussion');
   const [tabValue, setTabValue] = useState(0);
   const [searchText, setSearchText] = useState('');
@@ -107,7 +108,9 @@ export default function TaskProcessDetail() {
 
   function handleTabValueChange(_event, newValue) {
     history.push(
-      `?tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`
+      `?tab=${Object.keys(TAB_VALUES).find(
+        key => objectAccessor(TAB_VALUES, key) === newValue
+      )}&process_name=${processName}`
     );
     setTabValue(Number(newValue));
   }
@@ -150,8 +153,16 @@ export default function TaskProcessDetail() {
     return <CenteredContent>{formatError(projectDataError.message)}</CenteredContent>;
   }
 
+  const breadCrumbObj = {
+    extraBreadCrumb: t('processes.processes'),
+    extraBreadCrumbLink: '/processes',
+    linkText: `${processName}`,
+    linkHref: `/processes/${processId}/projects?process_name=${processName}`,
+    pageName: t('common:misc.process_detail_page'),
+  };
+
   return (
-    <PageWrapper pageTitle={t('common:misc.process_detail_page')}>
+    <PageWrapper pageTitle={t('common:misc.process_detail_page')} breadCrumbObj={breadCrumbObj}>
       <TaskContextProvider>
         <Grid
           container

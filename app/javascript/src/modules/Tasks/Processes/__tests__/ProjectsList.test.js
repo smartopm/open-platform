@@ -1,8 +1,6 @@
-/* eslint-disable import/prefer-default-export */
 import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-
 import { render, screen, waitFor } from '@testing-library/react';
 import ProjectsList from '../Components/ProjectsList';
 import { Context } from '../../../../containers/Provider/AuthStateProvider'
