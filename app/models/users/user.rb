@@ -159,10 +159,9 @@ module Users
 
     before_validation :add_default_state_type_and_role
     after_create :add_notification_preference
-    after_create :add_user_in_spreadsheet
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
     after_update :update_associated_request_details, if: -> { user_details_updated? }
-    after_update :update_user_in_spreadsheet
+    after_save :sync_user_in_spreadsheet
     after_save :associate_lead_labels, if: -> { user_type.eql?('lead') }
     after_commit :auto_generate_username_password, on: :create
 
@@ -776,21 +775,11 @@ module Users
       community.notes.find_by(category: 'whatsapp', completed: false, author_id: id)
     end
 
-    def add_user_in_spreadsheet
+    def sync_user_in_spreadsheet
       zapier_id = zapier_webhook_id(community.name)
-      return if Rails.env.test? || zapier_id['CREATE_USER'].nil?
+      return if Rails.env.test? || private_attributes? || zapier_id['USER'].nil?
 
-      ZapierRuby::Zapper.new(:create_user, zapier_id['CREATE_USER'])
-                        .zap(attributes.except(*PRIVATE_ATTRIBUTES))
-    rescue StandardError => e
-      Rollbar.error(e)
-    end
-
-    def update_user_in_spreadsheet
-      zapier_id = zapier_webhook_id(community.name)
-      return if Rails.env.test? || private_attributes? || zapier_id['UPDATE_USER'].nil?
-
-      ZapierRuby::Zapper.new(:update_user, zapier_id['UPDATE_USER'])
+      ZapierRuby::Zapper.new(:user, zapier_id['USER'])
                         .zap(attributes.except(*PRIVATE_ATTRIBUTES))
     rescue StandardError => e
       Rollbar.error(e)

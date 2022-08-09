@@ -384,7 +384,7 @@ RSpec.describe Users::User, type: :model do
       end
     end
 
-    describe '#add_user_in_spreadsheet' do
+    describe '#sync_user_in_spreadsheet' do
       before { Rails.env.stub(test?: false) }
 
       let(:community) { create(:community, name: 'DoubleGDP') }
@@ -403,61 +403,21 @@ RSpec.describe Users::User, type: :model do
         }
       end
       let(:body) { user.attributes.except(*private_attributes).to_json }
-      let(:zapier_webhook_id) { '{ "CREATE_USER": "122QW2/12332SD" }' }
+      let(:zapier_webhook_id) { '{ "USER": "122332/123D233" }' }
 
-      context 'when user is created' do
+      context 'when user is created and updated' do
         before do
           allow_any_instance_of(ApplicationHelper).to receive(:zapier_webhook_id)
             .with(community.name).and_return(JSON.parse(zapier_webhook_id))
           allow_any_instance_of(described_class).to receive(:auto_generate_username_password)
             .and_return(false)
-          stub_request(:post, 'https://hooks.zapier.com/hooks/catch/122QW2/12332SD/')
-            .with(body: body, headers: headers)
-            .to_return(body: response.to_json)
-        end
-
-        it 'creates zap and adds the user in spreadsheet' do
-          expect(JSON.parse(user.add_user_in_spreadsheet.body)['status']).to eql 200
-        end
-      end
-    end
-
-    describe '#update_user_in_spreadsheet' do
-      before { Rails.env.stub(test?: false) }
-
-      let(:community) { create(:community, name: 'DoubleGDP') }
-      let(:user) { create(:resident, community: community) }
-      let(:response) { { status: 200, body: '', headers: {} } }
-      let(:private_attributes) do
-        %w[encrypted_password has_reset_password
-           reset_password_token reset_password_sent_at].freeze
-      end
-      let(:headers) do
-        {
-          'Accept' => 'application/json',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Content-Type' => 'application/json',
-          'User-Agent' => 'Ruby',
-        }
-      end
-      let(:body) { user.attributes.except(*private_attributes).to_json }
-      let(:zapier_webhook_id) { '{ "UPDATE_USER": "122332/123D233" }' }
-
-      context 'when user is updated' do
-        before do
-          allow_any_instance_of(ApplicationHelper).to receive(:zapier_webhook_id)
-            .with(community.name).and_return(JSON.parse(zapier_webhook_id))
-          allow_any_instance_of(described_class).to receive(:auto_generate_username_password)
-            .and_return(false)
-          allow_any_instance_of(described_class).to receive(:add_user_in_spreadsheet)
-            .and_return(200)
           stub_request(:post, 'https://hooks.zapier.com/hooks/catch/122332/123D233/')
             .with(body: body, headers: headers)
             .to_return(body: response.to_json)
         end
 
-        it 'creates zap and updates user in spreadsheet' do
-          expect(JSON.parse(user.update_user_in_spreadsheet.body)['status']).to eql 200
+        it 'syncs user in spreadsheet' do
+          expect(JSON.parse(user.sync_user_in_spreadsheet.body)['status']).to eql 200
         end
       end
     end
