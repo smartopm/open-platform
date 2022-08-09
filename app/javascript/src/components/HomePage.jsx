@@ -4,7 +4,6 @@ import { StyleSheet, css } from 'aphrodite';
 import { Grid } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import HomePageCard from './Card';
 import QuickLinks from '../modules/QuickLinks/Components/QuickLinks';
 import SocialMediaLinks from './SocialMediaLinks';
@@ -14,7 +13,6 @@ import NewsFeed from '../modules/News/Components/NewsFeed';
 
 export default function Homepage({ authState, quickLinks }) {
   const guardPageUsers = ['security_guard', 'security_supervisor'];
-  const matches = useMediaQuery('(max-width:600px)');
   const { t } = useTranslation('dashboard');
   if (guardPageUsers.includes(authState.user.userType)) {
     return <Redirect push to="/guard_home" />;
@@ -29,7 +27,7 @@ export default function Homepage({ authState, quickLinks }) {
       card_id: 1,
       title: t('dashboard.scan'),
       path: '/scan',
-      access: ['custodian']
+      access: ['custodian'],
     },
     {
       card_id: 2,
@@ -49,21 +47,21 @@ export default function Homepage({ authState, quickLinks }) {
         'security_supervisor',
         'consultant',
         'developer',
-        'marketing_manager'
-      ]
+        'marketing_manager',
+      ],
     },
     {
       card_id: 3,
       title: t('dashboard.my_account'),
       path: `/myaccount/${authState.user.id}`,
       from: 'acc',
-      access: ['resident', 'client']
+      access: ['resident', 'client'],
     },
     {
       card_id: 4,
       title: t('common:misc.users'),
       path: '/users',
-      access: ['admin']
+      access: ['admin'],
     },
     {
       card_id: 18,
@@ -79,8 +77,8 @@ export default function Homepage({ authState, quickLinks }) {
         'visitor',
         'security_supervisor',
         'developer',
-        'marketing_manager'
-      ]
+        'marketing_manager',
+      ],
     },
     {
       card_id: 6,
@@ -99,26 +97,26 @@ export default function Homepage({ authState, quickLinks }) {
         'visitor',
         'security_supervisor',
         'developer',
-        'marketing_manager'
-      ]
+        'marketing_manager',
+      ],
     },
     {
       card_id: 7,
       title: t('common:misc.campaigns'),
       path: '/campaigns',
-      access: ['admin']
+      access: ['admin'],
     },
     {
       card_id: 8,
       title: t('common:misc.tasks'),
       path: '/tasks',
-      access: ['admin']
+      access: ['admin'],
     },
     {
       card_id: 9,
       title: t('common:misc.notes'),
       path: '/notes',
-      access: ['admin']
+      access: ['admin'],
     },
     {
       card_id: 10,
@@ -127,39 +125,39 @@ export default function Homepage({ authState, quickLinks }) {
       clientName: authState.user.name,
       from: 'home',
       access: ['admin', 'resident', 'client'],
-      communityName: authState.user
+      communityName: authState.user,
     },
     {
       card_id: 11,
       title: t('common:misc.request_forms'),
       path: '/forms',
       id: 'crfl',
-      access: ['admin', 'resident', 'client']
+      access: ['admin', 'resident', 'client'],
     },
     {
       card_id: 12,
       title: t('common:misc.time_card'),
       path: '/timesheet',
-      access: ['admin', 'custodian']
+      access: ['admin', 'custodian'],
     },
     {
       card_id: 13,
       title: t('common:misc.log_book'),
       path: '/logbook',
-      access: ['security_guard', 'admin']
+      access: ['security_guard', 'admin'],
     },
     {
       card_id: 14,
       title: t('common:misc.referrals'),
       path: '/referral',
       from: 'ref',
-      access: ['admin', 'resident', 'client']
+      access: ['admin', 'resident', 'client'],
     },
     {
       card_id: 16,
       title: t('common:misc.time_card'),
       path: `/timesheet/${authState.user.id}`,
-      access: ['contractor', 'site_worker', 'site_manager', 'security_supervisor']
+      access: ['contractor', 'site_worker', 'site_manager', 'security_supervisor'],
     },
     {
       card_id: 17,
@@ -168,9 +166,10 @@ export default function Homepage({ authState, quickLinks }) {
           {t('dashboard.call_manager')}
         </a>
       ),
-      access: ['contractor', 'site_worker', 'site_manager', 'security_supervisor']
+      access: ['contractor', 'site_worker', 'site_manager', 'security_supervisor'],
     },
     {
+      card_id: 5,
       title: t('common:misc.discussions'),
       path: '/discussions',
       access: [
@@ -185,8 +184,8 @@ export default function Homepage({ authState, quickLinks }) {
         'site_manager',
         'security_supervisor',
         'developer',
-        'marketing_manager'
-      ]
+        'marketing_manager',
+      ],
     },
 
     {
@@ -194,9 +193,10 @@ export default function Homepage({ authState, quickLinks }) {
       title: t('common:misc.business'),
       path: '/businesses',
       titleStyle: css(styles.CardtextImg),
-      access: ['admin', 'client', 'prospective_client', 'resident', 'visitor', 'marketing_manager']
+      access: ['admin', 'client', 'prospective_client', 'resident', 'visitor', 'marketing_manager'],
     },
     {
+      card_id: 15,
       title: `${authState.user.community.name} ${t('common:misc.support')}`,
       path: '/contact',
       access: [
@@ -208,61 +208,62 @@ export default function Homepage({ authState, quickLinks }) {
         'resident',
         'visitor',
         'developer',
-        'marketing_manager'
-      ]
+        'marketing_manager',
+      ],
     },
     {
+      card_id: 20,
       title: t('common:misc.labels'),
       path: `/labels`,
-      access: ['admin']
+      access: ['admin'],
     },
     {
+      card_id: 21,
       title: t('common:misc.comments'),
       path: '/comments',
-      access: ['admin']
+      access: ['admin'],
     },
     {
+      card_id: 22,
       title: t('common:misc.properties'),
       path: '/land_parcels',
-      access: ['admin']
+      access: ['admin'],
     },
     {
+      card_id: 23,
       title: t('common:misc.payments'),
       path: '/payments',
-      access: ['admin']
+      access: ['admin'],
     },
     {
+      card_id: 24,
       title: t('common:misc.mail_templates'),
       path: '/mail_templates',
-      access: ['admin']
+      access: ['admin'],
     },
     {
+      card_id: 25,
       title: t('common:misc.comm_settings'),
       path: '/community',
-      access: ['admin']
-    }
+      access: ['admin'],
+    },
   ];
 
   return (
     <div>
       <div>
         <div>
-          {['resident', 'lead'].includes(authState.user.userType) && (
+          {['resident', 'lead', 'site_manager', 'site_worker'].includes(authState.user.userType) && (
             <QuickLinks menuItems={quickLinks} translate={t} />
           )}
         </div>
         <FeatureCheck features={authState.user.community.features} name="News">
           <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
         </FeatureCheck>
-        <Grid
-          container
-          spacing={2}
-          style={matches ? { padding: '20px' } : { padding: '20px 39px 20px 20px', width: '99%' }}
-        >
-          {cards.map((card, index) => (
+        <Grid container spacing={2} sx={{ mt: 3 }}>
+          {cards.map((card) => (
             <HomePageCard
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
+              key={card.card_id}
               path={card.path}
               title={card.title}
               icon={card.icon}
@@ -285,23 +286,14 @@ export default function Homepage({ authState, quickLinks }) {
 }
 
 const styles = StyleSheet.create({
-  CardtextIcon: {
-    marginTop: '15.5%'
-  },
-  CardtextImg: {
-    marginTop: '21%'
-  },
+  CardtextImg: { marginTop: '21%' },
   cardSize: {
     width: 200,
     height: 154
-  },
-  QuickLinks: {
-    marginLeft: '2em'
   }
 });
 Homepage.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  authState: PropTypes.object.isRequired,
+  authState: PropTypes.shape(PropTypes.Object).isRequired,
   quickLinks: PropTypes.arrayOf(
     PropTypes.shape({
       menu_name: PropTypes.string,

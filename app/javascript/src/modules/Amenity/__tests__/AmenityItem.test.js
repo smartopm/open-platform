@@ -21,6 +21,7 @@ describe('Amenity Item', () => {
           translate={jest.fn()}
           handleEditAmenity={handleEdit}
           hasAccessToMenu
+          matches={false}
         />
       </MockedThemeProvider>
     );

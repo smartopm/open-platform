@@ -50,7 +50,7 @@ module Notifications
 
       new_message = ''
       text = 'Click this link to reply to this message in our app '
-      link = "https://#{HostEnv.base_url(user.community)}/message/#{id}"
+      link = "https://#{HostEnv.base_url(user.community)}/message/#{user_id}"
       new_message = "#{sender[:name]} from #{user.community.name} said: \n" if add_prefix
       new_message += message if message.present?
       new_message += "\n\n#{text} \n#{link}" if include_reply_link?
@@ -94,6 +94,10 @@ module Notifications
       return true if campaign_id.nil?
 
       Campaign.find(campaign_id).include_reply_link
+    end
+
+    def message_url
+      "/message/#{user_id}"
     end
 
     private

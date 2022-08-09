@@ -76,8 +76,7 @@ HomePageCard.propTypes = {
   clientNumber: PropTypes.string,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   access: PropTypes.arrayOf(PropTypes.string).isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  authState: PropTypes.object.isRequired
+  authState: PropTypes.shape(PropTypes.Object).isRequired
 };
 
 const useStyles = makeStyles(theme => ({

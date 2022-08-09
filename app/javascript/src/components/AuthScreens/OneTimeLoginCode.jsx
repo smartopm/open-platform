@@ -18,7 +18,7 @@ export default function OneTimeLoginCode({ match }) {
     if (authState.user.status === 'deactivated') return <Redirect push to='/logout' />
     if(type === 'request') return <Redirect push to={`/qr/invite/${requestId}`} />;
 
-    const nextUrlAfterOneTimeLogin = sessionStorage.getItem(AUTH_FORWARD_URL_KEY)
+    const nextUrlAfterOneTimeLogin = localStorage.getItem(AUTH_FORWARD_URL_KEY)
     if (nextUrlAfterOneTimeLogin) return <Redirect push to={`${nextUrlAfterOneTimeLogin}`} />;
     
     return <Redirect push to="/" />;

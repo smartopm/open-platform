@@ -12,7 +12,7 @@ import { objectAccessor } from '../../../utils/helpers';
 import { dateToString } from '../../../components/DateContainer';
 import { NotificationUpdate } from '../graphql/sos_mutation';
 
-export default function NotificationCard({ notification, userId, refetch, setOpenDrawer }) {
+export default function NotificationCard({ notification, refetch, setOpenDrawer }) {
   const { t } = useTranslation('notification');
   const classes = useStyles();
   const history = useHistory();
@@ -36,11 +36,7 @@ export default function NotificationCard({ notification, userId, refetch, setOpe
     }).then(() => {
       refetch()
       history?.push(
-        `${
-          notification.category === 'task'
-            ? `/tasks?taskId=${notification.notifableId}`
-            : `/message/${userId}`
-        }`
+        notification?.url
       );
       setOpenDrawer(false)
     });
@@ -103,7 +99,6 @@ const useStyles = makeStyles(() => ({
 
 NotificationCard.defaultProps = {
   notification: {},
-  userId: null,
   refetch: () => {},
   setOpenDrawer: () => {}
 };
@@ -116,9 +111,9 @@ NotificationCard.propTypes = {
     header: PropTypes.string,
     notifableId: PropTypes.string,
     id: PropTypes.string,
-    seenAt: PropTypes.string
+    seenAt: PropTypes.string,
+    url: PropTypes.string
   }),
-  userId: PropTypes.string,
   refetch: PropTypes.func,
   setOpenDrawer: PropTypes.func
 };

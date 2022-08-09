@@ -21,7 +21,8 @@ describe('Drawer Content Component', () => {
               createdAt: '2022-10-10',
               seenAt: null,
               header: 'sample header',
-              notifableId: 'dwwerfwewewefdwe'
+              notifableId: 'dwwerfwewewefdwe',
+              url: '/tasks?taskId=dwwerfwewewefdwe'
             }
           ]
         }
@@ -61,7 +62,8 @@ describe('Drawer Content Component', () => {
               createdAt: '2022-10-10',
               seenAt: '2022-10-10',
               header: 'sample header',
-              notifableId: 'dwwerfwewewefdwe'
+              notifableId: 'dwwerfwewewefdwe',
+              url: '/tasks?taskId=dwwerfwewewefdwe'
             }
           }
         }

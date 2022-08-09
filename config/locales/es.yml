@@ -363,6 +363,9 @@ es:
       invalid_action_name: Nombre de acción no válido
       invalid_event_type: Tipo de evento invalido
       not_found: Flujo de acción no encontrado
+    authentication:
+      reset_password_error: Proporcione una nueva contraseña
+      wrong_credentials: Nombre de usuario o contraseña incorrectos
     business:
       not_found: Negocio no encontrado
     campaign:

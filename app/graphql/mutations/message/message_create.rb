@@ -48,7 +48,8 @@ module Mutations
                                           notifable_type: message.class.name,
                                           description: message.message,
                                           category: :message,
-                                          user_id: message.user_id)
+                                          user_id: message.user_id,
+                                          url: message.message_url)
       end
 
       # TODO: Better auth here

@@ -259,7 +259,7 @@
     "plan_transfer_confirmation_message_2": "payments with a total value of",
     "plan_transfer_confirmation_message_3": "By transferring your plan, you will be transferring all payments associated to this plan. Click the 'Continue' button to transfer plan",
     "payment_transfer_confirmation_message_1": "You are about to transfer payment of amount",
-    "payment_transfer_confirmation_message_2": "to the selected plan. Click the 'Continue' button to transfer payment" ,
+    "payment_transfer_confirmation_message_2": "to the selected plan. Click the 'Continue' button to transfer payment",
     "select_frequency": "Please select frequency",
     "select_plan_type": "Please select a plan type",
     "select_transfer_plan": "Select the Plan you want to migrate this plan to?",
@@ -331,6 +331,7 @@
     "process_detail_page": "Project Detail",
     "copy_credentials": "The details below will be the login credentials for this account if you confirm, you may want to copy them as you will not be able to see them again one you close the modal.",
     "reset_disclaimer": "You are about to reset the password for the current account. This is an irreversable action.",
+    "request_forms": "Application forms and permits",
     "need_or_forgot_password": "Need a password or forgot one?",
     "required": "Required"
   },
