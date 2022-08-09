@@ -33,7 +33,7 @@ describe('Task List', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <RenderAddSubTasks />
+              <RenderTaskLists />
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
