@@ -10,6 +10,7 @@ const UserNotifications = gql`
       seenAt
       header
       notifableId
+      url
     }
   }
 `;

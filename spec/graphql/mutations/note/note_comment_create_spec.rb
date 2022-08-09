@@ -54,6 +54,18 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
         grouping_id: '9fafaba8-ad19-4a08-97e4-9b670d482cfa',
       )
     end
+
+    let(:form) { create(:form, community: user.community) }
+    let(:process) { create(:process, community: user.community, form: form) }
+    let(:note_list) { create(:note_list, process: process, community: user.community) }
+    let(:process_note) do
+      create(:note, note_list: note_list, community: user.community, user: user, author: admin)
+    end
+    let!(:process_note_assignees) do
+      create(:assignee_note, user: another_user, note: process_note)
+      create(:assignee_note, user: user, note: process_note)
+    end
+
     let(:query) do
       <<~GQL
         mutation noteCommentCreate($noteId: ID!, $body: String!, $replyRequired: Boolean, $replyFromId: ID, $groupingId: ID, $taggedDocuments: [ID]) {
@@ -186,6 +198,70 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
       expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'body'))
         .to eql 'Site worker Comment'
       expect(result['errors']).to be_nil
+    end
+
+    context 'when commented on task and reply is not required' do
+      it 'creates notification for all the assignees' do
+        variables = {
+          noteId: note.id,
+          body: 'Comment body',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: another_user,
+                                                  site_community: another_user.community,
+                                                }).as_json
+        notification = user.notifications.first
+        expect(result['errors']).to be_nil
+        expect(user.notifications.count).to eql 1
+        expect(notification.description).to eql 'Mark Test commented!'
+        expect(notification.url).to eql "/tasks?taskId=#{note.id}"
+        expect(notification.category).to eql 'comment'
+      end
+    end
+
+    context 'when commented on task and reply is required' do
+      it 'creates notification for reply required user' do
+        variables = {
+          noteId: process_note.id,
+          body: 'A reply is required body',
+          replyRequired: true,
+          replyFromId: user.id,
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: another_user,
+                                                  site_community: another_user.community,
+                                                }).as_json
+        notification = user.notifications.first
+        process_url = "/processes/#{process.id}/projects/#{process_note.id}?tab=processes"
+        expect(result['errors']).to be_nil
+        expect(user.notifications.count).to eql 1
+        expect(notification.url).to eql process_url
+        expect(notification.category).to eql 'reply_requested'
+        expect(notification.description).to eql 'Mark Test requested reply.'
+      end
+    end
+
+    context 'when comment on task is associated with process' do
+      it 'creates notification for all the assignees' do
+        variables = {
+          noteId: process_note.id,
+          body: 'Comment body',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: another_user,
+                                                  site_community: another_user.community,
+                                                }).as_json
+        notification = user.notifications.first
+        process_url = "/processes/#{process.id}/projects/#{process_note.id}?tab=processes"
+        expect(result['errors']).to be_nil
+        expect(user.notifications.count).to eql 1
+        expect(notification.description).to eql 'Mark Test commented!'
+        expect(notification.url).to eql process_url
+        expect(notification.category).to eql 'comment'
+      end
     end
 
     it 'raises unauthorized error if the context does not have current user' do

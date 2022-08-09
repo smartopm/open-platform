@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module Notes
   # Notes for the CRM portion of the app, attached to a user
   # rubocop:disable Metrics/ClassLength
@@ -101,7 +103,12 @@ module Notes
                                         description: I18n.t('notification_description.task',
                                                             task: body),
                                         category: :task,
-                                        user_id: assignee_id)
+                                        user_id: assignee_id,
+                                        url: note_link)
+    end
+
+    def note_link
+      "/tasks?taskId=#{id}"
     end
 
     # rubocop:disable Metrics/MethodLength

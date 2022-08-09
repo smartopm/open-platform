@@ -132,9 +132,11 @@ RSpec.describe Mutations::Message do
                                                   site_community: non_admin.community,
                                                   current_user: non_admin,
                                                 }).as_json
+        notification = admin.notifications.first
         expect(result['errors']).to be_nil
         expect(admin.notifications.count).to eql 1
-        expect(admin.notifications.first.description).to eql 'Hello You, hope you are well'
+        expect(notification.description).to eql 'Hello You, hope you are well'
+        expect(notification.url).to eql "/message/#{admin.id}"
       end
     end
 
