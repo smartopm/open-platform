@@ -480,6 +480,19 @@ RSpec.describe Types::Queries::EntryRequest do
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'currentGuests').size).to eql 1
         end
+
+        it 'returns list of all entry requests when duration is set to "All"' do
+          variables = { duration: 'All' }
+          guest
+          third_guest
+          result = DoubleGdpSchema.execute(current_guest_list_query,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: current_user.community,
+                                           }).as_json
+          expect(result.dig('data', 'currentGuests').size).to eql 3
+        end
       end
     end
 
