@@ -7,7 +7,7 @@ import AddSubTasks from './Components/AddSubTasks';
 const taskListPermissions = ['can_view_task_lists'];
 const currentModule = 'task_list';
 
-function RenderTaskLists() {
+export function RenderTaskLists() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={taskListPermissions}>
       <TaskLists />
@@ -15,7 +15,7 @@ function RenderTaskLists() {
   );
 }
 
-function RenderTaskListConfigure() {
+export function RenderTaskListConfigure() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={taskListPermissions}>
       <TaskListConfigure />
@@ -23,7 +23,7 @@ function RenderTaskListConfigure() {
   );
 }
 
-function RenderAddSubTasks() {
+export function RenderAddSubTasks() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={taskListPermissions}>
       <AddSubTasks />
