@@ -9,7 +9,8 @@ const fieldTypes = {
     text: 'Text',
     time: 'Time',
     payment: 'Payment',
-    appointment: 'Appointment'
+    appointment: 'Appointment',
+    multiline_text: "Multiline Text"
 };
 
 export default fieldTypes

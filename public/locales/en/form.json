@@ -142,7 +142,8 @@
     "dropdown": "Dropdown",
     "terms_and_condition": "Terms and Condition",
     "payment": "Payment",
-    "appointment": "Appointment"
+    "appointment": "Appointment",
+    "multiline_text": "Multiline Text"
   },
   "conditions": {
     "===": "equals to",
