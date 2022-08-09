@@ -168,8 +168,8 @@ RSpec.describe Mutations::Label do
                                          current_user: admin,
                                          site_community: user.community,
                                        }).as_json
-
-      expect(result.dig('data', 'userLabelCreate', 'label', 0, 'userId')).to eql user.id
+      user_ids = result.dig('data', 'userLabelCreate', 'label').map { |data| data['userId'] }
+      expect(user_ids).to include(user.id)
       expect(result['errors']).to be_nil
     end
 
