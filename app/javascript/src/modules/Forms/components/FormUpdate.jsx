@@ -1,12 +1,6 @@
-/* eslint-disable complexity */
 /* eslint-disable max-lines */
 /* eslint-disable max-statements */
-/* eslint-disable no-use-before-define */
-/* eslint-disable security/detect-object-injection */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { Button, Grid, Divider, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -49,9 +43,6 @@ import PaymentInput from './FormProperties/PaymentInput';
 import { currencies } from '../../../utils/constants';
 import CenteredContent from '../../../shared/CenteredContent';
 
-// date
-// text input (TextField or TextArea)
-// upload
 const initialData = {
   fieldType: '',
   fieldName: ' ',
@@ -170,7 +161,6 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
         { blobId: signedBlobId, propertyId: formState.currentPropId, contentType, url, filename }
       ]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   async function handleSignatureUpload() {
@@ -362,7 +352,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
             background: '#F5F5F4',
             padding: '10px 15px',
             borderRadius: '10px',
-            marginBottom: '20px'
+            marginBottom: '20px',
           }}
           inputVariant="outlined"
           selectedDate={
@@ -387,7 +377,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
             background: '#F5F5F4',
             padding: '10px 15px',
             borderRadius: '10px',
-            marginBottom: '20px'
+            marginBottom: '20px',
           }}
           inputVariant="outlined"
           time={
@@ -413,7 +403,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
             background: '#F5F5F4',
             padding: '10px 15px',
             borderRadius: '10px',
-            marginBottom: '20px'
+            marginBottom: '20px',
           }}
           inputVariant="outlined"
           selectedDateTime={
@@ -442,12 +432,8 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                   {' '}
                   <Typography variant="body2">{t('misc.upload_error_content_one')}</Typography>
                   <Typography variant="body2">{t('misc.upload_error_content_two')}</Typography>
-                  <Typography variant="body2">
-                    {t('misc.upload_error_content_three')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {t('misc.upload_error_content_four')}
-                  </Typography>
+                  <Typography variant="body2">{t('misc.upload_error_content_three')}</Typography>
+                  <Typography variant="body2">{t('misc.upload_error_content_four')}</Typography>
                 </div>
               )
             }
@@ -498,7 +484,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                   fileCount: uploadedImages.filter(
                     file => file.propertyId === formPropertiesData.formProperty.id
                   ).length,
-                  currentPropId: formState.currentPropId
+                  currentPropId: formState.currentPropId,
                 }}
                 upload={evt =>
                   handleFileSelect(evt, createPropertyObj(formPropertiesData.formProperty.id), t)
@@ -535,11 +521,11 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
       ),
       signature: (
         <div key={formPropertiesData.formProperty.id}>
-          {formPropertiesData.imageUrl && (
+          {formPropertiesData?.attachments?.length && (
             <>
               <Typography variant="caption">{t('misc.signature')}</Typography>
               <br />
-              <ImageAuth imageLink={formPropertiesData.imageUrl} auth />
+              <ImageAuth imageLink={[...formPropertiesData?.attachments]?.pop()?.image_url} auth />
             </>
           )}
           <ListWrapper className={classes.space}>
@@ -724,7 +710,6 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
         </form>
       </>
 
-      {/* dialog */}
       <DialogueBox
         open={openModal}
         handleClose={handleActionClick}
