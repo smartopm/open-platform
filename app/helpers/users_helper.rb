@@ -14,4 +14,7 @@ module UsersHelper
   VALID_LEAD_STATUSES = ['Qualified Lead', 'Interest Shown', 'Investment Motive Verified',
                          'Signed MOU', 'Signed Lease', 'Evaluation', 'Stakeholder Meetings',
                          'Site Visit'].freeze
+
+  PRIVATE_ATTRIBUTES = %w[encrypted_password has_reset_password reset_password_token
+                          reset_password_sent_at].freeze
 end

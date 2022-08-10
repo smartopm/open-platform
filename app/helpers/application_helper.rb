@@ -54,7 +54,17 @@ module ApplicationHelper # rubocop:disable Style/Documentation
     path_info.last
   end
 
+  # format: '{"PUBLIC_KEY": "FLWPUBK, "PRIVATE_KEY": "FLWSECK", "ENCRYPTION_KEY": "FLWENCK"}'
   def flutterwave_keys(community_name)
-    JSON.parse(ENV["#{community_name.parameterize.underscore.upcase}_FLUTTERWAVE"])
+    JSON.parse(ENV["#{capitized_community_name(community_name)}_FLUTTERWAVE"] || '{}')
+  end
+
+  # format: '{"CREATE_USER": "abc/999", "UPDATE_USER": "abc/123"}'
+  def zapier_webhook_id(community_name)
+    JSON.parse(ENV["#{capitized_community_name(community_name)}_ZAPIER_WEBHOOK_ID"] || '{}')
+  end
+
+  def capitized_community_name(community_name)
+    community_name.parameterize.underscore.upcase
   end
 end

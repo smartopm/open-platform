@@ -137,3 +137,5 @@ end
 gem "request_store", "~> 1.4"
 
 gem "graphql-batch", "~> 0.5.1"
+ 
+gem 'zapier_ruby'
