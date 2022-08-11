@@ -19,7 +19,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import EmailIcon from '@mui/icons-material/Email';
 import InputAdornment from '@mui/material/InputAdornment';
 import PhoneInput from 'react-phone-input-2';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { getAuthToken, AUTH_FORWARD_URL_KEY } from '../../utils/apollo';
 import GoogleIcon from '../../../../assets/images/google_icon.svg';
 import {
@@ -65,7 +65,7 @@ export default function LoginScreen({ currentCommunity }) {
 
   const authState = useContext(AuthStateContext);
   const nextUrl = decodeURIComponent(history.location.search).replace('?next=', '');
-  const redirectUrl = nextUrl.includes('/') ? nextUrl : `/${nextUrl}`
+  const redirectUrl = nextUrl.includes('/') ? nextUrl : `/${nextUrl}`;
 
   function routeToConfirmCode(data) {
     history.push({
@@ -93,10 +93,10 @@ export default function LoginScreen({ currentCommunity }) {
     }
   }
 
-  function loginWithEmailCallback(){
-    setEmailLoginSet(true)
-    if(shouldRedirectAfterLogin()) {
-      localStorage.setItem(AUTH_FORWARD_URL_KEY, redirectUrl)
+  function loginWithEmailCallback() {
+    setEmailLoginSet(true);
+    if (shouldRedirectAfterLogin()) {
+      localStorage.setItem(AUTH_FORWARD_URL_KEY, redirectUrl);
     }
   }
 
@@ -140,11 +140,11 @@ export default function LoginScreen({ currentCommunity }) {
   }
 
   function shouldRedirectAfterLogin() {
-    return (redirectUrl && history.location.search);
-  } 
+    return redirectUrl && history.location.search;
+  }
 
-  function handleOAuthLogin(url){
-    if(shouldRedirectAfterLogin()) {
+  function handleOAuthLogin(url) {
+    if (shouldRedirectAfterLogin()) {
       localStorage.setItem(AUTH_FORWARD_URL_KEY, redirectUrl);
     }
 
@@ -173,7 +173,7 @@ export default function LoginScreen({ currentCommunity }) {
       <Container maxWidth="xs">
         <CenteredContent>
           <ImageAuth
-            imageLink={currentCommunity?.imageUrl || ""}
+            imageLink={currentCommunity?.imageUrl || ''}
             className={css(styles.logo)}
             alt="community logo"
             style={{ marginTop: 32, marginBottom: -17 }}
@@ -187,9 +187,7 @@ export default function LoginScreen({ currentCommunity }) {
           marginTop="20px"
           variant="h6"
         >
-          {
-            t('login.welcome', { appName: currentCommunity?.name })
-          }
+          {t('login.welcome', { appName: currentCommunity?.name })}
         </Typography>
         <br />
         <br />
@@ -230,7 +228,7 @@ export default function LoginScreen({ currentCommunity }) {
               style={{ marginBottom: 14 }}
               variant="outlined"
               margin="dense"
-              size='small'
+              size="small"
               fullWidth
             />
             <PasswordInput
@@ -279,13 +277,17 @@ export default function LoginScreen({ currentCommunity }) {
             >
               {t('login.login_google')}
             </Button>
-            <FormControl fullWidth margin='dense' size="small" style={{ marginTop: 16 }}>
+            <FormControl fullWidth margin="dense" size="small" style={{ marginTop: 16 }}>
               <InputLabel htmlFor="outlined-adornment-amount">{t('login.login_email')}</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-amount"
                 value={userLogin.email}
                 onChange={event => setUserLogin({ email: event.target.value, phone: '' })}
-                startAdornment={<InputAdornment position="start"><EmailIcon /></InputAdornment>}
+                startAdornment={(
+                  <InputAdornment position="start">
+                    <EmailIcon />
+                  </InputAdornment>
+                )}
                 placeholder={t('login.login_email')}
                 label={t('login.login_email')}
                 data-testid="email_text_input"
@@ -326,7 +328,7 @@ export default function LoginScreen({ currentCommunity }) {
           <Button
             size="medium"
             id="trigger-modal-dialog"
-            data-testid="trouble-logging-in-btn"
+            data-testid="password-reset-btn"
             onClick={handleEmailInputModal}
             style={{ textTransform: 'none' }}
           >
@@ -341,15 +343,15 @@ export default function LoginScreen({ currentCommunity }) {
 }
 
 LoginScreen.defaultProps = {
-  currentCommunity: {}
-}
+  currentCommunity: {},
+};
 LoginScreen.propTypes = {
   currentCommunity: PropTypes.shape({
     name: PropTypes.string,
     imageUrl: PropTypes.string,
     locale: PropTypes.string,
-  })
-}
+  }),
+};
 
 const styles = StyleSheet.create({
   getStartedButton: {

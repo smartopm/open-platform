@@ -16,8 +16,8 @@ RSpec.describe Mutations::User::AdminResetPassword do
 
     let(:mutation) do
       <<~GQL
-        mutation resetPassword($userId: ID!){
-            resetPassword(userId: $userId){
+        mutation adminResetPassword($userId: ID!){
+          adminResetPassword(userId: $userId){
           username
           password
           }
@@ -29,8 +29,6 @@ RSpec.describe Mutations::User::AdminResetPassword do
       it 'resets user password' do
         variables = {
           userId: lead_user.id,
-          username: 'lead12dfg',
-          password: 'bhdjij342j3j4442-223',
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
@@ -38,16 +36,14 @@ RSpec.describe Mutations::User::AdminResetPassword do
                                                      site_community: community,
                                                    }).as_json
         expect(result['errors']).to be nil
-        expect(result.dig('data', 'resetPassword', 'username')).to_not be nil
-        expect(result.dig('data', 'resetPassword', 'password')).to_not be nil
+        expect(result.dig('data', 'adminResetPassword', 'username')).to_not be nil
+        expect(result.dig('data', 'adminResetPassword', 'password')).to_not be nil
       end
     end
 
     context 'when user is unauthorized' do
       it 'throws unauthorized error' do
         variables = {
-          username: 'leadBlah123',
-          password: 'dhfhfj-234-vvgess',
           userId: lead_user.id,
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,

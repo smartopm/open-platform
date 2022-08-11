@@ -29,7 +29,7 @@ describe('Password Reset component', () => {
       },
       result: {
         data: {
-          resetPassword: {
+          adminResetPassword: {
             username: 'TheBigBoss',
             password: 'TheBigBosspassword1234',
           },

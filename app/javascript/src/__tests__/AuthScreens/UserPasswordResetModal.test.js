@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
-import { Utils as QbUtils } from 'react-awesome-query-builder';
 import { UserPasswordResetMutation } from '../../graphql/mutations/user';
 import UserPasswordResetModal from '../../components/AuthScreens/UserPasswordResetModal';
 import { SnackbarContext } from '../../shared/snackbar/Context';

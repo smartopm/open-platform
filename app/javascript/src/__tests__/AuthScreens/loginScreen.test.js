@@ -131,6 +131,7 @@ describe('Login Screen', () => {
     expect(loginWrapper.queryByText('login.continue_button_text')).toBeInTheDocument();
     expect(loginWrapper.queryByTestId('login-btn')).toBeInTheDocument();
     expect(loginWrapper.queryByTestId('trouble-logging-in-btn')).toBeInTheDocument();
+    expect(loginWrapper.queryByTestId('password-reset-btn')).toBeInTheDocument();
     expect(loginWrapper.queryByText('login.request_account')).toBeInTheDocument();
 
     fireEvent.change(loginWrapper.getByPlaceholderText('common:form_placeholders.phone_number'), {
@@ -155,6 +156,14 @@ describe('Login Screen', () => {
     expect(loginWrapper.queryByTestId('interest')).toBeInTheDocument();
     expect(loginWrapper.queryByTestId('impact')).toBeInTheDocument();
     expect(loginWrapper.getByText('common:form_actions.send_email')).toBeInTheDocument();
+
+    fireEvent.click(loginWrapper.queryByTestId('password-reset-btn'));
+    // assert password reset modal visible
+    expect(loginWrapper.queryByText('users.confirm_reset_password')).toBeInTheDocument();
+    const resetBtn = loginWrapper.queryByText('common:misc.reset');
+    expect(resetBtn).toBeInTheDocument();
+    const closeIcon = loginWrapper.queryByTestId('password-reset-close-icon');
+    expect(closeIcon).toBeInTheDocument();
   });
 
   it('should trigger login with email', async () => {
@@ -261,9 +270,9 @@ describe('Login Screen', () => {
 
       fireEvent.click(googleLoginBtn);
 
-      expect(window.localStorage.getItem(AUTH_FORWARD_URL_KEY)).toEqual('/tasks')
-      expect(assignMock).toHaveBeenCalledWith(googleLoginUrl)
-    }, 10)
+      expect(window.localStorage.getItem(AUTH_FORWARD_URL_KEY)).toEqual('/tasks');
+      expect(assignMock).toHaveBeenCalledWith(googleLoginUrl);
+    }, 10);
   });
 
   it('should trigger facebook oauth button and persist in localStorage', async () => {
@@ -282,8 +291,8 @@ describe('Login Screen', () => {
 
       fireEvent.click(fbLoginBtn);
 
-      expect(window.localStorage.getItem(AUTH_FORWARD_URL_KEY)).toEqual('/tasks')
-      expect(assignMock).toHaveBeenCalledWith(fbLoginUrl)
-    }, 10)
+      expect(window.localStorage.getItem(AUTH_FORWARD_URL_KEY)).toEqual('/tasks');
+      expect(assignMock).toHaveBeenCalledWith(fbLoginUrl);
+    }, 10);
   });
 });

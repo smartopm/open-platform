@@ -65,6 +65,7 @@ export default function UserPasswordResetModal({ openModal, setOpenModal }) {
           margin="normal"
           type="email"
           required
+          size="small"
           fullWidth
           name="email"
           value={value.email}
@@ -91,14 +92,8 @@ export default function UserPasswordResetModal({ openModal, setOpenModal }) {
     </Dialog>
   );
 }
-const User = PropTypes.shape({
-  id: PropTypes.string,
-  name: PropTypes.string,
-  username: PropTypes.string,
-});
 
 UserPasswordResetModal.propTypes = {
   openModal: PropTypes.bool.isRequired,
   setOpenModal: PropTypes.func.isRequired,
-  data: PropTypes.shape({ user: User }).isRequired,
 };
