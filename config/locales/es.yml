@@ -397,7 +397,8 @@ es:
     form_property:
       not_found: Formulario de Propiedad no encontrado
     form:
-      draft_exist: Hay una versión de este formulario en modo borrador disponible en su perfil, envíe para hacer un nuevo borrador
+      draft_exist: Envíe el formulario de borrador existente para hacer un nuevo envío
+        de borrador
       not_found: Formulario no encontrado
     general:
       model_not_found: "%{model} no encontrado"
@@ -508,12 +509,20 @@ es:
     wallet:
       funds_not_sufficient: El monto asignado no es suficiente para el pago
   general:
+    accept_qrcode: Sí, enviar Código QR.
+    denied: denegado
+    granted: concedido
     guest_invite_message: Utilice el enlace de invitación %{invite_link} para acceder
       a la plataforma. Gracias, %{community_name}
+    guest_invite_qrcode_message: Te acaban de invitar a visitar %{community_name},
+      Este es el enlace de tu invitación %{invite_link}. O si prefieres, ¿Te gustaría
+      que te enviemos un código QR por acá?
+    reject_qrcode: No.
     task_reminder: RECORDATORIO, Por favor complete su tarea antes/a la fecha de finalización
       (%{due_date}). Revise su tarea en %{task_link}. Gracias, %{community_name}
     thanks_for_using_our_app: Gracias por usar nuestra aplicación, por favor use este
       enlace para darnos su opinión %{feedback_link}
+    visitor_granted_access: El acceso acaba de ser %{action} a tu invitado "%{visitor_name}".
   internet_off: Parece que no hay conexión de internet.
   invalid_phone_number: El número de teléfono no es válido
   notification_description:
