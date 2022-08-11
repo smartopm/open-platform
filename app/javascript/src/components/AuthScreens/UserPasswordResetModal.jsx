@@ -1,38 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Button from '@mui/material/Button';
-import { Dialog, DialogTitle, DialogContent, Box, IconButton } from '@mui/material';
-import { Spinner } from '../../../shared/Loading';
-import { ResetUserPasswordMutation } from '../../../graphql/mutations/user';
-import useMutationWrapper from '../../../shared/hooks/useMutationWrapper';
-import useStateIfMounted from '../../../shared/hooks/useStateIfMounted';
+import { Dialog, DialogTitle, DialogContent, Box, IconButton, TextField } from '@mui/material';
+import { Spinner } from '../../shared/Loading';
+import { UserPasswordResetMutation } from '../../graphql/mutations/user';
+import useMutationWrapper from '../../shared/hooks/useMutationWrapper';
 
-export default function PasswordRest({ openModal, setOpenModal, data }) {
+export default function UserPasswordResetModal({ openModal, setOpenModal }) {
   const { t } = useTranslation(['users', 'common']);
-  const [username, setUsername] = useStateIfMounted('');
-  const [password, setPassword] = useStateIfMounted('');
   const [resetPassword, loading] = useMutationWrapper(
-    ResetUserPasswordMutation,
-    resetPassData => setDataValues(resetPassData),
-    t('common:misc.reset_password_successful')
+    UserPasswordResetMutation,
+    reset,
+    t('common:misc.reset_password_success_message')
   );
 
-  function setDataValues(resetData) {
-    setUsername(resetData?.resetPassword?.username);
-    setPassword(resetData?.resetPassword?.password);
+  const initialValues = {
+    email: '',
+  };
+  const [value, setValue] = useState(initialValues);
+  function reset() {
+    setOpenModal(false);
   }
 
-  function resetModalState() {
-    setOpenModal(false);
-    setUsername('');
-    setPassword('');
-  }
   function handlePasswordReset() {
     resetPassword({
-      userId: data.user.id,
+      email: value.email,
     });
   }
 
@@ -52,7 +47,7 @@ export default function PasswordRest({ openModal, setOpenModal, data }) {
           <Box>
             <IconButton
               data-testid="password-reset-close-icon"
-              onClick={() => resetModalState()}
+              onClick={() => setOpenModal(false)}
               size="large"
             >
               <CloseIcon />
@@ -62,31 +57,27 @@ export default function PasswordRest({ openModal, setOpenModal, data }) {
       </DialogTitle>
 
       <DialogContent style={{ paddingTop: '6px', paddingBottom: '10px' }}>
-        {!username && !password && (
-          <>
-            <Typography gutterBottom>{t('common:misc.reset_disclaimer')}</Typography>
-          </>
-        )}
-
-        {username && password && (
-          <>
-            <Typography gutterBottom>{t('common:misc.copy_credentials')}</Typography>
-            <br />
-            <Typography variant="subtitle2" gutterBottom>
-              {t('users.username', { username })}
-            </Typography>
-            <Typography variant="subtitle2" gutterBottom>
-              {t('users.password', { password })}
-            </Typography>
-          </>
-        )}
+        <Typography gutterBottom>{t('common:misc.reset_disclaimer')}</Typography>
+        <Typography gutterBottom>{t('common:misc.enter_email')}</Typography>
+        <br />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          type="email"
+          required
+          fullWidth
+          name="email"
+          value={value.email}
+          label={t('common:form_fields.email')}
+          onChange={event => setValue({ ...value, email: event.target.value })}
+        />
       </DialogContent>
 
       <Box style={{ textAlign: 'center', marginBottom: 16 }}>
         <Button
           disableElevation
           onClick={handlePasswordReset}
-          disabled={loading || username !== '' || password !== ''}
+          disabled={loading}
           startIcon={loading && <Spinner />}
           color="primary"
           variant="contained"
@@ -106,7 +97,7 @@ const User = PropTypes.shape({
   username: PropTypes.string,
 });
 
-PasswordRest.propTypes = {
+UserPasswordResetModal.propTypes = {
   openModal: PropTypes.bool.isRequired,
   setOpenModal: PropTypes.func.isRequired,
   data: PropTypes.shape({ user: User }).isRequired,

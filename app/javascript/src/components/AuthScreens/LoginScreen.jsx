@@ -30,6 +30,7 @@ import {
 import { extractCountry } from '../../utils/helpers';
 import CenteredContent from '../../shared/CenteredContent';
 import SignupDialog from './SignupDialog';
+import UserPasswordResetModal from './UserPasswordResetModal';
 import PasswordInput from '../../shared/PasswordInput';
 import useMutationWrapper from '../../shared/hooks/useMutationWrapper';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
@@ -42,6 +43,7 @@ export default function LoginScreen({ currentCommunity }) {
   const [userLogin, setUserLogin] = useState({ email: '', phone: '' });
   const [emailLoginSent, setEmailLoginSet] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [values, setValues] = useState({
     username: '',
     password: '',
@@ -111,6 +113,10 @@ export default function LoginScreen({ currentCommunity }) {
     setOpen(!open);
   }
 
+  function handleEmailInputModal() {
+    setOpenModal(true);
+  }
+
   function handleUserLogin(event, type = 'input') {
     // submit on both click and Enter Key pressed
     if (event.keyCode === 13 || type === 'btnClick') {
@@ -161,6 +167,8 @@ export default function LoginScreen({ currentCommunity }) {
         handleModal={handleModal}
         currentCommunity={currentCommunity}
       />
+      {/* UserPasswordResetModal */}
+      <UserPasswordResetModal openModal={openModal} setOpenModal={setOpenModal} />
 
       <Container maxWidth="xs">
         <CenteredContent>
@@ -312,6 +320,18 @@ export default function LoginScreen({ currentCommunity }) {
           >
             <u>
               <strong>{t('login.request_account')}</strong>
+            </u>
+          </Button>
+
+          <Button
+            size="medium"
+            id="trigger-modal-dialog"
+            data-testid="trouble-logging-in-btn"
+            onClick={handleEmailInputModal}
+            style={{ textTransform: 'none' }}
+          >
+            <u>
+              <strong>{t('login.forgot_password')}</strong>
             </u>
           </Button>
         </CenteredContent>
