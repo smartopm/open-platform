@@ -12,7 +12,7 @@ module Mutations
         user = return_user_or_error(vals[:email])
         password = SecureRandom.alphanumeric
 
-        unless user.update(username: username(user), password: password,
+        unless user.update(username: user.autogenerate_username, password: password,
                            has_reset_password: false)
           raise GraphQL::ExecutionError, user.errors.full_messages&.join(', ')
         end
@@ -20,15 +20,6 @@ module Mutations
         eventlog = user.generate_events('password_reset', user)
         ActionFlowJob.perform_later(eventlog, { password: password })
         { success: true }
-      end
-
-      def username(user)
-        if user.username.nil?
-          user.name.split
-              .join.downcase << SecureRandom.uuid.slice(0, 3)
-        else
-          user.username
-        end
       end
 
       def return_user_or_error(email)
