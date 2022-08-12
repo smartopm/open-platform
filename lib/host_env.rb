@@ -11,6 +11,8 @@ class HostEnv
       case community.name
       when 'DoubleGDP'
         return 'demo.doublegdp.com'
+      when 'Testing'
+        return 'testing.doublegdp.com'
       when 'Ciudad Morazán'
         return 'morazancity.doublegdp.com'
       when 'Tilisi'
