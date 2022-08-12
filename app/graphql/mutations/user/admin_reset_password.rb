@@ -11,7 +11,7 @@ module Mutations
 
       def resolve(vals)
         validate_authorization(:user, :can_reset_user_password)
-        user = context[:site_community].users.find(vals[:user_id])
+        user = find_user_by_id(vals[:user_id])
         password = SecureRandom.alphanumeric
 
         unless user.update(username: username(user), password: password,
@@ -31,6 +31,10 @@ module Mutations
         else
           user.username
         end
+      end
+
+      def find_user_by_id(user_id)
+        context[:site_community].users.find(user_id)
       end
     end
   end
