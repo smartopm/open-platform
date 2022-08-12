@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
-import { Utils as QbUtils } from 'react-awesome-query-builder';
 import { ResetUserPasswordMutation } from '../../../graphql/mutations/user';
 import PasswordReset from '../Components/PasswordReset';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
@@ -41,7 +40,6 @@ describe('Password Reset component', () => {
       openModal: true,
       setOpenModal: openModalHandler,
     };
-    jest.spyOn(QbUtils, 'uuid').mockReturnValue('a889a98b-0123-4456-b89a-b1825459775b');
     const container = render(
       <MockedProvider mocks={[passwordResetDataMock]} addTypename={false}>
         <Context.Provider value={authState}>

@@ -268,11 +268,11 @@ export default function LoginScreen({ currentCommunity }) {
                 id="outlined-adornment-amount"
                 value={userLogin.email}
                 onChange={event => setUserLogin({ email: event.target.value, phone: '' })}
-                startAdornment={
+                startAdornment={(
                   <InputAdornment position="start">
                     <EmailIcon />
                   </InputAdornment>
-                }
+                )}
                 placeholder={t('login.login_email')}
                 label={t('login.login_email')}
                 data-testid="email_text_input"
