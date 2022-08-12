@@ -11,18 +11,29 @@ RSpec.describe HostEnv do
   let!(:community1) do
     create(:community, name: 'DoubleGDP')
   end
-
+  
   let!(:community2) do
     create(:community, name: 'Ciudad Morazán')
   end
-
+  
   let!(:community3) do
     create(:community, name: 'Tilisi')
+  end
+  
+  let!(:community4) do
+    create(:community, name: 'Testing')
   end
 
   describe 'case doubleGDP' do
     it 'returns correct base url for doubleGDP' do
       url = HostEnv.base_url(community1)
+      expect(url).to eql 'demo.doublegdp.com'
+    end
+  end
+
+  describe 'case Testing' do
+    it 'returns correct base url for Testing' do
+      url = HostEnv.base_url(community4)
       expect(url).to eql 'testing.doublegdp.com'
     end
   end

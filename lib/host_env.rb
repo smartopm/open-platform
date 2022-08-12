@@ -9,6 +9,8 @@ class HostEnv
   def self.base_url(community)
     if ENV['APP_ENV'].eql?('production')
       case community.name
+      when 'DoubleGDP'
+        return 'demo.doublegdp.com'
       when 'Testing'
         return 'testing.doublegdp.com'
       when 'Ciudad Morazán'
