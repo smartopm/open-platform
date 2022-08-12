@@ -18,6 +18,7 @@ describe('FormPropertyWrapper', () => {
       },
       editMode: true,
       number: 12,
+      childreen: <div>Child</div>
     };
     const container = render(
       <MockedProvider>
