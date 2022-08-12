@@ -11,15 +11,15 @@ RSpec.describe HostEnv do
   let!(:community1) do
     create(:community, name: 'DoubleGDP')
   end
-  
+
   let!(:community2) do
     create(:community, name: 'Ciudad Morazán')
   end
-  
+
   let!(:community3) do
     create(:community, name: 'Tilisi')
   end
-  
+
   let!(:community4) do
     create(:community, name: 'Testing')
   end
