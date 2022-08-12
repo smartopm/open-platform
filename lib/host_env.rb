@@ -10,7 +10,7 @@ class HostEnv
     if ENV['APP_ENV'].eql?('production')
       case community.name
       when 'DoubleGDP'
-        return 'demo.doublegdp.com'
+        return 'testing.doublegdp.com'
       when 'Ciudad Morazán'
         return 'morazancity.doublegdp.com'
       when 'Tilisi'

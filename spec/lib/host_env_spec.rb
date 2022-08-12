@@ -23,7 +23,7 @@ RSpec.describe HostEnv do
   describe 'case doubleGDP' do
     it 'returns correct base url for doubleGDP' do
       url = HostEnv.base_url(community1)
-      expect(url).to eql 'demo.doublegdp.com'
+      expect(url).to eql 'testing.doublegdp.com'
     end
   end
 
