@@ -5,6 +5,7 @@ import imageCompression from 'browser-image-compression';
 import { useTranslation } from 'react-i18next';
 import { CreateUpload } from './mutations';
 import { SnackbarContext } from '../shared/snackbar/Context';
+import { getFileType, isFileSizeValid } from '../utils/helpers';
 
 // FileUploader
 // Steps:
@@ -118,9 +119,9 @@ const useFileUpload = ({ client: apolloClient }) => {
   const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const onChange = async (file, { compressImage = true, maxWidthOrHeight = undefined } = {}) => {
-    const checkFileType = file.type.split('/')[0] === 'image';
+    const checkFileType = getFileType(file) === 'image';
 
-    if (file.size > 1000000 && checkFileType) {
+    if (!isFileSizeValid(file) && checkFileType) {
       return showSnackbar({ type: messageType.error, message: t('errors.image_size_not_allowed') });
     }
 
