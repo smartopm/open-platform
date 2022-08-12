@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   IconButton,
   Menu,
@@ -20,6 +20,8 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useTranslation } from 'react-i18next';
 import { dateToString } from '../../../components/DateContainer';
 import { Spinner } from '../../../shared/Loading';
+import { objectAccessor } from '../../../utils/helpers';
+import { TaskContext } from '../Context';
 
 export default function TaskSubTask({
   taskId,
@@ -35,6 +37,8 @@ export default function TaskSubTask({
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedSubTask, setSelectedSubTask] = useState(null);
   const { t } = useTranslation(['task', 'common']);
+
+  const { updateStatus } = useContext(TaskContext);
 
   const menuOpen = Boolean(anchorEl);
 
@@ -85,7 +89,7 @@ export default function TaskSubTask({
                 className={classes.bodyAlign}
                 data-testid="body"
               >
-                <Grid item md={2}>
+                <Grid item md={2} style={{cursor: objectAccessor(updateStatus, task.id) ? 'not-allowed' : 'pointer'}}>
                   <IconButton
                     aria-controls="task-completion-toggle-button"
                     aria-haspopup="true"
@@ -93,6 +97,7 @@ export default function TaskSubTask({
                     onClick={() => handleTaskCompletion(task.id, !task.completed)}
                     style={{ backgroundColor: 'transparent', margin: '-10px 0 0 -10px' }}
                     size="large"
+                    disabled={objectAccessor(updateStatus, task.id)}
                   >
                     {task.completed ? (
                       <CheckCircleIcon htmlColor="#4caf50" data-testid="check-icon" />
@@ -252,7 +257,7 @@ export default function TaskSubTask({
 TaskSubTask.defaultProps = {
   loading: null,
   fetchMore: () => {},
-  data: {}
+  data: {},
 };
 
 TaskSubTask.propTypes = {
@@ -263,7 +268,7 @@ TaskSubTask.propTypes = {
   fetchMore: PropTypes.func,
   data: PropTypes.shape({
     taskSubTasks: PropTypes.arrayOf(PropTypes.shape())
-  })
+  }),
 };
 
 const useStyles = makeStyles(() => ({

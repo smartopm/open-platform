@@ -12,8 +12,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import Card from '../../../../shared/Card';
-import { removeNewLines, sanitizeText } from '../../../../utils/helpers';
+import { objectAccessor, removeNewLines, sanitizeText } from '../../../../utils/helpers';
 import CustomProgressBar from '../../../../shared/CustomProgressBar';
+import { TaskContext } from '../../Context';
 
 export default function StepItem({
   step,
@@ -25,6 +26,7 @@ export default function StepItem({
   handleStepCompletion
 }) {
   const authState = React.useContext(AuthStateContext);
+  const { updateStatus } = React.useContext(TaskContext)
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
 
@@ -35,7 +37,13 @@ export default function StepItem({
   const canCompleteTask = taskPermissions.permissions.includes('can_mark_task_as_complete');
 
   return (
-    <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
+    <Card
+      clickData={{clickable, handleClick}}
+      styles={styles}
+      contentStyles={{
+        padding: '4px',
+        cursor: objectAccessor(updateStatus, step.id) ? 'not-allowed' : 'pointer' }}
+    >
       <Grid container>
         <Grid
           item
@@ -51,8 +59,9 @@ export default function StepItem({
                 aria-haspopup="true"
                 data-testid="process-check-box"
                 onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
-                style={{backgroundColor: 'transparent', cursor: canCompleteTask ? 'pointer' : 'not-allowed' }}
+                style={{backgroundColor: 'transparent', cursor: (canCompleteTask) ? 'pointer' : 'not-allowed' }}
                 size="large"
+                disabled={objectAccessor(updateStatus, step.id)}
               >
                 { step.completed ? (
                   <CheckCircleIcon htmlColor="#4caf50" data-testid="task-completed-icon" />
@@ -130,7 +139,7 @@ StepItem.defaultProps = {
   handleClick: null,
   styles: {},
   openSubSteps: false,
-  handleOpenSubStepsClick: null
+  handleOpenSubStepsClick: null,
 }
 StepItem.propTypes = {
   step: PropTypes.shape(Step).isRequired,
