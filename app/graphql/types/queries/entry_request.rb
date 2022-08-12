@@ -186,19 +186,23 @@ module Types::Queries::EntryRequest
   end
 
   def people_entered(entry_requests, duration)
+    return entry_requests.where.not(granted_at: nil) if duration == 'All'
+
     start_time = duration_based_start_time(duration)
     entry_requests
       .where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
   end
 
   def people_exited(entry_requests, duration)
+    return entry_requests.where.not(exited_at: nil) if duration == 'All'
+
     start_time = duration_based_start_time(duration)
     entry_requests
       .where('exited_at IS NOT NULL AND exited_at >= ? AND exited_at <= ?', start_time, end_time)
   end
 
   def all_people(entry_requests, duration)
-    return entry_requests if duration.blank?
+    return entry_requests if duration.blank? || duration == 'All'
 
     start_time = duration_based_start_time(duration)
     entry_requests
