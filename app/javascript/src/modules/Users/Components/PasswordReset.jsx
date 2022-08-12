@@ -21,8 +21,8 @@ export default function PasswordRest({ openModal, setOpenModal, data }) {
   );
 
   function setDataValues(resetData) {
-    setUsername(resetData?.resetPassword?.username);
-    setPassword(resetData?.resetPassword?.password);
+    setUsername(resetData?.adminResetPassword?.username);
+    setPassword(resetData?.adminResetPassword?.password);
   }
 
   function resetModalState() {
