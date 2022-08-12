@@ -17,17 +17,14 @@ export default function UserPasswordResetModal({ openModal, setOpenModal }) {
     t('common:misc.reset_password_success_message')
   );
 
-  const initialValues = {
-    email: '',
-  };
-  const [value, setValue] = useState(initialValues);
+  const [email, setEmail] = useState('');
   function reset() {
     setOpenModal(false);
   }
 
   function handlePasswordReset() {
     resetPassword({
-      email: value.email,
+      email,
     });
   }
 
@@ -68,9 +65,9 @@ export default function UserPasswordResetModal({ openModal, setOpenModal }) {
           size="small"
           fullWidth
           name="email"
-          value={value.email}
+          value={email}
           label={t('common:form_fields.email')}
-          onChange={event => setValue({ ...value, email: event.target.value })}
+          onChange={event => setEmail(event.target.value)}
         />
       </DialogContent>
 
