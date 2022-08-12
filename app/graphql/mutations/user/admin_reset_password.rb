@@ -21,7 +21,7 @@ module Mutations
 
         eventlog = context[:current_user].generate_events('password_reset', user)
         ActionFlowJob.perform_later(eventlog, { password: password })
-        { success: true, username: user.username, password: password }
+        { username: user.username, password: password }
       end
 
       def username(user)
