@@ -330,9 +330,9 @@
     "edit_entry": "Edit Entry",
     "lead_log_successful": "Lead log succesfully updated",
     "process_detail_page": "Project Detail",
-    "copy_credentials": "The details below are the login credentials for this account, you may want to copy them as you will not have acess to them again once you close the modal.",
+    "copy_credentials": "The details below are the login credentials for this account, you may want to copy them as you will not have access to them again once you close the modal.",
     "enter_email": "Please provide email registered with your account to receive  account reset details.",
-    "reset_disclaimer": "You are about to reset the password for the current account. This is an irreversable action.",
+    "reset_disclaimer": "You are about to reset the password for the current account. This is an irreversible action.",
     "request_forms": "Application forms and permits",
     "need_or_forgot_password": "Need a password or forgot one?",
     "required": "Required"
