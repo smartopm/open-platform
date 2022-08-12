@@ -1,8 +1,10 @@
-import { useReducer, useEffect } from 'react';
+import { useReducer, useEffect, useContext } from 'react';
 import { FileChecksum } from '@rails/activestorage/src/file_checksum';
 import imageCompression from 'browser-image-compression';
 
+import { useTranslation } from 'react-i18next';
 import { CreateUpload } from './mutations';
+import { SnackbarContext } from '../shared/snackbar/Context';
 
 // FileUploader
 // Steps:
@@ -112,9 +114,16 @@ const reducer = (state, action) => {
 
 const useFileUpload = ({ client: apolloClient }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { t } = useTranslation('common');
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const onChange = async (file, { compressImage = true, maxWidthOrHeight = undefined } = {}) => {
     const checkFileType = file.type.split('/')[0] === 'image';
+
+    if (file.size > 1000000 && checkFileType) {
+      return showSnackbar({ type: messageType.error, message: t('errors.image_size_not_allowed') });
+    }
+
     if (!checkFileType || !compressImage) {
       return startUpload(file);
     }
