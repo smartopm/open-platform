@@ -79,7 +79,7 @@ RSpec.describe Types::Queries::User do
                           email: 'ab@dc.ef', state: 'valid', role: admin_role)
     end
     let!(:another_admin) do
-      create(:admin_user, community_id: current_user.community_id,
+      create(:admin_user, name: 'another_admin', community_id: current_user.community_id,
                           email: 'cd@dc.ef', state: 'valid', role: admin_role)
     end
 
