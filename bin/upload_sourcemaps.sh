@@ -6,10 +6,8 @@ echo "Uploading source maps for version $version!"
 
 domains=( "app" "testing" "testing-staging" "morazancity" "tilisi" "greenpark" "enyimba" )
 for domain in "${domains[@]}"; do
-	echo "$i"
   for path in $(find app/assets/builds -name "*.js"); do
-    path=$(basename "$path")
-    url=https://${domain}.doublegdp.com/assets/${path}
+    url=https://${domain}.doublegdp.com/${path}
     source_map="@$path.map"
 
     echo "Uploading source map for $url"

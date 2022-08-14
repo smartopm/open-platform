@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const { execSync } = require("child_process");
 
 const mode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
-const devtool = process.env.NODE_ENV === 'development' ? 'eval' : 'source-map';
+const devtool = process.env.NODE_ENV === 'development' ? 'eval' : 'hidden-source-map';
 
 module.exports = {
   mode,
