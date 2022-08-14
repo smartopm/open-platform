@@ -4,12 +4,11 @@
         captureUncaught: true,
         captureUnhandledRejections: true,
         payload: {
-          environment: "production",
-          version: "<%= ENV['HEROKU_RELEASE_VERSION'] || '' %>",
+          environment: 'production',
           client: {
             javascript: {
               source_map_enabled: true,
-              code_version: "<%= ENV['HEROKU_SLUG_COMMIT'] %>",
+              code_version: process.env.CODE_VERSION,
               guess_uncaught_frames: true
             }
           }

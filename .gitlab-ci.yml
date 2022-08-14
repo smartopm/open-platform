@@ -130,6 +130,20 @@ eslint:
     - curl -o- -L https://yarnpkg.com/install.sh | bash
     - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
     - yarn install
+sourcemaps:
+  stage: test
+  allow_failure: false
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq cmake nodejs
+    - curl -o- -L https://yarnpkg.com/install.sh | bash
+    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+    - yarn install
+    - yarn build
+  script:
+    - sh ./bin/upload_sourcemaps.sh $ROLLBAR_POST_SERVER_TOKEN
+  except:
+    - tags
+    - schedules
 
 start_prod_push:
   extends: .base_db
