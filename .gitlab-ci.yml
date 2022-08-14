@@ -140,7 +140,7 @@ sourcemaps:
     - yarn install
     - yarn build
   script:
-    - sh ./bin/upload_sourcemaps.sh $ROLLBAR_POST_SERVER_TOKEN
+    - ./bin/upload_sourcemaps.sh $ROLLBAR_POST_SERVER_TOKEN
   except:
     - tags
     - schedules

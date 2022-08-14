@@ -8,9 +8,8 @@ domains=( "app" "testing" "testing-staging" "morazancity" "tilisi" "greenpark" "
 for domain in "${domains[@]}"; do
 	echo "$i"
   for path in $(find app/assets/builds -name "*.js"); do
-    url=https://${domain}.doublegdp.com/${path}
-
-    # a path to a corresponding source map file
+    path=$(basename "$path")
+    url=https://${domain}.doublegdp.com/assets/${path}
     source_map="@$path.map"
 
     echo "Uploading source map for $url"
