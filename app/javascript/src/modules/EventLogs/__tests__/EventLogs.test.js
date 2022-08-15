@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 
-
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import EventLogs from '../Components/EventLogs';
