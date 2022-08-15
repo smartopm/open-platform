@@ -58,7 +58,7 @@ export default function ConfirmCodeScreen({ match }) {
       })
       .catch(err => {
         setError(err.message.replace(/GraphQL error:/, ''));
-        setMsg(null)
+        setMsg(null);
         setIsLoading(false);
       });
   }
@@ -91,15 +91,11 @@ export default function ConfirmCodeScreen({ match }) {
       </CenteredContent>
       <CenteredContent>
         <div style={{ marginTop: 30, marginBottom: 24 }}>
-          <Typography color="textSecondary">
-            <Box sx={{ color: 'error.main' }}>
-              {error}
-            </Box>
+          <Typography color="textSecondary" component="span">
+            <Box sx={{ color: 'error.main' }}>{error}</Box>
           </Typography>
-          <Typography>
-            <Box sx={{ color: 'primary.main' }}>
-              {msg}
-            </Box>
+          <Typography component="span">
+            <Box sx={{ color: 'primary.main' }}>{msg}</Box>
           </Typography>
         </div>
       </CenteredContent>
