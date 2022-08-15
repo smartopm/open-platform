@@ -286,7 +286,16 @@ module Users
 
     def auto_generate_username_password
       self.password = SecureRandom.alphanumeric
-      self.username = name.split.join.downcase << SecureRandom.uuid.slice(0, 5)
+      self.username = name.split.join.downcase << SecureRandom.uuid.slice(0, 3)
+    end
+
+    def autogenerate_username
+      if username.nil?
+        name.split
+            .join.downcase << SecureRandom.uuid.slice(0, 3)
+      else
+        username
+      end
     end
 
     def log_user_create_event

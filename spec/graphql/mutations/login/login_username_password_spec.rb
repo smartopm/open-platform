@@ -29,7 +29,7 @@ RSpec.describe Mutations::Login::LoginUsernamePassword do
       before { allow(SecureRandom).to receive(:uuid).and_return('12abcd1234') }
       it 'login is successful and returns user' do
         variables = {
-          username: 'marktest12abc',
+          username: 'marktest12a',
           password: '12abcd1234',
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,

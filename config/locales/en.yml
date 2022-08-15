@@ -399,6 +399,7 @@ en:
       merge_failed: Failed to merge the user account
       not_found: This account does not exist. Submit a request to create an account or use the correct account information to log in
       not_found_with_id: Could not find User with id %{user_id}
+      not_found_with_email: An account with this %{email} does not exist
       update_failed: Failed to migrate the user details
       does_not_exist: User does not exists
       invalid_expired_token: Invalid or expired phone token

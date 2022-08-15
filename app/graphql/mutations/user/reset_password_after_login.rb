@@ -11,7 +11,9 @@ module Mutations
 
       def resolve(vals)
         user = context[:site_community].users.find(vals[:user_id])
-        auth_object = user.reset_password_on_first_login(user.username, vals[:password])
+        auth_object = user.reset_password_on_first_login(
+          user.username, vals[:password]
+        )
         raise_reset_password_error if auth_object.nil?
         auth_token = auth_object.auth_token
         {
