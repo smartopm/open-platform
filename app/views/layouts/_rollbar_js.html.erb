@@ -4,8 +4,7 @@
         captureUncaught: true,
         captureUnhandledRejections: true,
         payload: {
-          environment: "production",
-          version: "<%= ENV['HEROKU_RELEASE_VERSION'] || '' %>",
+          environment: 'production',
           client: {
             javascript: {
               source_map_enabled: true,
@@ -25,6 +24,20 @@
             return true;
           }
           return false;
+        },
+        transform: function(payload) {
+          var trace = payload.body.trace;
+          var locRegex = /^(https?):\/\/[a-zA-Z0-9._-]+\.doublegdp\.com(.*)/;
+          if (trace && trace.frames) {
+            for (var i = 0; i < trace.frames.length; i++) {
+              var filename = trace.frames[i].filename;
+              if (filename) {
+                var m = filename.match(locRegex);
+                // Be sure that the minified_url when uploading includes 'dynamichost'
+                trace.frames[i].filename = m[1] + '://dynamichost' + m[2];          
+              }
+            }
+          }
         }
       };
       // Rollbar Snippet
