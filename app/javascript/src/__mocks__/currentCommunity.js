@@ -2,7 +2,7 @@ import { CurrentCommunityQuery } from '../modules/Community/graphql/community_qu
 
 const currentCommunityMock = {
   request: {
-    query: CurrentCommunityQuery
+    query: CurrentCommunityQuery,
   },
   result: {
     data: {
@@ -11,7 +11,7 @@ const currentCommunityMock = {
         id: '8d66a68a-ded4-4f95-b9e2-62811d2f395f',
         leadMonthlyTargets: [
           { division: 'Africa', target: '15' },
-          { division: 'China', target: '15' }
+          { division: 'China', target: '15' },
         ],
         name: 'Test Community',
         supportEmail: [{ email: 'support@test.com', category: 'customer_care' }],
@@ -33,10 +33,11 @@ const currentCommunityMock = {
         subAdministrator: null,
         bankingDetails: null,
         smsPhoneNumbers: null,
-        emergencyCallNumber: null
-      }
-    }
-  }
+        emergencyCallNumber: null,
+        displayName: null,
+      },
+    },
+  },
 };
 
 export default currentCommunityMock;

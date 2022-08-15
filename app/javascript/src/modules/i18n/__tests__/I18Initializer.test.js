@@ -10,18 +10,19 @@ jest.mock('react-i18next', () => ({
     return {
       t: str => str,
       i18n: {
-        changeLanguage: () => new Promise(() => {})
-      }
+        changeLanguage: () => new Promise(() => {}),
+      },
     };
-  }
+  },
 }));
 
 describe('I18n Initializer component', () => {
   it('renders with no errors', async () => {
     const mock = {
       request: {
-        query: CurrentCommunityQuery
+        query: CurrentCommunityQuery,
       },
+
       result: {
         data: {
           currentCommunity: {
@@ -48,10 +49,11 @@ describe('I18n Initializer component', () => {
             subAdministrator: null,
             bankingDetails: null,
             smsPhoneNumbers: null,
-            emergencyCallNumber: null
-          }
-        }
-      }
+            emergencyCallNumber: null,
+            displayName: null,
+          },
+        },
+      },
     };
     // this is a dummy component so we don't get expect much from it
     render(

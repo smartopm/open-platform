@@ -176,7 +176,11 @@ export default function LoginScreen({ currentCommunity }) {
           marginTop="20px"
           variant="h6"
         >
-          {t('login.welcome', { appName: currentCommunity?.name })}
+          {t('login.welcome', {
+            appName: currentCommunity?.displayName
+              ? currentCommunity?.displayName
+              : currentCommunity?.name,
+          })}
         </Typography>
         <br />
         <br />
@@ -308,6 +312,7 @@ LoginScreen.defaultProps = {
 LoginScreen.propTypes = {
   currentCommunity: PropTypes.shape({
     name: PropTypes.string,
+    displayName: PropTypes.string,
     imageUrl: PropTypes.string,
     locale: PropTypes.string,
   }),
