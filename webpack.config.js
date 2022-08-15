@@ -1,9 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
-const { execSync } = require("child_process");
 
 const mode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
-const devtool = process.env.NODE_ENV === 'development' ? 'eval' : 'hidden-source-map';
+const devtool = process.env.NODE_ENV === 'development' ? 'eval' : 'source-map';
 
 module.exports = {
   mode,
@@ -44,9 +43,6 @@ module.exports = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
-    }),
-    new webpack.DefinePlugin({
-      'process.env.CODE_VERSION': JSON.stringify(execSync("git rev-parse --short HEAD").toString().trim()),
     })
   ]
 };
