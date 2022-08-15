@@ -18,7 +18,7 @@ import AuthStateProvider, {
 } from '../src/containers/Provider/AuthStateProvider';
 import UserShow from '../src/modules/Users/Containers/UserShow';
 import IDCard from '../src/containers/IdCard';
-import EventLogs from '../src/modules/LogBook/Components/EventLogs';
+import EventLogs from '../src/modules/EventLogs/Components/EventLogs';
 import Loading from '../src/shared/Loading';
 import '../src/modules/i18n';
 import Map from '../src/containers/Map';
@@ -454,8 +454,6 @@ const App = () => {
                                       {/* TODO: Remove this wrapper after routes move to their modules */}
                                       <AdminRoutes>
                                         <Switch>
-                                          {/* TODO: Migrate to EventLogs module */}
-                                          <Route path="/event_logs" component={EventLogs} />
                                           {/* TODO: Migrate to Feedback module */}
                                           <Route path="/feedbacks" component={FeedbackPage} />
                                         </Switch>
