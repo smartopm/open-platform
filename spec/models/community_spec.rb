@@ -35,6 +35,7 @@ RSpec.describe Community, type: :model do
     it { is_expected.to have_db_column(:emergency_call_number).of_type(:string) }
     it { is_expected.to have_db_column(:ga_id).of_type(:string) }
     it { is_expected.to have_db_column(:payment_keys).of_type(:json) }
+    it { is_expected.to have_db_column(:display_name).of_type(:string) }
     it do
       is_expected.to have_db_column(:domains).of_type(:string)
                                              .with_options(default: [], array: true)
