@@ -3,7 +3,7 @@ import { useQuery } from "react-apollo";
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from "../../../containers/Provider/AuthStateProvider";
 import Loading from "../../../shared/Loading";
-import { AllEventLogsQuery } from "../../../graphql/queries";
+import { AllEventLogsQuery } from "../graphql/queries";
 import ErrorPage from "../../../components/Error";
 import Events from "./Events"
 import PageWrapper from "../../../shared/PageWrapper";
