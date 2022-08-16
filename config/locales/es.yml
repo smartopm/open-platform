@@ -498,6 +498,7 @@ es:
       merge_failed: Falla al fusionar la cuenta del usuario
       not_found: Esta cuenta no existe. Envíe una solicitud para crear una cuenta
         o utilice la información de cuenta correcta para iniciar sesión
+      not_found_with_email: No existe una cuenta con este correo %{email}
       not_found_with_id: No se puede encontrar al Usuario %{user_id}
       token_generation_failed: "¡Lo sentimos! Su intento de acceso no pudo ser completado
         en este momento. ¡Inténtelo de nuevo!"
