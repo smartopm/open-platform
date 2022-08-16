@@ -19,7 +19,7 @@ import { Context as AuthStateContext } from '../../../containers/Provider/AuthSt
 import CenteredContent from '../../../shared/CenteredContent';
 import permissionsCheck from '../../Permissions/utils';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
-import { AllEventLogsQuery } from '../../../graphql/queries';
+import { AllEventLogsQuery } from '../../EventLogs/graphql/queries';
 import SearchInput from '../../../shared/search/SearchInput';
 import PageWrapper from '../../../shared/PageWrapper';
 import MenuList from '../../../shared/MenuList';

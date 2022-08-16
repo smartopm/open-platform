@@ -335,7 +335,8 @@
     "reset_disclaimer": "You are about to reset the password for the current account. This is an irreversible action.",
     "request_forms": "Application forms and permits",
     "need_or_forgot_password": "Need a password or forgot one?",
-    "required": "Required"
+    "required": "Required",
+    "event_logs": "Event Logs"
   },
   "menu": {
     "invoice": "Invoice",

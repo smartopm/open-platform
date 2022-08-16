@@ -4,7 +4,7 @@ import { Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
-import { AllEventLogsQuery } from '../../../graphql/queries';
+import { AllEventLogsQuery } from '../../EventLogs/graphql/queries';
 import { FormPropertiesQuery, FormQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
 import { FormUpdateMutation } from '../graphql/forms_mutation';
