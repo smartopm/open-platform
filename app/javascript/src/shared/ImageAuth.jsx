@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Avatar from '@mui/material/Avatar';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { useFetchMedia, useWindowDimensions } from '../utils/customHooks';
 import { Spinner } from './Loading';
 import { Context } from '../containers/Provider/AuthStateProvider';
@@ -35,14 +34,13 @@ export default function ImageAuth({ imageLink, className, type, alt, style, auth
 
   if (type === 'image') {
     return (
-      <LazyLoadImage
-        alt={alt}
-        height="auto"
-        src={auth ? response.url : imageLink}
-        width="100%"
-        className={className}
+      <img
         data-testid="authenticated_image"
+        src={auth ? response.url : imageLink}
         style={style}
+        className={className}
+        alt={alt}
+        width="100%"
       />
     );
   }

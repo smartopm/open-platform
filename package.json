@@ -77,7 +77,6 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^4.4.1",
     "react-i18next": "^11.0.1",
-    "react-lazy-load-image-component": "^1.5.5",
     "react-leaflet": "^2.6.1",
     "react-leaflet-markercluster": "^2.0.0",
     "react-markdown": "^7.0.0",
