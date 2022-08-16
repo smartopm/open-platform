@@ -6,7 +6,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import IconButton from "@mui/material/IconButton";
 import { Redirect } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import useTimer from '../../utils/customHooks';
+import useTimer from '../../../utils/customHooks';
 
 const styles = theme => ({
     checkedIcon: {

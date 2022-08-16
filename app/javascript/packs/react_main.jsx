@@ -30,14 +30,14 @@ import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
 import ErrorPage from '../src/components/Error';
 import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback';
 import { AUTH_TOKEN_KEY, AUTH_FORWARD_URL_KEY } from '../src/utils/apollo';
-import Feedback from '../src/containers/Activity/Feedback';
-import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
+import Feedback from '../src/modules/FeedBack/Components/Feedback';
+import FeedbackSuccess from '../src/modules/FeedBack/Components/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
 import ProjectsList from '../src/modules/Tasks/Processes/Components/ProjectsList';
 import TaskLists from '../src/modules/Tasks/TaskLists/Components/TaskLists'; // TODO: Remove after Task Lists menu is set up
 import TaskListConfigure from '../src/modules/Tasks/TaskLists/Components/TaskListConfigure';
 import AddSubTasks from '../src/modules/Tasks/TaskLists/Components/AddSubTasks';
-import FeedbackPage from '../src/containers/Activity/AllFeedback';
+import FeedbackPage from '../src/modules/FeedBack/Components/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
 import CampaignCreate from '../src/modules/Campaigns/containers/Campaigns';

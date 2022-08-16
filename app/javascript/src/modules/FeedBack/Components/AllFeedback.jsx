@@ -5,9 +5,9 @@ import { formatISO9075 } from 'date-fns'
 import ThumbDownIcon from '@mui/icons-material/ThumbDown'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import { useTranslation } from 'react-i18next';
-import { allFeedback } from '../../graphql/queries'
-import Loading from '../../shared/Loading'
-import ErrorPage from '../../components/Error'
+import { allFeedback } from '../../../graphql/queries'
+import Loading from '../../../shared/Loading'
+import ErrorPage from '../../../components/Error'
 
 // TODO: move to its own module and use the global theme and possibly reuse this
 
