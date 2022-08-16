@@ -829,3 +829,16 @@ export function isFileSizeValid(file, maxSize = 20000000) {
 export function getFileType(file) {
   return file.type.split('/')[0];
 }
+
+/**
+ * Gets the width of an image
+ * @param {Object} image image object
+ * @param {Function} cbHandler a callback handler
+ */
+export function getImageWidth(image, cbHandler) {
+  let img = new Image()
+  img.src = window.URL.createObjectURL(image)
+  img.onload = () => {
+    cbHandler(img.width)
+  }
+}
