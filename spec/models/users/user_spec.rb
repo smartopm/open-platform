@@ -889,7 +889,7 @@ RSpec.describe Users::User, type: :model do
     end
 
     it 'username is autogeneration successful' do
-      expect(user.username).to eql 'marktest12a'
+      expect(user.username).to eql 'marktest12abc'
     end
   end
 
@@ -923,7 +923,7 @@ RSpec.describe Users::User, type: :model do
       end
 
       it 'reset is not successful' do
-        expect(user.reset_password_on_first_login('marktest12a', '12abcd1234')).to be nil
+        expect(user.reset_password_on_first_login('marktest12abc', '12abcd1234')).to be nil
       end
     end
   end
