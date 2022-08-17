@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { waitFor } from '@testing-library/react';
 import dompurify from 'dompurify';
 import { paymentFilterFields } from '../../utils/constants'
 import { formatTimeZone } from '../../utils/dateutil'
@@ -29,6 +30,9 @@ import {
   replaceDocumentMentions,
   validateRequiredField,
   downloadAsImage,
+  isFileSizeValid,
+  getFileType,
+  getImageWidth,
 } from '../../utils/helpers';
 
 jest.mock('dompurify')
@@ -385,5 +389,48 @@ describe('format date timezone', () => {
 
   it('returns date when timezone is not passed', () => {
     expect(formatTimeZone(date)).toBe(date)
+  });
+});
+
+describe('#isFileSizeValid', () => {
+  it('returns true if file size is less or equal max size', () => {
+    const file = new Blob(['some text'], { type: 'image/png' });
+    expect(isFileSizeValid(file)).toBe(true);
+  });
+
+  it('returns false if file size is greater than max size', () => {
+    const file = new Blob(['some text'], { type: 'image/png' });
+    expect(isFileSizeValid(file, 0)).toBe(false);
+  });
+});
+
+describe('#getFileType', () => {
+  it('returns type of a file', () => {
+    const file = new Blob(['some text'], { type: 'image/jpeg' });
+    expect(getFileType(file)).toBe('image');
+
+    const file2 = new Blob(['some text'], { type: 'video/mp4' });
+    expect(getFileType(file2)).toBe('video');
+
+    const file3 = new Blob(['some text'], { type: 'text/csv' });
+    expect(getFileType(file3)).toBe('text');
+  });
+});
+
+describe('#getImageWidth', () => {
+  window.URL.createObjectURL = jest.fn().mockReturnValue({ width: 25 });
+  global.Image = class {
+    constructor() {
+      setTimeout(() => {
+        this.onload(); // simulate onload event
+      }, 100);
+    }
+  }
+
+  it('invokes callback handler with image width', async () => {
+    const file = new Blob(['some text'], { type: 'image/jpeg' });
+    const callback = jest.fn();
+    getImageWidth(file, callback);
+    await waitFor(() => { expect(callback).toHaveBeenCalled(); });
   });
 });
