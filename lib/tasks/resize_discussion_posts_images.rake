@@ -26,9 +26,7 @@ task resize_discussion_posts: :environment do
           filename: image.filename,
           content_type: 'image/jpeg',
         )
-
       end
-
     end
   end
 
