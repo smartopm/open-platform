@@ -336,7 +336,8 @@
     "request_forms": "Application forms and permits",
     "need_or_forgot_password": "Need a password or forgot one?",
     "required": "Required",
-    "event_logs": "Event Logs"
+    "event_logs": "Event Logs",
+    "feedback": "Feedback"
   },
   "menu": {
     "invoice": "Invoice",

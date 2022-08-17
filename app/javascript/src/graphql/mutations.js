@@ -585,21 +585,6 @@ export const AcknowledgeRequest = gql`
   ${EntryRequestFragment.publicFields}
 `;
 
-export const createFeedback = gql`
-  mutation FeedbackCreate($isThumbsUp: Boolean!, $review: String) {
-    feedbackCreate(isThumbsUp: $isThumbsUp, review: $review) {
-      feedback {
-        user {
-          id
-          name
-        }
-        createdAt
-        isThumbsUp
-      }
-    }
-  }
-`;
-
 export const createShowroomEntry = gql`
   mutation ShowroomEntryCreate(
     $name: String

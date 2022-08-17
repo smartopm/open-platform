@@ -455,7 +455,7 @@ const App = () => {
                                       <AdminRoutes>
                                         <Switch>
                                           {/* TODO: Migrate to Feedback module */}
-                                          <Route path="/feedbacks" component={FeedbackPage} />
+                                          {/* <Route path="/feedbacks" component={FeedbackPage} /> */}
                                         </Switch>
                                       </AdminRoutes>
                                       {/* we will also need a not found page for non-logged in user */}

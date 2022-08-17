@@ -15,6 +15,8 @@ import EditForm from '../Forms/containers/FormLinks';
 import UsersImport from './Containers/UsersImport';
 import LeadManagementUserImport from './LeadManagement/Containers/LeadManagementUserImport';
 import EventLogs from '../EventLogs/Components/EventLogs';
+import AllFeedback from '../FeedBack/Components/AllFeedback';
+
 // name in here is only used as key in routes, make sure it is unique
 
 const user = { module: 'user' };
@@ -34,6 +36,8 @@ const CommunityFormsPermissions = ['can_access_forms'];
 const userImportPermissions = ['can_create_users_via_csv'];
 
 const eventLogsPermissions = ['can_fetch_logbook_events']
+
+const feedbackPermissions = ['can_fetch_all_feedback']
 
 const currentModule = 'forms';
 
@@ -97,6 +101,14 @@ function RenderEventLogs() {
   return (
     <AccessCheck module='event_log' allowedPermissions={eventLogsPermissions}>
       <EventLogs />
+    </AccessCheck>
+  );
+}
+
+function RenderFeedback() {
+  return (
+    <AccessCheck module='feedback' allowedPermissions={feedbackPermissions}>
+      <AllFeedback />
     </AccessCheck>
   );
 }
@@ -246,6 +258,17 @@ const routes = [
     accessibleBy: [],
     name: 'event_logs',
     moduleName: 'event_log',
+    featureName: 'Users'
+  },
+  {
+    routeProps: {
+      path: '/feedbacks',
+      exact: true,
+      component: RenderFeedback
+    },
+    accessibleBy: [],
+    name: 'feedback',
+    moduleName: 'feedback',
     featureName: 'Users'
   }
 ];
