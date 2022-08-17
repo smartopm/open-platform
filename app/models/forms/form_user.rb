@@ -28,7 +28,8 @@ module Forms
 
     def create_form_task
       # TODO: Consider allowing other communities to engage processes
-      allowed_community = %w[DoubleGDP Tilisi Testing].include?(form.community.name)
+      allowed_community = ['DoubleGDP', 'Tilisi', 'Testing', 'Greenpark', 'Ciudad Morazán']
+                          .include?(form.community.name)
       if allowed_community && form.associated_process?
         return TaskCreate.new_from_process(task_params, form.process)
       end
