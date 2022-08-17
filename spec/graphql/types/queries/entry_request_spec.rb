@@ -20,6 +20,12 @@ RSpec.describe Types::Queries::EntryRequest do
                              granted_at: Time.zone.today, exited_at: Time.zone.today)
     end
 
+    let(:third_guest) do
+      create(:entry_request, user: admin, name: 'Jude', is_guest: true,
+                             community: community, visitation_date: Time.zone.today,
+                             granted_at: 3.months.ago, exited_at: 2.months.ago)
+    end
+
     let!(:admin_role) { create(:role, name: 'admin') }
     let!(:visitor_role) { create(:role, name: 'visitor') }
     let!(:permission) do
@@ -474,6 +480,19 @@ RSpec.describe Types::Queries::EntryRequest do
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'currentGuests').size).to eql 1
         end
+
+        it 'returns list of all entry requests when duration is set to "All"' do
+          variables = { duration: 'All' }
+          guest
+          third_guest
+          result = DoubleGdpSchema.execute(current_guest_list_query,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: current_user.community,
+                                           }).as_json
+          expect(result.dig('data', 'currentGuests').size).to eql 3
+        end
       end
     end
 
@@ -482,6 +501,23 @@ RSpec.describe Types::Queries::EntryRequest do
         before do
           guest
           another_guest
+          third_guest
+        end
+
+        context 'when duration is cleared (all)' do
+          it 'returns all statistics for the community' do
+            variables = { duration: 'All' }
+            result = DoubleGdpSchema.execute(community_people_statistics_query,
+                                             variables: variables,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: current_user.community,
+                                             }).as_json
+            data = result.dig('data', 'communityPeopleStatistics')
+            expect(data['peoplePresent']).to eql 1
+            expect(data['peopleEntered']).to eql 3
+            expect(data['peopleExited']).to eql 2
+          end
         end
 
         context 'when duration is for present day' do

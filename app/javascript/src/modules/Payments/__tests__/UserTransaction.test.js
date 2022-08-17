@@ -7,7 +7,7 @@ import currency from '../../../__mocks__/currency';
 import UserTransactionsList, {
   renderTransactions
 } from '../Components/UserTransactions/UserTransactions';
-import { AllEventLogsQuery } from '../../../graphql/queries';
+import { AllEventLogsQuery } from '../../EventLogs/graphql/queries';
 import { TransactionRevert } from '../graphql/payment_mutations';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';

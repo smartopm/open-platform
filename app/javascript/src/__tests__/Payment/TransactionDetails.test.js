@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom/';
 import TransactionDetails from '../../modules/Payments/Components/TransactionDetails';
 import { Spinner } from '../../shared/Loading';
 import currency from '../../__mocks__/currency';
-import { AllEventLogsQuery } from '../../graphql/queries';
+import { AllEventLogsQuery } from '../../modules/EventLogs/graphql/queries';
 import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 describe('Transaction Details Component', () => {

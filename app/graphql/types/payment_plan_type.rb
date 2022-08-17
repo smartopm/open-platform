@@ -73,7 +73,8 @@ module Types
     def general_payments
       batch_load(object, :plan_payments).then do |plan_payments|
         plan_payments.inject(0.0) do |sum, plan_payment|
-          sum + plan_payment.amount if plan_payment.present? && plan_payment.status.eql?('paid')
+          amount = plan_payment&.status.eql?('paid') ? plan_payment.amount : 0.0
+          sum + amount
         end
       end
     end

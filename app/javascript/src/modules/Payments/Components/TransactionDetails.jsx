@@ -13,7 +13,7 @@ import { dateToString } from '../../../components/DateContainer';
 import { formatError, formatMoney } from '../../../utils/helpers';
 import { StyledTab, StyledTabs, TabPanel } from '../../../components/Tabs';
 import { WalletTransactionUpdate } from '../../../graphql/mutations/transactions';
-import { AllEventLogsQuery } from '../../../graphql/queries';
+import { AllEventLogsQuery } from "../../EventLogs/graphql/queries";
 import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../components/CenteredContent';
 import EventTimeLine from '../../../shared/TimeLine';

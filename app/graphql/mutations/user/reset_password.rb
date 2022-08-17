@@ -2,25 +2,33 @@
 
 module Mutations
   module User
-    # Reset user password and username
+    # Reset user password
     class ResetPassword < BaseMutation
-      argument :user_id, ID, required: true
-      argument :username, String, required: true
-      argument :password, String, required: true
+      argument :email, String, required: true
 
-      field :success, GraphQL::Types::Boolean, null: false
+      field :success, GraphQL::Types::Boolean, null: true
 
       def resolve(vals)
-        validate_authorization(:user, :can_reset_user_password)
-        user = Users::User.find(vals[:user_id])
-        unless user.update(username: vals[:username], password: vals[:password],
+        user = return_user_or_error(vals[:email])
+        password = SecureRandom.alphanumeric
+
+        unless user.update(username: user.autogenerate_username, password: password,
                            has_reset_password: false)
           raise GraphQL::ExecutionError, user.errors.full_messages&.join(', ')
         end
 
-        eventlog = context[:current_user].generate_events('password_reset', user)
-        ActionFlowJob.perform_later(eventlog, { password: vals[:password] })
+        eventlog = user.generate_events('password_reset', user)
+        ActionFlowJob.perform_later(eventlog, { password: password })
         { success: true }
+      end
+
+      def return_user_or_error(email)
+        user = context[:site_community].users.find_by(email: email)
+        if user.nil?
+          raise GraphQL::ExecutionError,
+                I18n.t('errors.user.not_found_with_email', email: email)
+        end
+        user
       end
     end
   end

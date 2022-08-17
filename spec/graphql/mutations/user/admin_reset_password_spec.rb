@@ -2,16 +2,24 @@
 
 require 'rails_helper'
 
-RSpec.describe Mutations::User::ResetPassword do
+RSpec.describe Mutations::User::AdminResetPassword do
   describe 'reset password' do
+    let(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_reset_user_password])
+    end
     let(:lead_user) { create(:lead) }
     let(:community) { lead_user.community }
+    let(:admin) { create(:admin_user, community_id: community.id, role: admin_role) }
 
     let(:mutation) do
       <<~GQL
-        mutation resetPassword($email: String!){
-            resetPassword(email: $email){
-          success
+        mutation adminResetPassword($userId: ID!){
+          adminResetPassword(userId: $userId){
+          username
+          password
           }
         }     
       GQL
@@ -20,29 +28,31 @@ RSpec.describe Mutations::User::ResetPassword do
     context 'when current user is authorized' do
       it 'resets user password' do
         variables = {
-          email: lead_user.email,
+          userId: lead_user.id,
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
+                                                     current_user: admin,
                                                      site_community: community,
                                                    }).as_json
         expect(result['errors']).to be nil
-        expect(result.dig('data', 'resetPassword', 'success')).to eql true
+        expect(result.dig('data', 'adminResetPassword', 'username')).to_not be nil
+        expect(result.dig('data', 'adminResetPassword', 'password')).to_not be nil
       end
     end
 
-    context 'when user eamil does not exist' do
-      it 'returns not found error' do
+    context 'when user is unauthorized' do
+      it 'throws unauthorized error' do
         variables = {
-          email: 'dhfhfj-234-vvgess',
+          userId: lead_user.id,
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
+                                                     current_user: lead_user,
                                                      site_community: community,
                                                    }).as_json
         expect(result['errors']).to_not be nil
-        expect(result.dig('errors', 0, 'message'))
-          .to eql 'An account with this dhfhfj-234-vvgess does not exist'
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
       end
     end
   end

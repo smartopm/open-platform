@@ -39,6 +39,7 @@ module Types
     field :hotjar, Integer, null: true
     field :lead_monthly_targets, GraphQL::Types::JSON, null: true
     field :supported_languages, GraphQL::Types::JSON, null: true
+    field :display_name, String, null: true
 
     def image_url
       attachment_load('Community', :image, object.id).then do |image|

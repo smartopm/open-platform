@@ -5,40 +5,34 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Button from '@mui/material/Button';
 import { Dialog, DialogTitle, DialogContent, Box, IconButton } from '@mui/material';
-import { Utils as QbUtils } from 'react-awesome-query-builder';
 import { Spinner } from '../../../shared/Loading';
-import { ResetUserPasswordUserMutation } from '../../../graphql/mutations/user';
+import { ResetUserPasswordMutation } from '../../../graphql/mutations/user';
 import useMutationWrapper from '../../../shared/hooks/useMutationWrapper';
+import useStateIfMounted from '../../../shared/hooks/useStateIfMounted';
 
 export default function PasswordRest({ openModal, setOpenModal, data }) {
   const { t } = useTranslation(['users', 'common']);
+  const [username, setUsername] = useStateIfMounted('');
+  const [password, setPassword] = useStateIfMounted('');
   const [resetPassword, loading] = useMutationWrapper(
-    ResetUserPasswordUserMutation,
-    reset,
+    ResetUserPasswordMutation,
+    resetPassData => setDataValues(resetPassData),
     t('common:misc.reset_password_successful')
   );
 
-  function reset() {
-    setOpenModal(false);
+  function setDataValues(resetData) {
+    setUsername(resetData?.adminResetPassword?.username);
+    setPassword(resetData?.adminResetPassword?.password);
   }
 
-  const username =
-    data?.user?.username ||
-    data?.user?.name
-      .replace(/\s/g, '')
-      .toLowerCase()
-      .concat(
-        Math.random()
-          .toString(36)
-          .slice(2, 5)
-      );
-
-  const password = QbUtils.uuid().slice(0, 17);
+  function resetModalState() {
+    setOpenModal(false);
+    setUsername('');
+    setPassword('');
+  }
   function handlePasswordReset() {
     resetPassword({
       userId: data.user.id,
-      username,
-      password,
     });
   }
 
@@ -58,7 +52,7 @@ export default function PasswordRest({ openModal, setOpenModal, data }) {
           <Box>
             <IconButton
               data-testid="password-reset-close-icon"
-              onClick={() => setOpenModal(false)}
+              onClick={() => resetModalState()}
               size="large"
             >
               <CloseIcon />
@@ -68,23 +62,31 @@ export default function PasswordRest({ openModal, setOpenModal, data }) {
       </DialogTitle>
 
       <DialogContent style={{ paddingTop: '6px', paddingBottom: '10px' }}>
-        <Typography gutterBottom>{t('common:misc.reset_disclaimer')}</Typography>
-        <Typography gutterBottom>{t('common:misc.copy_credentials')}</Typography>
-        <br />
+        {!username && !password && (
+          <>
+            <Typography gutterBottom>{t('common:misc.reset_disclaimer')}</Typography>
+          </>
+        )}
 
-        <Typography variant="subtitle2" gutterBottom>
-          {t('users.username', { username })}
-        </Typography>
-        <Typography variant="subtitle2" gutterBottom>
-          {t('users.password', { password })}
-        </Typography>
+        {username && password && (
+          <>
+            <Typography gutterBottom>{t('common:misc.copy_credentials')}</Typography>
+            <br />
+            <Typography variant="subtitle2" gutterBottom>
+              {t('users.username', { username })}
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              {t('users.password', { password })}
+            </Typography>
+          </>
+        )}
       </DialogContent>
 
       <Box style={{ textAlign: 'center', marginBottom: 16 }}>
         <Button
           disableElevation
           onClick={handlePasswordReset}
-          disabled={loading}
+          disabled={loading || username !== '' || password !== ''}
           startIcon={loading && <Spinner />}
           color="primary"
           variant="contained"

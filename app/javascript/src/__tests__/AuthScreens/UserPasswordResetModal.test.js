@@ -1,14 +1,14 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
-import { ResetUserPasswordMutation } from '../../../graphql/mutations/user';
-import PasswordReset from '../Components/PasswordReset';
-import { SnackbarContext } from '../../../shared/snackbar/Context';
-import { mockedSnackbarProviderProps } from '../../__mocks__/mock_snackbar';
-import { Context } from '../../../containers/Provider/AuthStateProvider';
-import authState from '../../../__mocks__/authstate';
+import { UserPasswordResetMutation } from '../../graphql/mutations/user';
+import UserPasswordResetModal from '../../components/AuthScreens/UserPasswordResetModal';
+import { SnackbarContext } from '../../shared/snackbar/Context';
+import { mockedSnackbarProviderProps } from '../../modules/__mocks__/mock_snackbar';
+import { Context } from '../../containers/Provider/AuthStateProvider';
+import authState from '../../__mocks__/authstate';
 
-describe('Password Reset component', () => {
+describe('User Password Reset modal component', () => {
   it('should render the password reset properly', async () => {
     const openModalHandler = jest.fn();
     const data = {
@@ -19,16 +19,16 @@ describe('Password Reset component', () => {
       },
     };
 
-    const passwordResetDataMock = {
+    const userPasswordResetDataMock = {
       request: {
-        query: ResetUserPasswordMutation,
+        query: UserPasswordResetMutation,
         variables: {
           userId: '1',
         },
       },
       result: {
         data: {
-          adminResetPassword: {
+          resetPassword: {
             username: 'TheBigBoss',
             password: 'TheBigBosspassword1234',
           },
@@ -41,10 +41,10 @@ describe('Password Reset component', () => {
       setOpenModal: openModalHandler,
     };
     const container = render(
-      <MockedProvider mocks={[passwordResetDataMock]} addTypename={false}>
+      <MockedProvider mocks={[userPasswordResetDataMock]} addTypename={false}>
         <Context.Provider value={authState}>
           <SnackbarContext.Provider value={{ ...mockedSnackbarProviderProps }}>
-            <PasswordReset {...props} />
+            <UserPasswordResetModal {...props} />
           </SnackbarContext.Provider>
         </Context.Provider>
       </MockedProvider>

@@ -110,7 +110,7 @@ export default function LogbookStats() {
                 key={option.value}
                 value={option.value}
               >
-                {option.title === 'All' ? 'Clear' : `${t('common:misc.show')} ${option.title}`}
+                {`${t('common:misc.show')} ${option.title}`}
               </MenuItem>
             ))}
           </TextField>

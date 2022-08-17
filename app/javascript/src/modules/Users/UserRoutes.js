@@ -14,6 +14,7 @@ import LeadManagementDetails from './LeadManagement/Components/LeadManagementDet
 import EditForm from '../Forms/containers/FormLinks';
 import UsersImport from './Containers/UsersImport';
 import LeadManagementUserImport from './LeadManagement/Containers/LeadManagementUserImport';
+import EventLogs from '../EventLogs/Components/EventLogs';
 // name in here is only used as key in routes, make sure it is unique
 
 const user = { module: 'user' };
@@ -31,6 +32,8 @@ const leadManagementPermissions = ['can_update_user_details'];
 const CommunityFormsPermissions = ['can_access_forms'];
 
 const userImportPermissions = ['can_create_users_via_csv'];
+
+const eventLogsPermissions = ['can_fetch_logbook_events']
 
 const currentModule = 'forms';
 
@@ -86,6 +89,14 @@ function RenderUserLeadImport() {
   return (
     <AccessCheck module={user.module} allowedPermissions={userImportPermissions}>
       <LeadManagementUserImport />
+    </AccessCheck>
+  );
+}
+
+function RenderEventLogs() {
+  return (
+    <AccessCheck module='event_log' allowedPermissions={eventLogsPermissions}>
+      <EventLogs />
     </AccessCheck>
   );
 }
@@ -224,6 +235,17 @@ const routes = [
     accessibleBy: [],
     name: 'leads_import',
     moduleName: 'user',
+    featureName: 'Users'
+  },
+  {
+    routeProps: {
+      path: '/event_logs',
+      exact: true,
+      component: RenderEventLogs
+    },
+    accessibleBy: [],
+    name: 'event_logs',
+    moduleName: 'event_log',
     featureName: 'Users'
   }
 ];

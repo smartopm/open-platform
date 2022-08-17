@@ -11,7 +11,7 @@ import {
   InputLabel,
   OutlinedInput,
 } from '@mui/material';
-import { StyleSheet, css } from 'aphrodite';
+import { css } from 'aphrodite';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -19,7 +19,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import EmailIcon from '@mui/icons-material/Email';
 import InputAdornment from '@mui/material/InputAdornment';
 import PhoneInput from 'react-phone-input-2';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { getAuthToken, AUTH_FORWARD_URL_KEY } from '../../utils/apollo';
 import GoogleIcon from '../../../../assets/images/google_icon.svg';
 import {
@@ -30,10 +30,13 @@ import {
 import { extractCountry } from '../../utils/helpers';
 import CenteredContent from '../../shared/CenteredContent';
 import SignupDialog from './SignupDialog';
+import UserPasswordResetModal from './UserPasswordResetModal';
 import PasswordInput from '../../shared/PasswordInput';
 import useMutationWrapper from '../../shared/hooks/useMutationWrapper';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 import ImageAuth from '../../shared/ImageAuth';
+import styles from './styles/styles';
+import LinkButtons from './LinkButtons';
 
 export default function LoginScreen({ currentCommunity }) {
   const { state } = useLocation();
@@ -42,12 +45,8 @@ export default function LoginScreen({ currentCommunity }) {
   const [userLogin, setUserLogin] = useState({ email: '', phone: '' });
   const [emailLoginSent, setEmailLoginSet] = useState(false);
   const [open, setOpen] = useState(false);
-  const [values, setValues] = useState({
-    username: '',
-    password: '',
-    showPassword: false,
-  });
-
+  const [openModal, setOpenModal] = useState(false);
+  const [values, setValues] = useState({ username: '', password: '', showPassword: false });
   const [
     loginWithUsernamePassword,
     passwordLoginLoading,
@@ -60,10 +59,9 @@ export default function LoginScreen({ currentCommunity }) {
     loginPhoneMutation,
     routeToConfirmCode
   );
-
   const authState = useContext(AuthStateContext);
   const nextUrl = decodeURIComponent(history.location.search).replace('?next=', '');
-  const redirectUrl = nextUrl.includes('/') ? nextUrl : `/${nextUrl}`
+  const redirectUrl = nextUrl.includes('/') ? nextUrl : `/${nextUrl}`;
 
   function routeToConfirmCode(data) {
     history.push({
@@ -84,17 +82,14 @@ export default function LoginScreen({ currentCommunity }) {
         },
       });
     } else {
-      authState.setToken({
-        type: 'update',
-        token: data?.loginUsernamePassword?.authToken,
-      });
+      authState.setToken({ type: 'update', token: data?.loginUsernamePassword?.authToken });
     }
   }
 
-  function loginWithEmailCallback(){
-    setEmailLoginSet(true)
-    if(shouldRedirectAfterLogin()) {
-      localStorage.setItem(AUTH_FORWARD_URL_KEY, redirectUrl)
+  function loginWithEmailCallback() {
+    setEmailLoginSet(true);
+    if (shouldRedirectAfterLogin()) {
+      localStorage.setItem(AUTH_FORWARD_URL_KEY, redirectUrl);
     }
   }
 
@@ -109,6 +104,10 @@ export default function LoginScreen({ currentCommunity }) {
 
   function handleModal() {
     setOpen(!open);
+  }
+
+  function handleEmailInputModal() {
+    setOpenModal(true);
   }
 
   function handleUserLogin(event, type = 'input') {
@@ -134,14 +133,13 @@ export default function LoginScreen({ currentCommunity }) {
   }
 
   function shouldRedirectAfterLogin() {
-    return (redirectUrl && history.location.search);
-  } 
+    return redirectUrl && history.location.search;
+  }
 
-  function handleOAuthLogin(url){
-    if(shouldRedirectAfterLogin()) {
+  function handleOAuthLogin(url) {
+    if (shouldRedirectAfterLogin()) {
       localStorage.setItem(AUTH_FORWARD_URL_KEY, redirectUrl);
     }
-
     window.location.assign(url);
   }
 
@@ -153,7 +151,6 @@ export default function LoginScreen({ currentCommunity }) {
 
   return (
     <div style={{ overflow: 'hidden' }}>
-      {/* Signup Dialog */}
       <SignupDialog
         t={t}
         open={open}
@@ -161,11 +158,11 @@ export default function LoginScreen({ currentCommunity }) {
         handleModal={handleModal}
         currentCommunity={currentCommunity}
       />
-
+      <UserPasswordResetModal openModal={openModal} setOpenModal={setOpenModal} />
       <Container maxWidth="xs">
         <CenteredContent>
           <ImageAuth
-            imageLink={currentCommunity?.imageUrl || ""}
+            imageLink={currentCommunity?.imageUrl || ''}
             className={css(styles.logo)}
             alt="community logo"
             style={{ marginTop: 32, marginBottom: -17 }}
@@ -179,9 +176,11 @@ export default function LoginScreen({ currentCommunity }) {
           marginTop="20px"
           variant="h6"
         >
-          {
-            t('login.welcome', { appName: currentCommunity?.name })
-          }
+          {t('login.welcome', {
+            appName: currentCommunity?.displayName
+              ? currentCommunity?.displayName
+              : currentCommunity?.name,
+          })}
         </Typography>
         <br />
         <br />
@@ -222,7 +221,7 @@ export default function LoginScreen({ currentCommunity }) {
               style={{ marginBottom: 14 }}
               variant="outlined"
               margin="dense"
-              size='small'
+              size="small"
               fullWidth
             />
             <PasswordInput
@@ -247,7 +246,7 @@ export default function LoginScreen({ currentCommunity }) {
               onClick={() => handleOAuthLogin('/fb_oauth')}
               variant="outlined"
               data-testid="login-with-facebook-btn"
-              startIcon={<FacebookIcon className={`${css(styles.socialLoginButtonIcons)}`} />}
+              startIcon={<FacebookIcon className={`${css(styles.socialIcons)}`} />}
               size="medium"
               fullWidth
               className={`${css(styles.facebookOAuthButton)}`}
@@ -258,26 +257,26 @@ export default function LoginScreen({ currentCommunity }) {
               onClick={() => handleOAuthLogin('/login_oauth')}
               data-testid="login-with-google-btn"
               variant="outlined"
-              startIcon={(
-                <img
-                  src={GoogleIcon}
-                  alt="google-icon"
-                  className={`${css(styles.socialLoginButtonIcons)}`}
-                />
-              )}
+              startIcon={
+                <img src={GoogleIcon} alt="google-icon" className={`${css(styles.socialIcons)}`} />
+              }
               className={`${css(styles.googleOAuthButton)} google-sign-in-btn`}
               size="medium"
               fullWidth
             >
               {t('login.login_google')}
             </Button>
-            <FormControl fullWidth margin='dense' size="small" style={{ marginTop: 16 }}>
+            <FormControl fullWidth margin="dense" size="small" style={{ marginTop: 16 }}>
               <InputLabel htmlFor="outlined-adornment-amount">{t('login.login_email')}</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-amount"
                 value={userLogin.email}
                 onChange={event => setUserLogin({ email: event.target.value, phone: '' })}
-                startAdornment={<InputAdornment position="start"><EmailIcon /></InputAdornment>}
+                startAdornment={(
+                  <InputAdornment position="start">
+                    <EmailIcon />
+                  </InputAdornment>
+                )}
                 placeholder={t('login.login_email')}
                 label={t('login.login_email')}
                 data-testid="email_text_input"
@@ -301,69 +300,20 @@ export default function LoginScreen({ currentCommunity }) {
           </Button>
         </CenteredContent>
         <br />
-
-        <CenteredContent>
-          <Button
-            size="medium"
-            id="trigger-modal-dialog"
-            data-testid="trouble-logging-in-btn"
-            onClick={handleModal}
-            style={{ textTransform: 'none' }}
-          >
-            <u>
-              <strong>{t('login.request_account')}</strong>
-            </u>
-          </Button>
-        </CenteredContent>
+        <LinkButtons handleModal={handleModal} handleEmailInputModal={handleEmailInputModal} />
       </Container>
     </div>
   );
 }
 
 LoginScreen.defaultProps = {
-  currentCommunity: {}
-}
+  currentCommunity: {},
+};
 LoginScreen.propTypes = {
   currentCommunity: PropTypes.shape({
     name: PropTypes.string,
+    displayName: PropTypes.string,
     imageUrl: PropTypes.string,
     locale: PropTypes.string,
-  })
-}
-
-const styles = StyleSheet.create({
-  getStartedButton: {
-    color: '#FFF',
-    width: '55%',
-    boxShadow: 'none',
-    marginTop: 20,
-  },
-  phoneNumberInput: {
-    marginTop: '0.5em',
-  },
-  emailLoginTextField: {
-    marginTop: 14,
-  },
-  facebookOAuthButton: {
-    textTransform: 'none',
-    color: '#3b5998',
-    display: 'flex',
-    justifyContent: 'left',
-  },
-  googleOAuthButton: {
-    textTransform: 'none',
-    marginTop: '0.5em',
-    display: 'flex',
-    justifyContent: 'left',
-  },
-  socialLoginButtonIcons: {
-    marginLeft: '0.5em',
-    marginRight: '0.5em',
-  },
-  "[type='number']": {
-    fontSize: 30,
-  },
-  logo: {
-    height: 50,
-  },
-});
+  }),
+};

@@ -14,18 +14,24 @@ export default function TaskContextProvider({ children }) {
   const { id: projectId } = useParams();
   const { t } = useTranslation('task');
   const [selectedStep, setSelectedStep] = useState(null)
-  const [updateStatus, setUpdateStatus] = useState({ message: '', success: false })
+  const [updateStatus, setUpdateStatus] = useState({ message: '', success: false });
 
   const [taskUpdate] = useMutation(UpdateNote)
 
   function handleStepCompletion(stepItemId, completed, refetch = null){
+    setUpdateStatus({
+      ...updateStatus,
+      [stepItemId]: true,
+    })
+
     taskUpdate({variables: {  id: stepItemId, completed }})
       .then(() => {
         refetch();
         setUpdateStatus({
           ...updateStatus,
           success: true,
-          message: `${t('task.task_marked_as')} ${completed ? t('task.complete') : t('task.incomplete')}`
+          message: `${t('task.task_marked_as')} ${completed ? t('task.complete') : t('task.incomplete')}`,
+          [stepItemId]: false,
         })
       })
       .catch((error) => {
@@ -33,6 +39,7 @@ export default function TaskContextProvider({ children }) {
           ...updateStatus,
           success: false,
           message: formatError(error.message),
+          [stepItemId]: false,
         })
       });
   }

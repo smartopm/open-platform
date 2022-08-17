@@ -23,6 +23,7 @@ export const CurrentCommunityQuery = gql`
       features
       gaId
       securityManager
+      displayName
       templates
       subAdministrator {
         id
