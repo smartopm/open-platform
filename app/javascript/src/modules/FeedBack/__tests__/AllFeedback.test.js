@@ -2,8 +2,9 @@ import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import { allFeedback } from '../../graphql/queries';
-import AllFeedback from '../../containers/Activity/AllFeedback';
+import { allFeedback } from '../graphql/queries';
+import AllFeedback from '../Components/AllFeedback';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -19,7 +20,7 @@ describe('Feedback Component', () => {
 
     await waitFor(() => {
       expect(container.queryByTestId('loader')).toBeInTheDocument();
-    }, 10)
+    }, 10);
   });
 
   it('should display neccesary elements after fetching feedback', async () => {
@@ -29,8 +30,8 @@ describe('Feedback Component', () => {
           query: allFeedback,
           variables: {
             limit: 20,
-            offset: 0
-          }
+            offset: 0,
+          },
         },
         result: {
           data: {
@@ -39,32 +40,34 @@ describe('Feedback Component', () => {
                 id: '12h3k4',
                 user: {
                   id: '45fhd',
-                  name: 'Nurudeen'
+                  name: 'Nurudeen',
                 },
                 isThumbsUp: true,
                 createdAt: '2021-02-01',
-                review: 'Nice feedback'
-              }
-            ]
-          }
-        }
-      }
+                review: 'Nice feedback',
+              },
+            ],
+          },
+        },
+      },
     ];
 
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
-          <AllFeedback />
+          <MockedThemeProvider>
+            <AllFeedback />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
-      );
+    );
 
     await waitFor(() => {
       expect(container.queryByTestId('prev-link')).toBeInTheDocument();
       expect(container.queryByTestId('next-link')).toBeInTheDocument();
       fireEvent.click(container.queryByTestId('prev-link'));
       fireEvent.click(container.queryByTestId('next-link'));
-    }, 10)
+    }, 10);
   });
 
   it('should display no feedback if no result is fetched', async () => {
@@ -74,28 +77,30 @@ describe('Feedback Component', () => {
           query: allFeedback,
           variables: {
             limit: 20,
-            offset: 0
-          }
+            offset: 0,
+          },
         },
         result: {
           data: {
-            usersFeedback: []
-          }
-        }
-      }
+            usersFeedback: [],
+          },
+        },
+      },
     ];
 
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
-          <AllFeedback />
+          <MockedThemeProvider>
+            <AllFeedback />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
-      );
+    );
     // });
 
     await waitFor(() => {
       expect(container.queryByTestId('no-feedback-txt')).toBeInTheDocument();
-    }, 20)
+    }, 20);
   });
 });

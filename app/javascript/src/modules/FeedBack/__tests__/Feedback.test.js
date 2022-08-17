@@ -4,8 +4,8 @@ import { render, fireEvent } from '@testing-library/react';
 
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import Feedback from '../../containers/Activity/Feedback';
-import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
+import Feedback from '../Components/Feedback';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Feedback Component', () => {
   it('renders necessary elements', () => {
