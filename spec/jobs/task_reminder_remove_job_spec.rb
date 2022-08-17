@@ -19,17 +19,17 @@ RSpec.describe TaskReminderRemoveJob, type: :job do
       clear_performed_jobs
     end
     it 'should match enqueued job arguments' do
-      TaskReminderRemoveJob.perform_later(assignee_note)
-      expect(TaskReminderRemoveJob).to have_been_enqueued.with(assignee_note)
+      TaskReminderRemoveJob.perform_later(assignee_note.id)
+      expect(TaskReminderRemoveJob).to have_been_enqueued.with(assignee_note.id)
     end
     it 'should enqueue a job to update note and delete previously set job' do
-      TaskReminderRemoveJob.perform_later(assignee_note)
+      TaskReminderRemoveJob.perform_later(assignee_note.id)
       expect(TaskReminderRemoveJob).to have_been_enqueued
     end
     it 'should update assignee_note reminder_job_id to nil' do
       ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
 
-      TaskReminderRemoveJob.perform_later(assignee_note)
+      TaskReminderRemoveJob.perform_later(assignee_note.id)
 
       updated_assignee_note = Notes::AssigneeNote.find(assignee_note.id)
       expect(updated_assignee_note.reminder_job_id).to be_nil

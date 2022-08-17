@@ -9,7 +9,8 @@ class TaskReminderJob < ApplicationJob
 
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
-  def perform(job_type, assigned_note = nil)
+  def perform(job_type, assigned_note_id = nil)
+    assigned_note = Notes::AssigneeNote.find_by(id: assigned_note_id)
     return if job_type.eql?('manual') && assigned_note.nil?
 
     if job_type.eql?('manual')
