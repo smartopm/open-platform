@@ -286,13 +286,13 @@ module Users
 
     def auto_generate_username_password
       self.password = SecureRandom.alphanumeric
-      self.username = name.split.join.downcase << SecureRandom.uuid.slice(0, 3)
+      self.username = name.split.join.downcase << SecureRandom.uuid.slice(0, 5)
     end
 
     def autogenerate_username
       if username.nil?
         name.split
-            .join.downcase << SecureRandom.uuid.slice(0, 3)
+            .join.downcase << SecureRandom.uuid.slice(0, 5)
       else
         username
       end

@@ -27,7 +27,7 @@ module Mutations
       def username(user)
         if user.username.nil?
           user.name.split
-              .join.downcase << SecureRandom.uuid.slice(0, 3)
+              .join.downcase << SecureRandom.uuid.slice(0, 5)
         else
           user.username
         end

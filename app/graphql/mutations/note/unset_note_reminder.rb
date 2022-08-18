@@ -23,7 +23,7 @@ module Mutations
               .errors.full_messages
           end
 
-          TaskReminderRemoveJob.perform_later(assigned_note)
+          TaskReminderRemoveJob.perform_later(assigned_note.id)
         end
 
         note = assigned_note.note

@@ -37,9 +37,9 @@ RSpec.describe TaskReminderJob, type: :job do
     end
 
     it 'enqueues job with matched arguments' do
-      described_class.perform_later('manual', assignee_note)
+      described_class.perform_later('manual', assignee_note.id)
 
-      expect(TaskReminderJob).to have_been_enqueued.with('manual', assignee_note)
+      expect(TaskReminderJob).to have_been_enqueued.with('manual', assignee_note.id)
     end
 
     it 'invokes EmailMsg' do
@@ -59,7 +59,7 @@ RSpec.describe TaskReminderJob, type: :job do
         template: template,
         template_data: template_data,
       )
-      perform_enqueued_jobs { described_class.perform_later('manual', assignee_note) }
+      perform_enqueued_jobs { described_class.perform_later('manual', assignee_note.id) }
     end
 
     it 'invokes EmailMsg and SMS' do
