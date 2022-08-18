@@ -810,3 +810,35 @@ export function passwordChecks(value, value2, translate) {
     verified: allRulesChecked,
   };
 }
+
+/**
+ * A method to check if the file size is within the range of allowed size
+ * @param {File} file file input value
+ * @param {Number} maxSize maximum size of the file
+ * @returns Boolean
+ */
+export function isFileSizeValid(file, maxSize = 20000000) {
+  return file.size <= maxSize;
+}
+
+/**
+ * A method that returns the type of file
+ * @param {File} file file input value
+ * @returns (String) the type of a specific file
+ */
+export function getFileType(file) {
+  return file.type.split('/')[0];
+}
+
+/**
+ * Gets the width of an image
+ * @param {Object} image image object
+ * @param {Function} cbHandler a callback handler
+ */
+export function getImageWidth(image, cbHandler) {
+  let img = new Image()
+  img.src = window.URL.createObjectURL(image)
+  img.onload = () => {
+    cbHandler(img.width)
+  }
+}

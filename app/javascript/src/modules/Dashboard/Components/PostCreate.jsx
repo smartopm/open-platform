@@ -6,7 +6,7 @@ import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload
 import useFileUpload from '../../../graphql/useFileUpload';
 import { PostCreateMutation, PostUpdateMutation } from '../../../graphql/mutations';
 import { Spinner } from '../../../shared/Loading';
-import { getObjectKey } from '../../../utils/helpers';
+import { getImageWidth, getObjectKey } from '../../../utils/helpers';
 import { accessibilityOptions } from '../../../utils/constants';
 import { SnackbarContext } from '../../../shared/snackbar/Context';
 
@@ -149,6 +149,12 @@ export default function PostCreate({
       });
   }
 
+  function uploadPostImage(image) {
+    getImageWidth(image, (width) => {
+      onChange(image, { maxWidthOrHeight: ((3/4) * width) });
+    });
+  }
+
   return (
     <div style={{ margin: '0 5px' }}>
       <DialogWithImageUpload
@@ -159,7 +165,7 @@ export default function PostCreate({
           value: post,
           handleChange: val => setPost(val)
         }}
-        imageOnchange={img => onChange(img)}
+        imageOnchange={img => uploadPostImage(img)}
         imageUrls={imageUrls}
         status={status}
         closeButtonData={{

@@ -231,17 +231,17 @@ export default function CommunityNews({
                   data-testid="community_news_post_author_avatar"
                   style={{ padding: '0 16px' }}
                 >
-                  {// eslint-disable-next-line react/prop-types
+                  {
                     post?.imageUrls?.length >= 1 && (
                       <ImageAuth
-                        imageLink={post?.imageUrls[0]}
+                        imageLink={[...post?.imageUrls]?.pop()}
                         style={{
                           width: '100%',
                           marginBottom: '10px',
                           border: 'none',
                           boxShadow: 'none',
                           padding: 0,
-                          borderRadius: 0
+                          borderRadius: 0,
                         }}
                       />
                     )}

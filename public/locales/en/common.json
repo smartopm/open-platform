@@ -566,7 +566,8 @@
     "invalid_email": "Email is invalid",
     "something_went_wrong_forms": "Something went wrong while accessing this form",
     "something_went_wrong_payment": "Something went wrong with your payment",
-    "device_not_supported": "Device not supported or check the camera permissions"
+    "device_not_supported": "Device not supported or check the camera permissions",
+    "image_size_not_allowed": "Image size should not exceed 20MB"
   },
   "dialogs": {
     "dialog_action": "Are you sure you want to {{action}} this {{title}}?",

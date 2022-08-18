@@ -11,7 +11,9 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useLocation, useHistory } from 'react-router-dom';
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
-import { objectAccessor, sortTaskOrder, formatError, useParamsQuery } from '../../../utils/helpers';
+import {
+  objectAccessor, sortTaskOrder, formatError, useParamsQuery, isFileSizeValid, getFileType
+} from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 import { SubTasksQuery } from '../graphql/task_queries';
 import { LinearSpinner } from '../../../shared/Loading';
@@ -50,7 +52,7 @@ export default function TodoItem({
   const history = useHistory();
   const location = useLocation();
   const authState = React.useContext(AuthStateContext);
-
+  const [isInvalidImage, setIsInvalidImage] = useState(true);
   const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const taskPermissions = authState?.user?.permissions?.find(
@@ -197,6 +199,8 @@ export default function TodoItem({
 
   function handleFileInputChange(event, taskToAttach = null) {
     event.stopPropagation();
+    const file = event.target.files[0];
+    setIsInvalidImage(!isFileSizeValid(file) && getFileType(file) === 'image');
     setIsUpdating(true);
     toggleTask(selectedTask || taskToAttach);
     handleUploadDocument(event, selectedTask || taskToAttach);
@@ -291,7 +295,7 @@ export default function TodoItem({
         )}
 
         {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task?.id))) && (
-          <LinearSpinner />
+          !isInvalidImage && <LinearSpinner />
         )}
       </div>
 
