@@ -131,21 +131,6 @@ export const flaggedNotes = gql`
   ${NotesFragment.note}
 `;
 
-export const allFeedback = gql`
-  query getFeedback($limit: Int, $offset: Int) {
-    usersFeedback(limit: $limit, offset: $offset) {
-      id
-      isThumbsUp
-      user {
-        id
-        name
-      }
-      createdAt
-      review
-    }
-  }
-`;
-
 export const UsersDetails = gql`
   query users($limit: Int, $offset: Int, $query: String) {
     users(limit: $limit, offset: $offset, query: $query) {

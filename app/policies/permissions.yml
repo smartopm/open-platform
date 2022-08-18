@@ -297,6 +297,9 @@ admin:
     permissions:
       - can_fetch_logbook_events
       - can_download_logbook_events
+  feedback:
+    permissions:
+      - can_fetch_all_feedback
   lead_log:
     permissions:
       - can_create_lead_log
@@ -896,6 +899,9 @@ site_manager:
   event_log:
     permissions:
       - can_fetch_logbook_events
+  feedback:
+    permissions:
+      - can_fetch_all_feedback
   forms:
     permissions:
       - can_see_menu_item

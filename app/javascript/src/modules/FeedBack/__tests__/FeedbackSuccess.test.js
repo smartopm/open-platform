@@ -4,8 +4,8 @@ import { render } from '@testing-library/react';
 
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import FeedbackSuccess from '../../containers/Activity/FeedbackSuccess';
-import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
+import FeedbackSuccess from '../Components/FeedbackSuccess';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Feedback Component', () => {
   it('renders loader when loading notes', () => {

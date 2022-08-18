@@ -18,7 +18,6 @@ import AuthStateProvider, {
 } from '../src/containers/Provider/AuthStateProvider';
 import UserShow from '../src/modules/Users/Containers/UserShow';
 import IDCard from '../src/containers/IdCard';
-import EventLogs from '../src/modules/EventLogs/Components/EventLogs';
 import Loading from '../src/shared/Loading';
 import '../src/modules/i18n';
 import Map from '../src/containers/Map';
@@ -30,15 +29,12 @@ import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
 import ErrorPage from '../src/components/Error';
 import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback';
 import { AUTH_TOKEN_KEY, AUTH_FORWARD_URL_KEY } from '../src/utils/apollo';
-import Feedback from '../src/containers/Activity/Feedback';
-import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
-import AllNotes from '../src/containers/Activity/AllNotes';
+import Feedback from '../src/modules/FeedBack/Components/Feedback';
+import FeedbackSuccess from '../src/modules/FeedBack/Components/FeedbackSuccess';
 import ProjectsList from '../src/modules/Tasks/Processes/Components/ProjectsList';
 import TaskLists from '../src/modules/Tasks/TaskLists/Components/TaskLists'; // TODO: Remove after Task Lists menu is set up
 import TaskListConfigure from '../src/modules/Tasks/TaskLists/Components/TaskListConfigure';
 import AddSubTasks from '../src/modules/Tasks/TaskLists/Components/AddSubTasks';
-import FeedbackPage from '../src/containers/Activity/AllFeedback';
-import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
 import CampaignCreate from '../src/modules/Campaigns/containers/Campaigns';
 import Scan from '../src/containers/Scan';
@@ -51,7 +47,6 @@ import { theme } from '../src/themes/nkwashi/theme';
 import FormPage from '../src/modules/Forms/containers/FormPage';
 import FormEntriesPage from '../src/modules/Forms/containers/FormEntriesPage';
 import FormBuilderPage from '../src/modules/Forms/containers/FormBuilderPage';
-import CommentsPage from '../src/containers/Comments/CommentPage';
 import { MainMenu } from '../src/modules/Menu';
 import modules from '../src/modules';
 import UserRoutes from '../src/modules/Users/UserRoutes';
@@ -95,18 +90,6 @@ const LoggedInOnly = props => {
       }}
     />
   );
-};
-
-/**
- * @deprecated will deprecate this in favor of individual module authorization using accessibleBy:[]
- *
- */
-const AdminRoutes = props => {
-  const authState = useContext(AuthStateContext);
-  if (authState.user.userType === 'admin') {
-    return props.children;
-  }
-  return <Redirect to="/" />;
 };
 
 const Logout = () => {
@@ -451,13 +434,6 @@ const App = () => {
                                       {/* Deprecated Routes */}
                                       <Route path="/showroom_logs" render={() => <Page404 />} />
                                       <Route path="/notes" render={() => <Page404 />} />
-                                      {/* TODO: Remove this wrapper after routes move to their modules */}
-                                      <AdminRoutes>
-                                        <Switch>
-                                          {/* TODO: Migrate to Feedback module */}
-                                          <Route path="/feedbacks" component={FeedbackPage} />
-                                        </Switch>
-                                      </AdminRoutes>
                                       {/* we will also need a not found page for non-logged in user */}
                                       {/* if you are going to move this to another line carry it like an egg */}
                                       <Route

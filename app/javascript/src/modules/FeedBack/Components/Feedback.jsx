@@ -11,8 +11,8 @@ import IconButton from '@mui/material/IconButton';
 import { useMutation } from 'react-apollo';
 import { Button, CircularProgress, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { createFeedback } from '../../graphql/mutations';
-import { ifNotTest } from '../../utils/helpers';
+import { createFeedback } from '../graphql/mutations';
+import { ifNotTest } from '../../../utils/helpers';
 
 const redLike = 'rgb(299, 63, 69)';
 const greenLike = 'rgb(37, 192, 176)';

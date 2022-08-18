@@ -5,9 +5,10 @@ import { formatISO9075 } from 'date-fns'
 import ThumbDownIcon from '@mui/icons-material/ThumbDown'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import { useTranslation } from 'react-i18next';
-import { allFeedback } from '../../graphql/queries'
-import Loading from '../../shared/Loading'
-import ErrorPage from '../../components/Error'
+import { allFeedback } from '../graphql/queries'
+import Loading from '../../../shared/Loading'
+import ErrorPage from '../../../components/Error'
+import PageWrapper from '../../../shared/PageWrapper'
 
 // TODO: move to its own module and use the global theme and possibly reuse this
 
@@ -31,7 +32,7 @@ export default function FeedbackPage() {
     setOffset(offset - limit)
   }
   return (
-    <>
+    <PageWrapper pageTitle={t('common:misc.feedback')}>
       <div className="container">
         {data.usersFeedback.length ? (
           data.usersFeedback.map(feedback => (
@@ -107,6 +108,6 @@ export default function FeedbackPage() {
           </nav>
         </div>
       </div>
-    </>
+    </PageWrapper>
   )
 }
