@@ -40,7 +40,6 @@ export default function ImageAuth({ imageLink, className, type, alt, style, auth
         style={style}
         className={className}
         alt={alt}
-        width="100%"
       />
     );
   }

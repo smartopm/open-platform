@@ -17,10 +17,7 @@ task resize_discussion_posts: :environment do
             .saver!(quality: 70)
         end
 
-        # delete current image
-        post.images.find(image.id).purge
-
-        # replace deleted image with reprocessed one
+        # add a resized version to post images
         post.images.attach(
           io: reprocessed,
           filename: image.filename,
