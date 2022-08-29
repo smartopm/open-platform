@@ -86,7 +86,6 @@ gem "newrelic_rpm"
 gem 'nokogiri', '~> 1.13.4'
 gem 'yard', '~> 0.9.26'
 gem 'awesome_print'
-# Point to yanked v0.3.5
 
 # For better http request handling
 gem 'httparty'
