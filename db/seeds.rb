@@ -6,10 +6,11 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-community = Community.create(name: 'Test Community', slug: "dgdp", logo_url: "//nkwashi_white_logo_transparent.png")
-mark = Users::User.create(name: 'Mark Percival', email: 'mark1@doublegdp.com',
-                   provider: 'google_oauth2',
-                   image_url: 'https://lh3.googleusercontent.com/-ong4yo_HRvk/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rdHiURdL-7LHJ1e4mrpVEEU_MYgsg/photo.jpg',
-                   community_id: community,
-                   user_type: 'admin',
-                  )
+Community.create!(
+  name: 'DoubleGDP',
+  slug: "dgdp",
+  currency: "zambian_kwacha",
+  logo_url: "//nkwashi_white_logo_transparent.png",
+  domains: ['localhost'],
+  theme_colors: {"primaryColor" => "#53A2BE", "secondaryColor" => "#1E4785"}
+)
