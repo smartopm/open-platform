@@ -11,10 +11,15 @@ Requires Docker and docker-compose to be installed
 - `docker-compose build`
 - `./bin/docker_rails db:create db:schema:load`
 - `./bin/docker_rails db:seed`
+- `./bin/docker_rails db:add_permissions_to_global_roles`
 - `docker-compose run --rm webpacker yarn install --check-files`
 - `docker-compose up`
 
-The site is now available at http://localhost:3000.
+The site is now available at http://localhost:3000, and you can login with the details below:
+```
+username: admin1
+password: admin12345
+```
 
 If you're a member of the DoubleGDP team, request the development key
 and place it in `config/credentials/development.key`
@@ -64,6 +69,13 @@ To run individual frontend test
 
 `docker-compose run --rm webpacker yarn test test_file`
 
+#### Run Cypress end-to-end tests
+
+`./bin/integration_tests.sh`
+
+To rebuild images before running the tests, pass an argument:
+
+`./bin/integration_tests.sh 'ci'`
 
 #### Run Rubocop for linting
 

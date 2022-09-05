@@ -27,8 +27,8 @@ class Sms
     to = clean_number(to)
     client = Vonage::Client.new(api_key: config[:api_key], api_secret: config[:api_secret])
     twilio_client = Twilio::REST::Client.new(
-      Rails.application.credentials.twilio_account_sid,
-      Rails.application.credentials.twilio_token,
+      ENV['TWILIO_ACCOUNT_SID'],
+      ENV['TWILIO_TOKEN'],
     )
 
     # We temporarily removed the validation of numbers as it wasn't working well for CM
@@ -55,8 +55,8 @@ class Sms
     return if sender.nil?
 
     twilio_client = Twilio::REST::Client.new(
-      Rails.application.credentials.twilio_account_sid,
-      Rails.application.credentials.twilio_token,
+      ENV['TWILIO_ACCOUNT_SID'],
+      ENV['TWILIO_TOKEN'],
     )
     begin
       twilio_client.messages.create(
