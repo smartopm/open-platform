@@ -20,7 +20,7 @@ module Authorizable
   end
 
   def current_community
-    domains = ['dgdp.site', 'rails']
+    domains = ['dgdp.site', 'rails', 'localhost']
     @current_community ||= if domains.include?(request.domain) && request.subdomain != 'dev'
                              Community.find_by(name: 'DoubleGDP')
                            else

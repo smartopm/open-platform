@@ -31,7 +31,7 @@ class SendgridController < ApplicationController
   private
 
   def valid_webhook_token?
-    params[:token] == Rails.application.credentials[:sendgrid_webhook_token]
+    params[:token] == ENV['SENDGRID_WEBHOOK_TOKEN']
   end
 
   def generate_msg_and_assign(user, body)

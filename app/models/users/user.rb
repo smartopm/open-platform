@@ -618,7 +618,7 @@ module Users
     end
 
     def auth_token
-      JWT.encode({ user_id: self[:id] }, Rails.application.credentials.secret_key_base, 'HS256')
+      JWT.encode({ user_id: self[:id] }, ENV['SECRET_KEY_BASE'], 'HS256')
     end
 
     def self.find_via_auth_token(auth_token, community)
@@ -629,7 +629,7 @@ module Users
 
     def self.decode_auth_token(auth_token)
       JWT.decode auth_token,
-                 Rails.application.credentials.secret_key_base,
+                 ENV['SECRET_KEY_BASE'],
                  true,
                  algorithm: 'HS256'
     rescue JWT::ExpiredSignature

@@ -273,10 +273,10 @@ Devise.setup do |config|
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
   # Add the credentials from your Google application to your credentials
-  client_id = Rails.application.credentials[:google_oauth_client_id]
-  client_secret = Rails.application.credentials[:google_oauth_secret]
-  fb_app_id = Rails.application.credentials[:facebook_app_id]
-  fb_app_secret = Rails.application.credentials[:facebook_app_secret]
+  client_id = ENV['GOOGLE_OAUTH_CLIENT_ID']
+  client_secret = ENV['GOOGLE_OAUTH_SECRET']
+  fb_app_id = ENV['FACEBOOK_APP_ID']
+  fb_app_secret = ENV['FACEBOOK_APP_SECRET']
 
   # Configure Google omniauth with proper scope
   config.omniauth :google_oauth2, client_id, client_secret, {

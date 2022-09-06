@@ -74,7 +74,7 @@ class EmailMsg
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_PEER
     request = Net::HTTP::Get.new(url)
-    request['authorization'] = "Bearer #{Rails.application.credentials[:sendgrid_updated_api_key]}"
+    request['authorization'] = "Bearer #{ENV['SENDGRID_UPDATED_API_KEY']}"
     request.body = '{}'
     response = http.request(request)
     JSON.parse(response.read_body)
@@ -147,7 +147,7 @@ class EmailMsg
 
   def self.client
     @client ||= SendGrid::API.new(
-      api_key: Rails.application.credentials[:sendgrid_updated_api_key],
+      api_key: ENV['SENDGRID_UPDATED_API_KEY'],
     ).client
   end
 
@@ -181,7 +181,7 @@ class EmailMsg
   end
 
   def self.email_stats(key, value)
-    sg = SendGrid::API.new(api_key: Rails.application.credentials[:sendgrid_updated_api_key].to_s)
+    sg = SendGrid::API.new(api_key: ENV['SENDGRID_UPDATED_API_KEY']&.to_s)
 
     response = sg.client.messages.get(query_params: query_params(key, value))
     JSON.parse(response.body.presence || '{}')['messages']

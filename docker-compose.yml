@@ -48,15 +48,5 @@ services:
       - .:/myapp
     depends_on:
       - postgres
-  caddy:
-    image: abiosoft/caddy
-    ports:
-      - "443:443"
-      - "80:80"
-    volumes:
-      - ./certs:/root/certs
-      - ./Caddyfile:/etc/Caddyfile
-    depends_on:
-      - rails
 volumes:
   pgdata:
