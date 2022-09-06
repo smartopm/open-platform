@@ -32,6 +32,8 @@ RSpec.describe GraphqlController, type: :controller do
     GQL
   end
 
+  ENV['SECRET_KEY_BASE'] = '123456789'
+
   before do
     user.community.update(name: 'DoubleGDP')
     authenticate user
