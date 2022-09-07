@@ -16,6 +16,6 @@ To report a security issue, read our [security guidelines](https://gitlab.com/do
 
 If you want to get in touch with us, send an email: [support@doublegdp.com](mailto:support@doublegdp.com).
 
-License
-<hr />
-Code is released under the [ MIT License](https://gitlab.com/doublegdp/open-platform/-/blob/master/LICENSE.md). file for licensing information.
+## License
+
+Code is released under the [ MIT License](https://gitlab.com/doublegdp/open-platform/-/blob/master/LICENSE.md).
