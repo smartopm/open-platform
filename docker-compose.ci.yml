@@ -7,13 +7,13 @@ services:
     expose:
       - "5432"
     env_file:
-      - '.env.docker'
+      - 'cypress/.env.ci'
   redis:
     image: redis
     expose:
       - "6379"
     env_file:
-      - '.env.docker'
+      - 'cypress/.env.ci'
   rails:
     build:
       context: .
@@ -21,7 +21,7 @@ services:
     image: doublegdp_rails:latest
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -e test -p 3000 -b '0.0.0.0'"
     env_file:
-      - '.env.docker'
+      - 'cypress/.env.ci'
     environment:
       - RAILS_ENV=test
       - NODE_ENV=test
@@ -37,7 +37,7 @@ services:
     image: doublegdp_rails:latest
     cpu_shares: 75
     env_file:
-      - '.env.docker'
+      - 'cypress/.env.ci'
     volumes:
       - .:/myapp
     environment:
