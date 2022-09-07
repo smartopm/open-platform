@@ -1,5 +1,3 @@
-# README
-
 ## Contributing
 
 If you would like to contribute to this project, please read our [contributor guidelines](https://gitlab.com/doublegdp/open-platform/-/blob/master/CONTRIBUTING.md).
