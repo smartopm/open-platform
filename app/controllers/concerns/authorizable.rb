@@ -20,13 +20,10 @@ module Authorizable
   end
 
   def current_community
-    domains = ['dgdp.site', 'rails', 'localhost']
-    @current_community ||= if domains.include?(request.domain) && request.subdomain != 'dev'
-                             Community.find_by(name: 'DoubleGDP')
-                           else
-                             dom = "#{request.subdomain}.#{request.domain}"
-                             Community.where('? = ANY(domains)', dom).first
-                           end
+    # We used to have multiple communities before
+    # But now we expect only one community record
+    # This can be modified based on your use-case
+    @current_community ||= Community.first
   end
 
   # For now we can assume that each user is just a member of one community

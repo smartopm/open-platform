@@ -1,6 +1,7 @@
 ## Development Setup
 
-Git clone `https://gitlab.com/doublegdp/open-platform.git` then change directory to the project directory.
+- Git clone `https://gitlab.com/doublegdp/open-platform.git` then change directory to the project directory.
+- Generate `.env.docker` file: `cp .env.docker.sample .env.docker`
 
 ### Docker
 
@@ -10,26 +11,13 @@ Requires Docker and docker-compose to be installed
 
 - `docker-compose build`
 - `./bin/docker_rails db:create db:schema:load`
-- `./bin/docker_rails db:seed`
+- `./bin/docker_rails db:create_community[your-community-name-here]`
+- `./bin/docker_rails db:create_default_admin[email,username,password]`
 - `./bin/docker_rails db:add_permissions_to_global_roles`
 - `docker-compose run --rm webpacker yarn install --check-files`
 - `docker-compose up`
 
-The site is now available at http://localhost:3000, and you can login with the details below:
-```
-username: admin1
-password: admin12345
-```
-
-If you're a member of the DoubleGDP team, request the development key
-and place it in `config/credentials/development.key`
-
-To generate the environment variables required to run the app, run:
-
-`docker-compose run rails credentials:edit --environment development`
-
-Please look at `config/credentials/development.yml.sample` for a list of credentials
-that will be needed to run the app and created by running the same `credentials:edit` function as above.
+The site is now available at http://localhost:3000, and you can login with the username and password supplied above.
 
 ### Updating Dependecies
 
