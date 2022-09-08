@@ -15,4 +15,4 @@ heroku buildpacks:add --index 3 heroku/ruby --app <your-app-name>
 7. Load database schema: `heroku run rake db:schema:load --app <your-app-name>`
 8. Create your community: `heroku run rake db:create_community[your-community-name] --app <your-app-name>`
 9. Create a default admin user: `heroku run rake db:create_default_admin[email,username,password] --app <your-app-name>`
-10. Set necessary secret keys as explained here. `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are required to load the app.
+10. Set necessary secret keys as explained [here](https://gitlab.com/doublegdp/open-platform/-/blob/master/HANDBOOK.md#setting-environment-variables). `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are required to load the app.
