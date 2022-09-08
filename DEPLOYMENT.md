@@ -10,11 +10,11 @@ heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-activ
 heroku buildpacks:add --index 2 heroku/nodejs --app <your-app-name>
 heroku buildpacks:add --index 3 heroku/ruby --app <your-app-name>
 ```
-5. Set RACK_ENV and HOST: `heroku config:set RACK_ENV=production HOST=production --app <your-app-name>`
-6. Deploy the master branch: `git push heroku master`
-7. Load database schema: `heroku run rake db:schema:load --app <your-app-name>`
-8. Add Heroku redis addons: `heroku addons:create heroku-redis:hobby-dev --app <your-app-name>`
-9. Create your community: `heroku run rake db:create_community[your-community-name] --app <your-app-name>`
-10. Create a default admin user: `heroku run rake db:create_default_admin[email,username,password] --app <your-app-name>`
-11. Add necessary permissions: `heroku run rake db:add_permissions_to_global_roles --app <your-app-name>`
-12. Set necessary secret keys as explained [here](https://gitlab.com/doublegdp/open-platform/-/blob/master/HANDBOOK.md#setting-environment-variables). `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are required to load the app.
+6. Set RACK_ENV and HOST: `heroku config:set RACK_ENV=production HOST=production --app <your-app-name>`
+7. Deploy the master branch: `git push heroku master`
+8. Load database schema: `heroku run rake db:schema:load --app <your-app-name>`
+9. Add Heroku redis addons: `heroku addons:create heroku-redis:hobby-dev --app <your-app-name>`
+10. Create your community: `heroku run rake db:create_community[your-community-name] --app <your-app-name>`
+11. Create a default admin user: `heroku run rake db:create_default_admin[email,username,password] --app <your-app-name>`
+12. Add necessary permissions: `heroku run rake db:add_permissions_to_global_roles --app <your-app-name>`
+13. Set necessary secret keys as explained [here](https://gitlab.com/doublegdp/open-platform/-/blob/master/HANDBOOK.md#setting-environment-variables). `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are required to load the app.
