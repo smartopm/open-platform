@@ -1,6 +1,6 @@
 ## How To Contribute
 
-Please note that we have a [code of conduct](https://gitlab.com/doublegdp/open-platform/-/blob/master/CODE_OF_CONDUCT.md), please follow it in all your interactions with this project.
+Please note that we have a [code of conduct](CODE_OF_CONDUCT.md), please follow it in all your interactions with this project.
 
 Open issues can be found [here](https://gitlab.com/doublegdp/open-platform/-/issues), and we tag issues that are ready to be worked on with the `to do` label. We also tag issues that would make a good first merge request for new contributors with the `good first issue` label.
 
@@ -13,7 +13,7 @@ Contributions to this project should be made in the form of Gitlab merge request
 
 When you're ready to start working on an issue:
 
-1. Fork the project and clone it to your local machine. Follow the initial setup [here](https://gitlab.com/doublegdp/open-platform/-/blob/master/DEV_SETUP.md).
+1. Fork the project and clone it to your local machine. Follow the initial setup [here](DEV_SETUP.md).
 2. Visit the [issues page](https://gitlab.com/doublegdp/open-platform/-/issues), take the first issue you are comfortable with, starting from the top. Add a comment that you would like to work on it.
 3. Branch from main and, if needed, rebase to the current main branch before submitting your merge request
 4. Add tests relevant to the fixed bug or new feature
