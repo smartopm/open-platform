@@ -28,5 +28,5 @@
 Thanks for your MR, you're awesome! :+1:
 
 <!-- If it is a user related changes, you can append @vanessa43 to the list below  -->
-/assign_reviewer @nurudeen1 @saurabh44 @tolulope3 @DMutuba @victor369 @bonny2 @olivierjmm
+/assign_reviewer @nurudeen1 @olivierjmm
 
