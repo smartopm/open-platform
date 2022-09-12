@@ -1,14 +1,14 @@
 ## Contributing
 
-If you would like to contribute to this project, please read our [contributor guidelines](https://gitlab.com/doublegdp/open-platform/-/blob/master/CONTRIBUTING.md).
+If you would like to contribute to this project, please read our [contributor guidelines](CONTRIBUTING.md).
 
-To setup your development environment, see the [quickstart guide](https://gitlab.com/doublegdp/open-platform/-/blob/master/DEV_SETUP.md).
+To setup your development environment, see the [quickstart guide](DEV_SETUP.md).
 
-To setup your own instance of this project see [DEPLOYMENT.md](https://gitlab.com/doublegdp/open-platform/-/blob/master/DEPLOYMENT.md).
+To setup your own instance of this project see [DEPLOYMENT.md](DEPLOYMENT.md).
 
-To learn about working within this project, read the [project guidelines](https://gitlab.com/doublegdp/open-platform/-/blob/master/HANDBOOK.md).
+To learn about working within this project, read the [project guidelines](HANDBOOK.md).
 
-To report a security issue, read our [security guidelines](https://gitlab.com/doublegdp/open-platform/-/blob/master/SECURITY.md).
+To report a security issue, read our [security guidelines](SECURITY.md).
 
 ## Contact
 
@@ -16,4 +16,4 @@ If you want to get in touch with us, send an email: [support@doublegdp.com](mail
 
 ## License
 
-Code is released under the [ MIT License](https://gitlab.com/doublegdp/open-platform/-/blob/master/LICENSE.md).
+Code is released under the [ MIT License](LICENSE.md).
